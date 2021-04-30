@@ -8,15 +8,15 @@ export function NextStepsCardDemo() {
             {
                 name: "Koch",
                 tasks: [
-                    {isCompleted: true, description: "Schedule AR Headset Demo Call"},
-                    {isCompleted: false, description: "Invite IT to next meeting"}
+                    {description: "Schedule AR Headset Demo Call", isCompleted: true},
+                    {description: "Invite IT to next meeting", isCompleted: false}
                 ]
             },
         vendor:
             {
                 name: "Mira",
                 tasks: [
-                    {isCompleted: false, description: "Send Penelope a revised proposal"},
+                    {description: "Send Penelope a revised proposal", isCompleted: false},
                 ]
             }
     };
@@ -25,18 +25,18 @@ export function NextStepsCardDemo() {
 
 type CompanyTaskList = {
     name: string,
-    tasks: Array<{ isCompleted: boolean, description: string }>
+    tasks: Array<{ description: string, isCompleted: boolean }>
 }
 
-function TaskList(props: { taskList: CompanyTaskList }) {
+function TaskList(props: { data: CompanyTaskList }) {
     return <>
         <div className="px-4 py-5 sm:px-6">
-            <p className="mt-1 max-w-2xl text-sm">for <strong>{props.taskList.name}</strong></p>
+            <p className="mt-1 max-w-2xl text-sm">for <strong>{props.data.name}</strong></p>
         </div>
         <div className="sm:divide-y sm:divide-gray-200">
             <ul className="py-4 sm:py-5 sm:px-6">
                 {
-                    props.taskList.tasks.map(task => <li>
+                    props.data.tasks.map(task => <li>
                         <input type="checkbox" checked={task.isCompleted}/> {task.description}
                     </li>)
                 }
@@ -55,11 +55,11 @@ export default function NextStepsCard(props: { customer: CompanyTaskList, vendor
         </div>
 
         <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-            <TaskList taskList={props.customer}/>
+            <TaskList data={props.customer}/>
         </div>
 
         <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-            <TaskList taskList={props.vendor}/>
+            <TaskList data={props.vendor}/>
         </div>
 
         <button
@@ -68,7 +68,7 @@ export default function NextStepsCard(props: { customer: CompanyTaskList, vendor
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
         >
-            <PlusIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+            <PlusIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true"/>
             Add
         </button>
     </div>;
