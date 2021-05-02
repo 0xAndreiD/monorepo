@@ -3,7 +3,7 @@ import {CheckIcon, XIcon} from "@heroicons/react/solid";
 type Proposal = {
     description: string,
     productCallout: string,
-    stakeholders: Array<{ name: string, email: string, title: string, isApprovedBy?: boolean }>
+    stakeholders: Array<{ name: string, email: string, jobTitle: string, isApprovedBy?: boolean }>
 }
 
 export function ProposalCardDemo() {
@@ -13,25 +13,25 @@ export function ProposalCardDemo() {
         stakeholders: [
             {
                 name: "Nic Franklin",
-                title: "Director of Operations",
+                jobTitle: "Director of Operations",
                 email: "nick@mira.com",
                 isApprovedBy: true
             },
             {
                 name: "Kristin Sanders",
-                title: "Head of Technical Services",
+                jobTitle: "Head of Technical Services",
                 email: "kristin@mira.com",
                 isApprovedBy: true
             },
             {
                 name: "Wally Iris",
-                title: "Senior QA Manager",
+                jobTitle: "Senior QA Manager",
                 email: "wally@mira.com",
                 isApprovedBy: true
             },
             {
                 name: "Penelope Star",
-                title: "Plant Manager",
+                jobTitle: "Plant Manager",
                 email: "penelope@mira.com",
                 isApprovedBy: true
             }
@@ -82,7 +82,7 @@ function ProposalCard(props: Proposal) {
                         const colour = getColourFromSting(stakeholder.name);
                         return <div
                             className={`relative w-8 h-8 flex items-center justify-center 
-                                bg-${colour}-600 rounded-full hover:bg-${colour}-900`}>
+                                bg-${colour}-500 rounded-full hover:bg-${colour}-900`}>
                             <span className="text- text-white">{getInitialsOfName(stakeholder.name)}</span>
                         </div>;
                     }
@@ -111,5 +111,21 @@ function ProposalCard(props: Proposal) {
             Decline
         </button>
 
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {props.stakeholders.map((person) => (
+                <div
+                    key={person.email}
+                    className="relative rounded-lg  bg-white px-6 py-5 flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                >
+                    <div className="flex-1 min-w-0">
+                        <a href="#" className="focus:outline-none">
+                            <span className="absolute inset-0" aria-hidden="true"/>
+                            <p className="text-sm font-medium text-gray-900">{person.name}</p>
+                            <p className="text-sm text-gray-500 truncate">{person.jobTitle}</p>
+                        </a>
+                    </div>
+                </div>
+            ))}
+        </div>
     </>;
 }
