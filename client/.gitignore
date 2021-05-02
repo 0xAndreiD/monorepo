@@ -139,7 +139,7 @@ yarn-error.log*
 .idea/
 
 #yarn v2
-.yarn/*
+.yarn/
 !.yarn/patches
 !.yarn/releases
 !.yarn/plugins
