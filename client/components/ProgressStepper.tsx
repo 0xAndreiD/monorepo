@@ -89,7 +89,7 @@ function ProgressStepperElement({step, stepNum}: { step: ProgressStep, stepNum: 
                 <div
                     className="relative w-8 h-8 flex items-center justify-center bg-green-600 rounded-full hover:bg-green-900"
                 >
-                    <span className="h-2.5 w-2.5 text-white" aria-hidden="true">{stepNum}</span>
+                    <span className="text-white" aria-hidden="true">{stepNum}</span>
                 </div>
             </>;
 

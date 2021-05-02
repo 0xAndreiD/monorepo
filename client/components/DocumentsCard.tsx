@@ -36,19 +36,18 @@ function DocumentList(props: { data: CompanyDocumentList }) {
         <div className="sm:divide-y sm:divide-gray-200">
 
             {
-
-                props.data.documents.map(task => <a href={task.href}>
-
-                    <button
-                        type="button"
-                        className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+                props.data.documents.map(task =>
+                    <a href={task.href}>
+                        <button
+                            type="button"
+                            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                    >
-                        {task.isCompleted && <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-green-500" />}
-                        {task.title}
-                    </button>
-                </a>)
+                        >
+                            {task.isCompleted && <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-green-500"/>}
+                            {task.title}
+                        </button>
+                    </a>)
             }
 
         </div>
@@ -77,8 +76,8 @@ export default function DocumentsCard(props: { customer: CompanyDocumentList, ve
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
         >
-            <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" />
-Upload
+            <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4"/>
+            Upload
         </button>
     </div>;
 }
