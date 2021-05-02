@@ -815,6 +815,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"classnames@npm:^2.2.5":
+  version: 2.3.1
+  resolution: "classnames@npm:2.3.1"
+  checksum: 57d536edede609f81425d24b062d8d720a466565faf1e38d32c881e883920baa71519ac70c7b565e9cd39201fb1c1ff9bdf8aabf8e26544bac481e7924867c83
+  languageName: node
+  linkType: hard
+
 "clean-stack@npm:^2.0.0":
   version: 2.2.0
   resolution: "clean-stack@npm:2.2.0"
@@ -2858,7 +2865,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"prop-types@npm:15.7.2":
+"prop-types@npm:15.7.2, prop-types@npm:^15.5.8":
   version: 15.7.2
   resolution: "prop-types@npm:15.7.2"
   dependencies:
@@ -2997,6 +3004,15 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"react-easy-swipe@npm:^0.0.21":
+  version: 0.0.21
+  resolution: "react-easy-swipe@npm:0.0.21"
+  dependencies:
+    prop-types: ^15.5.8
+  checksum: fa493f3f5cc76cdbd1e88c5932bfbb2adf7bb5bcc40f9e56d2b0945a5a5fc471530642814f1e72a77d4b972c6c6d2cebfea2d80e5fcec5b8c341f1599f002009
+  languageName: node
+  linkType: hard
+
 "react-is@npm:16.13.1, react-is@npm:^16.8.1":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -3008,6 +3024,17 @@ fsevents@~2.3.1:
   version: 0.8.3
   resolution: "react-refresh@npm:0.8.3"
   checksum: 38f06df8e0a20701b96e5d680838a3528d66cfb53db79843d30cb9517df3262ec596607147439975267bf0634bee77101db37298ea79b5742cc28664632f3c76
+  languageName: node
+  linkType: hard
+
+"react-responsive-carousel@npm:^3.2.18":
+  version: 3.2.18
+  resolution: "react-responsive-carousel@npm:3.2.18"
+  dependencies:
+    classnames: ^2.2.5
+    prop-types: ^15.5.8
+    react-easy-swipe: ^0.0.21
+  checksum: 45fe74987b4c087816f9dd3746122712d9e8fc0b28561a70d9e4f01fcfecad445eb8f3721b934cd856279a9a72111c0cea863680f226f45b7c033d40f9ed76a2
   languageName: node
   linkType: hard
 
@@ -3141,6 +3168,7 @@ resolve@^1.20.0:
     postcss: latest
     react: ^17.0.2
     react-dom: ^17.0.2
+    react-responsive-carousel: ^3.2.18
     tailwindcss: latest
     typescript: ^4.2.4
   languageName: unknown
