@@ -17,13 +17,13 @@ const steps: ProgressStep[] = [
     {
         name: 'Intro Meeting',
         items: ["Go over Mira's platform."],
-        date: new Date(2021,9, 8),
+        date: new Date(2021, 9, 8),
         status: CompletionStatus.Complete
     },
     {
         name: 'AR Headset Demo',
         items: ["Demonstrate a live Mira Connect call from headset."],
-        date: new Date(2021,10,11),
+        date: new Date(2021, 10, 11),
         status: CompletionStatus.InProgress
     },
     {
@@ -77,7 +77,7 @@ function ProgressStepperElement({step, stepNum}: { step: ProgressStep, stepNum: 
                     className="relative w-8 h-8 flex items-center justify-center bg-white border-2 border-green-600 rounded-full"
                     aria-current="step"
                 >
-                    <span className="w-2.5 h-2.5 text-green-600" aria-hidden="true">{stepNum}</span>
+                    <span className="text-green-600">{stepNum}</span>
                 </div>
             </>;
 
@@ -89,7 +89,7 @@ function ProgressStepperElement({step, stepNum}: { step: ProgressStep, stepNum: 
                 <div
                     className="relative w-8 h-8 flex items-center justify-center bg-green-600 rounded-full hover:bg-green-900"
                 >
-                    <span className="text-white" aria-hidden="true">{stepNum}</span>
+                    <span className="text-white">{stepNum}</span>
                 </div>
             </>;
 
@@ -101,8 +101,7 @@ function ProgressStepperElement({step, stepNum}: { step: ProgressStep, stepNum: 
                 <div
                     className="group relative w-8 h-8 flex items-center justify-center bg-white border-2 border-gray-300 rounded-full hover:border-gray-400"
                 >
-                  <span className="h-2.5 w-2.5 bg-transparent rounded-full group-hover:bg-gray-300"
-                        aria-hidden="true">
+                  <span className="bg-transparent rounded-full group-hover:bg-gray-300">
                       {stepNum}
                   </span>
                 </div>
