@@ -13,7 +13,7 @@ export default function Home() {
         {/*<NextStepsCardDemo/>*/}
         {/*<DocumentsCardDemo/>*/}
         {/*<ProposalCardDemo/>*/}
-        {/*<ProductInfoCardDemo/>*/}
-        <ContactsCardDemo/>
+        <ProductInfoCardDemo/>
+        {/*<ContactsCardDemo/>*/}
     </>;
 }

@@ -1,6 +1,6 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import {Carousel} from 'react-responsive-carousel';
-import {ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon} from "@heroicons/react/outline";
+import {ChevronLeftIcon, ChevronRightIcon} from "@heroicons/react/outline";
 import {CSSProperties} from "react";
 
 type Section = {
@@ -94,7 +94,7 @@ export function ProductInfoCard(props: ProductInfoCard) {
 
         >
             {
-                props.images.map(image => <img src={image}/>)
+                props.images.map(image => <img src={image} alt=""/>)
             }
         </Carousel>
 
