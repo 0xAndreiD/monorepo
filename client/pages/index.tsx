@@ -5,6 +5,7 @@ import {DocumentsCardDemo} from "../components/DocumentsCard";
 import {ProposalCardDemo} from "../components/ProposalCard";
 import ProgressStepper from "../components/ProgressStepper";
 import {ProductInfoCardDemo} from "../components/ProductInfoCard";
+import {ContactsCardDemo} from "../components/ContactsCard";
 
 export default function Home() {
     return <>
@@ -12,6 +13,7 @@ export default function Home() {
         {/*<NextStepsCardDemo/>*/}
         {/*<DocumentsCardDemo/>*/}
         {/*<ProposalCardDemo/>*/}
-        <ProductInfoCardDemo/>
+        {/*<ProductInfoCardDemo/>*/}
+        <ContactsCardDemo/>
     </>;
 }
