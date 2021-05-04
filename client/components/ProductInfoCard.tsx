@@ -1,5 +1,7 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import {Carousel} from 'react-responsive-carousel';
+import {ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon} from "@heroicons/react/outline";
+import {CSSProperties} from "react";
 
 type Section = {
     heading: string,
@@ -18,6 +20,11 @@ export function ProductInfoCardDemo() {
             "https://brainhubeu.github.io/react-carousel/static/mona-7a1ceae9bdb8c43272eb101c091c5408.jpg",
             "https://brainhubeu.github.io/react-carousel/static/scream-ee207a05c1e6fed03aafa156cc511abe.jpg",
             "https://brainhubeu.github.io/react-carousel/static/starry-night-39eed0a107ddb6c9f980eb3081a8bdd3.jpg",
+            /*
+            "https://www.aniwaa.com/wp-content/uploads/2018/06/AR-glasses-smartphone-Mira-Prism-side.jpg",
+            "https://mk0uploadvrcom4bcwhj.kinstacdn.com/wp-content/uploads/2017/07/mira-headset-image-2.jpg",
+            "https://www.red-dot.org/index.php?f=37089&token=699949922eb8083e9bb5a3f67081e12da55eecff&eID=tx_solr_image&size=large&usage=hero",
+             */
         ],
         sections: [
             {
@@ -60,11 +67,32 @@ export function ProductInfoCardDemo() {
 }
 
 export function ProductInfoCard(props: ProductInfoCard) {
+    const style:CSSProperties = {
+        position: 'absolute',
+        zIndex: 2,
+        top: 'calc(50% )',
+        width: 30,
+        height: 30,
+        cursor: 'pointer',
+    };
+
     return <>
         <h3>Product Info</h3>
         <Carousel
             infiniteLoop={true}
-            showThumbs={false}>
+            showThumbs={false}
+            renderArrowPrev={(onClickHandler, hasPrev, label) =>
+                <button onClick={onClickHandler}
+                        style={{...style, left:15}}>
+                    <ChevronLeftIcon className="text-gray-400"/>
+                </button>}
+            renderArrowNext={(onClickHandler, hasPrev, label) =>
+                <button onClick={onClickHandler}
+                        style={{...style, right:15}}>
+                    <ChevronRightIcon className="text-gray-400"/>
+                </button>}
+
+        >
             {
                 props.images.map(image => <img src={image}/>)
             }
