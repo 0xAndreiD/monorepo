@@ -67,7 +67,7 @@ export function ProductInfoCardDemo() {
 }
 
 export function ProductInfoCard(props: ProductInfoCard) {
-    const style:CSSProperties = {
+    const style: CSSProperties = {
         position: 'absolute',
         zIndex: 2,
         top: 'calc(50% )',
@@ -83,12 +83,12 @@ export function ProductInfoCard(props: ProductInfoCard) {
             showThumbs={false}
             renderArrowPrev={(onClickHandler, hasPrev, label) =>
                 <button onClick={onClickHandler}
-                        style={{...style, left:15}}>
+                        style={{...style, left: 15}}>
                     <ChevronLeftIcon className="text-gray-400"/>
                 </button>}
             renderArrowNext={(onClickHandler, hasPrev, label) =>
                 <button onClick={onClickHandler}
-                        style={{...style, right:15}}>
+                        style={{...style, right: 15}}>
                     <ChevronRightIcon className="text-gray-400"/>
                 </button>}
 
@@ -102,9 +102,14 @@ export function ProductInfoCard(props: ProductInfoCard) {
             props.sections.map(section =>
                 <>
                     <h4>{section.heading}</h4>
-                    <ul>
+                    <ul className="list-disc">
                         {
-                            section.links.map(link => <li><a href={link.href}>{link.title}</a></li>)
+                            section.links.map(link => <li>
+
+                                <a href={link.href} className="text-blue-600 underline">
+                                    {link.title}
+                                </a>
+                            </li>)
                         }
                     </ul>
                 </>
