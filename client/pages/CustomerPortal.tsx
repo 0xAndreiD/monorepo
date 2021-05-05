@@ -11,7 +11,7 @@ import {InternalNotesDemo} from "../components/InternalNotes";
 export default function CustomerPortal() {
     return <div className="bg-gray-400">
         <ProgressStepper/>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-green-600">
                 <NextStepsCardDemo/>
                 <DocumentsCardDemo/>
