@@ -9,14 +9,19 @@ import {ContactsCardDemo} from "../components/ContactsCard";
 import {InternalNotesDemo} from "../components/InternalNotes";
 
 export default function CustomerPortal() {
-    return <>
+    return <div className="bg-gray-400">
         <ProgressStepper/>
-        <NextStepsCardDemo/>
-        <DocumentsCardDemo/>
-        <ProductInfoCardDemo/>
-
-        <ProposalCardDemo/>
-        <ContactsCardDemo/>
-        <InternalNotesDemo/>
-    </>;
+        <div className="grid grid-cols-2 gap-4">
+            <div className="bg-green-600">
+                <NextStepsCardDemo/>
+                <DocumentsCardDemo/>
+                <ProductInfoCardDemo/>
+            </div>
+            <div className="bg-red-500">
+                <ProposalCardDemo/>
+                <ContactsCardDemo/>
+                <InternalNotesDemo/>
+            </div>
+        </div>
+    </div>;
 }
