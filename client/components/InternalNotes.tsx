@@ -82,9 +82,7 @@ export default function InternalNotes(props: { data: Array<Root> }) {
                     <div
                         className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
                         <PaperAirplaneIcon className="ml-1 mb-1 transform rotate-45 h-6 w-6 text-gray-500"/>
-
                     </div>
-
                 </div>
             </div>
         </div>
