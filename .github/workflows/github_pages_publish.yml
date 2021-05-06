@@ -14,6 +14,7 @@ jobs:
           npm -v
           ls -l
           pwd
+          yarn set version berry
           yarn
           yarn build
 
