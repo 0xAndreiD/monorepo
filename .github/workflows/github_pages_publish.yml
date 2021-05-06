@@ -12,9 +12,10 @@ jobs:
         run: |
           node -v
           npm -v
-          ls -l
-          pwd
+          yarn -v
           yarn set version berry
+          ls -la
+          yarn -v
           yarn
           yarn build
 
