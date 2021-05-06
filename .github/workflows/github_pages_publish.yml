@@ -7,17 +7,39 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
 
-      - name: Install deps and Build FE 🔧
+      - name: Sanity Check + Yarn 2 ✅
         working-directory: client
         run: |
           echo Node version: $(node -v)
           echo NPM version: $(npm -v)
           yarn set version berry
           echo yarn version: $(yarn -v)
-          yarn install
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install deps 🔧
+        working-directory: client
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: |
+          yarn install --frozen-lockfile
           yarn ghpublish
 
+      - name: Build FE 🔧
+        working-directory: client
+        run: yarn ghpublish
+
       - name: Deploy 🚀
+        working-directory: client
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
           folder: out # source folder path
