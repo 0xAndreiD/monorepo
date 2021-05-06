@@ -20,10 +20,11 @@ jobs:
           echo "  - Yarn version: $(yarn -v)"
           echo "  - Working in directory: $(pwd)"
 
-      - name: Get yarn cache directory path
+      - name: Get yarn cache directory path ⚙️
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
 
+      - name: Cache check (and restore if cache-hit) ⚡
       - uses: actions/cache@v2
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
@@ -33,13 +34,9 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install deps 🔧
-        run: yarn install --immutable #reinstall because install state doesnt seem to persist
+        run: yarn install --immutable #reinstall because cache doesn't capture the entire install state
 
-      - run: ls -la
-      - run: ls -la .yarn
-      - run: tree .yarn
-
-      - name: Build FE 🔧
+      - name: Build FE 🏗️
         run: yarn ghpublish
 
       - name: Deploy 🚀
