@@ -1,14 +1,18 @@
-name: Build and Deploy
+name: Build and Deploy Client
 on: [ push ]
+
+defaults:
+  run:
+    working-directory: client
+
 jobs:
-  build-and-deploy:
+  build-and-deploy-client:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
 
       - name: Sanity Check + Yarn 2 ✅
-        working-directory: client
         run: |
           echo Node version: $(node -v)
           echo NPM version: $(npm -v)
@@ -28,18 +32,15 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install deps 🔧
-        working-directory: client
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: |
           yarn install --frozen-lockfile
           yarn ghpublish
 
       - name: Build FE 🔧
-        working-directory: client
         run: yarn ghpublish
 
       - name: Deploy 🚀
-        working-directory: client
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
           folder: out # source folder path
