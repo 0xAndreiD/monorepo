@@ -49,13 +49,31 @@ function classNames(...classes: string[]) {
 
 export default function ProgressStepper() {
 
-    //className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'flex flex-col items-center relative')}>
+
     return <nav>
-        <ul style={{gridTemplateRows: "repeat(5, auto)"}}
+        {/*<ol className="flex justify-around gap-x-5 px-11 items-center">*/}
+        {/*    {*/}
+        {/*        steps.map((step, stepIdx) =>*/}
+        {/*            <div key={step.name}*/}
+        {/*                 className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-40' : '', 'relative')}>*/}
+        {/*                <ProgressStepperElement step={step} stepNum={stepIdx + 1}/>*/}
+        {/*            </div>*/}
+        {/*        )*/}
+        {/*    }*/}
+        {/*</ol>*/}
+        <ul style={{gridTemplateRows: "repeat(5, auto)",gridAutoColumns: "1fr"}}
+        // <ul style={{gridTemplateRows: "repeat(4, auto)", gridAutoColumns: "1fr"}}
             className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5">
             {steps.map((step, stepIdx) => (
                 <>
-                    <ProgressStepperElement step={step} stepNum={stepIdx + 1}/>
+
+
+                    <div key={step.name}>
+                         {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
+                        <ProgressStepperElement step={step} stepNum={stepIdx + 1}/>
+                    </div>
+
+
                     <div className="text-gray-500 text-xs">
                         {step.date ? format(step.date, "MMM d") : "TBD"}
                     </div>
