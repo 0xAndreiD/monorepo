@@ -36,6 +36,10 @@ jobs:
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install --immutable
 
+      - run: ls -la
+      - run: ls -la .yarn
+      - run: tree .yarn
+
       - name: Build FE 🔧
         run: yarn ghpublish
 
