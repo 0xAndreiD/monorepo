@@ -1,6 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 
 import {CheckIcon, CloudUploadIcon} from "@heroicons/react/solid";
+import CardDivider, {Card, CardHeader} from "./card/Card";
 
 export function DocumentsCardDemo() {
     const data = {
@@ -30,54 +31,49 @@ type CompanyDocumentList = {
 
 function DocumentList(props: { data: CompanyDocumentList }) {
     return <>
-        <div className="px-4 py-5 sm:px-6">
-            <p className="mt-1 max-w-2xl text-sm">for <strong>{props.data.name}</strong></p>
-        </div>
-        <div className="sm:divide-y sm:divide-gray-200">
-
+        <p className="px-4 sm:px-6 max-w-2xl text-sm">for <strong>{props.data.name}</strong></p>
+        <div className="px-4 sm:px-6 py-4 flex justify-self-start gap-1.5">
             {
-                props.data.documents.map(task =>
-                    <a href={task.href}>
-                        <button
-                            type="button"
-                            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
-             leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                        >
-                            {task.isCompleted && <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-green-500"/>}
-                            {task.title}
-                        </button>
-                    </a>)
+                props.data.documents.map((task, idx) =>
+                    <span  key={idx}>
+                        <a href={task.href}>
+                            <button
+                                type="button"
+                                className={"inline-flex items-center px-3 py-2 border shadow-sm text-sm\
+             leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 " +
+                                (task.isCompleted ? "border-green-300" : "border-gray-300")}
+                            >
+                                {task.isCompleted && <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-green-500"/>}
+                                {task.title}
+                            </button>
+                        </a>
+                    </span>
+                )
             }
-
         </div>
     </>;
 }
 
 export default function DocumentsCard(props: { customer: CompanyDocumentList, vendor: CompanyDocumentList }) {
 //reference: https://tailwindui.com/components/application-ui/data-display/title-lists#component-e1b5917b21bbe76a73a96c5ca876225f
+    return <Card>
+        <CardHeader> Documents </CardHeader>
 
-    return <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-        <div className="px-4 py-5 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">Documents</h3>
-        </div>
+        <DocumentList data={props.customer}/>
+        <CardDivider/>
+        <DocumentList data={props.vendor}/>
 
-        <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-            <DocumentList data={props.customer}/>
-        </div>
-
-        <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-            <DocumentList data={props.vendor}/>
-        </div>
-
-        <button
-            type="button"
-            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+        <div className="px-4 sm:px-6 pb-4">
+            <button
+                type="button"
+                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-        >
-            <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4"/>
-            Upload
-        </button>
-    </div>;
+            >
+                <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4"/>
+                Upload
+            </button>
+        </div>
+    </Card>;
 }
