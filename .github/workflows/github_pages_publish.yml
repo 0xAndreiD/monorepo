@@ -43,7 +43,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
           folder: client/out # source folder path
-          repository-name: gh-pages-frontend # target repo name
+          repository-name: Romeano-Inc/gh-pages-frontend # target repo name
           branch: master # target branch name
           target-folder: docs
           clean: true # cleans the target repo destination
