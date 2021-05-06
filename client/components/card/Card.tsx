@@ -1,4 +1,4 @@
-import {ReactNode} from "react";
+import {CSSProperties, ReactNode} from "react";
 
 //source: https://tailwindui.com/components/application-ui/layout/panels#component-5a45d30370f33848da982e8b0879e0a3
 export function Card(props: { children?: ReactNode }) {
@@ -9,10 +9,13 @@ export function Card(props: { children?: ReactNode }) {
     </div>;
 }
 
-export function CardHeader(props: { children?: ReactNode }) {
+export function CardHeader(props: { classNameOverride?: string, classNameAddition?: string, style?: CSSProperties, children?: ReactNode }) {
     // return <h3 className="text-lg leading-6 font-bold text-gray-900">Next Steps</h3>;
 
-    return <div className="text-lg leading-6 font-bold text-gray-900 px-4 py-4 sm:px-6">{props.children}</div>;
+    return <div style={props.style}
+                className={props.classNameOverride || `${props.classNameAddition ?? ""} text-lg leading-6 font-bold text-gray-900 px-4 py-4 sm:px-6`}>
+        {props.children}
+    </div>;
 }
 
 export default function CardDivider() {

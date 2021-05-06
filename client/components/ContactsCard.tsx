@@ -1,4 +1,5 @@
 import {MailIcon} from "@heroicons/react/outline";
+import {Card, CardHeader} from "./card/Card";
 
 type ContactCard = {
     contacts: Array<{
@@ -38,23 +39,22 @@ export function ContactsCardDemo() {
 }
 
 export default function ContactsCard(props: ContactCard) {
-    return <>
-        <h3>Contacts</h3>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    return <Card>
+        <CardHeader>Contacts</CardHeader>
+        <div className="divide-y divide-gray-300">
             {
                 props.contacts.map((contact, idx) =>
-                    <>
+                    <div>
+                        <div className="px-4 sm:px-6 pt-5">{getPrecedence(idx)}</div>
                         <div key={idx}
-                             className="relative bg-white px-6 py-5 flex items-center space-x-3"
+                             className="relative bg-white px-6 flex items-center space-x-3"
                         >
-                            {/*<div>{getPrecedence(idx)}</div>*/}
-
                             <div className="flex-shrink-0">
                                 <img className="h-10 w-10 rounded-full" src={contact.imageUrl} alt=""/>
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-medium text-gray-900">{contact.name}</p>
-                                <p className="text-sm text-gray-500 truncate">{contact.role}</p>
+                                <p className="text-sm truncate">{contact.role}</p>
                             </div>
                             <a href={`mailto:${contact.email}`}>
                                 <div
@@ -63,9 +63,9 @@ export default function ContactsCard(props: ContactCard) {
                                 </div>
                             </a>
                         </div>
-                    </>
+                    </div>
                 )
             }
         </div>
-    </>;
+    </Card>;
 }
