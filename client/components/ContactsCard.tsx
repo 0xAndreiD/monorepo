@@ -1,5 +1,6 @@
 import {MailIcon} from "@heroicons/react/outline";
 import {Card, CardHeader} from "./card/Card";
+import {titleCase} from "../util/text";
 
 type ContactCard = {
     contacts: Array<{
@@ -41,11 +42,11 @@ export function ContactsCardDemo() {
 export default function ContactsCard(props: ContactCard) {
     return <Card>
         <CardHeader>Contacts</CardHeader>
-        <div className="divide-y divide-gray-300">
+        <div className="divide-y divide-gray-300 pb-4">
             {
                 props.contacts.map((contact, idx) =>
-                    <div>
-                        <div className="px-4 sm:px-6 pt-5">{getPrecedence(idx)}</div>
+                    <div className="py-3">
+                        <div className="px-4 sm:px-6 text-sm text-gray-600">{titleCase(getPrecedence(idx) ?? "")}:</div>
                         <div key={idx}
                              className="relative bg-white px-6 flex items-center space-x-3"
                         >
@@ -53,7 +54,7 @@ export default function ContactsCard(props: ContactCard) {
                                 <img className="h-10 w-10 rounded-full" src={contact.imageUrl} alt=""/>
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900">{contact.name}</p>
+                                <p className="font-medium text-gray-900">{contact.name}</p>
                                 <p className="text-sm truncate">{contact.role}</p>
                             </div>
                             <a href={`mailto:${contact.email}`}>
