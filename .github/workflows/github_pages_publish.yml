@@ -12,6 +12,7 @@ jobs:
         run: |
           node -v
           npm -v
+          ls -l
           pwd
           yarn
           yarn build
