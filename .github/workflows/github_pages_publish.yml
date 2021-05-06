@@ -10,12 +10,12 @@ jobs:
       - name: Install deps and Build FE 🔧
         working-directory: client
         run: |
-          node -v
-          npm -v
-          yarn -v
+          echo Node version: $(node -v)
+          echo NPM version: $(npm -v)
           yarn set version berry
-          ls -la
-          yarn -v
+          echo yarn version: $(yarn -v)
+          yarn install
+          yarn ghpublish
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
@@ -23,5 +23,5 @@ jobs:
           folder: out # source folder path
           repository-name: gh-pages-frontend # target repo name
           branch: master # target branch name
+          target-folder: docs
           clean: true # cleans the target repo destination
-

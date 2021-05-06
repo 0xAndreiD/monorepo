@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "ghpublish": "next build && next export && rm -rf docs && mv out docs && echo romeano.com > docs/CNAME"
+    "ghpublish": "next build && next export"
   },
   "dependencies": {
     "@headlessui/react": "^1.1.1",

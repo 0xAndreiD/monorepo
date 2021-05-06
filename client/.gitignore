@@ -138,6 +138,9 @@ yarn-error.log*
 #intellij
 .idea/
 
+#nextjs output
+docs/
+
 #yarn v2
 .yarn/
 !.yarn/patches
