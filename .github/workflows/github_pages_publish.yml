@@ -33,8 +33,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install deps 🔧
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn install --immutable
+        run: yarn install --immutable #reinstall because install state doesnt seem to persist
 
       - run: ls -la
       - run: ls -la .yarn
