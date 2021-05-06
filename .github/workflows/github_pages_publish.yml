@@ -18,6 +18,7 @@ jobs:
           echo NPM version: $(npm -v)
           yarn set version berry
           echo yarn version: $(yarn -v)
+          echo Working in directory: $(pwd)
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -33,9 +34,7 @@ jobs:
 
       - name: Install deps 🔧
         if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: |
-          yarn install --immutable
-          yarn ghpublish
+        run: yarn install --immutable
 
       - name: Build FE 🔧
         run: yarn ghpublish
