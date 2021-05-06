@@ -14,11 +14,11 @@ jobs:
 
       - name: Sanity Check + Yarn 2 ✅
         run: |
-          echo Node version: $(node -v)
-          echo NPM version: $(npm -v)
+          echo "  - Node version: $(node -v)"
+          echo "  - NPM version: $(npm -v)"
           yarn set version berry
-          echo yarn version: $(yarn -v)
-          echo Working in directory: $(pwd)
+          echo "  - Yarn version: $(yarn -v)"
+          echo "  - Working in directory: $(pwd)"
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
