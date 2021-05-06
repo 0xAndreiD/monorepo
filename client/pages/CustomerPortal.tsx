@@ -9,19 +9,25 @@ import {ContactsCardDemo} from "../components/ContactsCard";
 import {InternalNotesDemo} from "../components/InternalNotes";
 
 export default function CustomerPortal() {
-    return <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 bg-gray-400">
-        <ProgressStepper/>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-green-600">
-                <NextStepsCardDemo/>
-                <DocumentsCardDemo/>
-                <ProductInfoCardDemo/>
-            </div>
-            <div className="bg-red-500">
-                <ProposalCardDemo/>
-                <ContactsCardDemo/>
-                <InternalNotesDemo/>
+    //container: https://tailwindui.com/components/application-ui/layout/containers
+    return <>
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
+            <ProgressStepper/>
+        </div>
+
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 bg-gray-100">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid gap-4">
+                    <NextStepsCardDemo/>
+                    <DocumentsCardDemo/>
+                    <ProductInfoCardDemo/>
+                </div>
+                <div className="grid gap-4">
+                    <ProposalCardDemo/>
+                    <ContactsCardDemo/>
+                    <InternalNotesDemo/>
+                </div>
             </div>
         </div>
-    </div>;
+    </>;
 }

@@ -1075,6 +1075,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"date-fns@npm:^2.21.2":
+  version: 2.21.2
+  resolution: "date-fns@npm:2.21.2"
+  checksum: 044e5af3aa7e2d4988747c435700a6ebf6b744b75a9d514cb599d5f8f058d69cc43060e008be33ec8a4ebccb8416b8cdfceb6f13800625e2bc2e57da043b2398
+  languageName: node
+  linkType: hard
+
 "debug@npm:2":
   version: 2.6.9
   resolution: "debug@npm:2.6.9"
@@ -3172,6 +3179,7 @@ resolve@^1.20.0:
     "@types/node": ^15.0.2
     "@types/react": ^17.0.5
     autoprefixer: latest
+    date-fns: ^2.21.2
     lodash: ^4.17.21
     next: ^10.2.0
     postcss: latest

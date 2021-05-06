@@ -50,35 +50,33 @@ function classNames(...classes: string[]) {
 export default function ProgressStepper() {
 
     //className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'flex flex-col items-center relative')}>
-    return (
-        <nav aria-label="Progress">
-            <ul className="flex justify-between py-5">
+    return         <nav className="bg-white">
+            <ul style={{gridTemplateRows: "repeat(5, auto)"}}
+                className="grid grid-flow-col place-items-center gap-y-3 gap-x-5 py-5">
                 {steps.map((step, stepIdx) => (
-                    <div className="flex flex-1 flex-col items-center" key={stepIdx}>
-
+                    <>
                         <ProgressStepperElement step={step} stepNum={stepIdx + 1}/>
                         <div className="text-gray-500 text-xs">
                             {step.date ? format(step.date, "MMM d") : "TBD"}
                         </div>
-                        <div className="font-bold text-center">{step.name}</div>
+                        <div className="font-bold">{step.name}</div>
                         <ul className="list-disc pl-7">
                             {
                                 step.items.map((item) => <li>{item}</li>)
                             }
                         </ul>
-                        <div className="text-center py-3">
-                        {
-                            step.href && <a className="text-blue-500 underline"
-                                            href={step.href.href}>
-                                {step.href.body}
-                            </a>
-                        }
+                        <div className="text-center">
+                            {
+                                step.href && <a className="text-blue-500 underline"
+                                                href={step.href.href}>
+                                    {step.href.body}
+                                </a>
+                            }
                         </div>
-                    </div>
+                    </>
                 ))}
             </ul>
-        </nav>
-    );
+        </nav>;
 }
 
 function ProgressStepperElement({step, stepNum}: { step: ProgressStep, stepNum: number }) {
@@ -90,10 +88,10 @@ function ProgressStepperElement({step, stepNum}: { step: ProgressStep, stepNum: 
                 {/*</div>*/}
 
                 <div
-                    className="relative w-8 h-8 flex items-center justify-center bg-white border-2 border-green-600 rounded-full"
+                    className="relative w-16 h-16 flex items-center justify-center bg-white border-2 border-green-600 rounded-full"
                     aria-current="step"
                 >
-                    <span className="text-green-600">{stepNum}</span>
+                    <span className="text-green-600 text-2xl">{stepNum}</span>
                 </div>
             </>;
 
@@ -103,9 +101,9 @@ function ProgressStepperElement({step, stepNum}: { step: ProgressStep, stepNum: 
                 {/*    <div className="h-0.5 w-full bg-gray-200"/>*/}
                 {/*</div>*/}
                 <div
-                    className="relative w-8 h-8 flex items-center justify-center bg-green-600 rounded-full hover:bg-green-900"
+                    className="relative w-16 h-16 flex items-center justify-center bg-green-600 rounded-full hover:bg-green-900"
                 >
-                    <span className="text-white">{stepNum}</span>
+                    <span className="text-white text-2xl">{stepNum}</span>
                 </div>
             </>;
 
@@ -115,11 +113,10 @@ function ProgressStepperElement({step, stepNum}: { step: ProgressStep, stepNum: 
                 {/*    <div className="h-0.5 w-full bg-gray-200"/>*/}
                 {/*</div>*/}
                 <div
-                    className="group relative w-8 h-8 flex items-center justify-center bg-white border-2 border-gray-300 rounded-full hover:border-gray-400"
+                    className="group relative w-16 h-16 flex items-center justify-center bg-white border-2 border-gray-300 rounded-full hover:border-gray-400"
                 >
-                  <span className="bg-transparent rounded-full group-hover:bg-gray-300">
-                      {stepNum}
-                  </span>
+                    <span
+                        className="bg-transparent rounded-full text-2xl group-hover:bg-gray-300">{stepNum}</span>
                 </div>
             </>;
     }
