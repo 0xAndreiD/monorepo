@@ -2,6 +2,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import {Carousel} from 'react-responsive-carousel';
 import {ChevronLeftIcon, ChevronRightIcon} from "@heroicons/react/outline";
 import {CSSProperties} from "react";
+import {Card, CardHeader} from "./card/Card";
 
 type Section = {
     heading: string,
@@ -76,9 +77,9 @@ export function ProductInfoCard(props: ProductInfoCard) {
         cursor: 'pointer',
     };
 
-    return <>
-        <h3>Product Info</h3>
-        <Carousel
+    return <Card>
+        <CardHeader>Product Info</CardHeader>
+        <Carousel className="px-4 sm:px-6"
             infiniteLoop={true}
             showThumbs={false}
             renderArrowPrev={(onClickHandler, hasPrev, label) =>
@@ -101,11 +102,10 @@ export function ProductInfoCard(props: ProductInfoCard) {
         {
             props.sections.map(section =>
                 <>
-                    <h4>{section.heading}</h4>
-                    <ul className="list-disc">
+                    <h4 className="px-4 sm:px-6 pt-2 font-bold">{section.heading}</h4>
+                    <ul className="px-4 sm:px-6 py-1 list-disc">
                         {
-                            section.links.map(link => <li>
-
+                            section.links.map(link => <li className="mx-4">
                                 <a href={link.href} className="text-blue-600 underline">
                                     {link.title}
                                 </a>
@@ -115,7 +115,7 @@ export function ProductInfoCard(props: ProductInfoCard) {
                 </>
             )
         }
-
-    </>;
+        <div className="pb-4"/>
+    </Card>;
 
 }
