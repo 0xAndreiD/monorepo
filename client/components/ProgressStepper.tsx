@@ -50,50 +50,49 @@ function classNames(...classes: string[]) {
 export default function ProgressStepper() {
 
     //className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'flex flex-col items-center relative')}>
-    return         <nav className="bg-white">
-            <ul style={{gridTemplateRows: "repeat(5, auto)"}}
-                className="grid grid-flow-col place-items-center gap-y-3 gap-x-5 py-5">
-                {steps.map((step, stepIdx) => (
-                    <>
-                        <ProgressStepperElement step={step} stepNum={stepIdx + 1}/>
-                        <div className="text-gray-500 text-xs">
-                            {step.date ? format(step.date, "MMM d") : "TBD"}
-                        </div>
-                        <div className="font-bold">{step.name}</div>
-                        <ul className="list-disc pl-7">
-                            {
-                                step.items.map((item) => <li>{item}</li>)
-                            }
-                        </ul>
-                        <div className="text-center">
-                            {
-                                step.href && <a className="text-blue-500 underline"
-                                                href={step.href.href}>
-                                    {step.href.body}
-                                </a>
-                            }
-                        </div>
-                    </>
-                ))}
-            </ul>
-        </nav>;
+    return <nav>
+        <ul style={{gridTemplateRows: "repeat(5, auto)"}}
+            className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5">
+            {steps.map((step, stepIdx) => (
+                <>
+                    <ProgressStepperElement step={step} stepNum={stepIdx + 1}/>
+                    <div className="text-gray-500 text-xs">
+                        {step.date ? format(step.date, "MMM d") : "TBD"}
+                    </div>
+                    <div className="font-bold">{step.name}</div>
+                    <ul className="list-disc pl-7">
+                        {
+                            step.items.map((item) => <li>{item}</li>)
+                        }
+                    </ul>
+                    <div className="text-center">
+                        {
+                            step.href && <a className="text-blue-500 underline"
+                                            href={step.href.href}>
+                                {step.href.body}
+                            </a>
+                        }
+                    </div>
+                </>
+            ))}
+        </ul>
+    </nav>;
 }
 
 function ProgressStepperElement({step, stepNum}: { step: ProgressStep, stepNum: number }) {
     switch (step.status) {
         case CompletionStatus.Complete:
-            return <>
+            return <div>
                 {/*<div className="absolute inset-0 flex items-center" aria-hidden="true">*/}
                 {/*    <div className="h-0.5 w-full bg-green-600"/>*/}
                 {/*</div>*/}
 
                 <div
                     className="relative w-16 h-16 flex items-center justify-center bg-white border-2 border-green-600 rounded-full"
-                    aria-current="step"
                 >
                     <span className="text-green-600 text-2xl">{stepNum}</span>
                 </div>
-            </>;
+            </div>;
 
         case CompletionStatus.InProgress:
             return <>
