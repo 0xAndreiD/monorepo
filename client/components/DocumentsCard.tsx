@@ -31,7 +31,7 @@ type CompanyDocumentList = {
 
 function DocumentList(props: { data: CompanyDocumentList }) {
     return <>
-        <p className="px-4 sm:px-6 max-w-2xl text-sm">for <strong>{props.data.name}</strong></p>
+        <p className="px-4 sm:px-6 max-w-2xl text-sm">for <span className="font-bold">{props.data.name}</span></p>
         <div className="px-4 sm:px-6 py-4 flex justify-self-start gap-1.5">
             {
                 props.data.documents.map((task, idx) =>

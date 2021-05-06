@@ -31,7 +31,7 @@ type CompanyTaskList = {
 
 function TaskList(props: { data: CompanyTaskList }) {
     return <>
-        <p className="px-4 sm:px-6 max-w-2xl text-sm">for <strong>{props.data.name}</strong></p>
+        <p className="px-4 sm:px-6 max-w-2xl text-sm">for <span className="font-bold">{props.data.name}</span></p>
 
         <div className="sm:divide-y sm:divide-gray-200">
             <ul className="py-3 sm:py-3 sm:px-6">
