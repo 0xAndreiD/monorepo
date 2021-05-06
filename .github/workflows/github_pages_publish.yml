@@ -34,7 +34,7 @@ jobs:
       - name: Install deps 🔧
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: |
-          yarn install --frozen-lockfile
+          yarn install --immutable
           yarn ghpublish
 
       - name: Build FE 🔧
