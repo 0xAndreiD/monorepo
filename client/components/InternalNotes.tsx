@@ -1,4 +1,5 @@
-import {ChatAltIcon, PaperAirplaneIcon} from "@heroicons/react/outline";
+import {PaperAirplaneIcon} from "@heroicons/react/outline";
+import CardDivider, {Card, CardHeader} from "./card/Card";
 
 type Root = {
     id: number
@@ -37,54 +38,49 @@ export function InternalNotesDemo() {
 }
 
 export default function InternalNotes(props: { data: Array<Root> }) {
-    return <section aria-labelledby="trending-heading">
-        <div className="bg-white rounded-lg shadow">
-            <div className="p-6">
-                <h2 id="trending-heading" className="text-base font-medium text-gray-900">
-                    Internal Notes & Thoughts
-                </h2>
-                <div className="mt-6 flow-root">
-                    <ul className="-my-4 divide-y divide-gray-200">
-                        {props.data.map((post) => (
-                            <li key={post.id} className="flex py-4 space-x-3">
-                                <div className="flex-shrink-0">
-                                    <img className="h-8 w-8 rounded-full" src={post.user.imageUrl}
-                                         alt={post.user.name}/>
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-sm text-gray-800">{post.body}</p>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                {/*<div className="mt-6">*/}
-                {/*    <a*/}
-                {/*        href="#"*/}
-                {/*        className="w-full block text-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"*/}
-                {/*    >*/}
-                {/*        View all*/}
-                {/*    </a>*/}
-                {/*</div>*/}
-                <div className="mt-6 flex items-center justify-center">
-                    <label htmlFor="phone" className="sr-only">
-                        Phone
-                    </label>
-                    <input
-                        type="text"
-                        name="phone"
-                        id="phone"
-                        autoComplete="tel"
-                        className="block w-full shadow-sm border py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-                        placeholder="Type comment.."
-                    />
+    return <Card>
+        <CardHeader>
+            Internal Notes & Thoughts
+        </CardHeader>
+        <div className="px-4 sm:px-6 pb-3 text-xs text-gray-600">(Not visible to Mira)</div>
 
-                    <div
-                        className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
-                        <PaperAirplaneIcon className="ml-1 mb-1 transform rotate-45 h-6 w-6 text-gray-500"/>
-                    </div>
+        <CardDivider/>
+
+        <div className="px-4 sm:px-6 pb-5">
+            <div className="mt-6 flow-root">
+                <ul className="-my-4">
+                    {props.data.map((post) => (
+                        <li key={post.id} className="flex items-center py-4 space-x-3">
+                            <div className="flex-shrink-0">
+                                <img className="h-8 w-8 rounded-full"
+                                     src={post.user.imageUrl}
+                                     alt={post.user.name}/>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <p className="text-sm text-gray-800 flex items-center"><span className="px-4 py-2 rounded-3xl bg-gray-300">{post.body}</span></p>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            <div className="mt-6 flex gap-2 items-center justify-center">
+                <label htmlFor="phone" className="sr-only">
+                    Phone
+                </label>
+                <input
+                    type="text"
+                    name="phone"
+                    id="phone"
+                    className="block w-full shadow-sm border py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+                    placeholder="Type comment.."
+                />
+
+                <div
+                    className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
+                    <PaperAirplaneIcon className="ml-1 mb-1 transform rotate-45 h-6 w-6 text-gray-500"/>
                 </div>
             </div>
         </div>
-    </section>;
+    </Card>;
 }
