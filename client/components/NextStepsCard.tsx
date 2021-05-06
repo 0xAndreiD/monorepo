@@ -60,7 +60,7 @@ export default function NextStepsCard(props: { customer: CompanyTaskList, vendor
 
         <TaskList data={props.vendor}/>
 
-        <div className="px-4 pb-4">
+        <div className="px-4 sm:px-6 pb-4">
             <button
                 type="button"
                 className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
