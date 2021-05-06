@@ -117,5 +117,4 @@ export function ProductInfoCard(props: ProductInfoCard) {
         }
         <div className="pb-4"/>
     </Card>;
-
 }
