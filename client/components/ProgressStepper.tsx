@@ -1,5 +1,8 @@
 /* This example requires Tailwind CSS v2.0+ */
 
+import {format} from "date-fns";
+
+
 enum CompletionStatus {
     Complete,
     InProgress,
@@ -18,12 +21,14 @@ const steps: ProgressStep[] = [
         name: 'Intro Meeting',
         items: ["Go over Mira's platform."],
         date: new Date(2021, 9, 8),
+        href: {body: "Mira's Slide Deck", href: "#"},
         status: CompletionStatus.Complete
     },
     {
         name: 'AR Headset Demo',
         items: ["Demonstrate a live Mira Connect call from headset."],
         date: new Date(2021, 10, 11),
+        href: {body: "Join Zoom 📞", href: "#"},
         status: CompletionStatus.InProgress
     },
     {
@@ -43,35 +48,46 @@ function classNames(...classes: string[]) {
 }
 
 export default function ProgressStepper() {
+
+    //className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'flex flex-col items-center relative')}>
     return (
         <nav aria-label="Progress">
-            <ol className="flex items-center">
+            <ul className="flex justify-between py-5">
                 {steps.map((step, stepIdx) => (
-                    <li key={step.name}
-                        className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>
+                    <div className="flex flex-1 flex-col items-center" key={stepIdx}>
+
                         <ProgressStepperElement step={step} stepNum={stepIdx + 1}/>
-                        <div>{step.date?.toDateString()}</div>
-                        <div>{step.name}</div>
-                        <ul>
+                        <div className="text-gray-500 text-xs">
+                            {step.date ? format(step.date, "MMM d") : "TBD"}
+                        </div>
+                        <div className="font-bold text-center">{step.name}</div>
+                        <ul className="list-disc pl-7">
                             {
                                 step.items.map((item) => <li>{item}</li>)
                             }
                         </ul>
-                    </li>
+                        <div className="text-center py-3">
+                        {
+                            step.href && <a className="text-blue-500 underline"
+                                            href={step.href.href}>
+                                {step.href.body}
+                            </a>
+                        }
+                        </div>
+                    </div>
                 ))}
-            </ol>
+            </ul>
         </nav>
     );
 }
-
 
 function ProgressStepperElement({step, stepNum}: { step: ProgressStep, stepNum: number }) {
     switch (step.status) {
         case CompletionStatus.Complete:
             return <>
-                <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                    <div className="h-0.5 w-full bg-green-600"/>
-                </div>
+                {/*<div className="absolute inset-0 flex items-center" aria-hidden="true">*/}
+                {/*    <div className="h-0.5 w-full bg-green-600"/>*/}
+                {/*</div>*/}
 
                 <div
                     className="relative w-8 h-8 flex items-center justify-center bg-white border-2 border-green-600 rounded-full"
@@ -83,9 +99,9 @@ function ProgressStepperElement({step, stepNum}: { step: ProgressStep, stepNum: 
 
         case CompletionStatus.InProgress:
             return <>
-                <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                    <div className="h-0.5 w-full bg-gray-200"/>
-                </div>
+                {/*<div className="absolute inset-0 flex items-center" aria-hidden="true">*/}
+                {/*    <div className="h-0.5 w-full bg-gray-200"/>*/}
+                {/*</div>*/}
                 <div
                     className="relative w-8 h-8 flex items-center justify-center bg-green-600 rounded-full hover:bg-green-900"
                 >
@@ -95,9 +111,9 @@ function ProgressStepperElement({step, stepNum}: { step: ProgressStep, stepNum: 
 
         case CompletionStatus.Upcoming:
             return <>
-                <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                    <div className="h-0.5 w-full bg-gray-200"/>
-                </div>
+                {/*<div className="absolute inset-0 flex items-center" aria-hidden="true">*/}
+                {/*    <div className="h-0.5 w-full bg-gray-200"/>*/}
+                {/*</div>*/}
                 <div
                     className="group relative w-8 h-8 flex items-center justify-center bg-white border-2 border-gray-300 rounded-full hover:border-gray-400"
                 >
