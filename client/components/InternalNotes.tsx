@@ -1,5 +1,5 @@
 import {PaperAirplaneIcon} from "@heroicons/react/outline";
-import CardDivider, {Card, CardHeader} from "./card/Card";
+import CardDivider, {Card, CardHeader} from "./generic/Card";
 
 type Root = {
     id: number

@@ -1,5 +1,5 @@
 import {CheckIcon, ChevronUpIcon, XIcon} from "@heroicons/react/solid";
-import CardDivider, {Card, CardHeader} from "./card/Card";
+import CardDivider, {Card, CardHeader} from "./generic/Card";
 import Link from 'next/link';
 
 type Proposal = {

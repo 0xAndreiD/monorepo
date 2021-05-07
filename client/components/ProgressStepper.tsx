@@ -1,7 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 
 import {format} from "date-fns";
-import Link from "./Link";
+import Link from "./generic/Link";
 
 enum CompletionStatus {
     Complete,

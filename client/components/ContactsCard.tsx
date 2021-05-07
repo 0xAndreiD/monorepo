@@ -1,5 +1,5 @@
 import {MailIcon} from "@heroicons/react/outline";
-import {Card, CardHeader} from "./card/Card";
+import {Card, CardHeader} from "./generic/Card";
 import {titleCase} from "../util/text";
 import Link from 'next/link'
 

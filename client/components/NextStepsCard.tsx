@@ -1,7 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 
 import {PlusIcon} from "@heroicons/react/solid";
-import CardDivider, {Card, CardHeader} from "./card/Card";
+import CardDivider, {Card, CardHeader} from "./generic/Card";
 
 export function NextStepsCardDemo() {
     const data = {
