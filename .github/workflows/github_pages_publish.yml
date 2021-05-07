@@ -47,4 +47,5 @@ jobs:
           branch: master # target branch name
           target-folder: docs
           clean: true # cleans the target repo destination
+          clean-exclude: docs/CNAME # file needed for rendering with github pages at demo.romeano.com
           ssh-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
