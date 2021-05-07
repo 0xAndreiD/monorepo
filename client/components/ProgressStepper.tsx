@@ -1,7 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 
 import {format} from "date-fns";
-
+import Link from "./Link";
 
 enum CompletionStatus {
     Complete,
@@ -85,10 +85,10 @@ export default function ProgressStepper() {
                     </ul>
                     <div className="text-center">
                         {
-                            step.href && <a className="text-blue-500 underline"
+                            step.href && <Link
                                             href={step.href.href}>
                                 {step.href.body}
-                            </a>
+                            </Link>
                         }
                     </div>
                 </>

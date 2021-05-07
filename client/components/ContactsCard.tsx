@@ -1,6 +1,7 @@
 import {MailIcon} from "@heroicons/react/outline";
 import {Card, CardHeader} from "./card/Card";
 import {titleCase} from "../util/text";
+import Link from 'next/link'
 
 type ContactCard = {
     contacts: Array<{
@@ -57,12 +58,12 @@ export default function ContactsCard(props: ContactCard) {
                                 <p className="font-medium text-gray-900">{contact.name}</p>
                                 <p className="text-sm truncate">{contact.role}</p>
                             </div>
-                            <a href={`mailto:${contact.email}`}>
+                            <Link href={`mailto:${contact.email}`}>
                                 <div
                                     className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
                                     <MailIcon className="h-4 w-4 text-gray-400"/>
                                 </div>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 )

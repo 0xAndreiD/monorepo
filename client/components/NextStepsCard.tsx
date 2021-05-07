@@ -36,8 +36,8 @@ function TaskList(props: { data: CompanyTaskList }) {
         <div className="sm:divide-y sm:divide-gray-200">
             <ul className="py-3 sm:py-3 sm:px-6">
                 {
-                    props.data.tasks.map(task =>
-                        <li>
+                    props.data.tasks.map((task,idx) =>
+                        <li key={idx}>
                             <input type="checkbox" checked={task.isCompleted}/>
                             <span className="px-2">{task.description}</span>
                         </li>)

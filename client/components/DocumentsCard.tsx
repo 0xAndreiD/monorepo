@@ -2,7 +2,7 @@
 
 import {CheckIcon, CloudUploadIcon} from "@heroicons/react/solid";
 import CardDivider, {Card, CardHeader} from "./card/Card";
-
+import Link from 'next/link'
 export function DocumentsCardDemo() {
     const data = {
         customer:
@@ -35,8 +35,8 @@ function DocumentList(props: { data: CompanyDocumentList }) {
         <div className="px-4 sm:px-6 py-4 flex justify-self-start gap-1.5">
             {
                 props.data.documents.map((task, idx) =>
-                    <span  key={idx}>
-                        <a href={task.href}>
+                    <span key={idx}>
+                        <Link href={task.href}>
                             <button
                                 type="button"
                                 className={"inline-flex items-center px-3 py-2 border shadow-sm text-sm\
@@ -47,7 +47,7 @@ function DocumentList(props: { data: CompanyDocumentList }) {
                                 {task.isCompleted && <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-green-500"/>}
                                 {task.title}
                             </button>
-                        </a>
+                        </Link>
                     </span>
                 )
             }

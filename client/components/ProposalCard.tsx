@@ -1,5 +1,6 @@
 import {CheckIcon, ChevronUpIcon, XIcon} from "@heroicons/react/solid";
 import CardDivider, {Card, CardHeader} from "./card/Card";
+import Link from 'next/link';
 
 type Proposal = {
     description: string,
@@ -80,24 +81,24 @@ function ProposalCard(props: Proposal) {
             <h5 className="px-4 sm:px-6 py-2 font-bold text-center">{props.productCallout}</h5>
             <div className="sm:divide-y sm:divide-gray-200"/>
 
-            <a href={props.quoteHref}>
+            <Link href={props.quoteHref}>
                 <button
                     type="button"
                     className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 >
                     View Quote
                 </button>
-            </a>
+            </Link>
         </div>
         <CardDivider/>
 
         <h4 className="px-4 sm:px-6 font-bold">Key Stakeholders' Approval:</h4>
         <div className="px-4 sm:px-6 py-4 flex gap-3">
             {
-                props.stakeholders.map(stakeholder => {
+                props.stakeholders.map((stakeholder, idx) => {
                         const colour = getColourFromSting(stakeholder.name);
-                        return <div
-                            className={`relative w-8 h-8 flex items-center justify-center 
+                        return <div key={idx}
+                                    className={`relative w-8 h-8 flex items-center justify-center 
                                 bg-${colour}-500 rounded-full hover:bg-${colour}-900`}>
                             <span className="text- text-white">{getInitialsOfName(stakeholder.name)}</span>
                         </div>;
@@ -106,30 +107,31 @@ function ProposalCard(props: Proposal) {
             }
         </div>
 
-        <span className="px-4 sm:px-6 pb-4 flex items-center text-sm text-gray-400">Hide Details <ChevronUpIcon className="h-4 w-4"/></span>
+        <span className="px-4 sm:px-6 pb-4 flex items-center text-sm text-gray-400">Hide Details <ChevronUpIcon
+            className="h-4 w-4"/></span>
 
         <CardDivider/>
 
-        <div className="px-4 sm:px-6 flex gap-2" >
-        <button
-            type="button"
-            className="w-full text-center inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+        <div className="px-4 sm:px-6 flex gap-2">
+            <button
+                type="button"
+                className="w-full text-center inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-        >
-            <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500"/>
-            Approve
-        </button>
+            >
+                <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500"/>
+                Approve
+            </button>
 
-        <button
-            type="button"
-            className="w-full text-center inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+            <button
+                type="button"
+                className="w-full text-center inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-        >
-            <XIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500"/>
-            Decline
-        </button>
+            >
+                <XIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500"/>
+                Decline
+            </button>
         </div>
 
         <div className="py-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -139,11 +141,13 @@ function ProposalCard(props: Proposal) {
                     className="relative rounded-lg bg-white px-6 flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
                 >
                     <div className="flex-1 min-w-0">
-                        <a href="#" className="focus:outline-none">
-                            <span className="absolute inset-0" aria-hidden="true"/>
-                            <p className="text-sm font-medium text-gray-900">{person.name}</p>
-                            <p className="text-sm text-gray-500 truncate">{person.jobTitle}</p>
-                        </a>
+                        <Link href="#">
+                            <>
+                                <span className="absolute inset-0" aria-hidden="true"/>
+                                <p className="text-sm font-medium text-gray-900">{person.name}</p>
+                                <p className="text-sm text-gray-500 truncate">{person.jobTitle}</p>
+                            </>
+                        </Link>
                     </div>
                 </div>
             ))}

@@ -3,6 +3,7 @@ import {Carousel} from 'react-responsive-carousel';
 import {ChevronLeftIcon, ChevronRightIcon} from "@heroicons/react/outline";
 import {CSSProperties} from "react";
 import {Card, CardHeader} from "./card/Card";
+import Link from "./Link";
 
 type Section = {
     heading: string,
@@ -95,24 +96,24 @@ export function ProductInfoCard(props: ProductInfoCard) {
 
         >
             {
-                props.images.map(image => <img src={image} alt=""/>)
+                props.images.map((image,idx) => <img src={image} key={idx} alt=""/>)
             }
         </Carousel>
 
         {
-            props.sections.map(section =>
-                <>
+            props.sections.map((section,idx) =>
+                <div key={idx}>
                     <h4 className="px-4 sm:px-6 pt-2 font-bold">{section.heading}</h4>
                     <ul className="px-4 sm:px-6 py-1 list-disc">
                         {
                             section.links.map(link => <li className="mx-4">
-                                <a href={link.href} className="text-blue-600 underline">
+                                <Link href={link.href}>
                                     {link.title}
-                                </a>
+                                </Link>
                             </li>)
                         }
                     </ul>
-                </>
+                </div>
             )
         }
         <div className="pb-4"/>
