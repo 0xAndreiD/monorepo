@@ -6,6 +6,8 @@ import RevealSection from "./generic/RevealSection";
 import {Dialog} from "@headlessui/react";
 import {AddButton} from "./generic/AddButton";
 import Modal from "./generic/Modal";
+import {getColourFromSting} from "../util/colour";
+import {getInitialsOfName} from "../util/text";
 
 export type Stakeholder = {
     name: string,
@@ -57,38 +59,9 @@ export function ProposalCardDemo() {
     return <ProposalCard {...data}/>;
 }
 
-function getInitialsOfName(name: string) {
-    const parts = name.split(' ');
-
-    switch (parts.length) {
-        case 1:
-            return parts[0][0];
-        case 0:
-            return "";
-        default:
-            return parts[0][0] + parts[1][0];
-    }
-}
-
-function getColourFromSting(seed: string) {
-//colour ref: https://tailwindcss.com/docs/customizing-colors#color-palette-reference
-    const colours = ["grey", "red", "yellow", "green", "blue", "indigo", "purple", "pink"];
-
-    function hashCode(str: string) { // java String#hashCode
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            hash = str.charCodeAt(i) + ((hash << 5) - hash);
-        }
-        return hash;
-    }
-
-    return colours[Math.abs(hashCode(seed)) % colours.length];
-}
-
 function ProposalCard(props: Proposal) {
     const [isDetailsVisible, setDetailsVisible] = useState(true);
     const [isInviteStakeholdersModalOpen, setIsInviteStakeholdersModalOpen] = useState(false);
-
 
     return <Card>
         <div className="flex flex-col items-center pb-6">

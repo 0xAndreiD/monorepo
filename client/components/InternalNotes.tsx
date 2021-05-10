@@ -1,43 +1,46 @@
 import {PaperAirplaneIcon} from "@heroicons/react/outline";
 import CardDivider, {Card, CardHeader} from "./generic/Card";
+import {getColourFromSting} from "../util/colour";
+import {getInitialsOfName} from "../util/text";
 
-type Root = {
+type ChatMessage = {
     id: number
     user: User
-    body: string
+    body: string,
+    timestamp: number, //seconds since unix epoch
 }
 
 export type User = {
+    id: number,
     name: string
-    imageUrl: string
 }
 
 export function InternalNotesDemo() {
-    const trendingPosts = [
+    const trendingPosts: ChatMessage[] = [
         {
             id: 1,
             user: {
+                id: 1,
                 name: 'Wally Iris',
-                imageUrl:
-                    'https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
             },
             body: 'I wonder how difficult it is to learn how to use the headset',
+            timestamp: 1620651346
         },
 
         {
-            id: 1,
+            id: 2,
             user: {
+                id: 2,
                 name: 'Penelope Star',
-                imageUrl:
-                    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixqx=zu5KYgzszJ&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
             },
             body: "Let's ask during our demo call on Wed",
+            timestamp: 1620651358
         },
     ];
-    return <InternalNotes data={trendingPosts}/>;
+    return <InternalNotes messages={trendingPosts}/>;
 }
 
-export default function InternalNotes(props: { data: Array<Root> }) {
+export default function InternalNotes(props: { messages: Array<ChatMessage> }) {
     return <Card>
         <CardHeader>
             Internal Notes & Thoughts
@@ -47,20 +50,24 @@ export default function InternalNotes(props: { data: Array<Root> }) {
         <CardDivider/>
 
         <div className="pb-5">
-            <div className="mt-6 flow-root">
+            <div className="flow-root">
                 <ul className="-my-4">
-                    {props.data.map((post) => (
-                        <li key={post.id} className="flex items-center py-4 space-x-3">
-                            <div className="flex-shrink-0">
-                                <img className="h-8 w-8 rounded-full"
-                                     src={post.user.imageUrl}
-                                     alt={post.user.name}/>
-                            </div>
-                            <div className="min-w-0 flex-1">
-                                <p className="text-sm text-gray-800 flex items-center"><span className="px-4 py-2 rounded-3xl bg-gray-300">{post.body}</span></p>
-                            </div>
-                        </li>
-                    ))}
+                    {
+                        props.messages.map((post) => {
+                            const colour = getColourFromSting(post.user.name);
+
+                            return <li key={post.id} className="flex items-center py-4 space-x-3">
+                                <div className={`relative w-8 h-8 text-sm flex items-center justify-center 
+                                bg-${colour}-500 rounded-full hover:bg-${colour}-900`}>
+                                    <span className="text-white">{getInitialsOfName(post.user.name)}</span>
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-sm text-gray-800 flex items-center"><span
+                                        className="px-4 py-2 rounded-3xl bg-gray-300">{post.body}</span></p>
+                                </div>
+                            </li>;
+                        })
+                    }
                 </ul>
             </div>
 
@@ -79,7 +86,7 @@ export default function InternalNotes(props: { data: Array<Root> }) {
                 <div
                     className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
                     <PaperAirplaneIcon
-                        fill='#00ddb9'
+                        fill="#00ddb9"
                         className="ml-1 mb-1 transform rotate-45 h-6 w-6 text-green-400"/>
                 </div>
             </div>
