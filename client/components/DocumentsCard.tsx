@@ -2,7 +2,8 @@
 
 import {CheckIcon, CloudUploadIcon} from "@heroicons/react/solid";
 import CardDivider, {Card, CardHeader} from "./generic/Card";
-import Link from 'next/link'
+import Link from 'next/link';
+
 export function DocumentsCardDemo() {
     const data = {
         customer:
@@ -31,8 +32,8 @@ type CompanyDocumentList = {
 
 function DocumentList(props: { data: CompanyDocumentList }) {
     return <>
-        <p className="px-4 sm:px-6 max-w-2xl text-sm">for <span className="font-bold">{props.data.name}</span></p>
-        <div className="px-4 sm:px-6 py-4 flex justify-self-start gap-1.5">
+        <p className="max-w-2xl pt-4 text-sm">for <span className="font-bold">{props.data.name}</span></p>
+        <div className="py-4 flex justify-self-start gap-1.5">
             {
                 props.data.documents.map((task, idx) =>
                     <span key={idx}>
@@ -58,13 +59,13 @@ function DocumentList(props: { data: CompanyDocumentList }) {
 export default function DocumentsCard(props: { customer: CompanyDocumentList, vendor: CompanyDocumentList }) {
 //reference: https://tailwindui.com/components/application-ui/data-display/title-lists#component-e1b5917b21bbe76a73a96c5ca876225f
     return <Card>
-        <CardHeader> Documents </CardHeader>
+        <CardHeader>Documents </CardHeader>
 
         <DocumentList data={props.customer}/>
         <CardDivider/>
         <DocumentList data={props.vendor}/>
 
-        <div className="px-4 sm:px-6 pb-4">
+        <div>
             <button
                 type="button"
                 className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm

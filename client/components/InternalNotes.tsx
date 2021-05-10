@@ -42,11 +42,11 @@ export default function InternalNotes(props: { data: Array<Root> }) {
         <CardHeader>
             Internal Notes & Thoughts
         </CardHeader>
-        <div className="px-4 sm:px-6 pb-3 text-xs text-gray-600">(Not visible to Mira)</div>
+        <div className="pb-3 text-xs text-gray-600">(Not visible to Mira)</div>
 
         <CardDivider/>
 
-        <div className="px-4 sm:px-6 pb-5">
+        <div className="pb-5">
             <div className="mt-6 flow-root">
                 <ul className="-my-4">
                     {props.data.map((post) => (

@@ -17,7 +17,7 @@ export function CardHeader(props: PropsWithChildren<{
     // return <h3 className="text-lg leading-6 font-bold text-gray-900">Next Steps</h3>;
 
     return <div style={props.style}
-                className={props.classNameOverride || `${props.classNameAddition ?? ""} text-lg leading-6 font-bold text-gray-900 px-4 py-4 sm:px-6`}>
+                className={props.classNameOverride || `${props.classNameAddition ?? ""} text-lg leading-6 font-bold text-gray-900`}>
         {props.children}
     </div>;
 }
@@ -26,7 +26,7 @@ export default function CardDivider() {
     return (
         <div className="relative">
             <div className="flex justify-center" aria-hidden="true">
-                <div className="border-t pt-4 w-11/12 border-gray-300"/>
+                <div className="border-t pt-4 w-full border-gray-300"/>
             </div>
         </div>
     );

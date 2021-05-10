@@ -1,6 +1,8 @@
 import {CheckIcon, ChevronUpIcon, XIcon} from "@heroicons/react/solid";
 import CardDivider, {Card, CardHeader} from "./generic/Card";
 import Link from 'next/link';
+import {useState} from "react";
+import RevealSection from "./generic/RevealSection";
 
 type Proposal = {
     description: string,
@@ -74,11 +76,13 @@ function getColourFromSting(seed: string) {
 }
 
 function ProposalCard(props: Proposal) {
+    const [isDetailsVisible, setDetailsVisible] = useState(true);
+
     return <Card>
         <div className="flex flex-col items-center pb-6">
             <CardHeader>Proposal</CardHeader>
-            <h5 className="px-4 sm:px-6 text-center">{props.description}</h5>
-            <h5 className="px-4 sm:px-6 py-2 font-bold text-center">{props.productCallout}</h5>
+            <h5 className="text-center">{props.description}</h5>
+            <h5 className="py-2 font-bold text-center">{props.productCallout}</h5>
             <div className="sm:divide-y sm:divide-gray-200"/>
 
             <Link href={props.quoteHref}>
@@ -92,8 +96,8 @@ function ProposalCard(props: Proposal) {
         </div>
         <CardDivider/>
 
-        <h4 className="px-4 sm:px-6 font-bold">Key Stakeholders' Approval:</h4>
-        <div className="px-4 sm:px-6 py-4 flex gap-3">
+        <h4 className="font-bold">Key Stakeholders' Approval:</h4>
+        <div className="py-4 flex gap-3">
             {
                 props.stakeholders.map((stakeholder, idx) => {
                         const colour = getColourFromSting(stakeholder.name);
@@ -107,50 +111,53 @@ function ProposalCard(props: Proposal) {
             }
         </div>
 
-        <span className="px-4 sm:px-6 pb-4 flex items-center text-sm text-gray-400">Hide Details <ChevronUpIcon
-            className="h-4 w-4"/></span>
 
-        <CardDivider/>
+        <RevealSection isRevealed={isDetailsVisible}
+                       setter={setDetailsVisible}>
 
-        <div className="px-4 sm:px-6 flex gap-2">
-            <button
-                type="button"
-                className="w-full text-center inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+            <CardDivider/>
+
+            <div className="flex gap-2">
+                <button
+                    type="button"
+                    className="w-full text-center inline flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
-                <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500"/>
-                Approve
-            </button>
-
-            <button
-                type="button"
-                className="w-full text-center inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
-             leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
-                <XIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500"/>
-                Decline
-            </button>
-        </div>
-
-        <div className="py-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {props.stakeholders.map((person) => (
-                <div
-                    key={person.email}
-                    className="relative rounded-lg bg-white px-6 flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
                 >
-                    <div className="flex-1 min-w-0">
-                        <Link href="#">
-                            <>
-                                <span className="absolute inset-0" aria-hidden="true"/>
-                                <p className="text-sm font-medium text-gray-900">{person.name}</p>
-                                <p className="text-sm text-gray-500 truncate">{person.jobTitle}</p>
-                            </>
-                        </Link>
+                    <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500"/>
+                    <span className="flex-1">Approve</span>
+                </button>
+
+                <button
+                    type="button"
+                    className="w-full text-center inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+             leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                >
+                    <XIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500"/>
+                    <span className="flex-1">Decline</span>
+                </button>
+            </div>
+
+            <div className="pt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {props.stakeholders.map((person) => (
+                    <div
+                        key={person.email}
+                        className="relative rounded-lg bg-white flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                    >
+                        <div className="flex-1 min-w-0">
+                            <Link href="#">
+                                <>
+                                    <span className="absolute inset-0" aria-hidden="true"/>
+                                    <p className="text-sm font-medium text-gray-900">{person.name}</p>
+                                    <p className="text-sm text-gray-500 truncate">{person.jobTitle}</p>
+                                </>
+                            </Link>
+                        </div>
                     </div>
-                </div>
-            ))}
-        </div>
+                ))}
+            </div>
+        </RevealSection>
+
     </Card>;
 }

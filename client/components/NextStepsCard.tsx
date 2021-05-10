@@ -31,10 +31,10 @@ type CompanyTaskList = {
 
 function TaskList(props: { data: CompanyTaskList }) {
     return <>
-        <p className="px-4 sm:px-6 max-w-2xl text-sm">for <span className="font-bold">{props.data.name}</span></p>
+        <p className="max-w-2xl pt-4 text-sm">for <span className="font-bold">{props.data.name}</span></p>
 
         <div className="sm:divide-y sm:divide-gray-200">
-            <ul className="py-3 sm:py-3 sm:px-6">
+            <ul className="py-3 sm:py-3">
                 {
                     props.data.tasks.map((task,idx) =>
                         <li key={idx}>
@@ -52,7 +52,7 @@ export default function NextStepsCard(props: { customer: CompanyTaskList, vendor
 //reference: https://tailwindui.com/components/application-ui/data-display/description-lists#component-e1b5917b21bbe76a73a96c5ca876225f
     return <Card>
 
-        <CardHeader> Next Steps </CardHeader>
+        <CardHeader>Next Steps</CardHeader>
 
         <TaskList data={props.customer}/>
 
@@ -60,7 +60,7 @@ export default function NextStepsCard(props: { customer: CompanyTaskList, vendor
 
         <TaskList data={props.vendor}/>
 
-        <div className="px-4 sm:px-6 pb-4">
+        <div>
             <button
                 type="button"
                 className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm

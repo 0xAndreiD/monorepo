@@ -80,7 +80,7 @@ export function ProductInfoCard(props: ProductInfoCard) {
 
     return <Card>
         <CardHeader>Product Info</CardHeader>
-        <Carousel className="px-4 sm:px-6"
+        <Carousel
             infiniteLoop={true}
             showThumbs={false}
             renderArrowPrev={(onClickHandler, hasPrev, label) =>
@@ -103,8 +103,8 @@ export function ProductInfoCard(props: ProductInfoCard) {
         {
             props.sections.map((section,idx) =>
                 <div key={idx}>
-                    <h4 className="px-4 sm:px-6 pt-2 font-bold">{section.heading}</h4>
-                    <ul className="px-4 sm:px-6 py-1 list-disc">
+                    <h4 className="pt-2 font-bold">{section.heading}</h4>
+                    <ul className="py-1 list-disc">
                         {
                             section.links.map(link => <li className="mx-4">
                                 <Link href={link.href}>
@@ -116,6 +116,5 @@ export function ProductInfoCard(props: ProductInfoCard) {
                 </div>
             )
         }
-        <div className="pb-4"/>
     </Card>;
 }

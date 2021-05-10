@@ -43,13 +43,13 @@ export function ContactsCardDemo() {
 export default function ContactsCard(props: ContactCard) {
     return <Card>
         <CardHeader>Contacts</CardHeader>
-        <div className="divide-y divide-gray-300 pb-4">
+        <div className="divide-y divide-gray-300">
             {
                 props.contacts.map((contact, idx) =>
                     <div className="py-3">
-                        <div className="px-4 sm:px-6 text-sm text-gray-600">{titleCase(getPrecedence(idx) ?? "")}:</div>
+                        <div className="text-sm text-gray-600 pb-2">{titleCase(getPrecedence(idx) ?? "")}:</div>
                         <div key={idx}
-                             className="relative bg-white px-6 flex items-center space-x-3"
+                             className="relative bg-white flex items-center space-x-3"
                         >
                             <div className="flex-shrink-0">
                                 <img className="h-10 w-10 rounded-full" src={contact.imageUrl} alt=""/>
