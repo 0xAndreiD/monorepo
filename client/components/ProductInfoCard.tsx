@@ -81,6 +81,8 @@ export function ProductInfoCard(props: ProductInfoCard) {
         <Carousel
             infiniteLoop={true}
             showThumbs={false}
+            showStatus={false}
+            showIndicators={false}
             renderArrowPrev={(onClickHandler, hasPrev, label) =>
                 <button onClick={onClickHandler}
                         style={{...style, left: 15}}>
@@ -94,12 +96,12 @@ export function ProductInfoCard(props: ProductInfoCard) {
 
         >
             {
-                props.images.map((image,idx) => <img src={image} key={idx} alt=""/>)
+                props.images.map((image, idx) => <img src={image} key={idx} alt=""/>)
             }
         </Carousel>
 
         {
-            props.sections.map((section,idx) =>
+            props.sections.map((section, idx) =>
                 <div key={idx}>
                     <h4 className="pt-2 font-bold">{section.heading}</h4>
                     <ul className="py-1 list-disc">
