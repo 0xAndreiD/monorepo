@@ -42,7 +42,7 @@ export default function InternalNotes(props: { data: Array<Root> }) {
         <CardHeader>
             Internal Notes & Thoughts
         </CardHeader>
-        <div className="pb-3 text-xs text-gray-600">(Not visible to Mira)</div>
+        <div className="py-3 text-xs text-gray-600">(Not visible to Mira)</div>
 
         <CardDivider/>
 

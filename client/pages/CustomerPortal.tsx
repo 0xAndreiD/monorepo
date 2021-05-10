@@ -3,7 +3,7 @@ import 'tailwindcss/tailwind.css';
 import {NextStepsCardDemo} from "../components/NextStepsCard";
 import {DocumentsCardDemo} from "../components/DocumentsCard";
 import {ProposalCardDemo} from "../components/ProposalCard";
-import ProgressStepper from "../components/ProgressStepper";
+import LaunchRoadmap from "../components/LaunchRoadmap";
 import {ProductInfoCardDemo} from "../components/ProductInfoCard";
 import {ContactsCardDemo} from "../components/ContactsCard";
 import {InternalNotesDemo} from "../components/InternalNotes";
@@ -12,7 +12,7 @@ export default function CustomerPortal() {
     //container: https://tailwindui.com/components/application-ui/layout/containers
     return <>
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
-            <ProgressStepper/>
+            <LaunchRoadmap/>
         </div>
 
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 bg-gray-100">

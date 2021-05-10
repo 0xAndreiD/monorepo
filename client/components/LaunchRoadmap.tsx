@@ -9,14 +9,14 @@ enum CompletionStatus {
     Upcoming
 }
 
-type ProgressStep = {
+type LaunchStep = {
     name: string,
     items: string[],
     date?: Date,
     href?: { body: string, href: string },
     status: CompletionStatus
 }
-const steps: ProgressStep[] = [
+const steps: LaunchStep[] = [
     {
         name: 'Intro Meeting',
         items: ["Go over Mira's platform."],
@@ -47,10 +47,9 @@ function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
 }
 
-export default function ProgressStepper() {
-
-
+export default function LaunchRoadmap() {
     return <nav>
+        <h1 className="text-lg font-bold">Launch Roadmap</h1>
         {/*<ol className="flex justify-around gap-x-5 px-11 items-center">*/}
         {/*    {*/}
         {/*        steps.map((step, stepIdx) =>*/}
@@ -70,7 +69,7 @@ export default function ProgressStepper() {
 
                     <div key={step.name}>
                          {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
-                        <ProgressStepperElement step={step} stepNum={stepIdx + 1}/>
+                        <LaunchStepCircle step={step} stepNum={stepIdx + 1}/>
                     </div>
 
 
@@ -97,7 +96,7 @@ export default function ProgressStepper() {
     </nav>;
 }
 
-function ProgressStepperElement({step, stepNum}: { step: ProgressStep, stepNum: number }) {
+function LaunchStepCircle({step, stepNum}: { step: LaunchStep, stepNum: number }) {
     switch (step.status) {
         case CompletionStatus.Complete:
             return <div>
