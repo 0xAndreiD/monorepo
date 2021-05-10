@@ -3,6 +3,8 @@
 import {CheckIcon, CloudUploadIcon} from "@heroicons/react/solid";
 import CardDivider, {Card, CardHeader} from "./generic/Card";
 import Link from 'next/link';
+import {useState} from "react";
+import {useDropzone} from "react-dropzone";
 
 export function DocumentsCardDemo() {
     const data = {
@@ -58,15 +60,18 @@ function DocumentList(props: { data: CompanyDocumentList }) {
 
 export default function DocumentsCard(props: { customer: CompanyDocumentList, vendor: CompanyDocumentList }) {
 //reference: https://tailwindui.com/components/application-ui/data-display/title-lists#component-e1b5917b21bbe76a73a96c5ca876225f
+    const {getRootProps, getInputProps, open, acceptedFiles} = useDropzone();
+
     return <Card>
         <CardHeader>Documents </CardHeader>
 
         <DocumentList data={props.customer}/>
         <CardDivider/>
         <DocumentList data={props.vendor}/>
-
-        <div>
+        <div {...getRootProps({className: 'dropzone'})}>
+            <input {...getInputProps()} />
             <button
+                onClick={open}
                 type="button"
                 className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
