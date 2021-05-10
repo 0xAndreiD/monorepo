@@ -8,6 +8,5 @@ export default function Home() {
         {/*<Example/>*/}
         {/*<a href="//google.com">hello</a>*/}
         <CustomerPortal/>
-
     </>;
 }

@@ -8,11 +8,15 @@ import {ProductInfoCardDemo} from "../components/ProductInfoCard";
 import {ContactsCardDemo} from "../components/ContactsCard";
 import {InternalNotesDemo} from "../components/InternalNotes";
 import {Footer} from "../components/Footer";
+import {Header} from "../components/Header";
+import CardDivider from "../components/generic/Card";
 
 export default function CustomerPortal() {
     //container: https://tailwindui.com/components/application-ui/layout/containers
     return <>
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
+            <Header/>
+            <div className="py-3"><CardDivider/></div>
             <LaunchRoadmap/>
         </div>
 
