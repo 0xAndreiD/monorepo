@@ -19,14 +19,12 @@ export function ProductInfoCardDemo() {
 
     const data = {
         images: [
-            "https://brainhubeu.github.io/react-carousel/static/mona-7a1ceae9bdb8c43272eb101c091c5408.jpg",
-            "https://brainhubeu.github.io/react-carousel/static/scream-ee207a05c1e6fed03aafa156cc511abe.jpg",
-            "https://brainhubeu.github.io/react-carousel/static/starry-night-39eed0a107ddb6c9f980eb3081a8bdd3.jpg",
-            /*
+            // "https://brainhubeu.github.io/react-carousel/static/mona-7a1ceae9bdb8c43272eb101c091c5408.jpg",
+            // "https://brainhubeu.github.io/react-carousel/static/scream-ee207a05c1e6fed03aafa156cc511abe.jpg",
+            // "https://brainhubeu.github.io/react-carousel/static/starry-night-39eed0a107ddb6c9f980eb3081a8bdd3.jpg",
             "https://www.aniwaa.com/wp-content/uploads/2018/06/AR-glasses-smartphone-Mira-Prism-side.jpg",
-            "https://mk0uploadvrcom4bcwhj.kinstacdn.com/wp-content/uploads/2017/07/mira-headset-image-2.jpg",
+            "https://www.dhresource.com/0x0/f2/albu/g6/M00/D9/44/rBVaR1vhNjmAZBd_AAG1Wfrn4Go755.jpg/top-seller-2018-ar-glasses-mira-prism-ar.jpg",
             "https://www.red-dot.org/index.php?f=37089&token=699949922eb8083e9bb5a3f67081e12da55eecff&eID=tx_solr_image&size=large&usage=hero",
-             */
         ],
         sections: [
             {
@@ -106,7 +104,7 @@ export function ProductInfoCard(props: ProductInfoCard) {
                     <h4 className="pt-2 font-bold">{section.heading}</h4>
                     <ul className="py-1 list-disc">
                         {
-                            section.links.map(link => <li className="mx-4">
+                            section.links.map(link => <li className="mx-4 text-sm">
                                 <Link href={link.href}>
                                     {link.title}
                                 </Link>
