@@ -7,6 +7,7 @@ import LaunchRoadmap from "../components/LaunchRoadmap";
 import {ProductInfoCardDemo} from "../components/ProductInfoCard";
 import {ContactsCardDemo} from "../components/ContactsCard";
 import {InternalNotesDemo} from "../components/InternalNotes";
+import {Footer} from "../components/Footer";
 
 export default function CustomerPortal() {
     //container: https://tailwindui.com/components/application-ui/layout/containers
@@ -27,6 +28,9 @@ export default function CustomerPortal() {
                     <ContactsCardDemo/>
                     <InternalNotesDemo/>
                 </div>
+            </div>
+            <div className="pt-4">
+                <Footer/>
             </div>
         </div>
     </>;

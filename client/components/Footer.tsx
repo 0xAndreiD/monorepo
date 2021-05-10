@@ -1,25 +1,13 @@
+import Link from 'next/link';
 import React from 'react';
 
+export function Footer() {
+    return <Link href="https://romeano.com">
+        <div className="flex justify-center items-center gap-2">
+            <span className="text-gray-400 text-sm font-bold">Powered by
 
-
-
-// export function Footer() {
-//     const classes = useStyles();
-//     return <Container maxWidth="md" component="footer" className={classes.footer}>
-//         <CopyrightComponent/>
-//     </Container>
-// }
-//
-// function CopyrightComponent() {
-//     return <>
-//         <Typography variant="body1" color="textSecondary" align="center">
-//             Made with ♥ in SF
-//         </Typography>
-//         <Typography variant="body2" color="textSecondary" align="center">
-//             {`Copyright © ${new Date().getFullYear()} `}
-//             <Link color="inherit" href="https://romeano.com">
-//                 romeano
-//             </Link>
-//         </Typography>
-//     </>
-// }
+            </span>
+            <img alt="logo" src="/logo.png" height={44} width={106}/>
+        </div>
+    </Link>;
+}
