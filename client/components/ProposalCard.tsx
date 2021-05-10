@@ -51,7 +51,7 @@ export function ProposalCardDemo() {
                 name: "Penelope Star",
                 jobTitle: "Plant Manager",
                 email: "penelope@mira.com",
-                isApprovedBy: true
+                isApprovedBy: false
             }
         ]
     };
@@ -89,7 +89,16 @@ function ProposalCard(props: Proposal) {
                         return <div key={idx}
                                     className={`relative w-10 h-10 flex items-center justify-center 
                                 bg-${colour}-500 rounded-full hover:bg-${colour}-900`}>
-                            <span className="text-white">{getInitialsOfName(stakeholder.name)}</span>
+                            <span className="text-white static">{getInitialsOfName(stakeholder.name)}</span>
+
+                            {
+                                stakeholder.isApprovedBy ?
+                                    <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-green-500">
+                                        <CheckIcon className="text-white "/>
+                                    </div>
+                                    :
+                                    <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-gray-300"/>
+                            }
                         </div>;
                     }
                 )
