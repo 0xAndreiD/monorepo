@@ -2,6 +2,7 @@
 
 import CardDivider, {Card, CardHeader} from "./generic/Card";
 import {AddButton} from "./generic/AddButton";
+import {TrashIcon} from "@heroicons/react/outline";
 
 export function NextStepsCardDemo() {
     const data = {
@@ -29,7 +30,7 @@ type CompanyTaskList = {
     tasks: Array<{ description: string, isCompleted: boolean }>
 }
 
-function TaskList(props: { data: CompanyTaskList }) {
+function TaskList(props: { isElementDeletable: boolean, data: CompanyTaskList }) {
     return <>
         <p className="max-w-2xl pt-4 text-sm">for <span className="font-bold">{props.data.name}</span></p>
 
@@ -37,9 +38,11 @@ function TaskList(props: { data: CompanyTaskList }) {
             <ul className="py-3 sm:py-3">
                 {
                     props.data.tasks.map((task, idx) =>
-                        <li key={idx}>
+                        <li key={idx} className="flex items-center">
                             <input type="checkbox" checked={task.isCompleted}/>
                             <span className="px-2">{task.description}</span>
+                            {props.isElementDeletable &&
+                            <TrashIcon style={{marginLeft: "auto"}} className="w-4 h-4 text-gray-400"/>}
                         </li>)
                 }
             </ul>
@@ -54,13 +57,13 @@ export default function NextStepsCard(props: { customer: CompanyTaskList, vendor
 
         <CardHeader>Next Steps</CardHeader>
 
-        <TaskList data={props.customer}/>
+        <TaskList isElementDeletable={false} data={props.customer}/>
 
         <CardDivider/>
 
-        <TaskList data={props.vendor}/>
+        <TaskList isElementDeletable={true} data={props.vendor}/>
 
         <AddButton/>
-        
+
     </Card>;
 }
