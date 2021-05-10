@@ -49,7 +49,14 @@ function classNames(...classes: string[]) {
 
 export default function LaunchRoadmap() {
     return <nav>
-        <h1 className="text-lg font-bold">Launch Roadmap</h1>
+        <div className="flex justify-between">
+            <h1 className="text-lg font-bold">Launch Roadmap</h1>
+            <div className="flex gap-1 font-bold">
+                <span className="text-gray-900">{steps.filter(step => step.status !== CompletionStatus.Upcoming).length}</span>
+                <span className="text-gray-400">/</span>
+                <span className="text-gray-400">4</span>
+            </div>
+        </div>
         {/*<ol className="flex justify-around gap-x-5 px-11 items-center">*/}
         {/*    {*/}
         {/*        steps.map((step, stepIdx) =>*/}
@@ -60,15 +67,15 @@ export default function LaunchRoadmap() {
         {/*        )*/}
         {/*    }*/}
         {/*</ol>*/}
-        <ul style={{gridTemplateRows: "repeat(5, auto)",gridAutoColumns: "1fr"}}
-        // <ul style={{gridTemplateRows: "repeat(4, auto)", gridAutoColumns: "1fr"}}
+        <ul style={{gridTemplateRows: "repeat(5, auto)", gridAutoColumns: "1fr"}}
+            // <ul style={{gridTemplateRows: "repeat(4, auto)", gridAutoColumns: "1fr"}}
             className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5">
             {steps.map((step, stepIdx) => (
                 <>
 
 
                     <div key={step.name}>
-                         {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
+                        {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
                         <LaunchStepCircle step={step} stepNum={stepIdx + 1}/>
                     </div>
 
@@ -85,7 +92,7 @@ export default function LaunchRoadmap() {
                     <div className="text-center">
                         {
                             step.href && <Link
-                                            href={step.href.href}>
+                                href={step.href.href}>
                                 {step.href.body}
                             </Link>
                         }
