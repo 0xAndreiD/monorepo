@@ -1,7 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 
-import {PlusIcon} from "@heroicons/react/solid";
 import CardDivider, {Card, CardHeader} from "./generic/Card";
+import {AddButton} from "./generic/AddButton";
 
 export function NextStepsCardDemo() {
     const data = {
@@ -36,7 +36,7 @@ function TaskList(props: { data: CompanyTaskList }) {
         <div className="sm:divide-y sm:divide-gray-200">
             <ul className="py-3 sm:py-3">
                 {
-                    props.data.tasks.map((task,idx) =>
+                    props.data.tasks.map((task, idx) =>
                         <li key={idx}>
                             <input type="checkbox" checked={task.isCompleted}/>
                             <span className="px-2">{task.description}</span>
@@ -60,16 +60,7 @@ export default function NextStepsCard(props: { customer: CompanyTaskList, vendor
 
         <TaskList data={props.vendor}/>
 
-        <div>
-            <button
-                type="button"
-                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
-             leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
-                <PlusIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true"/>
-                Add
-            </button>
-        </div>
+        <AddButton/>
+        
     </Card>;
 }
