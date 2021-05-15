@@ -27,6 +27,14 @@ Note: we use port 8081 for accessing [mitmweb](https://mitmproxy.readthedocs.io/
 
 ### Server setup
 
+#### Local Setup
+
+##### DB
+```
+prisma migrate dev --name init
+prisma db seed --preview-feature
+```
+
 ```bash
 apt update && apt install -y curl git tmux mosh #tmux for logging, mosh for fast ssh
 
