@@ -30,11 +30,11 @@ export const queryResolvers: QueryResolvers = {
             );
         }
 
-        return portal.roadmapStages.map((x, idx) => ({
-            heading: x.heading,
-            date: x.date.toString(),
-            tasks: x.tasks as any,
-            ctaLink: x.ctaLinkText && x.ctaLink ? {body: x.ctaLinkText, href: x.ctaLink} : null,
+        return portal.roadmapStages.map((stage, idx) => ({
+            heading: stage.heading,
+            date: stage.date?.toString() ?? "TBD",
+            tasks: stage.tasks.map(task => task.task),
+            ctaLink: stage.ctaLinkText && stage.ctaLink ? {body: stage.ctaLinkText, href: stage.ctaLink} : null,
             status: portal.currentRoadmapStage - 1 === idx ? CompletionStatus.InProgress :
                 portal.currentRoadmapStage - 1 < idx ? CompletionStatus.Complete : CompletionStatus.Upcoming
         }));
