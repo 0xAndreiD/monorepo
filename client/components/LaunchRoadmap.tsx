@@ -2,57 +2,60 @@
 
 import {format} from "date-fns";
 import Link from "./generic/Link";
-
-enum CompletionStatus {
-    Complete,
-    InProgress,
-    Upcoming
-}
-
-type LaunchStep = {
-    heading: string,
-    items: string[],
-    date?: Date,
-    ctaLink?: { body: string, href: string },
-    status: CompletionStatus
-}
-const steps: LaunchStep[] = [
-    {
-        heading: 'Intro Meeting',
-        items: ["Go over Mira's platform."],
-        date: new Date(2021, 9, 8),
-        ctaLink: {body: "Mira's Slide Deck", href: "#"},
-        status: CompletionStatus.Complete
-    },
-    {
-        heading: 'AR Headset Demo',
-        items: ["Demonstrate a live Mira Connect call from headset."],
-        date: new Date(2021, 10, 11),
-        ctaLink: {body: "Join Zoom 📞", href: "#"},
-        status: CompletionStatus.InProgress
-    },
-    {
-        heading: 'Use-Case Planning Workshop',
-        items: ["Define problem and primary use-case Mira will be used for."],
-        status: CompletionStatus.Upcoming
-    },
-    {
-        heading: 'Pilot Package Purchase',
-        items: ["Quote attached below"],
-        status: CompletionStatus.Upcoming
-    },
-];
+import {CompletionStatus, LaunchStep} from "../src/generated/graphql";
+import React from "react";
+//
+// enum CompletionStatus {
+//     Complete,
+//     InProgress,
+//     Upcoming
+// }
+//
+// type RoadmapStage = {
+//     heading: string,
+//     date?: Date,
+//     tasks: string[],
+//     ctaLink?: { body: string, href: string },
+//     status: CompletionStatus
+// }
+// const steps: RoadmapStage[] = [
+//     {
+//         heading: 'Intro Meeting',
+//         date: new Date(2021, 9, 8),
+//         tasks: ["Go over Mira's platform."],
+//         ctaLink: {body: "Mira's Slide Deck", href: "#"},
+//         status: CompletionStatus.Complete
+//     },
+//     {
+//         heading: 'AR Headset Demo',
+//         date: new Date(2021, 10, 11),
+//         tasks: ["Demonstrate a live Mira Connect call from headset."],
+//         ctaLink: {body: "Join Zoom 📞", href: "#"},
+//         status: CompletionStatus.InProgress
+//     },
+//     {
+//         heading: 'Use-Case Planning Workshop',
+//         tasks: ["Define problem and primary use-case Mira will be used for."],
+//         status: CompletionStatus.Upcoming
+//     },
+//     {
+//         heading: 'Pilot Package Purchase',
+//         tasks: ["Quote attached below"],
+//         status: CompletionStatus.Upcoming
+//     },
+// ];
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
 }
 
-export default function LaunchRoadmap() {
+export default function LaunchRoadmap(props: { roadmaps: LaunchStep[] }) {
     return <nav>
         <div className="flex justify-between">
             <h1 className="text-lg font-bold">Launch Roadmap</h1>
             <div className="flex gap-1 font-bold">
-                <span className="text-gray-900">{steps.filter(step => step.status !== CompletionStatus.Upcoming).length}</span>
+                <span
+                    className="text-gray-900">{props.roadmaps.filter(step => step.status !== CompletionStatus.Upcoming).length}</span>
                 <span className="text-gray-400">/</span>
                 <span className="text-gray-400">4</span>
             </div>
@@ -70,12 +73,10 @@ export default function LaunchRoadmap() {
         <ul style={{gridTemplateRows: "repeat(5, auto)", gridAutoColumns: "1fr"}}
             // <ul style={{gridTemplateRows: "repeat(4, auto)", gridAutoColumns: "1fr"}}
             className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5">
-            {steps.map((step, stepIdx) => (
-                <>
-
-
-                    <div key={step.heading}>
-                    {/*<div key={step.name} className="flex justify-center w-full">*/}
+            {props.roadmaps.map((step, stepIdx) =>
+                <React.Fragment key={stepIdx}>
+                    <div>
+                        {/*<div key={step.name} className="flex justify-center w-full">*/}
                         {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
                         <LaunchStepCircle step={step} stepNum={stepIdx + 1}/>
                         {/*<div className="absolute left-96 text-green-300">*/}
@@ -85,12 +86,12 @@ export default function LaunchRoadmap() {
 
 
                     <div className="text-gray-500 text-xs">
-                        {step.date ? format(step.date, "MMM d") : "TBD"}
+                        {step.date ? format(new Date(step.date), "MMM d") : "TBD"}
                     </div>
                     <div className="font-bold">{step.heading}</div>
                     <ul className="list-disc pl-7">
                         {
-                            step.items.map((item) => <li>{item}</li>)
+                            step.tasks.map((item, idx) => <li key={idx}>{item}</li>)
                         }
                     </ul>
                     <div className="text-center">
@@ -101,8 +102,8 @@ export default function LaunchRoadmap() {
                             </Link>
                         }
                     </div>
-                </>
-            ))}
+                </React.Fragment>
+            )}
         </ul>
     </nav>;
 }

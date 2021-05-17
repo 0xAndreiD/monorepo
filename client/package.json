@@ -6,12 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "ghpublish": "next build && next export"
+    "ghpublish": "next build && next export",
+    "codegen-gql": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.18",
     "@headlessui/react": "^1.1.1",
     "@heroicons/react": "^1.0.1",
     "date-fns": "^2.21.3",
+    "graphql": "^15.5.0",
     "lodash": "^4.17.21",
     "next": "^10.2.0",
     "react": "^17.0.2",
@@ -20,6 +23,11 @@
     "react-responsive-carousel": "^3.2.18"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "1.21.4",
+    "@graphql-codegen/fragment-matcher": "2.0.1",
+    "@graphql-codegen/typescript": "1.22.0",
+    "@graphql-codegen/typescript-operations": "1.17.16",
+    "@graphql-codegen/typescript-react-apollo": "2.2.4",
     "@types/lodash": "^4.14.168",
     "@types/node": "^15.0.2",
     "@types/react": "^17.0.5",

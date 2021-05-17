@@ -1,7 +1,7 @@
 import {MailIcon} from "@heroicons/react/outline";
 import {Card, CardHeader} from "./generic/Card";
 import {titleCase} from "../util/text";
-import Link from 'next/link'
+import Link from 'next/link';
 
 type ContactCard = {
     contacts: Array<{
@@ -46,11 +46,9 @@ export default function ContactsCard(props: ContactCard) {
         <div className="divide-y divide-gray-300">
             {
                 props.contacts.map((contact, idx) =>
-                    <div className="py-3">
+                    <div className="py-3" key={idx}>
                         <div className="text-sm text-gray-600 pb-2">{titleCase(getPrecedence(idx) ?? "")}:</div>
-                        <div key={idx}
-                             className="relative bg-white flex items-center space-x-3"
-                        >
+                        <div className="relative bg-white flex items-center space-x-3">
                             <div className="flex-shrink-0">
                                 <img className="h-10 w-10 rounded-full" src={contact.imageUrl} alt=""/>
                             </div>

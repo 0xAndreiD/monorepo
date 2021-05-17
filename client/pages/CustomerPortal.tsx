@@ -10,14 +10,64 @@ import {InternalNotesDemo} from "../components/InternalNotes";
 import {Footer} from "../components/Footer";
 import {Header} from "../components/Header";
 import CardDivider from "../components/generic/Card";
+import {gql} from "@apollo/client";
+import {usePortalQuery} from "../src/generated/graphql";
+
+
+const CLIENT_QUERY = gql`
+    query portal {
+        getLaunchRoadmap(id: 1) {
+            heading
+            date
+            tasks
+            ctaLink {
+                body
+                href
+            }
+            status
+        }
+
+        getNextSteps(id: 1) {
+            customer {
+                ...CompanyTaskListFragment
+            }
+            vendor {
+                ...CompanyTaskListFragment
+            }
+        }
+    }
+
+    fragment CompanyTaskListFragment on CompanyTaskList {
+        name
+        tasks {
+            description
+            isCompleted
+        }
+    }
+`;
 
 export default function CustomerPortal() {
+    const {data, loading, error} = usePortalQuery({
+        variables: {},
+    });
+
+    if (loading) {
+        return <>Loading!</>;
+    }
+
+    if (error) {
+        return <>Error! {JSON.stringify(error)}</>;
+    }
+    if (!data) {
+        return <>No Data!</>;
+    }
+
     //container: https://tailwindui.com/components/application-ui/layout/containers
     return <>
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
             <Header/>
             <div className="py-3"><CardDivider/></div>
-            <LaunchRoadmap/>
+            <LaunchRoadmap roadmaps={data.getLaunchRoadmap}/>
         </div>
 
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 bg-gray-100">

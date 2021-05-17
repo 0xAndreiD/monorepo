@@ -106,7 +106,7 @@ export function ProductInfoCard(props: ProductInfoCard) {
                     <h4 className="pt-2 font-bold">{section.heading}</h4>
                     <ul className="py-1 list-disc">
                         {
-                            section.links.map(link => <li className="mx-4 text-sm">
+                            section.links.map((link,idx) => <li className="mx-4 text-sm" key={idx}>
                                 <Link href={link.href}>
                                     {link.title}
                                 </Link>
