@@ -50,19 +50,19 @@ model RoadmapStage {
   portal      Portal             @relation(fields: [portalId], references: [id])
   portalId    Int
   heading     String
-  date        DateTime
+  date        DateTime?
   tasks       RoadmapStageTask[]
   ctaLinkText String?
   ctaLink     String?
-  isComplete  Boolean
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
 }
 
 model RoadmapStageTask {
   id             Int          @id @default(autoincrement())
   roadmapStage   RoadmapStage @relation(fields: [roadmapStageId], references: [id])
   roadmapStageId Int
+  task           String
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }

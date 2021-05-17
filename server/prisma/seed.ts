@@ -2,40 +2,10 @@ import {Portal, PrismaClient, RoadmapStage, Vendor} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-
-// const steps: RoadmapStage[] = [
-//     {
-//         heading: 'Intro Meeting',
-//         date: new Date(2021, 9, 8),
-//         ctaLinkText: "Mira's Slide Deck",
-//         ctaLink: "#",
-//         isComplete: false
-//     },
-//     {
-//         heading: 'AR Headset Demo',
-//         items: ["Demonstrate a live Mira Connect call from headset."],
-//         date: new Date(2021, 10, 11),
-//         ctaLinkText: "Join Zoom 📞",
-//         ctaLink: "#",
-//         status: CompletionStatus.InProgress
-//     },
-//     {
-//         heading: 'Use-Case Planning Workshop',
-//         items: ["Define problem and primary use-case Mira will be used for."],
-//         status: CompletionStatus.Upcoming
-//     },
-//     {
-//         heading: 'Pilot Package Purchase',
-//         items: ["Quote attached below"],
-//         status: CompletionStatus.Upcoming
-//     },
-// ];
-
-
 async function main() {
     console.log(`Start seeding ...`);
 
-    prisma.portal.create({
+    const portal = await prisma.portal.create({
         data: {
             currentRoadmapStage: 2,
             accountExecutive: { //make AE
@@ -55,6 +25,33 @@ async function main() {
             },
         }
     });
+
+    const stage = [
+        {
+            heading: 'Intro Meeting',
+            date: new Date(2021, 9, 8),
+            tasks: {create: {task: "Go over Mira's platform."}},
+            ctaLinkText: "Mira's Slide Deck",
+            ctaLink: "#",
+        },
+        {
+            heading: 'AR Headset Demo',
+            date: new Date(2021, 10, 11),
+            tasks: {create: {task: "Demonstrate a live Mira Connect call from headset."}},
+            ctaLinkText: "Join Zoom 📞",
+            ctaLink: "#",
+        },
+        {
+            heading: 'Use-Case Planning Workshop',
+            tasks: {create: {task: "Define problem and primary use-case Mira will be used for."}},
+        },
+        {
+            heading: 'Pilot Package Purchase',
+            tasks: {create: {task: "Quote attached below"}},
+        },
+    ];
+
+    await Promise.all(stage.map(x => prisma.roadmapStage.create({data: {portalId: portal.id, ...x}})));
 
     console.log(`Seeding finished.`);
 }

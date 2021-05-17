@@ -13,7 +13,28 @@ type NextSteps{
     vendor: CompanyTaskList!
 }
 
+type Link{
+    body: String!
+    href: String!
+}
+
+enum CompletionStatus {
+    Complete,
+    InProgress,
+    Upcoming,
+}
+
+type LaunchStep {
+    heading: String!,
+    date: String,
+    tasks: [String!]!,
+    ctaLink: Link,
+    status: CompletionStatus!,
+}
+
 type Query {
+    getFoo: Boolean
+    getLaunchRoadmap(id: ID!): [LaunchStep!]!
     getNextSteps(id: ID!): NextSteps
     getUploadTransactionId: ID!
 }

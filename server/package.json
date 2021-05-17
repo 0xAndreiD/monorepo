@@ -20,6 +20,7 @@
     "@graphql-codegen/introspection": "1.18.2",
     "@graphql-codegen/typescript": "1.22.0",
     "@graphql-codegen/typescript-resolvers": "1.19.1",
+    "@tsconfig/node16": "^1.0.1",
     "@types/jest": "^26.0.23",
     "@types/lodash": "^4.14.169",
     "@types/multer": "^1.4.5",

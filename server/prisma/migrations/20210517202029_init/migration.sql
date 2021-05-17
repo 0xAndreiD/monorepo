@@ -46,10 +46,9 @@ CREATE TABLE "RoadmapStage" (
     "id" SERIAL NOT NULL,
     "portalId" INTEGER NOT NULL,
     "heading" TEXT NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
+    "date" TIMESTAMP(3),
     "ctaLinkText" TEXT,
     "ctaLink" TEXT,
-    "isComplete" BOOLEAN NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -60,6 +59,7 @@ CREATE TABLE "RoadmapStage" (
 CREATE TABLE "RoadmapStageTask" (
     "id" SERIAL NOT NULL,
     "roadmapStageId" INTEGER NOT NULL,
+    "task" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
