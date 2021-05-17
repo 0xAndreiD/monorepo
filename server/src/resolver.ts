@@ -32,7 +32,7 @@ export const queryResolvers: QueryResolvers = {
 
         return portal.roadmapStages.map((stage, idx) => ({
             heading: stage.heading,
-            date: stage.date?.toString() ?? "TBD",
+            date: stage.date?.toISOString(),
             tasks: stage.tasks.map(task => task.task),
             ctaLink: stage.ctaLinkText && stage.ctaLink ? {body: stage.ctaLinkText, href: stage.ctaLink} : null,
             status: portal.currentRoadmapStage - 1 === idx ? CompletionStatus.InProgress :
@@ -40,8 +40,24 @@ export const queryResolvers: QueryResolvers = {
         }));
     },
     getNextSteps: (_, {id}) => {
-        const a: NextSteps = {} as any;
-        return a;
+
+        return {
+            customer:
+                {
+                    name: "Koch",
+                    tasks: [
+                        {description: "Schedule AR Headset Demo Call", isCompleted: true},
+                        {description: "Invite IT to next meeting", isCompleted: false}
+                    ]
+                },
+            vendor:
+                {
+                    name: "Mira",
+                    tasks: [
+                        {description: "Send Penelope a revised proposal", isCompleted: false},
+                    ]
+                }
+        };
     },
 };
 

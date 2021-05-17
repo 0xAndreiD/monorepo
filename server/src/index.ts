@@ -40,17 +40,17 @@ function main() {
         dsn: 'https://9cf257b270414ca29c42ae687bae8f4c@sentry.io/5185401',
         attachStacktrace: true
     });
-    const schema = makeExecutableSchema({
+
+    const apolloServer = new ApolloServer({
         typeDefs: fs.readFileSync("./src/schema.graphql", "utf8"),
         resolvers: {
             Query: queryResolvers,
             Mutation: mutationResolvers
-        }
-    });
+        },
 
-    const apolloServer = new ApolloServer({schema});
+    });
     const app = express();
-    apolloServer.applyMiddleware({app}); //manual express route to avoid needing 2 servers
+    apolloServer.applyMiddleware({app,cors:true}); //manual express route to avoid needing 2 servers
     initExpress(app);
     httpServer(app, apolloServer);
 }

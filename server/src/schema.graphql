@@ -44,10 +44,3 @@ type Mutation {
     returns null if phone number is invalid or txn id not found"""
     fax(to: String!, uploadTransactionId: ID!): String
 }
-
-enum FaxState {
-    COMPLETED
-    SENDING
-    ERROR
-}
-
