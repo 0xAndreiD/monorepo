@@ -10,34 +10,34 @@ enum CompletionStatus {
 }
 
 type LaunchStep = {
-    name: string,
+    heading: string,
     items: string[],
     date?: Date,
-    href?: { body: string, href: string },
+    ctaLink?: { body: string, href: string },
     status: CompletionStatus
 }
 const steps: LaunchStep[] = [
     {
-        name: 'Intro Meeting',
+        heading: 'Intro Meeting',
         items: ["Go over Mira's platform."],
         date: new Date(2021, 9, 8),
-        href: {body: "Mira's Slide Deck", href: "#"},
+        ctaLink: {body: "Mira's Slide Deck", href: "#"},
         status: CompletionStatus.Complete
     },
     {
-        name: 'AR Headset Demo',
+        heading: 'AR Headset Demo',
         items: ["Demonstrate a live Mira Connect call from headset."],
         date: new Date(2021, 10, 11),
-        href: {body: "Join Zoom 📞", href: "#"},
+        ctaLink: {body: "Join Zoom 📞", href: "#"},
         status: CompletionStatus.InProgress
     },
     {
-        name: 'Use-Case Planning Workshop',
+        heading: 'Use-Case Planning Workshop',
         items: ["Define problem and primary use-case Mira will be used for."],
         status: CompletionStatus.Upcoming
     },
     {
-        name: 'Pilot Package Purchase',
+        heading: 'Pilot Package Purchase',
         items: ["Quote attached below"],
         status: CompletionStatus.Upcoming
     },
@@ -74,16 +74,20 @@ export default function LaunchRoadmap() {
                 <>
 
 
-                    <div key={step.name}>
+                    <div key={step.heading}>
+                    {/*<div key={step.name} className="flex justify-center w-full">*/}
                         {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
                         <LaunchStepCircle step={step} stepNum={stepIdx + 1}/>
+                        {/*<div className="absolute left-96 text-green-300">*/}
+                        {/*    hi*/}
+                        {/*</div>*/}
                     </div>
 
 
                     <div className="text-gray-500 text-xs">
                         {step.date ? format(step.date, "MMM d") : "TBD"}
                     </div>
-                    <div className="font-bold">{step.name}</div>
+                    <div className="font-bold">{step.heading}</div>
                     <ul className="list-disc pl-7">
                         {
                             step.items.map((item) => <li>{item}</li>)
@@ -91,9 +95,9 @@ export default function LaunchRoadmap() {
                     </ul>
                     <div className="text-center">
                         {
-                            step.href && <Link
-                                href={step.href.href}>
-                                {step.href.body}
+                            step.ctaLink && <Link
+                                href={step.ctaLink.href}>
+                                {step.ctaLink.body}
                             </Link>
                         }
                     </div>
