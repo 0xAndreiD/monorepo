@@ -55,9 +55,9 @@ export default function LaunchRoadmap(props: { roadmaps: LaunchStep[] }) {
             <h1 className="text-lg font-bold">Launch Roadmap</h1>
             <div className="flex gap-1 font-bold">
                 <span
-                    className="text-gray-900">{props.roadmaps.filter(step => step.status !== CompletionStatus.Upcoming).length}</span>
+                    className="text-gray-900">{props.roadmaps.filter(step => step.status === CompletionStatus.Complete).length}</span>
                 <span className="text-gray-400">/</span>
-                <span className="text-gray-400">4</span>
+                <span className="text-gray-400">{props.roadmaps.length}</span>
             </div>
         </div>
         {/*<ol className="flex justify-around gap-x-5 px-11 items-center">*/}

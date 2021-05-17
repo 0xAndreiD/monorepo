@@ -26,7 +26,7 @@ async function main() {
         }
     });
 
-    const stage = [
+    const stages = [
         {
             heading: 'Intro Meeting',
             date: new Date(2021, 9, 8),
@@ -51,8 +51,9 @@ async function main() {
         },
     ];
 
-    await Promise.all(stage.map(x => prisma.roadmapStage.create({data: {portalId: portal.id, ...x}})));
-
+    for (const stage of stages) {
+        await prisma.roadmapStage.create({data: {portalId: portal.id, ...stage}});
+    }
     console.log(`Seeding finished.`);
 }
 
