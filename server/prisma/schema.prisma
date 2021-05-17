@@ -7,27 +7,62 @@ datasource db {
   url      = "postgresql://postgres:password@localhost"
 }
 
-//datasource db {
-//  provider = "sqlite"
-//  url      = "file:./dev.db"
-//}
-
-model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  password String
-  name     String?
-  posts    Post[]
+model Vendor {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  logoUrl    String
+  VendorTeam VendorTeam[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
+model VendorTeam {
+  id              Int                @id @default(autoincrement())
+  vendor          Vendor             @relation(fields: [vendorId], references: [id])
+  vendorId        Int
+  accountExecutes AccountExecutive[]
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+model AccountExecutive {
+  id           Int        @id @default(autoincrement())
+  vendorTeam   VendorTeam @relation(fields: [vendorTeamId], references: [id])
+  vendorTeamId Int
+  email        String
+  portals      Portal[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Portal {
+  id                  Int              @id @default(autoincrement())
+  accountExecutive    AccountExecutive @relation(fields: [accountExecutiveId], references: [id])
+  accountExecutiveId  Int
+  roadmapStages       RoadmapStage[]
+  currentRoadmapStage Int
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+}
+
+model RoadmapStage {
+  id          Int                @id @default(autoincrement())
+  portal      Portal             @relation(fields: [portalId], references: [id])
+  portalId    Int
+  heading     String
+  date        DateTime
+  tasks       RoadmapStageTask[]
+  ctaLinkText String?
+  ctaLink     String?
+  isComplete  Boolean
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  viewCount Int      @default(0)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+}
+
+model RoadmapStageTask {
+  id             Int          @id @default(autoincrement())
+  roadmapStage   RoadmapStage @relation(fields: [roadmapStageId], references: [id])
+  roadmapStageId Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
