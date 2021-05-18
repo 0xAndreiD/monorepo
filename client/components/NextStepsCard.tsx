@@ -3,32 +3,33 @@
 import CardDivider, {Card, CardHeader} from "./generic/Card";
 import {AddButton} from "./generic/AddButton";
 import {TrashIcon} from "@heroicons/react/outline";
-
-export function NextStepsCardDemo() {
-    const data = {
-        customer:
-            {
-                name: "Koch",
-                tasks: [
-                    {description: "Schedule AR Headset Demo Call", isCompleted: true},
-                    {description: "Invite IT to next meeting", isCompleted: false}
-                ]
-            },
-        vendor:
-            {
-                name: "Mira",
-                tasks: [
-                    {description: "Send Penelope a revised proposal", isCompleted: false},
-                ]
-            }
-    };
-    return <NextStepsCard {...data}/>;
-}
-
-type CompanyTaskList = {
-    name: string,
-    tasks: Array<{ description: string, isCompleted: boolean }>
-}
+import {CompanyTaskList, NextSteps} from "../src/generated/graphql";
+//
+// export function NextStepsCardDemo() {
+//     const data = {
+//         customer:
+//             {
+//                 name: "Koch",
+//                 tasks: [
+//                     {description: "Schedule AR Headset Demo Call", isCompleted: true},
+//                     {description: "Invite IT to next meeting", isCompleted: false}
+//                 ]
+//             },
+//         vendor:
+//             {
+//                 name: "Mira",
+//                 tasks: [
+//                     {description: "Send Penelope a revised proposal", isCompleted: false},
+//                 ]
+//             }
+//     };
+//     return <NextStepsCard {...data}/>;
+// }
+//
+// type CompanyTaskList = {
+//     name: string,
+//     tasks: Array<{ description: string, isCompleted: boolean }>
+// }
 
 function TaskList(props: { isElementDeletable: boolean, data: CompanyTaskList }) {
     return <>
@@ -51,17 +52,17 @@ function TaskList(props: { isElementDeletable: boolean, data: CompanyTaskList })
     </>;
 }
 
-export default function NextStepsCard(props: { customer: CompanyTaskList, vendor: CompanyTaskList }) {
+export default function NextStepsCard(props: {data:NextSteps}) {
 //reference: https://tailwindui.com/components/application-ui/data-display/description-lists#component-e1b5917b21bbe76a73a96c5ca876225f
     return <Card>
 
         <CardHeader>Next Steps</CardHeader>
 
-        <TaskList isElementDeletable={false} data={props.customer}/>
+        <TaskList isElementDeletable={false} data={props.data.customer}/>
 
         <CardDivider/>
 
-        <TaskList isElementDeletable={true} data={props.vendor}/>
+        <TaskList isElementDeletable={true} data={props.data.vendor}/>
 
         <AddButton/>
 
