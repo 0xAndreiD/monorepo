@@ -3,7 +3,8 @@
 import CardDivider, {Card, CardHeader} from "./generic/Card";
 import {AddButton} from "./generic/AddButton";
 import {TrashIcon} from "@heroicons/react/outline";
-import {CompanyTaskList, NextSteps} from "../src/generated/graphql";
+import {CompanyTaskList, NextSteps, usePortalNextStepsSetTaskCompletionMutation} from "../src/generated/graphql";
+import {gql} from "@apollo/client";
 //
 // export function NextStepsCardDemo() {
 //     const data = {
@@ -31,7 +32,19 @@ import {CompanyTaskList, NextSteps} from "../src/generated/graphql";
 //     tasks: Array<{ description: string, isCompleted: boolean }>
 // }
 
+const UPDATE_QUERY = gql`
+    mutation portalNextStepsSetTaskCompletion($id: ID!, $isCompleted:Boolean!){
+        portalNextStepsSetTaskCompletion(id:$id, isCompleted: $isCompleted){
+            id
+            isCompleted
+            description
+        }
+    }
+`;
+
 function TaskList(props: { isElementDeletable: boolean, data: CompanyTaskList }) {
+    const [updateIsCompleted] = usePortalNextStepsSetTaskCompletionMutation();
+
     return <>
         <p className="max-w-2xl pt-4 text-sm">for <span className="font-bold">{props.data.name}</span></p>
 
@@ -40,7 +53,9 @@ function TaskList(props: { isElementDeletable: boolean, data: CompanyTaskList })
                 {
                     props.data.tasks.map(task =>
                         <li key={task.id} className="flex items-center">
-                            <input type="checkbox" checked={task.isCompleted}/>
+                            <input type="checkbox" checked={task.isCompleted} onChange={() => {
+                                updateIsCompleted({variables: {id: task.id, isCompleted: !task.isCompleted}});
+                            }}/>
                             <span className="px-2">{task.description}</span>
                             {props.isElementDeletable &&
                             <TrashIcon style={{marginLeft: "auto"}} className="w-4 h-4 text-gray-400"/>}

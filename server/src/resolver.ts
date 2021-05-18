@@ -42,7 +42,10 @@ export const queryResolvers: QueryResolvers = {
     getNextSteps: async (_, {id}) => {
         const portal = await prisma.portal.findUnique({
             where: {id: parseInt(id)},
-            include: {nextSteps: true, accountExecutive: {include: {vendorTeam: {include: {vendor: true}}}}}
+            include: {
+                nextStepsTasks: {orderBy: {id: 'asc'}},
+                accountExecutive: {include: {vendorTeam: {include: {vendor: true}}}}
+            }
         });
 
         if (!portal) {
@@ -54,13 +57,13 @@ export const queryResolvers: QueryResolvers = {
         return {
             customer: {
                 name: portal.accountExecutive.vendorTeam.vendor.name,
-                tasks: portal.nextSteps
+                tasks: portal.nextStepsTasks
                     .filter(x => x.customerOrVendor === CustomerOrVendor.CUSTOMER)
                     .map(x => ({...x, id: x.id.toString()}))
             },
             vendor: {
                 name: portal.customerName,
-                tasks: portal.nextSteps
+                tasks: portal.nextStepsTasks
                     .filter(x => x.customerOrVendor === CustomerOrVendor.VENDOR)
                     .map(x => ({...x, id: x.id.toString()}))
             }
@@ -69,4 +72,17 @@ export const queryResolvers: QueryResolvers = {
 };
 
 
-export const mutationResolvers: MutationResolvers = {};
+export const mutationResolvers: MutationResolvers = {
+    portalNextStepsSetTaskCompletion: async (_, {id, isCompleted}) => {
+        const task = await prisma.nextStepsTask.update({
+            where: {id: parseInt(id)},
+            data: {isCompleted}
+        });
+
+        return {
+            id: task.id.toString(),
+            description: task.description,
+            isCompleted: task.isCompleted
+        };
+    }
+};

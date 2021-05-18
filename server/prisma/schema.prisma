@@ -42,7 +42,7 @@ model Portal {
   customerName        String
   customerLogoUrl     String
   roadmapStages       RoadmapStage[]
-  nextSteps           NextSteps[]
+  nextStepsTasks           NextStepsTask[]
   currentRoadmapStage Int
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
@@ -75,7 +75,7 @@ enum CustomerOrVendor {
   CUSTOMER
 }
 
-model NextSteps {
+model NextStepsTask {
   id               Int              @id @default(autoincrement())
   portalId         Int
   portal           Portal           @relation(fields: [portalId], references: [id])

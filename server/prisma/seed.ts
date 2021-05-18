@@ -57,7 +57,7 @@ async function main() {
         await prisma.roadmapStage.create({data: {portalId: portal.id, ...stage}});
     }
 
-    await prisma.nextSteps.createMany({
+    await prisma.nextStepsTask.createMany({
         data: [
             {
                 portalId: portal.id,

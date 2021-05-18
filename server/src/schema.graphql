@@ -39,9 +39,7 @@ type Query {
     getNextSteps(id: ID!): NextSteps!
     getUploadTransactionId: ID!
 }
+
 type Mutation {
-    """uploadTransactionId is created by getUploadTransactionId()
-    it is used for finding the uploaded files associated with this fax
-    returns null if phone number is invalid or txn id not found"""
-    fax(to: String!, uploadTransactionId: ID!): String
+    portalNextStepsSetTaskCompletion(id: ID!, isCompleted: Boolean!): CompanyTaskItem!
 }

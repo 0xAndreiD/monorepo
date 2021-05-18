@@ -50,18 +50,13 @@ export type Link = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /**
-   * uploadTransactionId is created by getUploadTransactionId()
-   * it is used for finding the uploaded files associated with this fax
-   * returns null if phone number is invalid or txn id not found
-   */
-  fax?: Maybe<Scalars['String']>;
+  portalNextStepsSetTaskCompletion: CompanyTaskItem;
 };
 
 
-export type MutationFaxArgs = {
-  to: Scalars['String'];
-  uploadTransactionId: Scalars['ID'];
+export type MutationPortalNextStepsSetTaskCompletionArgs = {
+  id: Scalars['ID'];
+  isCompleted: Scalars['Boolean'];
 };
 
 export type NextSteps = {
@@ -87,6 +82,20 @@ export type QueryGetLaunchRoadmapArgs = {
 export type QueryGetNextStepsArgs = {
   id: Scalars['ID'];
 };
+
+export type PortalNextStepsSetTaskCompletionMutationVariables = Exact<{
+  id: Scalars['ID'];
+  isCompleted: Scalars['Boolean'];
+}>;
+
+
+export type PortalNextStepsSetTaskCompletionMutation = (
+  { __typename?: 'Mutation' }
+  & { portalNextStepsSetTaskCompletion: (
+    { __typename?: 'CompanyTaskItem' }
+    & Pick<CompanyTaskItem, 'id' | 'isCompleted' | 'description'>
+  ) }
+);
 
 export type PortalQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -131,6 +140,42 @@ export const CompanyTaskListFragmentFragmentDoc = gql`
   }
 }
     `;
+export const PortalNextStepsSetTaskCompletionDocument = gql`
+    mutation portalNextStepsSetTaskCompletion($id: ID!, $isCompleted: Boolean!) {
+  portalNextStepsSetTaskCompletion(id: $id, isCompleted: $isCompleted) {
+    id
+    isCompleted
+    description
+  }
+}
+    `;
+export type PortalNextStepsSetTaskCompletionMutationFn = Apollo.MutationFunction<PortalNextStepsSetTaskCompletionMutation, PortalNextStepsSetTaskCompletionMutationVariables>;
+
+/**
+ * __usePortalNextStepsSetTaskCompletionMutation__
+ *
+ * To run a mutation, you first call `usePortalNextStepsSetTaskCompletionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePortalNextStepsSetTaskCompletionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [portalNextStepsSetTaskCompletionMutation, { data, loading, error }] = usePortalNextStepsSetTaskCompletionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      isCompleted: // value for 'isCompleted'
+ *   },
+ * });
+ */
+export function usePortalNextStepsSetTaskCompletionMutation(baseOptions?: Apollo.MutationHookOptions<PortalNextStepsSetTaskCompletionMutation, PortalNextStepsSetTaskCompletionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PortalNextStepsSetTaskCompletionMutation, PortalNextStepsSetTaskCompletionMutationVariables>(PortalNextStepsSetTaskCompletionDocument, options);
+      }
+export type PortalNextStepsSetTaskCompletionMutationHookResult = ReturnType<typeof usePortalNextStepsSetTaskCompletionMutation>;
+export type PortalNextStepsSetTaskCompletionMutationResult = Apollo.MutationResult<PortalNextStepsSetTaskCompletionMutation>;
+export type PortalNextStepsSetTaskCompletionMutationOptions = Apollo.BaseMutationOptions<PortalNextStepsSetTaskCompletionMutation, PortalNextStepsSetTaskCompletionMutationVariables>;
 export const PortalDocument = gql`
     query portal {
   getLaunchRoadmap(id: 1) {

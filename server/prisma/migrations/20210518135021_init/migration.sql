@@ -72,7 +72,7 @@ CREATE TABLE "RoadmapStageTask" (
 );
 
 -- CreateTable
-CREATE TABLE "NextSteps" (
+CREATE TABLE "NextStepsTask" (
     "id" SERIAL NOT NULL,
     "portalId" INTEGER NOT NULL,
     "description" TEXT NOT NULL,
@@ -103,4 +103,4 @@ ALTER TABLE "RoadmapStage" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id"
 ALTER TABLE "RoadmapStageTask" ADD FOREIGN KEY ("roadmapStageId") REFERENCES "RoadmapStage"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "NextSteps" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "NextStepsTask" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
