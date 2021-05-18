@@ -1,4 +1,5 @@
 type CompanyTaskItem{
+    id: ID!
     description: String!
     isCompleted: Boolean!
 }
@@ -35,7 +36,7 @@ type LaunchStep {
 type Query {
     getFoo: Boolean
     getLaunchRoadmap(id: ID!): [LaunchStep!]!
-    getNextSteps(id: ID!): NextSteps
+    getNextSteps(id: ID!): NextSteps!
     getUploadTransactionId: ID!
 }
 type Mutation {

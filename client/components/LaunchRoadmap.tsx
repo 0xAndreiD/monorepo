@@ -49,15 +49,15 @@ function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
 }
 
-export default function LaunchRoadmap(props: { roadmaps: LaunchStep[] }) {
+export default function LaunchRoadmap(props: { data: LaunchStep[] }) {
     return <nav>
         <div className="flex justify-between">
             <h1 className="text-lg font-bold">Launch Roadmap</h1>
             <div className="flex gap-1 font-bold">
                 <span
-                    className="text-gray-900">{props.roadmaps.filter(step => step.status === CompletionStatus.Complete).length}</span>
+                    className="text-gray-900">{props.data.filter(step => step.status === CompletionStatus.Complete).length}</span>
                 <span className="text-gray-400">/</span>
-                <span className="text-gray-400">{props.roadmaps.length}</span>
+                <span className="text-gray-400">{props.data.length}</span>
             </div>
         </div>
         {/*<ol className="flex justify-around gap-x-5 px-11 items-center">*/}
@@ -73,7 +73,7 @@ export default function LaunchRoadmap(props: { roadmaps: LaunchStep[] }) {
         <ul style={{gridTemplateRows: "repeat(5, auto)", gridAutoColumns: "1fr"}}
             // <ul style={{gridTemplateRows: "repeat(4, auto)", gridAutoColumns: "1fr"}}
             className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5">
-            {props.roadmaps.map((step, stepIdx) =>
+            {props.data.map((step, stepIdx) =>
                 <React.Fragment key={stepIdx}>
                     <div>
                         {/*<div key={step.name} className="flex justify-center w-full">*/}

@@ -54,11 +54,15 @@ export const queryResolvers: QueryResolvers = {
         return {
             customer: {
                 name: portal.accountExecutive.vendorTeam.vendor.name,
-                tasks: portal.nextSteps.filter(x => x.customerOrVendor === CustomerOrVendor.CUSTOMER)
+                tasks: portal.nextSteps
+                    .filter(x => x.customerOrVendor === CustomerOrVendor.CUSTOMER)
+                    .map(x => ({...x, id: x.id.toString()}))
             },
             vendor: {
                 name: portal.customerName,
-                tasks: portal.nextSteps.filter(x => x.customerOrVendor === CustomerOrVendor.VENDOR)
+                tasks: portal.nextSteps
+                    .filter(x => x.customerOrVendor === CustomerOrVendor.VENDOR)
+                    .map(x => ({...x, id: x.id.toString()}))
             }
         };
     },

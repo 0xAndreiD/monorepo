@@ -78,7 +78,7 @@ enum CustomerOrVendor {
 model NextSteps {
   id               Int              @id @default(autoincrement())
   portalId         Int
-  Portal           Portal           @relation(fields: [portalId], references: [id])
+  portal           Portal           @relation(fields: [portalId], references: [id])
   description      String
   isCompleted      Boolean
   customerOrVendor CustomerOrVendor

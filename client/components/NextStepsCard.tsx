@@ -38,8 +38,8 @@ function TaskList(props: { isElementDeletable: boolean, data: CompanyTaskList })
         <div className="sm:divide-y sm:divide-gray-200">
             <ul className="py-3 sm:py-3">
                 {
-                    props.data.tasks.map((task, idx) =>
-                        <li key={idx} className="flex items-center">
+                    props.data.tasks.map(task =>
+                        <li key={task.id} className="flex items-center">
                             <input type="checkbox" checked={task.isCompleted}/>
                             <span className="px-2">{task.description}</span>
                             {props.isElementDeletable &&
@@ -52,7 +52,7 @@ function TaskList(props: { isElementDeletable: boolean, data: CompanyTaskList })
     </>;
 }
 
-export default function NextStepsCard(props: {data:NextSteps}) {
+export default function NextStepsCard(props: { data: NextSteps }) {
 //reference: https://tailwindui.com/components/application-ui/data-display/description-lists#component-e1b5917b21bbe76a73a96c5ca876225f
     return <Card>
 

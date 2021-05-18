@@ -16,6 +16,7 @@ export type Scalars = {
 
 export type CompanyTaskItem = {
   __typename?: 'CompanyTaskItem';
+  id: Scalars['ID'];
   description: Scalars['String'];
   isCompleted: Scalars['Boolean'];
 };
@@ -73,7 +74,7 @@ export type Query = {
   __typename?: 'Query';
   getFoo?: Maybe<Scalars['Boolean']>;
   getLaunchRoadmap: Array<LaunchStep>;
-  getNextSteps?: Maybe<NextSteps>;
+  getNextSteps: NextSteps;
   getUploadTransactionId: Scalars['ID'];
 };
 
@@ -99,7 +100,7 @@ export type PortalQuery = (
       { __typename?: 'Link' }
       & Pick<Link, 'body' | 'href'>
     )> }
-  )>, getNextSteps?: Maybe<(
+  )>, getNextSteps: (
     { __typename?: 'NextSteps' }
     & { customer: (
       { __typename?: 'CompanyTaskList' }
@@ -108,7 +109,7 @@ export type PortalQuery = (
       { __typename?: 'CompanyTaskList' }
       & CompanyTaskListFragmentFragment
     ) }
-  )> }
+  ) }
 );
 
 export type CompanyTaskListFragmentFragment = (
@@ -116,7 +117,7 @@ export type CompanyTaskListFragmentFragment = (
   & Pick<CompanyTaskList, 'name'>
   & { tasks: Array<(
     { __typename?: 'CompanyTaskItem' }
-    & Pick<CompanyTaskItem, 'description' | 'isCompleted'>
+    & Pick<CompanyTaskItem, 'id' | 'description' | 'isCompleted'>
   )> }
 );
 
@@ -124,6 +125,7 @@ export const CompanyTaskListFragmentFragmentDoc = gql`
     fragment CompanyTaskListFragment on CompanyTaskList {
   name
   tasks {
+    id
     description
     isCompleted
   }
