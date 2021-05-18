@@ -39,7 +39,10 @@ model Portal {
   id                  Int              @id @default(autoincrement())
   accountExecutive    AccountExecutive @relation(fields: [accountExecutiveId], references: [id])
   accountExecutiveId  Int
+  customerName        String
+  customerLogoUrl     String
   roadmapStages       RoadmapStage[]
+  nextSteps           NextSteps[]
   currentRoadmapStage Int
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
@@ -65,4 +68,20 @@ model RoadmapStageTask {
   task           String
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+}
+
+enum CustomerOrVendor {
+  VENDOR
+  CUSTOMER
+}
+
+model NextSteps {
+  id               Int              @id @default(autoincrement())
+  portalId         Int
+  Portal           Portal           @relation(fields: [portalId], references: [id])
+  description      String
+  isCompleted      Boolean
+  customerOrVendor CustomerOrVendor
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 }

@@ -1,4 +1,4 @@
-import {Portal, PrismaClient, RoadmapStage, Vendor} from '@prisma/client';
+import {CustomerOrVendor, Portal, PrismaClient, RoadmapStage, Vendor} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -7,6 +7,8 @@ async function main() {
 
     const portal = await prisma.portal.create({
         data: {
+            customerName: "Koch",
+            customerLogoUrl: "https://gray-kwch-prod.cdn.arcpublishing.com/resizer/gLAX07TEGwQfEgBOQ3quD5JAugM=/1200x400/smart/cloudfront-us-east-1.images.arcpublishing.com/gray/IKLFKUHCCJCO3GQSYNXHJOAOSU.JPG",
             currentRoadmapStage: 2,
             accountExecutive: { //make AE
                 create: {
@@ -54,6 +56,30 @@ async function main() {
     for (const stage of stages) {
         await prisma.roadmapStage.create({data: {portalId: portal.id, ...stage}});
     }
+
+    await prisma.nextSteps.createMany({
+        data: [
+            {
+                portalId: portal.id,
+                description: "Schedule AR Headset Demo Call",
+                isCompleted: true,
+                customerOrVendor: CustomerOrVendor.CUSTOMER
+            },
+            {
+                portalId: portal.id,
+                description: "Invite IT to next meeting",
+                isCompleted: false,
+                customerOrVendor: CustomerOrVendor.CUSTOMER
+            },
+            {
+                portalId: portal.id,
+                description: "Send Penelope a revised proposal",
+                isCompleted: false,
+                customerOrVendor: CustomerOrVendor.VENDOR
+            }
+        ]
+    });
+
     console.log(`Seeding finished.`);
 }
 

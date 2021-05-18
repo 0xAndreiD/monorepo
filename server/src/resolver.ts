@@ -1,7 +1,7 @@
 import {CompletionStatus, LaunchStep, MutationResolvers, NextSteps, QueryResolvers, Scalars} from "./generated/graphql";
 import {v1 as uuid} from 'uuid';
 import {uploadTransactionsDb} from "./db";
-import {PrismaClient} from "@prisma/client";
+import {CustomerOrVendor, PrismaClient} from "@prisma/client";
 import {ApolloError} from "apollo-server-express";
 
 const prisma = new PrismaClient();
@@ -39,24 +39,27 @@ export const queryResolvers: QueryResolvers = {
                 portal.currentRoadmapStage - 1 < idx ? CompletionStatus.Complete : CompletionStatus.Upcoming
         }));
     },
-    getNextSteps: (_, {id}) => {
+    getNextSteps: async (_, {id}) => {
+        const portal = await prisma.portal.findUnique({
+            where: {id: parseInt(id)},
+            include: {nextSteps: true, accountExecutive: {include: {vendorTeam: {include: {vendor: true}}}}}
+        });
 
+        if (!portal) {
+            throw new ApolloError(
+                "Not found in db",
+                "CAN_NOT_FETCH_BY_ID",
+            );
+        }
         return {
-            customer:
-                {
-                    name: "Koch",
-                    tasks: [
-                        {description: "Schedule AR Headset Demo Call", isCompleted: true},
-                        {description: "Invite IT to next meeting", isCompleted: false}
-                    ]
-                },
-            vendor:
-                {
-                    name: "Mira",
-                    tasks: [
-                        {description: "Send Penelope a revised proposal", isCompleted: false},
-                    ]
-                }
+            customer: {
+                name: portal.accountExecutive.vendorTeam.vendor.name,
+                tasks: portal.nextSteps.filter(x => x.customerOrVendor === CustomerOrVendor.CUSTOMER)
+            },
+            vendor: {
+                name: portal.customerName,
+                tasks: portal.nextSteps.filter(x => x.customerOrVendor === CustomerOrVendor.VENDOR)
+            }
         };
     },
 };

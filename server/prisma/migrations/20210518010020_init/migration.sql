@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "CustomerOrVendor" AS ENUM ('VENDOR', 'CUSTOMER');
+
 -- CreateTable
 CREATE TABLE "Vendor" (
     "id" SERIAL NOT NULL,
@@ -34,6 +37,8 @@ CREATE TABLE "AccountExecutive" (
 CREATE TABLE "Portal" (
     "id" SERIAL NOT NULL,
     "accountExecutiveId" INTEGER NOT NULL,
+    "customerName" TEXT NOT NULL,
+    "customerLogoUrl" TEXT NOT NULL,
     "currentRoadmapStage" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -66,6 +71,19 @@ CREATE TABLE "RoadmapStageTask" (
     PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "NextSteps" (
+    "id" SERIAL NOT NULL,
+    "portalId" INTEGER NOT NULL,
+    "description" TEXT NOT NULL,
+    "isCompleted" BOOLEAN NOT NULL,
+    "customerOrVendor" "CustomerOrVendor" NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Vendor.name_unique" ON "Vendor"("name");
 
@@ -83,3 +101,6 @@ ALTER TABLE "RoadmapStage" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id"
 
 -- AddForeignKey
 ALTER TABLE "RoadmapStageTask" ADD FOREIGN KEY ("roadmapStageId") REFERENCES "RoadmapStage"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "NextSteps" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
