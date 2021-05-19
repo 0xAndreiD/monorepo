@@ -33,10 +33,21 @@ type LaunchStep {
     status: CompletionStatus!,
 }
 
+type PortalDocument {
+    body: String!
+    href: String!
+    isApproved: Boolean!
+}
+
+type PortalDocuments {
+    customer: [PortalDocument!]!
+    vendor: [PortalDocument!]!
+}
+
 type Query {
-    getFoo: Boolean
     getLaunchRoadmap(id: ID!): [LaunchStep!]!
     getNextSteps(id: ID!): NextSteps!
+    getDocuments(id: ID!): PortalDocuments!
     getUploadTransactionId: ID!
 }
 

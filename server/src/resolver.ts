@@ -69,6 +69,36 @@ export const queryResolvers: QueryResolvers = {
             }
         };
     },
+    getDocuments: async (_, {id}) => {
+        const portal = await prisma.portal.findUnique({
+            where: {id: parseInt(id)},
+            include: {
+                nextStepsTasks: {orderBy: {id: 'asc'}},
+                accountExecutive: {include: {vendorTeam: {include: {vendor: true}}}}
+            }
+        });
+
+        if (!portal) {
+            throw new ApolloError(
+                "Not found in db",
+                "CAN_NOT_FETCH_BY_ID",
+            );
+        }
+        return {
+            customer: {
+                name: portal.accountExecutive.vendorTeam.vendor.name,
+                tasks: portal.nextStepsTasks
+                    .filter(x => x.customerOrVendor === CustomerOrVendor.CUSTOMER)
+                    .map(x => ({...x, id: x.id.toString()}))
+            },
+            vendor: {
+                name: portal.customerName,
+                tasks: portal.nextStepsTasks
+                    .filter(x => x.customerOrVendor === CustomerOrVendor.VENDOR)
+                    .map(x => ({...x, id: x.id.toString()}))
+            }
+        };
+    },
 };
 
 
