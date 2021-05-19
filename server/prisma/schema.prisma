@@ -25,11 +25,24 @@ model VendorTeam {
   updatedAt       DateTime           @updatedAt
 }
 
+model User {
+  id               Int               @id @default(autoincrement())
+  firstName        String
+  lastName         String
+  email            String
+  photoUrl         String
+  AccountExecutive AccountExecutive?
+  Documents        Documents[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
 model AccountExecutive {
   id           Int        @id @default(autoincrement())
   vendorTeam   VendorTeam @relation(fields: [vendorTeamId], references: [id])
   vendorTeamId Int
-  email        String
+  user         User       @relation(fields: [userId], references: [id])
+  userId       Int        @unique
   portals      Portal[]
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
@@ -42,8 +55,9 @@ model Portal {
   customerName        String
   customerLogoUrl     String
   roadmapStages       RoadmapStage[]
-  nextStepsTasks           NextStepsTask[]
+  nextStepsTasks      NextStepsTask[]
   currentRoadmapStage Int
+  Documents           Documents[]
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
 }
@@ -84,4 +98,17 @@ model NextStepsTask {
   customerOrVendor CustomerOrVendor
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
+}
+
+//TODO: add uploader
+model Documents {
+  id        Int      @id @default(autoincrement())
+  portalId  Int
+  portal    Portal   @relation(fields: [portalId], references: [id])
+  title     String
+  url       String
+  uploader  User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
 }

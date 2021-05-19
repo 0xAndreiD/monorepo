@@ -12,7 +12,14 @@ async function main() {
             currentRoadmapStage: 2,
             accountExecutive: { //make AE
                 create: {
-                    email: "greg@mira.com",
+                    user: {
+                        create: {
+                            firstName: "Greg",
+                            lastName: "Miller",
+                            email: "greg@mira.com",
+                            photoUrl: "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
+                        }
+                    },
                     vendorTeam: { //make vendorTeam
                         create: {
                             vendor: { //make vendor
