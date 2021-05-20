@@ -89,6 +89,7 @@ enum CustomerOrVendor {
   CUSTOMER
 }
 
+//TODO: add creator
 model NextStepsTask {
   id               Int              @id @default(autoincrement())
   portalId         Int
@@ -100,7 +101,6 @@ model NextStepsTask {
   updatedAt        DateTime         @updatedAt
 }
 
-//TODO: add uploader
 model Documents {
   id        Int      @id @default(autoincrement())
   portalId  Int

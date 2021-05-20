@@ -65,11 +65,24 @@ export type NextSteps = {
   vendor: CompanyTaskList;
 };
 
+export type PortalDocument = {
+  __typename?: 'PortalDocument';
+  body: Scalars['String'];
+  href: Scalars['String'];
+  isApproved: Scalars['Boolean'];
+};
+
+export type PortalDocuments = {
+  __typename?: 'PortalDocuments';
+  customer: Array<PortalDocument>;
+  vendor: Array<PortalDocument>;
+};
+
 export type Query = {
   __typename?: 'Query';
-  getFoo?: Maybe<Scalars['Boolean']>;
   getLaunchRoadmap: Array<LaunchStep>;
   getNextSteps: NextSteps;
+  getDocuments: PortalDocuments;
   getUploadTransactionId: Scalars['ID'];
 };
 
@@ -80,6 +93,11 @@ export type QueryGetLaunchRoadmapArgs = {
 
 
 export type QueryGetNextStepsArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryGetDocumentsArgs = {
   id: Scalars['ID'];
 };
 
