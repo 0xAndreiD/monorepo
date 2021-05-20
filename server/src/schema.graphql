@@ -34,9 +34,10 @@ type LaunchStep {
 }
 
 type PortalDocument {
-    body: String!
+    id: ID!
+    title: String!
     href: String!
-    isApproved: Boolean!
+    isCompleted: Boolean!
 }
 
 type PortalDocuments {

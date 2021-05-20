@@ -8,21 +8,38 @@ datasource db {
 }
 
 model Vendor {
-  id         Int          @id @default(autoincrement())
-  name       String       @unique
-  logoUrl    String
-  VendorTeam VendorTeam[]
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  logoUrl     String
+  vendorTeams VendorTeam[]
+  portals     Portal[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model VendorTeam {
-  id              Int                @id @default(autoincrement())
-  vendor          Vendor             @relation(fields: [vendorId], references: [id])
-  vendorId        Int
-  accountExecutes AccountExecutive[]
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  id                Int                @id @default(autoincrement())
+  vendor            Vendor             @relation(fields: [vendorId], references: [id])
+  vendorId          Int
+  accountExecutives AccountExecutive[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+enum Role {
+  AccountExecutive
+  Stakeholder
+}
+
+model UserPortal {
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  portal    Portal   @relation(fields: [portalId], references: [id])
+  portalId  Int
+  role      Role
+  createdAt DateTime @default(now())
+
+  @@id([userId, portalId])
 }
 
 model User {
@@ -30,11 +47,20 @@ model User {
   firstName        String
   lastName         String
   email            String
-  photoUrl         String
-  AccountExecutive AccountExecutive?
-  Documents        Documents[]
+  photoUrl         String?
+  accountExecutive AccountExecutive?
+  stakeholder      Stakeholder?
+  documents        Document[]
+  userPortals      UserPortal[]
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
+}
+
+model Stakeholder {
+  jobTitle     String
+  isApprovedBy Boolean
+  user         User    @relation(fields: [userId], references: [id])
+  userId       Int     @unique
 }
 
 model AccountExecutive {
@@ -43,23 +69,23 @@ model AccountExecutive {
   vendorTeamId Int
   user         User       @relation(fields: [userId], references: [id])
   userId       Int        @unique
-  portals      Portal[]
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 }
 
 model Portal {
-  id                  Int              @id @default(autoincrement())
-  accountExecutive    AccountExecutive @relation(fields: [accountExecutiveId], references: [id])
-  accountExecutiveId  Int
+  id                  Int             @id @default(autoincrement())
   customerName        String
   customerLogoUrl     String
   roadmapStages       RoadmapStage[]
   nextStepsTasks      NextStepsTask[]
   currentRoadmapStage Int
-  Documents           Documents[]
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
+  documents           Document[]
+  userPortals         UserPortal[]
+  vendor              Vendor          @relation(fields: [vendorId], references: [id])
+  vendorId            Int
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
 }
 
 model RoadmapStage {
@@ -101,14 +127,15 @@ model NextStepsTask {
   updatedAt        DateTime         @updatedAt
 }
 
-model Documents {
-  id        Int      @id @default(autoincrement())
-  portalId  Int
-  portal    Portal   @relation(fields: [portalId], references: [id])
-  title     String
-  url       String
-  uploader  User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId    Int
+model Document {
+  id          Int      @id @default(autoincrement())
+  portalId    Int
+  portal      Portal   @relation(fields: [portalId], references: [id])
+  title       String
+  href        String
+  isCompleted Boolean
+  uploader    User     @relation(fields: [userId], references: [id])
+  userId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

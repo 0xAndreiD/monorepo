@@ -1,7 +1,15 @@
-import {CompletionStatus, LaunchStep, MutationResolvers, NextSteps, QueryResolvers, Scalars} from "./generated/graphql";
+import {
+    CompletionStatus,
+    LaunchStep,
+    MutationResolvers,
+    NextSteps,
+    PortalDocuments,
+    QueryResolvers,
+    Scalars
+} from "./generated/graphql";
 import {v1 as uuid} from 'uuid';
 import {uploadTransactionsDb} from "./db";
-import {CustomerOrVendor, PrismaClient} from "@prisma/client";
+import {CustomerOrVendor, PrismaClient, Role} from "@prisma/client";
 import {ApolloError} from "apollo-server-express";
 
 const prisma = new PrismaClient();
@@ -44,7 +52,7 @@ export const queryResolvers: QueryResolvers = {
             where: {id: parseInt(id)},
             include: {
                 nextStepsTasks: {orderBy: {id: 'asc'}},
-                accountExecutive: {include: {vendorTeam: {include: {vendor: true}}}}
+                vendor: true
             }
         });
 
@@ -56,7 +64,7 @@ export const queryResolvers: QueryResolvers = {
         }
         return {
             customer: {
-                name: portal.accountExecutive.vendorTeam.vendor.name,
+                name: portal.vendor.name,
                 tasks: portal.nextStepsTasks
                     .filter(x => x.customerOrVendor === CustomerOrVendor.CUSTOMER)
                     .map(x => ({...x, id: x.id.toString()}))
@@ -73,8 +81,9 @@ export const queryResolvers: QueryResolvers = {
         const portal = await prisma.portal.findUnique({
             where: {id: parseInt(id)},
             include: {
-                nextStepsTasks: {orderBy: {id: 'asc'}},
-                accountExecutive: {include: {vendorTeam: {include: {vendor: true}}}}
+                documents: {orderBy: {id: 'asc'}},
+                vendor: true,
+                userPortals: true
             }
         });
 
@@ -84,23 +93,27 @@ export const queryResolvers: QueryResolvers = {
                 "CAN_NOT_FETCH_BY_ID",
             );
         }
+
         return {
-            customer: {
-                name: portal.accountExecutive.vendorTeam.vendor.name,
-                tasks: portal.nextStepsTasks
-                    .filter(x => x.customerOrVendor === CustomerOrVendor.CUSTOMER)
-                    .map(x => ({...x, id: x.id.toString()}))
-            },
-            vendor: {
-                name: portal.customerName,
-                tasks: portal.nextStepsTasks
-                    .filter(x => x.customerOrVendor === CustomerOrVendor.VENDOR)
-                    .map(x => ({...x, id: x.id.toString()}))
-            }
+            customer: portal.documents
+                .filter(x => portal.userPortals.filter(up => up.role === Role.AccountExecutive).map(up => up.userId).includes(x.userId))
+                .map(x => ({
+                    id: x.id.toString(),
+                    title: x.title,
+                    href: x.href,
+                    isCompleted: x.isCompleted
+                })),
+            vendor: portal.documents
+                .filter(x => portal.userPortals.filter(up => up.role === Role.Stakeholder).map(up => up.userId).includes(x.userId))
+                .map(x => ({
+                    id: x.id.toString(),
+                    title: x.title,
+                    href: x.href,
+                    isCompleted: x.isCompleted
+                }))
         };
     },
 };
-
 
 export const mutationResolvers: MutationResolvers = {
     portalNextStepsSetTaskCompletion: async (_, {id, isCompleted}) => {

@@ -1,39 +1,109 @@
-import {CustomerOrVendor, Portal, PrismaClient, RoadmapStage, Vendor} from '@prisma/client';
+import {CustomerOrVendor, Portal, PrismaClient, RoadmapStage, Role, Vendor} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 async function main() {
     console.log(`Start seeding ...`);
 
+    const vendorTeam = await prisma.vendorTeam.create({
+        data: {
+            vendor: { //make vendor
+                create: {
+                    name: "Mira",
+                    logoUrl: "https://images.squarespace-cdn.com/content/v1/59ecb4ff4c0dbfd368993258/1519077349473-M7ADD9VEABMQSHAJB6ZL/ke17ZwdGBToddI8pDm48kEEk35wlJZsUCSxoPFFCfNNZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PICXa7_N5J40iYbFYBr4Oop3ePWNkItV5sPMJ0tw-x6KIKMshLAGzx4R3EDFOm1kBS/Mira+Labs+logo.jpg"
+                }
+            }
+        }
+    });
+
+    const aeUser = await prisma.user.create({
+            data: {
+                firstName: "Greg",
+                lastName: "Miller",
+                email: "greg@mira.com",
+                photoUrl: "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
+                accountExecutive: { //make AE
+                    create: {
+                        vendorTeamId: vendorTeam.vendorId
+                    }
+                }
+            },
+            include: {
+                accountExecutive: {include: {vendorTeam: {include: {vendor: true}}}}
+            }
+        }
+    );
+
     const portal = await prisma.portal.create({
         data: {
             customerName: "Koch",
             customerLogoUrl: "https://gray-kwch-prod.cdn.arcpublishing.com/resizer/gLAX07TEGwQfEgBOQ3quD5JAugM=/1200x400/smart/cloudfront-us-east-1.images.arcpublishing.com/gray/IKLFKUHCCJCO3GQSYNXHJOAOSU.JPG",
             currentRoadmapStage: 2,
-            accountExecutive: { //make AE
+            userPortals: {
                 create: {
-                    user: {
-                        create: {
-                            firstName: "Greg",
-                            lastName: "Miller",
-                            email: "greg@mira.com",
-                            photoUrl: "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
-                        }
-                    },
-                    vendorTeam: { //make vendorTeam
-                        create: {
-                            vendor: { //make vendor
-                                create: {
-                                    name: "Mira",
-                                    logoUrl: "https://images.squarespace-cdn.com/content/v1/59ecb4ff4c0dbfd368993258/1519077349473-M7ADD9VEABMQSHAJB6ZL/ke17ZwdGBToddI8pDm48kEEk35wlJZsUCSxoPFFCfNNZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PICXa7_N5J40iYbFYBr4Oop3ePWNkItV5sPMJ0tw-x6KIKMshLAGzx4R3EDFOm1kBS/Mira+Labs+logo.jpg"
-                                }
-                            }
-                        }
-                    },
+                    userId: aeUser.id,
+                    role: Role.AccountExecutive
                 }
             },
-        }
+            vendorId: vendorTeam.vendorId
+        },
     });
+
+    const rawStakeholders = [
+        {
+            firstName: "Nic",
+            lastName: "Franklin",
+            jobTitle: "Director of Operations",
+            email: "nick@mira.com",
+            isApprovedBy: true
+        },
+        {
+            firstName: "Kristin",
+            lastName: "Sanders",
+            jobTitle: "Head of Technical Services",
+            email: "kristin@mira.com",
+            isApprovedBy: true
+        },
+        {
+            firstName: "Wally",
+            lastName: "Iris",
+            jobTitle: "Senior QA Manager",
+            email: "wally@mira.com",
+            isApprovedBy: true
+        },
+        {
+            firstName: "Penelope",
+            lastName: "Star",
+            jobTitle: "Plant Manager",
+            email: "penelope@mira.com",
+            isApprovedBy: false
+        }
+    ];
+
+    const stakeholders = [];
+
+    for (const stakeholder of rawStakeholders) {
+        stakeholders.push(await prisma.user.create({
+                data: {
+                    firstName: stakeholder.firstName,
+                    lastName: stakeholder.lastName,
+                    email: stakeholder.email,
+                    stakeholder: {
+                        create: {
+                            jobTitle: stakeholder.jobTitle,
+                            isApprovedBy: stakeholder.isApprovedBy
+                        }
+                    },
+                    userPortals: {
+                        create: {
+                            role: Role.Stakeholder,
+                            portalId: portal.id
+                        }
+                    },
+                },
+            })
+        );
+    }
 
     const stages = [
         {
@@ -86,6 +156,33 @@ async function main() {
             }
         ]
     });
+
+
+    await prisma.document.createMany({
+        data: [
+            {
+                portalId: portal.id,
+                title: "Security Questionnaire",
+                href: "",
+                isCompleted: false,
+                userId: aeUser.id
+            },
+            {
+                portalId: portal.id,
+                title: "Vendor Setup",
+                href: "",
+                isCompleted: false,
+                userId: aeUser.id
+            },
+            {
+                portalId: portal.id,
+                title: "W-9 Form",
+                href: "",
+                isCompleted: true,
+                userId: stakeholders[0].id
+            }
+        ]
+    })
 
     console.log(`Seeding finished.`);
 }

@@ -37,14 +37,10 @@
     "start": "NODE_ENV=development ts-node-dev --no-notify --respawn --transpile-only src/index.ts",
     "start-prod": "cd ../client && yarn build && cd - && NODE_ENV=production ts-node src/index.ts",
     "start-prod-docker": "NODE_ENV=production ts-node src/index.ts",
-    "preinstall": "export GS4JS_HOME=/usr/lib",
     "postinstall": "if [[ -f codegen.yml ]]; then yarn codegen; fi #for docker build to avoid running before source files are copied",
-    "codegen": "graphql-codegen --config codegen.yml",
     "test": "jest",
-    "build": "npm -s run clean && npm -s run generate && tsc",
-    "generate": "npm -s run generate:prisma && npm -s run generate:nexus",
     "generate:prisma": "prisma generate",
-    "generate:nexus": "ts-node --transpile-only src/schema",
-    "codegen-gql": "graphql-codegen --config codegen.yml"
+    "codegen-gql": "graphql-codegen --config codegen.yml",
+    "codegen-db": "prisma migrate dev --name init"
   }
 }

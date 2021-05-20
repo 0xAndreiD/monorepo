@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "Role" AS ENUM ('AccountExecutive', 'Stakeholder');
+
+-- CreateEnum
 CREATE TYPE "CustomerOrVendor" AS ENUM ('VENDOR', 'CUSTOMER');
 
 -- CreateTable
@@ -23,16 +26,33 @@ CREATE TABLE "VendorTeam" (
 );
 
 -- CreateTable
+CREATE TABLE "UserPortal" (
+    "userId" INTEGER NOT NULL,
+    "portalId" INTEGER NOT NULL,
+    "role" "Role" NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY ("userId","portalId")
+);
+
+-- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "photoUrl" TEXT NOT NULL,
+    "photoUrl" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Stakeholder" (
+    "jobTitle" TEXT NOT NULL,
+    "isApprovedBy" BOOLEAN NOT NULL,
+    "userId" INTEGER NOT NULL
 );
 
 -- CreateTable
@@ -49,10 +69,10 @@ CREATE TABLE "AccountExecutive" (
 -- CreateTable
 CREATE TABLE "Portal" (
     "id" SERIAL NOT NULL,
-    "accountExecutiveId" INTEGER NOT NULL,
     "customerName" TEXT NOT NULL,
     "customerLogoUrl" TEXT NOT NULL,
     "currentRoadmapStage" INTEGER NOT NULL,
+    "vendorId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -98,14 +118,15 @@ CREATE TABLE "NextStepsTask" (
 );
 
 -- CreateTable
-CREATE TABLE "Documents" (
+CREATE TABLE "Document" (
     "id" SERIAL NOT NULL,
     "portalId" INTEGER NOT NULL,
     "title" TEXT NOT NULL,
-    "url" TEXT NOT NULL,
+    "href" TEXT NOT NULL,
+    "isCompleted" BOOLEAN NOT NULL,
+    "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "userId" INTEGER NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -114,10 +135,10 @@ CREATE TABLE "Documents" (
 CREATE UNIQUE INDEX "Vendor.name_unique" ON "Vendor"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "AccountExecutive.userId_unique" ON "AccountExecutive"("userId");
+CREATE UNIQUE INDEX "Stakeholder.userId_unique" ON "Stakeholder"("userId");
 
--- AddForeignKey
-ALTER TABLE "VendorTeam" ADD FOREIGN KEY ("vendorId") REFERENCES "Vendor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- CreateIndex
+CREATE UNIQUE INDEX "AccountExecutive.userId_unique" ON "AccountExecutive"("userId");
 
 -- AddForeignKey
 ALTER TABLE "AccountExecutive" ADD FOREIGN KEY ("vendorTeamId") REFERENCES "VendorTeam"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -126,19 +147,31 @@ ALTER TABLE "AccountExecutive" ADD FOREIGN KEY ("vendorTeamId") REFERENCES "Vend
 ALTER TABLE "AccountExecutive" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Portal" ADD FOREIGN KEY ("accountExecutiveId") REFERENCES "AccountExecutive"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "RoadmapStage" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Stakeholder" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Document" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Document" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserPortal" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserPortal" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "VendorTeam" ADD FOREIGN KEY ("vendorId") REFERENCES "Vendor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Portal" ADD FOREIGN KEY ("vendorId") REFERENCES "Vendor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "RoadmapStageTask" ADD FOREIGN KEY ("roadmapStageId") REFERENCES "RoadmapStage"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "NextStepsTask" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "RoadmapStage" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Documents" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Documents" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
