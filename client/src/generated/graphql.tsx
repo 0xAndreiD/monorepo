@@ -67,22 +67,29 @@ export type NextSteps = {
 
 export type PortalDocument = {
   __typename?: 'PortalDocument';
-  body: Scalars['String'];
+  id: Scalars['ID'];
+  title: Scalars['String'];
   href: Scalars['String'];
-  isApproved: Scalars['Boolean'];
+  isCompleted: Scalars['Boolean'];
 };
 
-export type PortalDocuments = {
-  __typename?: 'PortalDocuments';
-  customer: Array<PortalDocument>;
-  vendor: Array<PortalDocument>;
+export type PortalDocumentList = {
+  __typename?: 'PortalDocumentList';
+  name: Scalars['String'];
+  documents: Array<PortalDocument>;
+};
+
+export type PortalDocumentsCard = {
+  __typename?: 'PortalDocumentsCard';
+  customer: PortalDocumentList;
+  vendor: PortalDocumentList;
 };
 
 export type Query = {
   __typename?: 'Query';
   getLaunchRoadmap: Array<LaunchStep>;
   getNextSteps: NextSteps;
-  getDocuments: PortalDocuments;
+  getDocuments: PortalDocumentsCard;
   getUploadTransactionId: Scalars['ID'];
 };
 
@@ -136,7 +143,29 @@ export type PortalQuery = (
       { __typename?: 'CompanyTaskList' }
       & CompanyTaskListFragmentFragment
     ) }
+  ), getDocuments: (
+    { __typename?: 'PortalDocumentsCard' }
+    & { customer: (
+      { __typename?: 'PortalDocumentList' }
+      & Pick<PortalDocumentList, 'name'>
+      & { documents: Array<(
+        { __typename?: 'PortalDocument' }
+        & DocumentsListFragmentFragment
+      )> }
+    ), vendor: (
+      { __typename?: 'PortalDocumentList' }
+      & Pick<PortalDocumentList, 'name'>
+      & { documents: Array<(
+        { __typename?: 'PortalDocument' }
+        & DocumentsListFragmentFragment
+      )> }
+    ) }
   ) }
+);
+
+export type DocumentsListFragmentFragment = (
+  { __typename?: 'PortalDocument' }
+  & Pick<PortalDocument, 'id' | 'title' | 'href' | 'isCompleted'>
 );
 
 export type CompanyTaskListFragmentFragment = (
@@ -148,6 +177,14 @@ export type CompanyTaskListFragmentFragment = (
   )> }
 );
 
+export const DocumentsListFragmentFragmentDoc = gql`
+    fragment DocumentsListFragment on PortalDocument {
+  id
+  title
+  href
+  isCompleted
+}
+    `;
 export const CompanyTaskListFragmentFragmentDoc = gql`
     fragment CompanyTaskListFragment on CompanyTaskList {
   name
@@ -214,8 +251,23 @@ export const PortalDocument = gql`
       ...CompanyTaskListFragment
     }
   }
+  getDocuments(id: 1) {
+    customer {
+      name
+      documents {
+        ...DocumentsListFragment
+      }
+    }
+    vendor {
+      name
+      documents {
+        ...DocumentsListFragment
+      }
+    }
+  }
 }
-    ${CompanyTaskListFragmentFragmentDoc}`;
+    ${CompanyTaskListFragmentFragmentDoc}
+${DocumentsListFragmentFragmentDoc}`;
 
 /**
  * __usePortalQuery__

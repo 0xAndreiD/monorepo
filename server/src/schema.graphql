@@ -40,15 +40,20 @@ type PortalDocument {
     isCompleted: Boolean!
 }
 
-type PortalDocuments {
-    customer: [PortalDocument!]!
-    vendor: [PortalDocument!]!
+type PortalDocumentList{
+    name: String!
+    documents: [PortalDocument!]!
+}
+
+type PortalDocumentsCard {
+    customer: PortalDocumentList!
+    vendor: PortalDocumentList!
 }
 
 type Query {
     getLaunchRoadmap(id: ID!): [LaunchStep!]!
     getNextSteps(id: ID!): NextSteps!
-    getDocuments(id: ID!): PortalDocuments!
+    getDocuments(id: ID!): PortalDocumentsCard!
     getUploadTransactionId: ID!
 }
 

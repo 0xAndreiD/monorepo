@@ -3,7 +3,7 @@ import {
     LaunchStep,
     MutationResolvers,
     NextSteps,
-    PortalDocuments,
+    PortalDocuments, PortalDocumentsCard,
     QueryResolvers,
     Scalars
 } from "./generated/graphql";
@@ -95,22 +95,28 @@ export const queryResolvers: QueryResolvers = {
         }
 
         return {
-            customer: portal.documents
-                .filter(x => portal.userPortals.filter(up => up.role === Role.AccountExecutive).map(up => up.userId).includes(x.userId))
-                .map(x => ({
-                    id: x.id.toString(),
-                    title: x.title,
-                    href: x.href,
-                    isCompleted: x.isCompleted
-                })),
-            vendor: portal.documents
-                .filter(x => portal.userPortals.filter(up => up.role === Role.Stakeholder).map(up => up.userId).includes(x.userId))
-                .map(x => ({
-                    id: x.id.toString(),
-                    title: x.title,
-                    href: x.href,
-                    isCompleted: x.isCompleted
-                }))
+            customer: {
+                name: portal.customerName,
+                documents: portal.documents
+                    .filter(x => portal.userPortals.filter(up => up.role === Role.AccountExecutive).map(up => up.userId).includes(x.userId))
+                    .map(x => ({
+                        id: x.id.toString(),
+                        title: x.title,
+                        href: x.href,
+                        isCompleted: x.isCompleted
+                    }))
+            },
+            vendor: {
+                name: portal.customerName,
+                documents: portal.documents
+                    .filter(x => portal.userPortals.filter(up => up.role === Role.Stakeholder).map(up => up.userId).includes(x.userId))
+                    .map(x => ({
+                        id: x.id.toString(),
+                        title: x.title,
+                        href: x.href,
+                        isCompleted: x.isCompleted
+                    }))
+            }
         };
     },
 };

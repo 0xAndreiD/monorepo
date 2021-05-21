@@ -1,7 +1,7 @@
 import React from 'react';
 import 'tailwindcss/tailwind.css';
 import NextStepsCard from "../components/NextStepsCard";
-import {DocumentsCardDemo} from "../components/DocumentsCard";
+import DocumentsCard from "../components/DocumentsCard";
 import {ProposalCardDemo} from "../components/ProposalCard";
 import LaunchRoadmap from "../components/LaunchRoadmap";
 import {ProductInfoCardDemo} from "../components/ProductInfoCard";
@@ -26,7 +26,7 @@ const CLIENT_QUERY = gql`
             }
             status
         }
-
+        
         getNextSteps(id: 1) {
             customer {
                 ...CompanyTaskListFragment
@@ -35,8 +35,30 @@ const CLIENT_QUERY = gql`
                 ...CompanyTaskListFragment
             }
         }
+
+        getDocuments(id: 1) {
+            customer {
+                name
+                documents {
+                    ...DocumentsListFragment
+                }
+            }
+            vendor {
+                name
+                documents {
+                    ...DocumentsListFragment
+                }
+            }
+        }
     }
 
+    fragment DocumentsListFragment on PortalDocument {
+        id
+        title
+        href
+        isCompleted
+    }
+    
     fragment CompanyTaskListFragment on CompanyTaskList {
         name
         tasks {
@@ -75,7 +97,7 @@ export default function CustomerPortal() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-4">
                     <NextStepsCard data={data.getNextSteps}/>
-                    <DocumentsCardDemo/>
+                    <DocumentsCard data={data.getDocuments}/>
                     <ProductInfoCardDemo/>
                 </div>
                 <div className="flex flex-col gap-4">
