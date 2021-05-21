@@ -2,8 +2,6 @@ import {
     CompletionStatus,
     LaunchStep,
     MutationResolvers,
-    NextSteps,
-    PortalDocuments, PortalDocumentsCard,
     QueryResolvers,
     Scalars
 } from "./generated/graphql";
