@@ -1,3 +1,5 @@
+import {PrismaClient} from "@prisma/client";
+
 export type FaxOrder = {
     //data known at fax submission time
     toFaxNumber: string,
@@ -23,3 +25,5 @@ export type FaxOrder = {
 };
 export const ordersDb: Record<string, FaxOrder> = {};  //maps paypal orderid to fax order details
 export const uploadTransactionsDb: Record<string, string[]> = {}; //maps transaction ids to uploaded files
+
+const prisma = new PrismaClient();

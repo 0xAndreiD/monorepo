@@ -5,6 +5,7 @@ import {AddButton} from "./generic/AddButton";
 import {TrashIcon} from "@heroicons/react/outline";
 import {CompanyTaskList, NextSteps, usePortalNextStepsSetTaskCompletionMutation} from "../src/generated/graphql";
 import {gql} from "@apollo/client";
+import {APOLLO_CLIENT} from "../config";
 //
 // export function NextStepsCardDemo() {
 //     const data = {
@@ -43,7 +44,7 @@ const UPDATE_QUERY = gql`
 `;
 
 function TaskList(props: { isElementDeletable: boolean, data: CompanyTaskList }) {
-    const [updateIsCompleted] = usePortalNextStepsSetTaskCompletionMutation();
+    const [updateIsCompleted] = usePortalNextStepsSetTaskCompletionMutation({client: APOLLO_CLIENT,});
 
     return <>
         <p className="max-w-2xl pt-4 text-sm">for <span className="font-bold">{props.data.name}</span></p>

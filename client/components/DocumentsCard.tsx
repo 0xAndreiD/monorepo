@@ -3,9 +3,11 @@
 import {CheckIcon, CloudUploadIcon} from "@heroicons/react/solid";
 import CardDivider, {Card, CardHeader} from "./generic/Card";
 import Link from 'next/link';
-import {useState} from "react";
+import {useCallback} from "react";
 import {useDropzone} from "react-dropzone";
 import {PortalDocument, PortalDocumentsCard} from "../src/generated/graphql";
+import axios from "axios";
+import {APOLLO_CLIENT, BACKEND_ENDPOINT} from "../config";
 //
 // export function DocumentsCardDemo() {
 //     const data = {
@@ -29,9 +31,38 @@ import {PortalDocument, PortalDocumentsCard} from "../src/generated/graphql";
 // }
 
 
-export default function DocumentsCard(props: { data: PortalDocumentsCard }) {
+export default function DocumentsCard(props: { portalId: string, data: PortalDocumentsCard }) {
 //reference: https://tailwindui.com/components/application-ui/data-display/title-lists#component-e1b5917b21bbe76a73a96c5ca876225f
-    const {getRootProps, getInputProps, open, acceptedFiles} = useDropzone();
+
+    const onDrop = useCallback((acceptedFiles: File[]) => {
+        // Do something with the files
+        const formData = new FormData();
+        formData.append("portalId", props.portalId);
+        acceptedFiles.forEach((file, idx) => formData.append(`file_${idx}`, file));
+        axios.post(`${BACKEND_ENDPOINT}/fileUpload`, formData, {
+            headers: {'Content-Type': 'multipart/form-data'}
+        }).then(() => {
+
+            APOLLO_CLIENT.writeQuery({
+                // id: 'Todo:5',
+                query: PortalDocument,
+                data: {
+                    getDocuments: {
+                        customer: {
+                            documents: {
+                                id: 999,
+                                title: "gql",
+                                href: "#",
+                                isCompleted: false
+                            }
+                        }
+                    }
+                },
+            });
+        });
+    }, []);
+
+    const {getRootProps, getInputProps, open, acceptedFiles} = useDropzone({onDrop});
 
     return <Card>
         <CardHeader>Documents </CardHeader>
@@ -62,7 +93,7 @@ function DocumentList(props: { companyName: string, documents: PortalDocument[] 
             {
                 props.documents.map((task, idx) =>
                     <span key={idx}>
-                        <Link href={task.href}>
+                        <Link href={`${BACKEND_ENDPOINT}/${task.href}`}>
                             <button
                                 type="button"
                                 className={"inline-flex items-center px-3 py-2 border shadow-sm text-sm\

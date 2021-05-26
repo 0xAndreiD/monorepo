@@ -2,7 +2,7 @@
 
 ### Local
 #### Dependencies
-- Node 13+
+- Node 14+
 - yarn 1.22+
 - [docker 19.03+](https://github.com/docker/docker-install) (for building images)
 - [docker-compose](https://github.com/docker/compose) (for building images)
@@ -22,6 +22,18 @@ Also install [Docker for Mac](https://hub.docker.com/editions/community/docker-c
 
 #### Connecting to the server
 ```ssh -L 8081:localhost:8081 root@vps287158.vps.ovh.ca```
+
+#### Endpoints
+
+`/fileUpload`
+
+Content type: `multipart/form-data`
+Method: `POST`
+
+`/graphql`
+
+Content type: `application/json`
+Method: `POST`
 
 Note: we use port 8081 for accessing [mitmweb](https://mitmproxy.readthedocs.io/en/v2.0.2/mitmweb.html) to debug interactions between the client and server
 

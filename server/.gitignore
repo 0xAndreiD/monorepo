@@ -121,6 +121,6 @@ dist/**/*
 
 # build artifacts
 src/generated
-public/media/*
+public/media/
 
 .idea/

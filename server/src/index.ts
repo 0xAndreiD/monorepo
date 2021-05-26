@@ -1,58 +1,39 @@
-import {ApolloServer, makeExecutableSchema} from 'apollo-server-express';
-import express from 'express';
-import core from "express-serve-static-core";
 import fs from "fs";
-import {mutationResolvers, queryResolvers} from "./resolver";
-import {initExpress} from "./routeHandler";
-import {PUBLIC_ROOT_URL} from "./config";
-import * as https from "https";
+import Koa from "koa";
+import {ApolloServer} from "apollo-server-koa";
 import * as Sentry from '@sentry/node';
+import {mutationResolvers, queryResolvers} from "./resolver";
+import {PUBLIC_PORT} from "./config";
+import {initRouter} from "./routeHandler";
 
-function httpsServer(app: core.Express, apolloServer: ApolloServer) {
-    app.use(function (request, response) { //force https
-        if (!request.secure) {
-            response.redirect(301, "https://" + request.headers.host + request.url);
-        }
-    });
-    const httpsServer = https.createServer(
-        //https info: https://www.apollographql.com/docs/apollo-server/security/terminating-ssl/
-        {
-            key: fs.readFileSync("privkey.pem"),
-            cert: fs.readFileSync("fullchain.pem")
-        },
-        app
-    );
-
-    httpsServer.listen({port: 443}, () =>
-        console.log(`🚀 Server ready at ${PUBLIC_ROOT_URL}${apolloServer.graphqlPath}`)
-    );
-}
-
-function httpServer(app: core.Express, apolloServer: ApolloServer) {
-    const port = 8000;
-    app.listen({port: port}, () => //need ipv4 for docker
-        console.log(`🚀 Server ready at http://localhost:${port}${apolloServer.graphqlPath}`)
-    );
-}
-
-function main() {
-    Sentry.init({
-        dsn: 'https://9cf257b270414ca29c42ae687bae8f4c@sentry.io/5185401',
-        attachStacktrace: true
-    });
-
-    const apolloServer = new ApolloServer({
+async function startApolloServer() {
+    const server = new ApolloServer({
         typeDefs: fs.readFileSync("./src/schema.graphql", "utf8"),
         resolvers: {
             Query: queryResolvers,
             Mutation: mutationResolvers
         },
-
     });
-    const app = express();
-    apolloServer.applyMiddleware({app,cors:true}); //manual express route to avoid needing 2 servers
-    initExpress(app);
-    httpServer(app, apolloServer);
+    await server.start();
+    return server;
+}
+
+async function main() {
+    Sentry.init({
+        dsn: 'https://9cf257b270414ca29c42ae687bae8f4c@sentry.io/5185401',
+        attachStacktrace: true
+    });
+
+    const server = await startApolloServer();
+
+    const app = new Koa();
+    server.applyMiddleware({app});
+    // alternatively you can get a composed middleware from the apollo server
+    // app.use(server.getMiddleware());
+
+    app.use(initRouter().routes());
+    await app.listen({port: PUBLIC_PORT});
+    console.log(`🚀 Server ready at http://localhost:${PUBLIC_PORT}${server.graphqlPath}`);
 }
 
 main();

@@ -8,7 +8,7 @@ import {
 import {v1 as uuid} from 'uuid';
 import {uploadTransactionsDb} from "./db";
 import {CustomerOrVendor, PrismaClient, Role} from "@prisma/client";
-import {ApolloError} from "apollo-server-express";
+import {ApolloError} from "apollo-server-koa";
 
 const prisma = new PrismaClient();
 
