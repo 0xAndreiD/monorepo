@@ -1,20 +1,20 @@
-type CompanyTaskItem{
+type CompanyTaskItem {
     id: ID!
     description: String!
     isCompleted: Boolean!
 }
 
-type CompanyTaskList  {
+type CompanyTaskList {
     name: String!
     tasks: [CompanyTaskItem!]!
 }
 
-type NextSteps{
+type NextSteps {
     customer: CompanyTaskList!
     vendor: CompanyTaskList!
 }
 
-type Link{
+type Link {
     body: String!
     href: String!
 }
@@ -40,7 +40,7 @@ type PortalDocument {
     isCompleted: Boolean!
 }
 
-type PortalDocumentList{
+type PortalDocumentList {
     name: String!
     documents: [PortalDocument!]!
 }
@@ -50,10 +50,21 @@ type PortalDocumentsCard {
     vendor: PortalDocumentList!
 }
 
+type ProductInfoSection {
+    heading: String!
+    links: [Link!]!
+}
+
+type PortalProductInfoCard {
+    images: [String!]!
+    sections: [ProductInfoSection!]!
+}
+
 type Query {
     getLaunchRoadmap(id: ID!): [LaunchStep!]!
     getNextSteps(id: ID!): NextSteps!
     getDocuments(id: ID!): PortalDocumentsCard!
+    getProductInfo(id: ID!): PortalProductInfoCard!
     getUploadTransactionId: ID!
 }
 

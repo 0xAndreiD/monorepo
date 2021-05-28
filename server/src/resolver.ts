@@ -1,10 +1,4 @@
-import {
-    CompletionStatus,
-    LaunchStep,
-    MutationResolvers,
-    QueryResolvers,
-    Scalars
-} from "./generated/graphql";
+import {CompletionStatus, LaunchStep, MutationResolvers, QueryResolvers, Scalars} from "./generated/graphql";
 import {v1 as uuid} from 'uuid';
 import {uploadTransactionsDb} from "./db";
 import {CustomerOrVendor, PrismaClient, Role} from "@prisma/client";
@@ -117,6 +111,53 @@ export const queryResolvers: QueryResolvers = {
             }
         };
     },
+    getProductInfo: async (_, {id}) => {
+        const data = {
+            images: [
+                "https://www.aniwaa.com/wp-content/uploads/2018/06/AR-glasses-smartphone-Mira-Prism-side.jpg",
+                "https://www.dhresource.com/0x0/f2/albu/g6/M00/D9/44/rBVaR1vhNjmAZBd_AAG1Wfrn4Go755.jpg/top-seller-2018-ar-glasses-mira-prism-ar.jpg",
+                "https://www.red-dot.org/index.php?f=37089&token=699949922eb8083e9bb5a3f67081e12da55eecff&eID=tx_solr_image&size=large&usage=hero",
+            ],
+            sections: [
+                {
+                    heading: "Product Videos",
+                    links: [
+                        {
+                            body: "Mira Connect", href: "#",
+                        },
+                        {
+                            body: "Mira Flow", href: "#",
+                        }
+                    ]
+                },
+                {
+                    heading: "Customer Case Studies",
+                    links: [
+                        {
+                            body: "Cogentrix Case Study - Remote Audits", href: "#",
+                        },
+                        {
+                            body: "Orica Case Study - Remote Troubleshooting", href: "#",
+                        }
+                    ]
+                },
+                {
+                    heading: "Misc",
+                    links: [
+                        {body: "Device Technical Spec Sheet", href: "#",}
+                    ]
+                },
+                {
+                    heading: "Website",
+                    links: [
+                        {body: "Mira Home", href: "#",},
+                        {body: "Mira FAQ", href: "#",}
+                    ]
+                }
+            ]
+        };
+        return data;
+    }
 };
 
 export const mutationResolvers: MutationResolvers = {

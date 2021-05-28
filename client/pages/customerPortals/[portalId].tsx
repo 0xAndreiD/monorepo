@@ -4,7 +4,7 @@ import NextStepsCard from "../../components/NextStepsCard";
 import DocumentsCard from "../../components/DocumentsCard";
 import {ProposalCardDemo} from "../../components/ProposalCard";
 import LaunchRoadmap from "../../components/LaunchRoadmap";
-import {ProductInfoCardDemo} from "../../components/ProductInfoCard";
+import {ProductInfoCard} from "../../components/ProductInfoCard";
 import {ContactsCardDemo} from "../../components/ContactsCard";
 import {InternalNotesDemo} from "../../components/InternalNotes";
 import {Footer} from "../../components/Footer";
@@ -49,6 +49,16 @@ const CLIENT_QUERY = gql`
                 name
                 documents {
                     ...DocumentsListFragment
+                }
+            }
+        }
+        getProductInfo(id: $portalId) {
+            images
+            sections {
+                heading
+                links {
+                    body
+                    href
                 }
             }
         }
@@ -109,7 +119,7 @@ export default function CustomerPortal() {
                 <div className="flex flex-col gap-4">
                     <NextStepsCard data={data.getNextSteps}/>
                     <DocumentsCard portalId={portalId} data={data.getDocuments}/>
-                    <ProductInfoCardDemo/>
+                    <ProductInfoCard data={data.getProductInfo}/>
                 </div>
                 <div className="flex flex-col gap-4">
                     <ProposalCardDemo/>

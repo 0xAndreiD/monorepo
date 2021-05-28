@@ -85,11 +85,24 @@ export type PortalDocumentsCard = {
   vendor: PortalDocumentList;
 };
 
+export type PortalProductInfoCard = {
+  __typename?: 'PortalProductInfoCard';
+  images: Array<Scalars['String']>;
+  sections: Array<ProductInfoSection>;
+};
+
+export type ProductInfoSection = {
+  __typename?: 'ProductInfoSection';
+  heading: Scalars['String'];
+  links: Array<Link>;
+};
+
 export type Query = {
   __typename?: 'Query';
   getLaunchRoadmap: Array<LaunchStep>;
   getNextSteps: NextSteps;
   getDocuments: PortalDocumentsCard;
+  getProductInfo: PortalProductInfoCard;
   getUploadTransactionId: Scalars['ID'];
 };
 
@@ -105,6 +118,11 @@ export type QueryGetNextStepsArgs = {
 
 
 export type QueryGetDocumentsArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryGetProductInfoArgs = {
   id: Scalars['ID'];
 };
 
@@ -162,6 +180,17 @@ export type PortalQuery = (
         & DocumentsListFragmentFragment
       )> }
     ) }
+  ), getProductInfo: (
+    { __typename?: 'PortalProductInfoCard' }
+    & Pick<PortalProductInfoCard, 'images'>
+    & { sections: Array<(
+      { __typename?: 'ProductInfoSection' }
+      & Pick<ProductInfoSection, 'heading'>
+      & { links: Array<(
+        { __typename?: 'Link' }
+        & Pick<Link, 'body' | 'href'>
+      )> }
+    )> }
   ) }
 );
 
@@ -264,6 +293,16 @@ export const PortalDocument = gql`
       name
       documents {
         ...DocumentsListFragment
+      }
+    }
+  }
+  getProductInfo(id: $portalId) {
+    images
+    sections {
+      heading
+      links {
+        body
+        href
       }
     }
   }
