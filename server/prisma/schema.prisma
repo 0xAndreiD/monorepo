@@ -65,6 +65,7 @@ model Stakeholder {
 
 model AccountExecutive {
   id           Int        @id @default(autoincrement())
+  jobTitle     String
   vendorTeam   VendorTeam @relation(fields: [vendorTeamId], references: [id])
   vendorTeamId Int
   user         User       @relation(fields: [userId], references: [id])

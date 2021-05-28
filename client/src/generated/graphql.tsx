@@ -65,6 +65,19 @@ export type NextSteps = {
   vendor: CompanyTaskList;
 };
 
+export type PortalContact = {
+  __typename?: 'PortalContact';
+  name: Scalars['String'];
+  jobTitle?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  photoUrl: Scalars['String'];
+};
+
+export type PortalContactsCard = {
+  __typename?: 'PortalContactsCard';
+  contacts: Array<PortalContact>;
+};
+
 export type PortalDocument = {
   __typename?: 'PortalDocument';
   id: Scalars['ID'];
@@ -112,6 +125,7 @@ export type Query = {
   getDocuments: PortalDocumentsCard;
   getProductInfo: PortalProductInfoCard;
   getProposalCard: PortalProposalCard;
+  getContactsCard: PortalContactsCard;
   getUploadTransactionId: Scalars['ID'];
 };
 
@@ -137,6 +151,11 @@ export type QueryGetProductInfoArgs = {
 
 
 export type QueryGetProposalCardArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryGetContactsCardArgs = {
   id: Scalars['ID'];
 };
 
@@ -219,6 +238,12 @@ export type PortalQuery = (
     & { stakeholders: Array<(
       { __typename?: 'Stakeholder' }
       & Pick<Stakeholder, 'name' | 'jobTitle' | 'email' | 'isApprovedBy'>
+    )> }
+  ), getContactsCard: (
+    { __typename?: 'PortalContactsCard' }
+    & { contacts: Array<(
+      { __typename?: 'PortalContact' }
+      & Pick<PortalContact, 'name' | 'jobTitle' | 'email' | 'photoUrl'>
     )> }
   ) }
 );
@@ -344,6 +369,14 @@ export const PortalDocument = gql`
       jobTitle
       email
       isApprovedBy
+    }
+  }
+  getContactsCard(id: $portalId) {
+    contacts {
+      name
+      jobTitle
+      email
+      photoUrl
     }
   }
 }

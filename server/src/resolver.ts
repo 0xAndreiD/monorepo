@@ -165,15 +165,44 @@ export const queryResolvers: QueryResolvers = {
                 .map(userPortal =>
                     ({
                         name: `${userPortal.user.firstName} ${userPortal.user.lastName}`,
-                        jobTitle: userPortal.user.stakeholder?.jobTitle ?? "",
+                        jobTitle: userPortal.user.stakeholder?.jobTitle,
                         email: userPortal.user.email,
                         isApprovedBy: userPortal.user.stakeholder?.isApprovedBy ?? false
                     })
                 )
         };
+    },
+    getContactsCard: async (_, {id}) => {
+        const portal = await prisma.portal.findUnique({
+            where: {id: parseInt(id)},
+            include: {
+                userPortals: {
+                    include: {user: {include: {accountExecutive: true}}},
+                    where: {role: Role.AccountExecutive}
+                }
+            },
+
+        });
+
+        if (!portal) {
+            throw new ApolloError(
+                "Not found in db",
+                "CAN_NOT_FETCH_BY_ID",
+            );
+        }
+        return {
+            contacts: portal.userPortals
+                .map(userPortal =>
+                    ({
+                        name: `${userPortal.user.firstName} ${userPortal.user.lastName}`,
+                        jobTitle: userPortal.user.accountExecutive?.jobTitle,
+                        email: userPortal.user.email,
+                        photoUrl: userPortal.user.photoUrl ?? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                    })
+                )
+        };
     }
 };
-
 export const mutationResolvers: MutationResolvers = {
     portalNextStepsSetTaskCompletion: async (_, {id, isCompleted}) => {
         const task = await prisma.nextStepsTask.update({

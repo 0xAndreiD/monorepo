@@ -74,12 +74,24 @@ type PortalProposalCard {
     stakeholders: [Stakeholder!]!
 }
 
+type PortalContact {
+    name: String!
+    jobTitle: String
+    email: String!
+    photoUrl: String!
+}
+
+type PortalContactsCard {
+    contacts: [PortalContact!]!
+}
+
 type Query {
     getLaunchRoadmap(id: ID!): [LaunchStep!]!
     getNextSteps(id: ID!): NextSteps!
     getDocuments(id: ID!): PortalDocumentsCard!
     getProductInfo(id: ID!): PortalProductInfoCard!
     getProposalCard(id: ID!): PortalProposalCard!
+    getContactsCard(id: ID!): PortalContactsCard!
     getUploadTransactionId: ID!
 }
 

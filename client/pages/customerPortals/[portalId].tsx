@@ -5,7 +5,7 @@ import DocumentsCard from "../../components/DocumentsCard";
 import {ProposalCard} from "../../components/ProposalCard";
 import LaunchRoadmap from "../../components/LaunchRoadmap";
 import {ProductInfoCard} from "../../components/ProductInfoCard";
-import {ContactsCardDemo} from "../../components/ContactsCard";
+import {ContactsCard} from "../../components/ContactsCard";
 import {InternalNotesDemo} from "../../components/InternalNotes";
 import {Footer} from "../../components/Footer";
 import {Header} from "../../components/Header";
@@ -73,6 +73,14 @@ const CLIENT_QUERY = gql`
                 isApprovedBy
             }
         }
+        getContactsCard(id: $portalId) {
+            contacts {
+                name
+                jobTitle
+                email
+                photoUrl
+            }
+        }
     }
 
     fragment DocumentsListFragment on PortalDocument {
@@ -134,7 +142,7 @@ export default function CustomerPortal() {
                 </div>
                 <div className="flex flex-col gap-4">
                     <ProposalCard data={data.getProposalCard}/>
-                    <ContactsCardDemo/>
+                    <ContactsCard data={data.getContactsCard}/>
                     <InternalNotesDemo/>
                 </div>
             </div>
