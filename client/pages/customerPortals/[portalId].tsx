@@ -2,7 +2,7 @@ import React from 'react';
 import 'tailwindcss/tailwind.css';
 import NextStepsCard from "../../components/NextStepsCard";
 import DocumentsCard from "../../components/DocumentsCard";
-import {ProposalCardDemo} from "../../components/ProposalCard";
+import {ProposalCard} from "../../components/ProposalCard";
 import LaunchRoadmap from "../../components/LaunchRoadmap";
 import {ProductInfoCard} from "../../components/ProductInfoCard";
 import {ContactsCardDemo} from "../../components/ContactsCard";
@@ -60,6 +60,17 @@ const CLIENT_QUERY = gql`
                     body
                     href
                 }
+            }
+        }
+        getProposalCard(id: $portalId) {
+            heading
+            subheading
+            quoteLink
+            stakeholders {
+                name
+                jobTitle
+                email
+                isApprovedBy
             }
         }
     }
@@ -122,7 +133,7 @@ export default function CustomerPortal() {
                     <ProductInfoCard data={data.getProductInfo}/>
                 </div>
                 <div className="flex flex-col gap-4">
-                    <ProposalCardDemo/>
+                    <ProposalCard data={data.getProposalCard}/>
                     <ContactsCardDemo/>
                     <InternalNotesDemo/>
                 </div>

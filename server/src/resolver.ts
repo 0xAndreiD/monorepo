@@ -138,6 +138,39 @@ export const queryResolvers: QueryResolvers = {
                     }))
             }))
         };
+    },
+    getProposalCard: async (_, {id}) => {
+        const portal = await prisma.portal.findUnique({
+            where: {id: parseInt(id)},
+            include: {
+                userPortals: {
+                    include: {user: {include: {stakeholder: true}}},
+                    where: {role: Role.Stakeholder}
+                }
+            },
+
+        });
+
+        if (!portal) {
+            throw new ApolloError(
+                "Not found in db",
+                "CAN_NOT_FETCH_BY_ID",
+            );
+        }
+        return {
+            heading: portal.proposalHeading,
+            subheading: portal.proposalSubheading,
+            quoteLink: portal.proposalQuoteLink,
+            stakeholders: portal.userPortals
+                .map(userPortal =>
+                    ({
+                        name: `${userPortal.user.firstName} ${userPortal.user.lastName}`,
+                        jobTitle: userPortal.user.stakeholder?.jobTitle ?? "",
+                        email: userPortal.user.email,
+                        isApprovedBy: userPortal.user.stakeholder?.isApprovedBy ?? false
+                    })
+                )
+        };
     }
 };
 

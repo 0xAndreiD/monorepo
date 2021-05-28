@@ -8,69 +8,70 @@ import {AddButton} from "./generic/AddButton";
 import Modal from "./generic/Modal";
 import {getColourFromSting} from "../util/colour";
 import {getInitialsOfName} from "../util/text";
+import {PortalProposalCard, Stakeholder} from "../src/generated/graphql";
 
-export type Stakeholder = {
-    name: string,
-    email: string,
-    jobTitle: string,
-    isApprovedBy?: boolean
-};
+// export type Stakeholder = {
+//     name: string,
+//     email: string,
+//     jobTitle: string,
+//     isApprovedBy?: boolean
+// };
+//
+// type Proposal = {
+//     description: string,
+//     productCallout: string,
+//     quoteHref: string,
+//     stakeholders: Array<Stakeholder>
+// }
+//
+// export function ProposalCardDemo() {
+//     const data: Proposal = {
+//         description: "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
+//         productCallout: "2 Prism Headsets + 4 User Licenses",
+//         quoteHref: "http://google.com",
+//         stakeholders: [
+//             {
+//                 name: "Nic Franklin",
+//                 jobTitle: "Director of Operations",
+//                 email: "nick@mira.com",
+//                 isApprovedBy: true
+//             },
+//             {
+//                 name: "Kristin Sanders",
+//                 jobTitle: "Head of Technical Services",
+//                 email: "kristin@mira.com",
+//                 isApprovedBy: true
+//             },
+//             {
+//                 name: "Wally Iris",
+//                 jobTitle: "Senior QA Manager",
+//                 email: "wally@mira.com",
+//                 isApprovedBy: true
+//             },
+//             {
+//                 name: "Penelope Star",
+//                 jobTitle: "Plant Manager",
+//                 email: "penelope@mira.com",
+//                 isApprovedBy: false
+//             }
+//         ]
+//     };
+//
+//     return <ProposalCard {...data}/>;
+// }
 
-type Proposal = {
-    description: string,
-    productCallout: string,
-    quoteHref: string,
-    stakeholders: Array<Stakeholder>
-}
-
-export function ProposalCardDemo() {
-    const data: Proposal = {
-        description: "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
-        productCallout: "2 Prism Headsets + 4 User Licenses",
-        quoteHref: "http://google.com",
-        stakeholders: [
-            {
-                name: "Nic Franklin",
-                jobTitle: "Director of Operations",
-                email: "nick@mira.com",
-                isApprovedBy: true
-            },
-            {
-                name: "Kristin Sanders",
-                jobTitle: "Head of Technical Services",
-                email: "kristin@mira.com",
-                isApprovedBy: true
-            },
-            {
-                name: "Wally Iris",
-                jobTitle: "Senior QA Manager",
-                email: "wally@mira.com",
-                isApprovedBy: true
-            },
-            {
-                name: "Penelope Star",
-                jobTitle: "Plant Manager",
-                email: "penelope@mira.com",
-                isApprovedBy: false
-            }
-        ]
-    };
-
-    return <ProposalCard {...data}/>;
-}
-
-function ProposalCard(props: Proposal) {
+export function ProposalCard(props: { data:PortalProposalCard  }) {
     const [isDetailsVisible, setDetailsVisible] = useState(true);
     const [isInviteStakeholdersModalOpen, setIsInviteStakeholdersModalOpen] = useState(false);
 
     return <Card>
         <div className="flex flex-col items-center pb-6">
             <CardHeader>Proposal</CardHeader>
-            <h5 className="text-center">{props.description}</h5>
-            <h5 className="py-2 font-bold text-center">{props.productCallout}</h5>
+            <h5 className="text-center">{props.data.heading}</h5>
+            <h5 className="py-2 font-bold text-center">{props.data.subheading}</h5>
             <div className="sm:divide-y sm:divide-gray-200"/>
 
-            <Link href={props.quoteHref}>
+            <Link href={props.data.quoteLink}>
                 <button
                     type="button"
                     className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
@@ -84,7 +85,7 @@ function ProposalCard(props: Proposal) {
         <h4 className="font-bold">Key Stakeholders' Approval:</h4>
         <div className="py-4 flex gap-3">
             {
-                props.stakeholders.map((stakeholder, idx) => {
+                props.data.stakeholders.map((stakeholder, idx) => {
                         const colour = getColourFromSting(stakeholder.name);
                         return <div key={idx}
                                     className={`relative w-10 h-10 flex items-center justify-center 
@@ -119,7 +120,7 @@ function ProposalCard(props: Proposal) {
         {/*Show stakeholder invitation*/}
         <Modal isOpen={isInviteStakeholdersModalOpen}
                setIsOpen={setIsInviteStakeholdersModalOpen}>
-            <InviteStakeholdersContent stakeholders={props.stakeholders}
+            <InviteStakeholdersContent stakeholders={props.data.stakeholders}
                                        setIsOpen={setIsInviteStakeholdersModalOpen}/>
         </Modal>
 
@@ -151,7 +152,7 @@ function ProposalCard(props: Proposal) {
             </div>
 
             <div className="pt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {props.stakeholders.map((person) => (
+                {props.data.stakeholders.map((person) => (
                     <div
                         key={person.email}
                         className="relative rounded-lg bg-white flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"

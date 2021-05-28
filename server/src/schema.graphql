@@ -60,11 +60,26 @@ type PortalProductInfoCard {
     sections: [ProductInfoSection!]!
 }
 
+type Stakeholder{
+    name: String!
+    jobTitle: String
+    email: String!
+    isApprovedBy: Boolean!
+}
+
+type PortalProposalCard {
+    heading: String!
+    subheading: String!
+    quoteLink: String!
+    stakeholders: [Stakeholder!]!
+}
+
 type Query {
     getLaunchRoadmap(id: ID!): [LaunchStep!]!
     getNextSteps(id: ID!): NextSteps!
     getDocuments(id: ID!): PortalDocumentsCard!
     getProductInfo(id: ID!): PortalProductInfoCard!
+    getProposalCard(id: ID!): PortalProposalCard!
     getUploadTransactionId: ID!
 }
 

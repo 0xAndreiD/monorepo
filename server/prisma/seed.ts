@@ -45,6 +45,9 @@ async function main() {
                     role: Role.AccountExecutive
                 }
             },
+            proposalHeading: "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
+            proposalSubheading: "2 Prism Headsets + 4 User Licenses",
+            proposalQuoteLink: "https://www.google.com/?gws_rd=ssl",
             vendorId: vendorTeam.vendorId
         },
     });

@@ -91,6 +91,14 @@ export type PortalProductInfoCard = {
   sections: Array<ProductInfoSection>;
 };
 
+export type PortalProposalCard = {
+  __typename?: 'PortalProposalCard';
+  heading: Scalars['String'];
+  subheading: Scalars['String'];
+  quoteLink: Scalars['String'];
+  stakeholders: Array<Stakeholder>;
+};
+
 export type ProductInfoSection = {
   __typename?: 'ProductInfoSection';
   heading: Scalars['String'];
@@ -103,6 +111,7 @@ export type Query = {
   getNextSteps: NextSteps;
   getDocuments: PortalDocumentsCard;
   getProductInfo: PortalProductInfoCard;
+  getProposalCard: PortalProposalCard;
   getUploadTransactionId: Scalars['ID'];
 };
 
@@ -124,6 +133,19 @@ export type QueryGetDocumentsArgs = {
 
 export type QueryGetProductInfoArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryGetProposalCardArgs = {
+  id: Scalars['ID'];
+};
+
+export type Stakeholder = {
+  __typename?: 'Stakeholder';
+  name: Scalars['String'];
+  jobTitle?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  isApprovedBy: Scalars['Boolean'];
 };
 
 export type PortalNextStepsSetTaskCompletionMutationVariables = Exact<{
@@ -190,6 +212,13 @@ export type PortalQuery = (
         { __typename?: 'Link' }
         & Pick<Link, 'body' | 'href'>
       )> }
+    )> }
+  ), getProposalCard: (
+    { __typename?: 'PortalProposalCard' }
+    & Pick<PortalProposalCard, 'heading' | 'subheading' | 'quoteLink'>
+    & { stakeholders: Array<(
+      { __typename?: 'Stakeholder' }
+      & Pick<Stakeholder, 'name' | 'jobTitle' | 'email' | 'isApprovedBy'>
     )> }
   ) }
 );
@@ -304,6 +333,17 @@ export const PortalDocument = gql`
         body
         href
       }
+    }
+  }
+  getProposalCard(id: $portalId) {
+    heading
+    subheading
+    quoteLink
+    stakeholders {
+      name
+      jobTitle
+      email
+      isApprovedBy
     }
   }
 }
