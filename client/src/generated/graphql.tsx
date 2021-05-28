@@ -122,7 +122,9 @@ export type PortalNextStepsSetTaskCompletionMutation = (
   ) }
 );
 
-export type PortalQueryVariables = Exact<{ [key: string]: never; }>;
+export type PortalQueryVariables = Exact<{
+  portalId: Scalars['ID'];
+}>;
 
 
 export type PortalQuery = (
@@ -232,8 +234,8 @@ export type PortalNextStepsSetTaskCompletionMutationHookResult = ReturnType<type
 export type PortalNextStepsSetTaskCompletionMutationResult = Apollo.MutationResult<PortalNextStepsSetTaskCompletionMutation>;
 export type PortalNextStepsSetTaskCompletionMutationOptions = Apollo.BaseMutationOptions<PortalNextStepsSetTaskCompletionMutation, PortalNextStepsSetTaskCompletionMutationVariables>;
 export const PortalDocument = gql`
-    query portal {
-  getLaunchRoadmap(id: 1) {
+    query portal($portalId: ID!) {
+  getLaunchRoadmap(id: $portalId) {
     heading
     date
     tasks
@@ -243,7 +245,7 @@ export const PortalDocument = gql`
     }
     status
   }
-  getNextSteps(id: 1) {
+  getNextSteps(id: $portalId) {
     customer {
       ...CompanyTaskListFragment
     }
@@ -251,7 +253,7 @@ export const PortalDocument = gql`
       ...CompanyTaskListFragment
     }
   }
-  getDocuments(id: 1) {
+  getDocuments(id: $portalId) {
     customer {
       name
       documents {
@@ -281,10 +283,11 @@ ${DocumentsListFragmentFragmentDoc}`;
  * @example
  * const { data, loading, error } = usePortalQuery({
  *   variables: {
+ *      portalId: // value for 'portalId'
  *   },
  * });
  */
-export function usePortalQuery(baseOptions?: Apollo.QueryHookOptions<PortalQuery, PortalQueryVariables>) {
+export function usePortalQuery(baseOptions: Apollo.QueryHookOptions<PortalQuery, PortalQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<PortalQuery, PortalQueryVariables>(PortalDocument, options);
       }

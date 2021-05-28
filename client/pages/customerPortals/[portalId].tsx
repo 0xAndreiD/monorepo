@@ -10,15 +10,15 @@ import {InternalNotesDemo} from "../../components/InternalNotes";
 import {Footer} from "../../components/Footer";
 import {Header} from "../../components/Header";
 import CardDivider from "../../components/generic/Card";
-import {ApolloProvider, gql} from "@apollo/client";
-import {useRouter} from 'next/router'
+import {gql} from "@apollo/client";
+import {useRouter} from 'next/router';
 import {usePortalQuery} from "../../src/generated/graphql";
 import {APOLLO_CLIENT} from "../../config";
 
 
 const CLIENT_QUERY = gql`
-    query portal {
-        getLaunchRoadmap(id: 1) {
+    query portal($portalId: ID!) {
+        getLaunchRoadmap(id: $portalId) {
             heading
             date
             tasks
@@ -29,7 +29,7 @@ const CLIENT_QUERY = gql`
             status
         }
 
-        getNextSteps(id: 1) {
+        getNextSteps(id: $portalId) {
             customer {
                 ...CompanyTaskListFragment
             }
@@ -38,7 +38,7 @@ const CLIENT_QUERY = gql`
             }
         }
 
-        getDocuments(id: 1) {
+        getDocuments(id: $portalId) {
             customer {
                 name
                 documents {
@@ -73,9 +73,10 @@ const CLIENT_QUERY = gql`
 
 export default function CustomerPortal() {
     const router = useRouter();
-    const { portalId } = router.query;
+    const {portalId} = router.query;
     const {data, loading, error} = usePortalQuery({
-        variables: {},
+        skip: (typeof portalId !== "string" || !portalId),
+        variables: {portalId: portalId as string}, //cast should be safe with 'skip'
         client: APOLLO_CLIENT,
     });
 
@@ -88,7 +89,6 @@ export default function CustomerPortal() {
     }
 
     if (!portalId || typeof portalId !== "string") {
-        console.log(portalId)
         return <>Wrong Portal Id!</>;
     }
 
