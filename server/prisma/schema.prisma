@@ -74,18 +74,45 @@ model AccountExecutive {
 }
 
 model Portal {
-  id                  Int             @id @default(autoincrement())
+  id                  Int                  @id @default(autoincrement())
   customerName        String
   customerLogoUrl     String
   roadmapStages       RoadmapStage[]
   nextStepsTasks      NextStepsTask[]
   currentRoadmapStage Int
   documents           Document[]
+  images              PortalImage[]
+  productInfoSections ProductInfoSection[]
   userPortals         UserPortal[]
-  vendor              Vendor          @relation(fields: [vendorId], references: [id])
+  vendor              Vendor               @relation(fields: [vendorId], references: [id])
   vendorId            Int
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @updatedAt
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+}
+
+model ProductInfoSectionLink {
+  id                   Int                @id @default(autoincrement())
+  linkText             String
+  link                 String
+  productInfoSectionId Int
+  productInfoSection   ProductInfoSection @relation(fields: [productInfoSectionId], references: [id])
+}
+
+model ProductInfoSection {
+  id       Int                      @id @default(autoincrement())
+  portalId Int
+  portal   Portal                   @relation(fields: [portalId], references: [id])
+  heading  String
+  links    ProductInfoSectionLink[]
+}
+
+model PortalImage {
+  id        Int      @id @default(autoincrement())
+  portalId  Int
+  portal    Portal   @relation(fields: [portalId], references: [id])
+  href      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model RoadmapStage {

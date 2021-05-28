@@ -112,51 +112,32 @@ export const queryResolvers: QueryResolvers = {
         };
     },
     getProductInfo: async (_, {id}) => {
-        const data = {
-            images: [
-                "https://www.aniwaa.com/wp-content/uploads/2018/06/AR-glasses-smartphone-Mira-Prism-side.jpg",
-                "https://www.dhresource.com/0x0/f2/albu/g6/M00/D9/44/rBVaR1vhNjmAZBd_AAG1Wfrn4Go755.jpg/top-seller-2018-ar-glasses-mira-prism-ar.jpg",
-                "https://www.red-dot.org/index.php?f=37089&token=699949922eb8083e9bb5a3f67081e12da55eecff&eID=tx_solr_image&size=large&usage=hero",
-            ],
-            sections: [
-                {
-                    heading: "Product Videos",
-                    links: [
-                        {
-                            body: "Mira Connect", href: "#",
-                        },
-                        {
-                            body: "Mira Flow", href: "#",
-                        }
-                    ]
-                },
-                {
-                    heading: "Customer Case Studies",
-                    links: [
-                        {
-                            body: "Cogentrix Case Study - Remote Audits", href: "#",
-                        },
-                        {
-                            body: "Orica Case Study - Remote Troubleshooting", href: "#",
-                        }
-                    ]
-                },
-                {
-                    heading: "Misc",
-                    links: [
-                        {body: "Device Technical Spec Sheet", href: "#",}
-                    ]
-                },
-                {
-                    heading: "Website",
-                    links: [
-                        {body: "Mira Home", href: "#",},
-                        {body: "Mira FAQ", href: "#",}
-                    ]
-                }
-            ]
+        const portal = await prisma.portal.findUnique({
+            where: {id: parseInt(id)},
+            include: {
+                images: {orderBy: {id: 'asc'}},
+                productInfoSections: {include: {links: true}}
+            }
+        });
+
+        if (!portal) {
+            throw new ApolloError(
+                "Not found in db",
+                "CAN_NOT_FETCH_BY_ID",
+            );
+        }
+
+        return {
+            images: portal.images.map(x => x.href),
+            sections: portal.productInfoSections.map(section => ({
+                heading: section.heading,
+                links: section.links.map(link =>
+                    ({
+                        body: link.linkText,
+                        href: link.link
+                    }))
+            }))
         };
-        return data;
     }
 };
 

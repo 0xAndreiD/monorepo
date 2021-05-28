@@ -1,4 +1,4 @@
-import {CustomerOrVendor, Portal, PrismaClient, RoadmapStage, Role, Vendor} from '@prisma/client';
+import {CustomerOrVendor, PrismaClient, Role} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -157,7 +157,6 @@ async function main() {
         ]
     });
 
-
     await prisma.document.createMany({
         data: [
             {
@@ -182,8 +181,81 @@ async function main() {
                 userId: stakeholders[0].id
             }
         ]
-    })
+    });
 
+    await prisma.portalImage.createMany({
+        data: [
+            {
+                portalId: portal.id,
+                href: "https://www.aniwaa.com/wp-content/uploads/2018/06/AR-glasses-smartphone-Mira-Prism-side.jpg",
+            },
+            {
+                portalId: portal.id,
+                href: "https://www.dhresource.com/0x0/f2/albu/g6/M00/D9/44/rBVaR1vhNjmAZBd_AAG1Wfrn4Go755.jpg/top-seller-2018-ar-glasses-mira-prism-ar.jpg",
+            },
+            {
+                portalId: portal.id,
+                href: "https://www.red-dot.org/index.php?f=37089&token=699949922eb8083e9bb5a3f67081e12da55eecff&eID=tx_solr_image&size=large&usage=hero",
+            }
+        ]
+    });
+
+    const productInfoSections = [
+        {
+            heading: "Product Videos",
+            links: [
+                {
+                    body: "Mira Connect", href: "#",
+                },
+                {
+                    body: "Mira Flow", href: "#",
+                }
+            ]
+        },
+        {
+            heading: "Customer Case Studies",
+            links: [
+                {
+                    body: "Cogentrix Case Study - Remote Audits", href: "#",
+                },
+                {
+                    body: "Orica Case Study - Remote Troubleshooting", href: "#",
+                }
+            ]
+        },
+        {
+            heading: "Misc",
+            links: [
+                {body: "Device Technical Spec Sheet", href: "#",}
+            ]
+        },
+        {
+            heading: "Website",
+            links: [
+                {body: "Mira Home", href: "#",},
+                {body: "Mira FAQ", href: "#",}
+            ]
+        }
+    ];
+
+    for (const section of productInfoSections) {
+        await prisma.productInfoSection.create({
+            data: {
+                portalId: portal.id,
+                heading: section.heading,
+                links: {
+                    createMany: {
+                        data: section.links.map(linkElem =>
+                            ({
+                                linkText: linkElem.body,
+                                link: linkElem.href,
+                            }))
+                    }
+                }
+            }
+        });
+
+    }
     console.log(`Seeding finished.`);
 }
 
