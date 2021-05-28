@@ -14,6 +14,20 @@ export type Scalars = {
   Float: number;
 };
 
+export type ChatMessage = {
+  __typename?: 'ChatMessage';
+  id: Scalars['ID'];
+  user: Scalars['ID'];
+  body: Scalars['String'];
+  timestamp: Scalars['String'];
+};
+
+export type ChatUser = {
+  __typename?: 'ChatUser';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+};
+
 export type CompanyTaskItem = {
   __typename?: 'CompanyTaskItem';
   id: Scalars['ID'];
@@ -98,6 +112,12 @@ export type PortalDocumentsCard = {
   vendor: PortalDocumentList;
 };
 
+export type PortalInternalNotesCard = {
+  __typename?: 'PortalInternalNotesCard';
+  users: Array<ChatUser>;
+  messages: Array<ChatMessage>;
+};
+
 export type PortalProductInfoCard = {
   __typename?: 'PortalProductInfoCard';
   images: Array<Scalars['String']>;
@@ -126,6 +146,7 @@ export type Query = {
   getProductInfo: PortalProductInfoCard;
   getProposalCard: PortalProposalCard;
   getContactsCard: PortalContactsCard;
+  getInternalNotes: PortalInternalNotesCard;
   getUploadTransactionId: Scalars['ID'];
 };
 
@@ -156,6 +177,11 @@ export type QueryGetProposalCardArgs = {
 
 
 export type QueryGetContactsCardArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryGetInternalNotesArgs = {
   id: Scalars['ID'];
 };
 
@@ -244,6 +270,15 @@ export type PortalQuery = (
     & { contacts: Array<(
       { __typename?: 'PortalContact' }
       & Pick<PortalContact, 'name' | 'jobTitle' | 'email' | 'photoUrl'>
+    )> }
+  ), getInternalNotes: (
+    { __typename?: 'PortalInternalNotesCard' }
+    & { users: Array<(
+      { __typename?: 'ChatUser' }
+      & Pick<ChatUser, 'id' | 'name'>
+    )>, messages: Array<(
+      { __typename?: 'ChatMessage' }
+      & Pick<ChatMessage, 'id' | 'user' | 'body' | 'timestamp'>
     )> }
   ) }
 );
@@ -377,6 +412,18 @@ export const PortalDocument = gql`
       jobTitle
       email
       photoUrl
+    }
+  }
+  getInternalNotes(id: $portalId) {
+    users {
+      id
+      name
+    }
+    messages {
+      id
+      user
+      body
+      timestamp
     }
   }
 }

@@ -85,6 +85,23 @@ type PortalContactsCard {
     contacts: [PortalContact!]!
 }
 
+type ChatMessage {
+    id: ID!
+    user: ID!
+    body: String!
+    timestamp: String!
+}
+
+type ChatUser{
+    id: ID!
+    name: String!
+}
+
+type PortalInternalNotesCard {
+    users: [ChatUser!]!
+    messages: [ChatMessage!]!
+}
+
 type Query {
     getLaunchRoadmap(id: ID!): [LaunchStep!]!
     getNextSteps(id: ID!): NextSteps!
@@ -92,6 +109,7 @@ type Query {
     getProductInfo(id: ID!): PortalProductInfoCard!
     getProposalCard(id: ID!): PortalProposalCard!
     getContactsCard(id: ID!): PortalContactsCard!
+    getInternalNotes(id: ID!): PortalInternalNotesCard!
     getUploadTransactionId: ID!
 }
 

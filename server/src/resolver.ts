@@ -201,7 +201,49 @@ export const queryResolvers: QueryResolvers = {
                     })
                 )
         };
-    }
+    },
+    getInternalNotes: async (_, {id}) => {
+        const portal = await prisma.portal.findUnique({
+            where: {id: parseInt(id)},
+            include: {
+                userPortals: {
+                    include: {user: {include: {stakeholder: true}}},
+                    where: {role: Role.Stakeholder}
+                }
+            },
+
+        });
+
+        if (!portal) {
+            throw new ApolloError(
+                "Not found in db",
+                "CAN_NOT_FETCH_BY_ID",
+            );
+        }
+        return {
+            messages: [
+                {
+                    id: "1",
+                    user: "3",
+                    body: 'I wonder how difficult it is to learn how to use the headset',
+                    timestamp: new Date(1620651346000).toISOString()
+                },
+                {
+                    id: "2",
+                    user: "4",
+                    body: "Let's ask during our demo call on Wed",
+                    timestamp: new Date(1620651358000).toISOString()
+                },
+            ],
+            users: portal.userPortals
+                .map(userPortal =>
+                    ({
+                        id: userPortal.userId.toString(),
+                        name: `${userPortal.user.firstName} ${userPortal.user.lastName}`,
+                    })
+                )
+        };
+    },
 };
 export const mutationResolvers: MutationResolvers = {
     portalNextStepsSetTaskCompletion: async (_, {id, isCompleted}) => {

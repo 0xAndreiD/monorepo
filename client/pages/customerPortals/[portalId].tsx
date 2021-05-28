@@ -6,7 +6,7 @@ import {ProposalCard} from "../../components/ProposalCard";
 import LaunchRoadmap from "../../components/LaunchRoadmap";
 import {ProductInfoCard} from "../../components/ProductInfoCard";
 import {ContactsCard} from "../../components/ContactsCard";
-import {InternalNotesDemo} from "../../components/InternalNotes";
+import {InternalNotes} from "../../components/InternalNotes";
 import {Footer} from "../../components/Footer";
 import {Header} from "../../components/Header";
 import CardDivider from "../../components/generic/Card";
@@ -81,6 +81,18 @@ const CLIENT_QUERY = gql`
                 photoUrl
             }
         }
+        getInternalNotes(id: $portalId) {
+            users {
+                id
+                name
+            }
+            messages {
+                id
+                user
+                body
+                timestamp
+            }
+        }
     }
 
     fragment DocumentsListFragment on PortalDocument {
@@ -143,7 +155,7 @@ export default function CustomerPortal() {
                 <div className="flex flex-col gap-4">
                     <ProposalCard data={data.getProposalCard}/>
                     <ContactsCard data={data.getContactsCard}/>
-                    <InternalNotesDemo/>
+                    <InternalNotes data={data.getInternalNotes}/>
                 </div>
             </div>
             <div className="pt-4">
