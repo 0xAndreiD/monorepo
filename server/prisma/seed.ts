@@ -284,8 +284,20 @@ async function main() {
                 }
             }
         });
-
     }
+
+    await prisma.internalNotes.createMany({data: [
+            {
+                portalId: portal.id,
+                userId: stakeholders[2].id,
+                message:"I wonder how difficult it is to learn how to use the headset",
+            } ,
+            {
+                portalId: portal.id,
+                userId: stakeholders[3].id,
+                message:"Let's ask during our demo call on Wed",
+            }
+        ]})
     console.log(`Seeding finished.`);
 }
 

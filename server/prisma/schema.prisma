@@ -52,6 +52,7 @@ model User {
   stakeholder      Stakeholder?
   documents        Document[]
   userPortals      UserPortal[]
+  messagesSent     InternalNotes[]
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 }
@@ -87,11 +88,12 @@ model Portal {
   proposalHeading     String
   proposalSubheading  String
   proposalQuoteLink   String
-  userPortals UserPortal[]
-  vendor      Vendor       @relation(fields: [vendorId], references: [id])
-  vendorId    Int
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  userPortals         UserPortal[]
+  internalNotes       InternalNotes[]
+  vendor              Vendor               @relation(fields: [vendorId], references: [id])
+  vendorId            Int
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
 }
 
 model ProductInfoSectionLink {
@@ -171,8 +173,13 @@ model Document {
   updatedAt   DateTime @updatedAt
 }
 
-model InternalNotes{
-  id          Int      @id @default(autoincrement())
-createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model InternalNotes {
+  id        Int      @id @default(autoincrement())
+  portalId  Int
+  portal    Portal   @relation(fields: [portalId], references: [id])
+  message   String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
