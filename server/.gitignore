@@ -124,3 +124,4 @@ src/generated
 public/media/
 
 .idea/
+graphql.schema.json

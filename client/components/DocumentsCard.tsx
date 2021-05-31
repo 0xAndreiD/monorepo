@@ -5,9 +5,11 @@ import CardDivider, {Card, CardHeader} from "./generic/Card";
 import Link from 'next/link';
 import {useCallback} from "react";
 import {useDropzone} from "react-dropzone";
-import {PortalDocument, PortalDocumentsCard} from "../src/generated/graphql";
+import {DocumentsListFragmentFragmentDoc, PortalDocument, PortalDocumentsCard} from "../src/generated/graphql";
 import axios from "axios";
 import {APOLLO_CLIENT, BACKEND_ENDPOINT} from "../config";
+import {UPLOAD_DIR} from "../../server/src/config";
+import {gql} from "@apollo/client";
 //
 // export function DocumentsCardDemo() {
 //     const data = {
@@ -42,28 +44,64 @@ export default function DocumentsCard(props: { portalId: string, data: PortalDoc
         axios.post(`${BACKEND_ENDPOINT}/fileUpload`, formData, {
             headers: {'Content-Type': 'multipart/form-data'}
         }).then(() => {
+            const maxIdCustomer = props.data.customer.documents.reduce((currentMax, document) => Math.max(currentMax, parseInt(document.id)), 0);
+            const maxIdVendor = props.data.vendor.documents.reduce((currentMax, document) => Math.max(currentMax, parseInt(document.id)), 0);
+            const maxId = Math.max(maxIdCustomer, maxIdVendor);
+            acceptedFiles.forEach((file, idx) => {
+                APOLLO_CLIENT.cache.evict({id:"ROOT_QUERY"})
 
-            APOLLO_CLIENT.writeQuery({
-                // id: 'Todo:5',
-                query: PortalDocument,
-                data: {
-                    getDocuments: {
-                        customer: {
-                            documents: {
-                                id: 999,
-                                title: "gql",
-                                href: "#",
-                                isCompleted: false
-                            }
-                        }
-                    }
-                },
+                // const gqlTypename = 'PortalDocument';
+                // const data = {
+                //     __typename: gqlTypename,
+                //     id: (maxId + idx + 1).toString(),
+                //     title: file.name,
+                //     href: `${BACKEND_ENDPOINT}/${UPLOAD_DIR}/${file.name}`,
+                //     isCompleted: false
+                // };
+
+                // APOLLO_CLIENT.writeFragment({
+                //     fragment: DocumentsListFragmentFragmentDoc,
+                //     id: `${gqlTypename}:${maxId + idx + 1}`,
+                //     data
+                // });
+
+                // APOLLO_CLIENT.writeQuery({
+                //     query: gql`
+                //         query portal($portalId: ID!) {
+                //             getDocuments(id: $portalId) {
+                //                 vendor {
+                //                     documents {
+                //                         id
+                //                         title
+                //                         href
+                //                         isCompleted
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     `,
+                //     // id: `${gqlTypename}:${maxId + idx + 1}`,
+                //     variables: {id: props.portalId},
+                //     data: {
+                //         getDocuments:{
+                //         vendor: {
+                //             documents: [data]
+                //             // documents: [props.data.vendor.documents, data]
+                //         }
+                //     }}
+                // });
             });
         });
     }, []);
 
     const {getRootProps, getInputProps, open, acceptedFiles} = useDropzone({onDrop});
 
+    // console.log("cache", (APOLLO_CLIENT.cache.extract()));
+    // const todo = APOLLO_CLIENT.readFragment({
+    //     id: 'PortalDocument:2', // The value of the to-do item's unique identifier
+    //     fragment: DocumentsListFragmentFragmentDoc
+    // });
+    // console.log("cache search:", todo);
     return <Card>
         <CardHeader>Documents </CardHeader>
 
