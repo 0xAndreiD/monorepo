@@ -2,7 +2,8 @@ import {useRouter} from "next/router";
 import React from "react";
 import 'tailwindcss/tailwind.css';
 import Link from "../../components/generic/Link";
-import {formatDistanceToNowStrict, subMinutes} from "date-fns";
+import {subMinutes} from "date-fns";
+import {timeAgo} from "../../util/relativeDate";
 
 export function OpportunityEngagementDemo() {
     const data = [
@@ -103,7 +104,7 @@ export function StakeholderActivityLogDemo() {
                             {`${event.name} from ${event.company} viewed `}
                             <Link href={event.link.href}>{event.link.body}</Link>
                         </div>
-                        <span className="text-right">{formatDistanceToNowStrict(new Date(event.timestamp))}</span>
+                        <span className="text-right">{timeAgo(new Date(event.timestamp))}</span>
                     </div>
                 </div>;
             })
