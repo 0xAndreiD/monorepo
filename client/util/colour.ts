@@ -1,6 +1,6 @@
 export function getColourFromSting(seed: string) {
 //colour ref: https://tailwindcss.com/docs/customizing-colors#color-palette-reference
-    const colours = ["grey", "red", "yellow", "green", "blue", "indigo", "purple", "pink"];
+    const colours = ["gray", "red", "yellow", "green", "blue", "indigo", "purple", "pink"];
 
     function hashCode(str: string) { // java String#hashCode
         let hash = 0;

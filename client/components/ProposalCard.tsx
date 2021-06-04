@@ -60,7 +60,32 @@ import {PortalProposalCard, Stakeholder} from "../src/generated/graphql";
 //     return <ProposalCard {...data}/>;
 // }
 
-export function ProposalCard(props: { data:PortalProposalCard  }) {
+function StakeholderApprovalCircles(props: { data: Array<Stakeholder> }) {
+    return <>
+        {
+            props.data.map((stakeholder, idx) => {
+                    const colour = getColourFromSting(stakeholder.name);
+                    return <div key={idx}
+                                className={`relative w-10 h-10 flex items-center justify-center 
+                                bg-${colour}-500 rounded-full hover:bg-${colour}-900`}>
+                        <span className="text-white static">{getInitialsOfName(stakeholder.name)}</span>
+
+                        {
+                            stakeholder.isApprovedBy ?
+                                <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-green-500">
+                                    <CheckIcon className="text-white "/>
+                                </div>
+                                :
+                                <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-gray-300"/>
+                        }
+                    </div>;
+                }
+            )
+        }
+    </>;
+}
+
+export function ProposalCard(props: { data: PortalProposalCard }) {
     const [isDetailsVisible, setDetailsVisible] = useState(true);
     const [isInviteStakeholdersModalOpen, setIsInviteStakeholdersModalOpen] = useState(false);
 
@@ -84,27 +109,7 @@ export function ProposalCard(props: { data:PortalProposalCard  }) {
 
         <h4 className="font-bold">Key Stakeholders' Approval:</h4>
         <div className="py-4 flex gap-3">
-            {
-                props.data.stakeholders.map((stakeholder, idx) => {
-                        const colour = getColourFromSting(stakeholder.name);
-                        return <div key={idx}
-                                    className={`relative w-10 h-10 flex items-center justify-center 
-                                bg-${colour}-500 rounded-full hover:bg-${colour}-900`}>
-                            <span className="text-white static">{getInitialsOfName(stakeholder.name)}</span>
-
-                            {
-                                stakeholder.isApprovedBy ?
-                                    <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-green-500">
-                                        <CheckIcon className="text-white "/>
-                                    </div>
-                                    :
-                                    <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-gray-300"/>
-                            }
-                        </div>;
-                    }
-                )
-            }
-
+            <StakeholderApprovalCircles data={props.data.stakeholders}/>
             <div style={{marginLeft: "auto"}}>
                 <button
                     type="button"

@@ -1,8 +1,13 @@
 /* This example requires Tailwind CSS v2.0+ */
 import 'tailwindcss/tailwind.css';
-import Link from "next/link";
+import {default as NextLink} from "next/link";
 import {MailIcon} from "@heroicons/react/outline";
 import {Link as GQLLink, PortalContact, Stakeholder} from "../src/generated/graphql";
+import {getColourFromSting} from "../util/colour";
+import {getInitialsOfName} from "../util/text";
+import {CheckIcon} from "@heroicons/react/solid";
+import {BACKEND_ENDPOINT} from "../config";
+import Link from "./generic/Link";
 
 const portals: Array<{
     customerName: string,
@@ -54,7 +59,15 @@ const portals: Array<{
                 body: "Mira Sales Deck",
                 href: "",
                 eventCount: 8
-            }
+            }, {
+                body: "Mira Connect Video",
+                href: "",
+                eventCount: 6
+            }, {
+                body: "Quote Proposal",
+                href: "",
+                eventCount: 2
+            },
         ],
         portalHref: "",
     },
@@ -107,6 +120,36 @@ function ProgressBullets(props: { current: number, total: number }) {
 
 }
 
+function StakeholderClickCircles(props: { data: Array<Stakeholder & { eventCount: number }> }) {
+    return <>
+        {
+            props.data.map((stakeholder, idx) => {
+                    const colour = getColourFromSting(stakeholder.name);
+                    return <div className="flex flex-col items-center">
+                        <div key={idx}
+                             className={`relative w-10 h-10 flex items-center justify-center
+                                bg-${colour}-500 rounded-full hover:bg-${colour}-900`}>
+                                                            <span
+                                                                className="text-white static">{getInitialsOfName(stakeholder.name)}</span>
+                            {
+                                stakeholder.isApprovedBy ?
+                                    <div
+                                        className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-green-500">
+                                        <CheckIcon className="text-white "/>
+                                    </div>
+                                    :
+                                    <div
+                                        className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-gray-300"/>
+                            }
+                        </div>
+                        <span className="text-xs">{stakeholder.eventCount}</span>
+                    </div>;
+                }
+            )
+        }
+    </>;
+}
+
 export function ActivePortalsDemo() {
     return (
         <div className="flex flex-col">
@@ -146,12 +189,12 @@ export function ActivePortalsDemo() {
                             </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                            {portals.map((portal,idx) => (
+                            {portals.map((portal, idx) => (
                                 <tr key={idx}>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
-                                            <div className="">
-                                                <div className="text-sm font-medium text-gray-900">
+                                            <div className="flex flex-col gap-y-1">
+                                                <div className="text-lg font-medium text-gray-900">
                                                     {portal.customerName}
                                                 </div>
                                                 <ProgressBullets current={portal.customerCurrentStage}
@@ -160,31 +203,49 @@ export function ActivePortalsDemo() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-600 pb-2">Primary</div>
                                         <div className="relative bg-white flex items-center space-x-3">
                                             <div className="flex-1 min-w-0">
                                                 <p className="font-medium text-gray-900">{portal.vendorContact.name}</p>
                                                 <p className="text-sm truncate">{portal.vendorContact.jobTitle}</p>
                                             </div>
-                                            <Link href={`mailto:${portal.vendorContact.email}`}>
+                                            <NextLink href={`mailto:${portal.vendorContact.email}`}>
                                                 <div
                                                     className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
                                                     <MailIcon className="h-4 w-4 text-gray-400"/>
                                                 </div>
-                                            </Link>
+                                            </NextLink>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                          className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                        Active
-                      </span>
+                                        <div className="py-4 flex gap-3">
+                                            <StakeholderClickCircles data={portal.stakeholderEvents}/>
+                                        </div>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{""}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm flex flex-col gap-y-1">
+                                        {
+                                            portal.documentEvents.slice(0, 3).map(document =>
+                                                <>
+                                                    <span className="flex gap-x-1">
+                                                        <Link href={`${BACKEND_ENDPOINT}/${document.href}`}>
+                                                        {document.body}
+                                                    </Link>
+                                                   <span className={"text-gray-900"}>{document.eventCount}</span>
+                                                    </span>
+                                                </>
+                                            )
+                                        }
+
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="#" className="text-green-600 hover:text-green-900">
-                                            Edit
-                                        </a>
+                                        <NextLink href={`${BACKEND_ENDPOINT}/${portal.portalHref}`}>
+                                            <button
+                                                type="button"
+                                                className="inline-flex items-center px-5 py-3 border shadow-sm text-sm\
+             leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300">
+                                                View
+                                            </button>
+                                        </NextLink>
                                     </td>
                                 </tr>
                             ))}
