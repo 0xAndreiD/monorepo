@@ -4,23 +4,24 @@ import 'tailwindcss/tailwind.css';
 import Link from "../../components/generic/Link";
 import {subMinutes} from "date-fns";
 import {timeAgo} from "../../util/relativeDate";
+import {ActivePortalsDemo} from "../../components/ActivePortals";
 
 export function OpportunityEngagementDemo() {
     const data = [
         {
-            name: "Koch",
+            customer: "Koch",
             eventCount: 55,
         }, {
-            name: "Raytheon",
+            customer: "Raytheon",
             eventCount: 49,
         }, {
-            name: "Nasa",
+            customer: "Nasa",
             eventCount: 38,
         }, {
-            name: "Lear",
+            customer: "Lear",
             eventCount: 11,
         }, {
-            name: "Pratt & Whitney",
+            customer: "Pratt & Whitney",
             eventCount: 9,
         },
     ];
@@ -32,7 +33,7 @@ export function OpportunityEngagementDemo() {
         {
             data.map(company => {
                 return <div>
-                    {company.name}
+                    {company.customer}
                     <div className="flex align-middle gap-1">
                         <div className="h-10 w-full rounded ring-1 ring-inset ring-black ring-opacity-0 bg-green-500"
                              style={{height: 20, width: `${Math.ceil(100 * company.eventCount / maxClickCount)}%`}}/>
@@ -49,7 +50,7 @@ export function StakeholderActivityLogDemo() {
     const now = new Date();
     const data = [
         {
-            name: "Kahili Laliji",
+            customer: "Kahili Laliji",
             company: "NASA",
             link: {
                 body: "Quote Proposal",
@@ -58,7 +59,7 @@ export function StakeholderActivityLogDemo() {
             timestamp: subMinutes(now, 14).toISOString()
         },
         {
-            name: "Alex Hills",
+            customer: "Alex Hills",
             company: "Lear",
             link: {
                 body: "Technical Specs",
@@ -67,7 +68,7 @@ export function StakeholderActivityLogDemo() {
             timestamp: subMinutes(now, 32).toISOString()
         },
         {
-            name: "Ken Laft",
+            customer: "Ken Laft",
             company: "Lear",
             link: {
                 body: "Technical Specs",
@@ -76,7 +77,7 @@ export function StakeholderActivityLogDemo() {
             timestamp: subMinutes(now, 33).toISOString()
         },
         {
-            name: "Paul Nells",
+            customer: "Paul Nells",
             company: "Lear",
             link: {
                 body: "Technical Specs",
@@ -85,7 +86,7 @@ export function StakeholderActivityLogDemo() {
             timestamp: subMinutes(now, 34).toISOString()
         },
         {
-            name: "Kischa Block",
+            customer: "Kischa Block",
             company: "Raytheon",
             link: {
                 body: "Mira Sales Deck",
@@ -101,7 +102,7 @@ export function StakeholderActivityLogDemo() {
                 return <div>
                     <div className="flex justify-between">
                         <div>
-                            {`${event.name} from ${event.company} viewed `}
+                            {`${event.customer} from ${event.company} viewed `}
                             <Link href={event.link.href}>{event.link.body}</Link>
                         </div>
                         <span className="text-right">{timeAgo(new Date(event.timestamp))}</span>
@@ -148,5 +149,6 @@ export default function VendorStats() {
     return <>
         <OpportunityEngagementDemo/>
         <StakeholderActivityLogDemo/>
+        <ActivePortalsDemo/>
     </>;
 }
