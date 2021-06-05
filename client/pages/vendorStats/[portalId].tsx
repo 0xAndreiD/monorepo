@@ -102,19 +102,22 @@ export function StakeholderActivityLogDemo() {
     ];
     return <Card borderless>
         <CardHeader>Stakeholder Activity Log</CardHeader>
-        {
-            data.map(event => {
-                return <div>
-                    <div className="flex justify-between">
-                        <div>
+        <div className="mt-5 bg-white overflow-hidden shadow rounded-lg">
+            <div className="px-4 py-2 flex flex-col gap-y-3">
+                {
+                    data.map(event =>
+                        <div className="flex justify-between">
+                        <span className="text-sm">
                             {`${event.customer} from ${event.company} viewed `}
                             <Link href={event.link.href}>{event.link.body}</Link>
+                        </span>
+                            <span
+                                className="text-right text-sm text-gray-500">{timeAgo(new Date(event.timestamp))}</span>
                         </div>
-                        <span className="text-right">{timeAgo(new Date(event.timestamp))}</span>
-                    </div>
-                </div>;
-            })
-        }
+                    )
+                }
+            </div>
+        </div>
     </Card>;
 }
 
