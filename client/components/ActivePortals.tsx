@@ -187,7 +187,7 @@ export function ActivePortalsDemo() {
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
                             {portals.map((portal, idx) => (
-                                <tr key={idx}>
+                                <tr key={idx} className="divide-x">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
                                             <div className="flex flex-col gap-y-1">
@@ -214,24 +214,25 @@ export function ActivePortalsDemo() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="py-4 flex gap-3">
+                                        <div className="flex gap-3">
                                             <StakeholderClickCircles data={portal.stakeholderEvents}/>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm flex flex-col gap-y-1">
-                                        {
-                                            portal.documentEvents.slice(0, 3).map(document =>
-                                                <>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="text-sm flex justify-center flex-col gap-y-1">
+                                            {
+                                                portal.documentEvents.slice(0, 3).map(document =>
+                                                    <>
                                                     <span className="flex gap-x-1">
                                                         <Link href={`${BACKEND_ENDPOINT}/${document.href}`}>
                                                         {document.body}
                                                     </Link>
                                                    <span className={"text-gray-900"}>{document.eventCount}</span>
                                                     </span>
-                                                </>
-                                            )
-                                        }
-
+                                                    </>
+                                                )
+                                            }
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <NextLink href={`${BACKEND_ENDPOINT}/${portal.portalHref}`}>
