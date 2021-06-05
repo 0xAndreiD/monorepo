@@ -93,8 +93,7 @@ function ProgressBullets(props: { current: number, total: number }) {
                     <li key={step.name}>
                         {step.status === 'complete' ? (
                             <a href={step.href}
-                               className="block w-2.5 h-2.5 bg-green-600 rounded-full hover:bg-green-900">
-                                <span className="sr-only">{step.name}</span>
+                               className="block w-2.5 h-2.5 bg-white rounded-full border-green-600 border-2">
                             </a>
                         ) : step.status === 'current' ? (
                             <a href={step.href} className="relative flex items-center justify-center"
@@ -104,12 +103,10 @@ function ProgressBullets(props: { current: number, total: number }) {
                 </span>
                                 <span className="relative block w-2.5 h-2.5 bg-green-600 rounded-full"
                                       aria-hidden="true"/>
-                                <span className="sr-only">{step.name}</span>
                             </a>
                         ) : (
                             <a href={step.href}
                                className="block w-2.5 h-2.5 bg-gray-200 rounded-full hover:bg-gray-400">
-                                <span className="sr-only">{step.name}</span>
                             </a>
                         )}
                     </li>
