@@ -4,7 +4,7 @@ import {CompletionStatus, LaunchStep} from "../../src/generated/graphql";
 import React from "react";
 import {format} from "date-fns";
 
-export default function LaunchRoadmap(props: { data: LaunchStep[] }) {
+export default function OpportunityOverview(props: { data: LaunchStep[] }) {
     return <nav>
         <h1 className="text-lg font-bold">Opportunity Overview</h1>
 
@@ -32,12 +32,33 @@ export default function LaunchRoadmap(props: { data: LaunchStep[] }) {
                         {/*</div>*/}
                     </div>
 
-                    <div className={"text-xs " + (step.status===CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")}>
+                    <div
+                        className={"text-xs " + (step.status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")}>
                         {step.date ? format(new Date(step.date), "MMM d") : "TBD"}
                     </div>
                 </React.Fragment>
             )}
         </ul>
+
+        <div className="rounded-lg p-5 bg-gray-100">
+            <table className="min-w-full">
+                <thead className="text-gray-500 text-left">
+                <tr>
+                    <th>Open Date</th>
+                    <th>Amount</th>
+                    <th>Opportunity Owner</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>10/23/2020</td>
+                    <td>$16,000</td>
+                    <td>Greg Miller</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
     </nav>;
 }
 

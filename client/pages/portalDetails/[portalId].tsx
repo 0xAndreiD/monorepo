@@ -3,7 +3,7 @@ import 'tailwindcss/tailwind.css';
 import NextStepsCard from "../../components/NextStepsCard";
 import DocumentsCard from "../../components/DocumentsCard";
 import {ProposalCard} from "../../components/ProposalCard";
-import LaunchRoadmap from "./LaunchRoadmap";
+import OpportunityOverview from "./OpportunityOverview";
 import {ProductInfoCard} from "../../components/ProductInfoCard";
 import {ContactsCard} from "../../components/ContactsCard";
 import {InternalNotes} from "../../components/InternalNotes";
@@ -16,6 +16,7 @@ import {LaunchStep, usePortalQuery} from "../../src/generated/graphql";
 import {APOLLO_CLIENT} from "../../config";
 import {format} from "date-fns";
 import Link from "../../components/generic/Link";
+import LineChart from "./LineChart";
 
 
 const CLIENT_QUERY = gql`
@@ -120,6 +121,11 @@ export function LaunchStepBody(step: LaunchStep ) {
         </div>
     </>;
 }
+
+function Chart() {
+    return null;
+}
+
 export default function CustomerPortal() {
     const router = useRouter();
     const {portalId} = router.query;
@@ -150,23 +156,22 @@ export default function CustomerPortal() {
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
             <Header/>
             <div className="py-3"><CardDivider/></div>
-            <LaunchRoadmap data={data.getLaunchRoadmap}            />
         </div>
 
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 bg-gray-100">
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-4">
-                    <NextStepsCard data={data.getNextSteps}/>
-                    <DocumentsCard portalId={portalId} data={data.getDocuments}/>
-                    <ProductInfoCard data={data.getProductInfo}/>
+                    <OpportunityOverview data={data.getLaunchRoadmap}            />
+                    <ContactsCard data={data.getContactsCard}/>
+
                 </div>
                 <div className="flex flex-col gap-4">
-                    <ProposalCard data={data.getProposalCard}/>
-                    <ContactsCard data={data.getContactsCard}/>
-                    <InternalNotes data={data.getInternalNotes}/>
+                    <LineChart/>
                 </div>
             </div>
             <div className="pt-4">
+                <DocumentsCard portalId={portalId} data={data.getDocuments}/>
+
                 <Footer/>
             </div>
         </div>
