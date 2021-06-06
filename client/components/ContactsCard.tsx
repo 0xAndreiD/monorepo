@@ -1,8 +1,9 @@
 import {MailIcon} from "@heroicons/react/outline";
 import {Card, CardHeader} from "./generic/Card";
-import {titleCase} from "../util/text";
+import {getInitialsOfName, titleCase} from "../util/text";
 import Link from 'next/link';
 import {PortalContactsCard} from "../src/generated/graphql";
+import {getColourFromSting} from "../util/colour";
 
 // type ContactCard = {
 //     contacts: Array<{
@@ -41,17 +42,29 @@ function getPrecedence(idx: number): string | undefined {
 //     return <ContactsCard {...data}/>;
 // }
 
-export function ContactsCard(props:{data:PortalContactsCard} ) {
+function Circle(props: { name: string }) {
+    const colour = getColourFromSting(props.name);
+
+    return <div className={`relative w-10 h-10 text-sm flex items-center justify-center 
+                                bg-${colour}-500 rounded-full hover:bg-${colour}-900`}>
+        <span className="text-white">{getInitialsOfName(props.name)}</span>
+    </div>;
+}
+
+export function ContactsCard(props: { data: PortalContactsCard, numContactsToDisplay?: number, showProfilePictures?: boolean }) {
     return <Card>
         <CardHeader>Contacts</CardHeader>
         <div className="divide-y divide-gray-300">
             {
-                props.data.contacts.map((contact, idx) =>
+                props.data.contacts.slice(0, props.numContactsToDisplay).map((contact, idx) =>
                     <div className="py-3" key={idx}>
                         <div className="text-sm text-gray-600 pb-2">{titleCase(getPrecedence(idx) ?? "")}:</div>
                         <div className="relative bg-white flex items-center space-x-3">
                             <div className="flex-shrink-0">
-                                <img className="h-10 w-10 rounded-full" src={contact.photoUrl} alt=""/>
+                                {
+                                    contact.photoUrl ? <Circle name={contact.name}/> :
+                                        <img className="h-10 w-10 rounded-full" src={contact.photoUrl} alt=""/>
+                                }
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="font-medium text-gray-900">{contact.name}</p>

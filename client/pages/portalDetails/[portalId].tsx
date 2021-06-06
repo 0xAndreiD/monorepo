@@ -114,17 +114,6 @@ const CLIENT_QUERY = gql`
         }
     }
 `;
-export function LaunchStepBody(step: LaunchStep ) {
-    return <>
-        <div className="text-gray-500 text-xs">
-            {step.date ? format(new Date(step.date), "MMM d") : "TBD"}
-        </div>
-    </>;
-}
-
-function Chart() {
-    return null;
-}
 
 export default function CustomerPortal() {
     const router = useRouter();
@@ -162,7 +151,7 @@ export default function CustomerPortal() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-4">
                     <OpportunityOverview data={data.getLaunchRoadmap}            />
-                    <ContactsCard data={data.getContactsCard}/>
+                    <ContactsCard data={data.getContactsCard} numContactsToDisplay={1}/>
 
                 </div>
                 <div className="flex flex-col gap-4">

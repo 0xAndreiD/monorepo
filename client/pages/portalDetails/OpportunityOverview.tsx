@@ -40,24 +40,24 @@ export default function OpportunityOverview(props: { data: LaunchStep[] }) {
             )}
         </ul>
 
-        <div className="rounded-lg p-5 bg-gray-100">
-            <table className="min-w-full">
-                <thead className="text-gray-500 text-left">
-                <tr>
-                    <th>Open Date</th>
-                    <th>Amount</th>
-                    <th>Opportunity Owner</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>10/23/2020</td>
-                    <td>$16,000</td>
-                    <td>Greg Miller</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        {/*<div className="rounded-lg p-5 bg-gray-100">*/}
+        {/*    <table className="min-w-full">*/}
+        {/*        <thead className="text-gray-500 text-left">*/}
+        {/*        <tr>*/}
+        {/*            <th>Open Date</th>*/}
+        {/*            <th>Amount</th>*/}
+        {/*            <th>Opportunity Owner</th>*/}
+        {/*        </tr>*/}
+        {/*        </thead>*/}
+        {/*        <tbody>*/}
+        {/*        <tr>*/}
+        {/*            <td>10/23/2020</td>*/}
+        {/*            <td>$16,000</td>*/}
+        {/*            <td>Greg Miller</td>*/}
+        {/*        </tr>*/}
+        {/*        </tbody>*/}
+        {/*    </table>*/}
+        {/*</div>*/}
 
     </nav>;
 }
