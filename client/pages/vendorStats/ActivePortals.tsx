@@ -2,12 +2,12 @@
 import 'tailwindcss/tailwind.css';
 import {default as NextLink} from "next/link";
 import {MailIcon} from "@heroicons/react/outline";
-import {Link as GQLLink, PortalContact, Stakeholder} from "../src/generated/graphql";
-import {getColourFromSting} from "../util/colour";
-import {getInitialsOfName} from "../util/text";
+import {Link as GQLLink, PortalContact, Stakeholder} from "../../src/generated/graphql";
+import {getColourFromSting} from "../../util/colour";
+import {getInitialsOfName} from "../../util/text";
 import {CheckIcon} from "@heroicons/react/solid";
-import {BACKEND_ENDPOINT} from "../config";
-import Link from "./generic/Link";
+import {BACKEND_ENDPOINT} from "../../config";
+import Link from "../../components/generic/Link";
 
 const portals: Array<{
     customerName: string,

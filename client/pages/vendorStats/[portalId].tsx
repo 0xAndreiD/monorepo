@@ -4,8 +4,10 @@ import 'tailwindcss/tailwind.css';
 import Link from "../../components/generic/Link";
 import {subMinutes} from "date-fns";
 import {timeAgo} from "../../util/relativeDate";
-import {ActivePortalsDemo} from "../../components/ActivePortals";
-import {Card, CardHeader} from "../../components/generic/Card";
+import {ActivePortalsDemo} from "./ActivePortals";
+import CardDivider, {Card, CardHeader} from "../../components/generic/Card";
+import {Header} from "./Header";
+import {Footer} from "../../components/Footer";
 
 export function OpportunityEngagementDemo() {
     const data = [
@@ -154,11 +156,19 @@ export default function VendorStats() {
     // if (!data) {
     //     return <>No Data!</>;
     // }
-    return <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <OpportunityEngagementDemo/>
-            <StakeholderActivityLogDemo/>
+
+    return <>
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
+            <Header/>
+            <div className="py-3"><CardDivider/></div>
         </div>
-        <ActivePortalsDemo/>
-    </div>;
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <OpportunityEngagementDemo/>
+                <StakeholderActivityLogDemo/>
+            </div>
+            <ActivePortalsDemo/>
+        </div>
+        <Footer/>
+    </>;
 }

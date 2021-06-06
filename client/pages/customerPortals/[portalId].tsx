@@ -8,7 +8,7 @@ import {ProductInfoCard} from "../../components/ProductInfoCard";
 import {ContactsCard} from "../../components/ContactsCard";
 import {InternalNotes} from "../../components/InternalNotes";
 import {Footer} from "../../components/Footer";
-import {Header} from "../../components/Header";
+import {Header} from "./Header";
 import CardDivider from "../../components/generic/Card";
 import {gql} from "@apollo/client";
 import {useRouter} from 'next/router';
