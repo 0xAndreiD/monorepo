@@ -12,8 +12,10 @@ import {Header} from "./Header";
 import CardDivider from "../../components/generic/Card";
 import {gql} from "@apollo/client";
 import {useRouter} from 'next/router';
-import {usePortalQuery} from "../../src/generated/graphql";
+import {LaunchStep, usePortalQuery} from "../../src/generated/graphql";
 import {APOLLO_CLIENT} from "../../config";
+import {format} from "date-fns";
+import Link from "../../components/generic/Link";
 
 
 const CLIENT_QUERY = gql`
@@ -111,7 +113,13 @@ const CLIENT_QUERY = gql`
         }
     }
 `;
-
+export function LaunchStepBody(step: LaunchStep ) {
+    return <>
+        <div className="text-gray-500 text-xs">
+            {step.date ? format(new Date(step.date), "MMM d") : "TBD"}
+        </div>
+    </>;
+}
 export default function CustomerPortal() {
     const router = useRouter();
     const {portalId} = router.query;
@@ -142,7 +150,7 @@ export default function CustomerPortal() {
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
             <Header/>
             <div className="py-3"><CardDivider/></div>
-            <LaunchRoadmap data={data.getLaunchRoadmap}/>
+            <LaunchRoadmap data={data.getLaunchRoadmap}            />
         </div>
 
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 bg-gray-100">
