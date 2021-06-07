@@ -11,6 +11,8 @@ import {useRouter} from 'next/router';
 import {usePortalQuery} from "../../src/generated/graphql";
 import {APOLLO_CLIENT} from "../../config";
 import LineChart from "./LineChart";
+import {StakeholderEngagementDemo} from "./StakeholderEngagementDemo";
+import {StakeholderActivityLogDemo} from "./StakeholderActivityLogDemo";
 
 
 const CLIENT_QUERY = gql`
@@ -156,7 +158,8 @@ export default function CustomerPortal() {
             <div className="py-1"><CardDivider/></div>
             <div className="">
                 <DocumentsCard portalId={portalId} data={data.getDocuments}/>
-
+                <StakeholderEngagementDemo/>
+                <StakeholderActivityLogDemo/>
                 <Footer/>
             </div>
         </div>
