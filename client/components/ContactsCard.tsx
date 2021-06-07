@@ -51,7 +51,7 @@ function Circle(props: { name: string }) {
     </div>;
 }
 
-export function ContactsCard(props: { data: PortalContactsCard, numContactsToDisplay?: number, showProfilePictures?: boolean }) {
+export function ContactsCard(props: { data: PortalContactsCard, numContactsToDisplay?: number, showProfilePictures?: boolean, narrowLayout?: boolean }) {
     return <Card>
         <CardHeader>Contacts</CardHeader>
         <div className="divide-y divide-gray-300">
@@ -59,14 +59,14 @@ export function ContactsCard(props: { data: PortalContactsCard, numContactsToDis
                 props.data.contacts.slice(0, props.numContactsToDisplay).map((contact, idx) =>
                     <div className="py-3" key={idx}>
                         <div className="text-sm text-gray-600 pb-2">{titleCase(getPrecedence(idx) ?? "")}:</div>
-                        <div className="relative bg-white flex items-center space-x-3">
+                        <div className="relative flex items-center space-x-3">
                             <div className="flex-shrink-0">
                                 {
                                     contact.photoUrl ? <Circle name={contact.name}/> :
                                         <img className="h-10 w-10 rounded-full" src={contact.photoUrl} alt=""/>
                                 }
                             </div>
-                            <div className="flex-1 min-w-0">
+                            <div className={props.narrowLayout? "" : "flex-1"}>
                                 <p className="font-medium text-gray-900">{contact.name}</p>
                                 <p className="text-sm truncate">{contact.jobTitle}</p>
                             </div>

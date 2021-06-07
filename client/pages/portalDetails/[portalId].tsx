@@ -1,21 +1,15 @@
 import React from 'react';
 import 'tailwindcss/tailwind.css';
-import NextStepsCard from "../../components/NextStepsCard";
 import DocumentsCard from "../../components/DocumentsCard";
-import {ProposalCard} from "../../components/ProposalCard";
 import OpportunityOverview from "./OpportunityOverview";
-import {ProductInfoCard} from "../../components/ProductInfoCard";
 import {ContactsCard} from "../../components/ContactsCard";
-import {InternalNotes} from "../../components/InternalNotes";
 import {Footer} from "../../components/Footer";
 import {Header} from "./Header";
 import CardDivider from "../../components/generic/Card";
 import {gql} from "@apollo/client";
 import {useRouter} from 'next/router';
-import {LaunchStep, usePortalQuery} from "../../src/generated/graphql";
+import {usePortalQuery} from "../../src/generated/graphql";
 import {APOLLO_CLIENT} from "../../config";
-import {format} from "date-fns";
-import Link from "../../components/generic/Link";
 import LineChart from "./LineChart";
 
 
@@ -150,15 +144,17 @@ export default function CustomerPortal() {
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-4">
-                    <OpportunityOverview data={data.getLaunchRoadmap}            />
-                    <ContactsCard data={data.getContactsCard} numContactsToDisplay={1}/>
-
+                    <OpportunityOverview data={data.getLaunchRoadmap}/>
+                    <ContactsCard data={data.getContactsCard}
+                                  numContactsToDisplay={1}
+                                  narrowLayout/>
                 </div>
                 <div className="flex flex-col gap-4">
                     <LineChart/>
                 </div>
             </div>
-            <div className="pt-4">
+            <div className="py-1"><CardDivider/></div>
+            <div className="">
                 <DocumentsCard portalId={portalId} data={data.getDocuments}/>
 
                 <Footer/>
