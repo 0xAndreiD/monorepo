@@ -1,8 +1,13 @@
 import {subMinutes} from "date-fns";
 import {Card, CardHeader} from "../../components/generic/Card";
 import Link from "../../components/generic/Link";
-import {timeAgo} from "../../util/relativeDate";
 import React from "react";
+import {DesktopComputerIcon, DeviceMobileIcon} from "@heroicons/react/outline";
+
+enum Device {
+    Computer,
+    Mobile
+}
 
 export function StakeholderActivityLogDemo() {
     const now = new Date();
@@ -14,6 +19,8 @@ export function StakeholderActivityLogDemo() {
                 body: "Quote Proposal",
                 href: "",
             },
+            location: "Houston, TX, USA",
+            device: Device.Mobile,
             timestamp: subMinutes(now, 14).toISOString()
         },
         {
@@ -23,6 +30,8 @@ export function StakeholderActivityLogDemo() {
                 body: "Technical Specs",
                 href: "",
             },
+            location: "Houston, TX, USA",
+            device: Device.Computer,
             timestamp: subMinutes(now, 32).toISOString()
         },
         {
@@ -32,6 +41,8 @@ export function StakeholderActivityLogDemo() {
                 body: "Technical Specs",
                 href: "",
             },
+            location: "Cincinnati, OH, USA",
+            device: Device.Computer,
             timestamp: subMinutes(now, 33).toISOString()
         },
         {
@@ -41,6 +52,8 @@ export function StakeholderActivityLogDemo() {
                 body: "Technical Specs",
                 href: "",
             },
+            location: "Cincinnati, OH, USA",
+            device: Device.Mobile,
             timestamp: subMinutes(now, 34).toISOString()
         },
         {
@@ -50,25 +63,74 @@ export function StakeholderActivityLogDemo() {
                 body: "Mira Sales Deck",
                 href: "",
             },
+            location: "Dublin, Ireland",
+            device: Device.Mobile,
             timestamp: subMinutes(now, 51).toISOString()
         },
     ];
     return <Card borderless>
         <CardHeader>Stakeholder Activity Log</CardHeader>
-        <div className="mt-5 bg-white overflow-hidden shadow rounded-lg">
-            <div className="px-4 py-2 flex flex-col gap-y-3">
-                {
-                    data.map(event =>
-                        <div className="flex justify-between">
-                        <span className="text-sm">
-                            {`${event.customer} from ${event.company} viewed `}
-                            <Link href={event.link.href}>{event.link.body}</Link>
-                        </span>
-                            <span
-                                className="text-right text-sm text-gray-500">{timeAgo(new Date(event.timestamp))}</span>
-                        </div>
-                    )
-                }
+
+        <div className="flex flex-col pt-4">
+            <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                    <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                            <tr>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Activity
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Location
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Device
+                                </th>
+                                <th
+                                    scope="col"
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    Time
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200 text-sm">
+                            {
+                                data.map((event, idx) =>
+                                    <tr key={idx}>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            {`${event.customer} from ${event.company} viewed `}
+                                            <Link href={event.link.href}>{event.link.body}</Link>
+                                        </td>
+                                        <td>
+                                            {event.location}
+                                        </td>
+                                        <td>
+                                            {event.device === Device.Mobile && <DeviceMobileIcon className="h-5 w-5"/>}
+                                            {event.device === Device.Computer && <DesktopComputerIcon className="h-5 w-5"/>}
+                                        </td>
+                                        <td>
+                                            <span className="text-right text-sm text-gray-500">
+                                                {new Date(event.timestamp).toISOString()}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                )
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </Card>;
