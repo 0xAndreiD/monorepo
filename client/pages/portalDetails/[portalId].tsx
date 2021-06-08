@@ -1,6 +1,6 @@
 import React from 'react';
 import 'tailwindcss/tailwind.css';
-import DocumentsCard from "../../components/DocumentsCard";
+import DocumentsCard from "./DocumentsCard";
 import OpportunityOverview from "./OpportunityOverview";
 import {ContactsCard} from "../../components/ContactsCard";
 import {Footer} from "../../components/Footer";
@@ -155,13 +155,12 @@ export default function CustomerPortal() {
                     <LineChart/>
                 </div>
             </div>
-            <div className="py-1"><CardDivider/></div>
-            <div className="">
-                <DocumentsCard portalId={portalId} data={data.getDocuments}/>
-                <StakeholderEngagementDemo/>
-                <StakeholderActivityLogDemo/>
-                <Footer/>
-            </div>
+            <CardDivider/>
+            <DocumentsCard portalId={portalId} data={data.getDocuments}/>
+            <CardDivider/>
+            <StakeholderEngagementDemo/>
+            <StakeholderActivityLogDemo/>
+            <Footer/>
         </div>
     </>;
 }
