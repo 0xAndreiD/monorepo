@@ -99,9 +99,9 @@ function ProgressBullets(props: { current: number, total: number }) {
                         ) : step.status === 'current' ? (
                             <a href={step.href} className="relative flex items-center justify-center"
                                aria-current="step">
-                <span className="absolute w-5 h-5 p-px flex" aria-hidden="true">
-                  <span className="w-full h-full rounded-full bg-green-200"/>
-                </span>
+                                <span className="absolute w-5 h-5 p-px flex" aria-hidden="true">
+                                    <span className="w-full h-full rounded-full bg-green-200"/>
+                                </span>
                                 <span className="relative block w-2.5 h-2.5 bg-green-600 rounded-full"
                                       aria-hidden="true"/>
                             </a>
@@ -127,8 +127,8 @@ function StakeholderClickCircles(props: { data: Array<Stakeholder & { eventCount
                         <div key={idx}
                              className={`relative w-10 h-10 flex items-center justify-center
                                 bg-${colour}-500 rounded-full hover:bg-${colour}-900`}>
-                                                            <span
-                                                                className="text-white static">{getInitialsOfName(stakeholder.name)}</span>
+                        <span
+                            className="text-white static">{getInitialsOfName(stakeholder.name)}</span>
                             {
                                 stakeholder.isApprovedBy ?
                                     <div
@@ -185,9 +185,6 @@ export function ActivePortalsDemo() {
                                     >
                                         Document Opens
                                     </th>
-                                    <th scope="col" className="relative px-6 py-3">
-                                        <span className="sr-only">Edit</span>
-                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
@@ -224,31 +221,34 @@ export function ActivePortalsDemo() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm flex justify-center flex-col gap-y-1">
-                                                {
-                                                    portal.documentEvents.slice(0, 3).map((document, idx) =>
+                                            <div className="flex justify-between">
+                                                <div className="text-sm flex justify-center flex-col gap-y-1">
+                                                    {
+                                                        portal.documentEvents.slice(0, 3).map((document, idx) =>
                                                             <div key={idx}>
-                                                    <span className="flex gap-x-1">
-                                                        <Link href={`${BACKEND_ENDPOINT}/${document.href}`}>
-                                                        {document.body}
-                                                    </Link>
-                                                   <span className={"text-gray-900"}>{document.eventCount}</span>
-                                                    </span>
+                                                                    <span className="flex gap-x-1">
+                                                                        <Link
+                                                                            href={`${BACKEND_ENDPOINT}/${document.href}`}>
+                                                                            {document.body}
+                                                                        </Link>
+                                                                        <span
+                                                                            className={"text-gray-900"}>{document.eventCount}
+                                                                        </span>
+                                                                    </span>
                                                             </div>
-                                                    )
-                                                }
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <NextLink href={`${BACKEND_ENDPOINT}/${portal.portalHref}`}>
-                                                <button
-                                                    type="button"
-                                                    className="inline-flex items-center px-5 py-3 border shadow-sm text-sm\
+                                                        )
+                                                    }
+                                                </div>
+                                                <NextLink href={`${BACKEND_ENDPOINT}/${portal.portalHref}`}>
+                                                    <button
+                                                        type="button"
+                                                        className="inline-flex items-center px-5 my-3 border shadow-sm text-sm\
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300">
-                                                    View
-                                                </button>
-                                            </NextLink>
+                                                        View
+                                                    </button>
+                                                </NextLink>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
