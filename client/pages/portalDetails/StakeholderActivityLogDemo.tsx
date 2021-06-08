@@ -112,14 +112,14 @@ export function StakeholderActivityLogDemo() {
                                             {`${event.customer} from ${event.company} viewed `}
                                             <Link href={event.link.href}>{event.link.body}</Link>
                                         </td>
-                                        <td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
                                             {event.location}
                                         </td>
-                                        <td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
                                             {event.device === Device.Mobile && <DeviceMobileIcon className="h-5 w-5"/>}
                                             {event.device === Device.Computer && <DesktopComputerIcon className="h-5 w-5"/>}
                                         </td>
-                                        <td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
                                             <span className="text-right text-sm text-gray-500">
                                                 {new Date(event.timestamp).toISOString()}
                                             </span>

@@ -44,10 +44,10 @@ export function StakeholderEngagementDemo() {
             <CardHeader>Stakeholder Engagement</CardHeader>
             <div className="text-sm text-gray-700">(clicks)</div>
         </div>
-        <div className="py-3">
+        <div className="py-3 grid gap-x-4 gap-y-2 items-center" style={{gridTemplateColumns: "auto minmax(0, 1fr) auto"}}>
             {
                 data.map(stakeholder =>
-                    <div className="flex items-center">
+                    <>
                         <div>
                             <div className="text-sm font-bold">{stakeholder.stakeholderName}</div>
                             <div className="text-sm">{stakeholder.stakeholderJobTitle}</div>
@@ -57,9 +57,10 @@ export function StakeholderEngagementDemo() {
                                  style={{width: `${Math.ceil(100 * stakeholder.eventCount / maxClickCount)}%`}}/>
                             <span className="font-bold text-sm">{stakeholder.eventCount}</span>
                         </div>
-                        <span
-                            className="text-right text-sm text-gray-500">{timeAgo(new Date(stakeholder.lastActive))}</span>
-                    </div>
+                        <div
+                            className="text-right text-sm text-gray-500">{timeAgo(new Date(stakeholder.lastActive))}
+                        </div>
+                    </>
                 )
             }
         </div>
