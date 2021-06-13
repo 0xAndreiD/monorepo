@@ -7,8 +7,8 @@ import {getColourFromSting} from "../../util/colour";
 import {getInitialsOfName} from "../../util/text";
 import {CheckIcon} from "@heroicons/react/solid";
 import {BACKEND_ENDPOINT} from "../../config";
-import Link from "../../components/generic/Link";
-import {Card, CardHeader} from "../../components/generic/Card";
+import Link from "../generic/Link";
+import {Card, CardHeader} from "../generic/Card";
 
 const portals: Array<{
     customerName: string,

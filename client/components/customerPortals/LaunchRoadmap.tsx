@@ -3,7 +3,7 @@
 import {CompletionStatus, LaunchStep} from "../../src/generated/graphql";
 import React from "react";
 import {format} from "date-fns";
-import Link from "../../components/generic/Link";
+import Link from "../generic/Link";
 
 export default function LaunchRoadmap(props: { data: LaunchStep[] }) {
     return <nav>

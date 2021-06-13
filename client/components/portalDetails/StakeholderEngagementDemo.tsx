@@ -1,4 +1,4 @@
-import {Card, CardHeader} from "../../components/generic/Card";
+import {Card, CardHeader} from "../generic/Card";
 import React from "react";
 import {subMinutes} from "date-fns";
 import {timeAgo} from "../../util/relativeDate";

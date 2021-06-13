@@ -2,7 +2,7 @@ import React from 'react';
 import {Line} from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
 import {addDays} from "date-fns";
-import {Card, CardHeader} from "../../components/generic/Card";
+import {Card, CardHeader} from "../generic/Card";
 
 const data2 = {
     labels: ['1', '2', '3', '4', '5', '6'],

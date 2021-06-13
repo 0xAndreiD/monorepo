@@ -1,12 +1,12 @@
 import {useRouter} from "next/router";
 import React from "react";
 import 'tailwindcss/tailwind.css';
-import {ActivePortalsDemo} from "./ActivePortals";
+import {ActivePortalsDemo} from "../../components/vendorStats/ActivePortals";
 import CardDivider from "../../components/generic/Card";
-import {Header} from "./Header";
+import {Header} from "../../components/vendorStats/Header";
 import {Footer} from "../../components/Footer";
-import {OpportunityEngagementDemo} from "./OpportunityEngagementDemo";
-import {StakeholderActivityLogDemo} from "./StakeholderActivityLogDemo";
+import {OpportunityEngagementDemo} from "../../components/vendorStats/OpportunityEngagementDemo";
+import {StakeholderActivityLogDemo} from "../../components/vendorStats/StakeholderActivityLogDemo";
 
 export default function VendorStats() {
     const router = useRouter();

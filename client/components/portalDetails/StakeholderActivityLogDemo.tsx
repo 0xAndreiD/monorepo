@@ -1,6 +1,6 @@
 import {subMinutes} from "date-fns";
-import {Card, CardHeader} from "../../components/generic/Card";
-import Link from "../../components/generic/Link";
+import {Card, CardHeader} from "../generic/Card";
+import Link from "../generic/Link";
 import React from "react";
 import {DesktopComputerIcon, DeviceMobileIcon} from "@heroicons/react/outline";
 

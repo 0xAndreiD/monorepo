@@ -1,18 +1,18 @@
 import React from 'react';
 import 'tailwindcss/tailwind.css';
-import DocumentsCard from "./DocumentsCard";
-import OpportunityOverview from "./OpportunityOverview";
+import DocumentsCard from "../../components/portalDetails/DocumentsCard";
+import OpportunityOverview from "../../components/portalDetails/OpportunityOverview";
 import {ContactsCard} from "../../components/ContactsCard";
 import {Footer} from "../../components/Footer";
-import {Header} from "./Header";
+import {Header} from "../../components/portalDetails/Header";
 import CardDivider from "../../components/generic/Card";
 import {gql} from "@apollo/client";
 import {useRouter} from 'next/router';
 import {usePortalQuery} from "../../src/generated/graphql";
 import {APOLLO_CLIENT} from "../../config";
-import LineChart from "./LineChart";
-import {StakeholderEngagementDemo} from "./StakeholderEngagementDemo";
-import {StakeholderActivityLogDemo} from "./StakeholderActivityLogDemo";
+import LineChart from "../../components/portalDetails/LineChart";
+import {StakeholderEngagementDemo} from "../../components/portalDetails/StakeholderEngagementDemo";
+import {StakeholderActivityLogDemo} from "../../components/portalDetails/StakeholderActivityLogDemo";
 
 
 const CLIENT_QUERY = gql`
