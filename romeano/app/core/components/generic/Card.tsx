@@ -22,7 +22,7 @@ export function CardHeader(props: PropsWithChildren<{
     </div>;
 }
 
-export default function CardDivider() {
+export function CardDivider() {
     return (
         <div className="relative">
             <div className="flex justify-center" aria-hidden="true">
