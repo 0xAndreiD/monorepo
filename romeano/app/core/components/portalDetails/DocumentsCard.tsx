@@ -6,7 +6,7 @@ import Link from 'next/link';
 import {BACKEND_ENDPOINT} from "../../config";
 
 
-export default function DocumentsCard(props: { portalId: string, data: PortalDocumentsCard }) {
+export default function DocumentsCard(props: { portalId: number, data: PortalDocumentsCard }) {
 //reference: https://tailwindui.com/components/application-ui/data-display/title-lists#component-e1b5917b21bbe76a73a96c5ca876225f
 
     // console.log("cache", (APOLLO_CLIENT.cache.extract()));
