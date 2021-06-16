@@ -1,6 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
 
-import {CompletionStatus, LaunchStep} from "../../src/generated/graphql";
 import React from "react";
 import {format} from "date-fns";
 

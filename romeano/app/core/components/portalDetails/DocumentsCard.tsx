@@ -3,7 +3,6 @@
 import {CheckIcon} from "@heroicons/react/solid";
 import {Card, CardHeader} from "../generic/Card";
 import Link from 'next/link';
-import {PortalDocument, PortalDocumentsCard} from "../../src/generated/graphql";
 import {BACKEND_ENDPOINT} from "../../config";
 
 
