@@ -88,83 +88,34 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
     }
   }
 
-
-  const startDate = new Date(2021, 9, 28)
-  const overallEngagement = [
+  const opportunityEngagement = [
     {
-      x: addDays(startDate, 0),
-      y: 40
-    },
-    {
-      x: addDays(startDate, 2),
-      y: 17
-    },
-    {
-      x: addDays(startDate, 4),
-      y: 23
-    },
-    {
-      x: addDays(startDate, 6),
-      y: 8
-    },
-    {
-      x: addDays(startDate, 8),
-      y: 35
-    },
-    {
-      x: addDays(startDate, 10),
-      y: 25
-    },
-    {
-      x: addDays(startDate, 12),
-      y: 28
-    }
-  ]
-
-  const now = new Date()
-  const stakeholderEngagement = [
-    {
-      stakeholderName: "George Lu",
-      stakeholderJobTitle: "Chief of Operations",
+      customer: "Koch",
       eventCount: 55,
-      lastActive: subMinutes(now, 25).toISOString()
-    },
-    {
-      stakeholderName: "Keenan Decker",
-      stakeholderJobTitle: "Director of Manufacturing",
+    }, {
+      customer: "Raytheon",
       eventCount: 49,
-      lastActive: subMinutes(now, 30).toISOString()
-    },
-    {
-      stakeholderName: "Jason Cahn",
-      stakeholderJobTitle: "Plant Manager",
+    }, {
+      customer: "Nasa",
       eventCount: 38,
-      lastActive: subMinutes(now, 40).toISOString()
-    },
-    {
-      stakeholderName: "Neil Harker",
-      stakeholderJobTitle: "Senior QA Manager",
+    }, {
+      customer: "Lear",
       eventCount: 11,
-      lastActive: subMinutes(now, 60).toISOString()
-    },
-    {
-      stakeholderName: "Ashton Smith",
-      stakeholderJobTitle: "Operations manager",
+    }, {
+      customer: "Pratt & Whitney",
       eventCount: 9,
-      lastActive: subMinutes(now, 180).toISOString()
-    }
-  ]
+    },
+  ];
 
-  const stakeholderActivityLog = [
+  const now = new Date();
+  const stakeholderActivity = [
     {
       customer: "Kahili Laliji",
       company: "NASA",
       link: {
         body: "Quote Proposal",
-        href: ""
+        href: "",
       },
-      location: "Houston, TX, USA",
-      device: Device.Mobile,
       timestamp: subMinutes(now, 14).toISOString()
     },
     {
@@ -172,10 +123,8 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
       company: "Lear",
       link: {
         body: "Technical Specs",
-        href: ""
+        href: "",
       },
-      location: "Houston, TX, USA",
-      device: Device.Computer,
       timestamp: subMinutes(now, 32).toISOString()
     },
     {
@@ -183,10 +132,8 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
       company: "Lear",
       link: {
         body: "Technical Specs",
-        href: ""
+        href: "",
       },
-      location: "Cincinnati, OH, USA",
-      device: Device.Computer,
       timestamp: subMinutes(now, 33).toISOString()
     },
     {
@@ -194,10 +141,8 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
       company: "Lear",
       link: {
         body: "Technical Specs",
-        href: ""
+        href: "",
       },
-      location: "Cincinnati, OH, USA",
-      device: Device.Mobile,
       timestamp: subMinutes(now, 34).toISOString()
     },
     {
@@ -205,20 +150,14 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
       company: "Raytheon",
       link: {
         body: "Mira Sales Deck",
-        href: ""
+        href: "",
       },
-      location: "Dublin, Ireland",
-      device: Device.Mobile,
       timestamp: subMinutes(now, 51).toISOString()
-    }
-  ]
+    },
+  ];
 
   return {
-    opportunityOverview,
-    contacts,
-    overallEngagement,
-    documents,
-    stakeholderEngagement,
-    stakeholderActivityLog
+    opportunityEngagement,
+    stakeholderActivity,
   }
 })
