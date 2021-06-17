@@ -2,8 +2,17 @@
 
 import React from "react";
 import {format} from "date-fns";
-import { CompletionStatus, LaunchStep } from "../customerPortals/LaunchRoadmap"
+import { CompletionStatus } from "../customerPortals/LaunchRoadmap"
 
+
+export type LaunchStep = {
+  heading: string,
+  date?: string,
+  ctaLink?: {
+    body: string,
+    href: string
+  },
+}
 export default function OpportunityOverview(props: { currentRoadmapStage: number, stages: LaunchStep[] }) {
     return <nav>
         <h1 className="text-lg font-bold">Opportunity Overview</h1>

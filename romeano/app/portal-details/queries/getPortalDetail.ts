@@ -15,14 +15,9 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
   const portal = await db.portal.findFirst({
     where: { id },
     include: {
-      roadmapStages: {
-        include: { tasks: true } //get the associated tasks for a stage
-      },
-      nextStepsTasks: { orderBy: { id: "asc" } },
+      roadmapStages: true,
       vendor: true,
       documents: { orderBy: { id: "asc" } },
-      images: { orderBy: { id: "asc" } },
-      productInfoSections: { include: { links: true } },
       userPortals: {
         include: {
           user: {
@@ -33,7 +28,6 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
           }
         }
       },
-      internalNotes: true
     }
   })
 
@@ -44,7 +38,6 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
     stages: portal.roadmapStages.map(stage => ({
       heading: stage.heading,
       date: stage.date?.toISOString(),
-      tasks: stage.tasks.map(task => task.task),
       ctaLink: stage.ctaLinkText && stage.ctaLink ? { body: stage.ctaLinkText, href: stage.ctaLink } : undefined
     }))
   }
