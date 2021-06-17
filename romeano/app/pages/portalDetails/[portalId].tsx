@@ -6,7 +6,6 @@ import { ContactsCard } from "app/core/components/ContactsCard"
 import { Footer } from "app/core/components/Footer"
 import { Header } from "app/core/components/portalDetails/Header"
 import { CardDivider } from "app/core/components/generic/Card"
-import { useRouter } from "next/router"
 import LineChart from "app/core/components/portalDetails/LineChart"
 import { StakeholderEngagementDemo } from "app/core/components/portalDetails/StakeholderEngagementDemo"
 import { StakeholderActivityLogDemo } from "app/core/components/portalDetails/StakeholderActivityLogDemo"
@@ -30,7 +29,7 @@ export default function CustomerPortal() {
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-4">
-          <OpportunityOverview data={portal.launchRoadmap} />
+          <OpportunityOverview {...portal.opportunityOverview} />
           <ContactsCard data={portal.contacts}
                         numContactsToDisplay={1}
                         narrowLayout />

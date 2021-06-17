@@ -4,7 +4,7 @@ import React from "react";
 import {format} from "date-fns";
 import { CompletionStatus, LaunchStep } from "../customerPortals/LaunchRoadmap"
 
-export default function OpportunityOverview(props: { currentRoadmapStage: number, data: LaunchStep[] }) {
+export default function OpportunityOverview(props: { currentRoadmapStage: number, stages: LaunchStep[] }) {
     return <nav>
         <h1 className="text-lg font-bold">Opportunity Overview</h1>
 
@@ -21,7 +21,7 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
         <ul style={{gridTemplateRows: `repeat(2, auto)`, gridAutoColumns: "1fr"}}
             // <ul style={{gridTemplateRows: "repeat(4, auto)", gridAutoColumns: "1fr"}}
             className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5">
-            {props.data.map((step, stepIdx) => {
+            {props.stages.map((step, stepIdx) => {
 
               const status = props.currentRoadmapStage - 1 === stepIdx ? CompletionStatus.InProgress :
                 props.currentRoadmapStage - 1 < stepIdx ? CompletionStatus.Complete : CompletionStatus.Upcoming
