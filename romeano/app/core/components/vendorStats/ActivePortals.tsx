@@ -6,24 +6,10 @@ import { getColourFromString } from "../../util/colour"
 import { getInitialsOfName } from "../../util/text"
 import { CheckIcon } from "@heroicons/react/solid"
 import { BACKEND_ENDPOINT } from "../../config"
-import Link from "../generic/Link"
+import StyledLink from "../generic/Link"
 import { Card, CardHeader } from "../generic/Card"
+import { EventCounted, Link, Stakeholder, VendorContact } from "../../../../types"
 
-export type EventCounted<T> = T & { eventCount: number }
-export type Contact = {
-  name: string,
-  jobTitle?: string,
-  email: string,
-};
-export type Stakeholder = Contact & {
-  isApprovedBy: boolean,
-}
-
-export type VendorContact = Contact & { photoUrl: string }
-export type Link = {
-  body: string,
-  href: string,
-}
 const portals: Array<{
   customerName: string,
   customerCurrentStage: number,
@@ -241,10 +227,10 @@ export function ActivePortalsDemo() {
                             portal.documentEvents.slice(0, 3).map((document, idx) =>
                               <div key={idx}>
                                                                     <span className="flex gap-x-1">
-                                                                        <Link
+                                                                        <StyledLink
                                                                           href={`${BACKEND_ENDPOINT}/${document.href}`}>
                                                                             {document.body}
-                                                                        </Link>
+                                                                        </StyledLink>
                                                                         <span
                                                                           className={"text-gray-900"}>{document.eventCount}
                                                                         </span>

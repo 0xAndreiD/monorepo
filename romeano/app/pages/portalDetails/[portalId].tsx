@@ -8,7 +8,7 @@ import { Header } from "app/core/components/portalDetails/Header"
 import { CardDivider } from "app/core/components/generic/Card"
 import LineChart from "app/core/components/portalDetails/LineChart"
 import { StakeholderEngagementCard } from "app/core/components/portalDetails/StakeholderEngagementCard"
-import { StakeholderActivityLogDemo } from "app/core/components/portalDetails/StakeholderActivityLogDemo"
+import { StakeholderActivityLogCard } from "app/core/components/portalDetails/StakeholderActivityLogCard"
 import { NotFoundError, useParam, useQuery } from "blitz"
 import getPortalDetail from "../../portal-details/queries/getPortalDetail"
 
@@ -42,7 +42,7 @@ export default function CustomerPortal() {
       <DocumentsCard portalId={portalId} data={portal.documents} />
       <CardDivider />
       <StakeholderEngagementCard data={portal.stakeholderEngagement} />
-      <StakeholderActivityLogDemo />
+      <StakeholderActivityLogCard data={portal.stakeholderActivityLog}/>
       <Footer />
     </div>
   </Suspense>

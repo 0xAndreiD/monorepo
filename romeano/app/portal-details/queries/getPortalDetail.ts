@@ -2,6 +2,7 @@ import { NotFoundError, resolver } from "blitz"
 import db, { Role } from "db"
 import { z } from "zod"
 import { addDays, subMinutes } from "date-fns"
+import { Device } from "../../../types"
 
 const GetPortalDetail = z.object({
   // This accepts type of undefined, but is required at runtime
@@ -120,7 +121,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
     }
   ]
 
-  const now = new Date();
+  const now = new Date()
   const stakeholderEngagement = [
     {
       stakeholderName: "George Lu",
@@ -151,8 +152,66 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
       stakeholderJobTitle: "Operations manager",
       eventCount: 9,
       lastActive: subMinutes(now, 180).toISOString()
+    }
+  ]
+
+  const stakeholderActivityLog = [
+    {
+      customer: "Kahili Laliji",
+      company: "NASA",
+      link: {
+        body: "Quote Proposal",
+        href: ""
+      },
+      location: "Houston, TX, USA",
+      device: Device.Mobile,
+      timestamp: subMinutes(now, 14).toISOString()
     },
-  ];
+    {
+      customer: "Alex Hills",
+      company: "Lear",
+      link: {
+        body: "Technical Specs",
+        href: ""
+      },
+      location: "Houston, TX, USA",
+      device: Device.Computer,
+      timestamp: subMinutes(now, 32).toISOString()
+    },
+    {
+      customer: "Ken Laft",
+      company: "Lear",
+      link: {
+        body: "Technical Specs",
+        href: ""
+      },
+      location: "Cincinnati, OH, USA",
+      device: Device.Computer,
+      timestamp: subMinutes(now, 33).toISOString()
+    },
+    {
+      customer: "Paul Nells",
+      company: "Lear",
+      link: {
+        body: "Technical Specs",
+        href: ""
+      },
+      location: "Cincinnati, OH, USA",
+      device: Device.Mobile,
+      timestamp: subMinutes(now, 34).toISOString()
+    },
+    {
+      customer: "Kischa Block",
+      company: "Raytheon",
+      link: {
+        body: "Mira Sales Deck",
+        href: ""
+      },
+      location: "Dublin, Ireland",
+      device: Device.Mobile,
+      timestamp: subMinutes(now, 51).toISOString()
+    }
+  ]
 
   return {
     opportunityOverview,
@@ -160,6 +219,6 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
     overallEngagement,
     documents,
     stakeholderEngagement,
-
+    stakeholderActivityLog
   }
 })
