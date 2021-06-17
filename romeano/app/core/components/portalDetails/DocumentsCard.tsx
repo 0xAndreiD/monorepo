@@ -5,6 +5,22 @@ import {Card, CardHeader} from "../generic/Card";
 import Link from 'next/link';
 import {BACKEND_ENDPOINT} from "../../config";
 
+export type PortalDocument = {
+  id: string,
+  title:string,
+  href: string,
+  isCompleted:boolean
+};
+
+export type PortalDocumentList = {
+  name: string,
+  documents: Array<PortalDocument>;
+};
+
+export type PortalDocumentsCard = {
+  customer: PortalDocumentList;
+  vendor: PortalDocumentList;
+};
 
 export default function DocumentsCard(props: { portalId: number, data: PortalDocumentsCard }) {
 //reference: https://tailwindui.com/components/application-ui/data-display/title-lists#component-e1b5917b21bbe76a73a96c5ca876225f

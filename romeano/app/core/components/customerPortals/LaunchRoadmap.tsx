@@ -10,7 +10,7 @@ export enum CompletionStatus {
   Upcoming
 }
 
-type LaunchStep = {
+export type LaunchStep = {
   heading: string,
   date?: string,
   tasks: string[],

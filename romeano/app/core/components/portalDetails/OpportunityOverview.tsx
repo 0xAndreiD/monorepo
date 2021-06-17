@@ -2,8 +2,9 @@
 
 import React from "react";
 import {format} from "date-fns";
+import { CompletionStatus, LaunchStep } from "../customerPortals/LaunchRoadmap"
 
-export default function OpportunityOverview(props: { data: LaunchStep[] }) {
+export default function OpportunityOverview(props: { currentRoadmapStage: number, data: LaunchStep[] }) {
     return <nav>
         <h1 className="text-lg font-bold">Opportunity Overview</h1>
 
@@ -20,23 +21,26 @@ export default function OpportunityOverview(props: { data: LaunchStep[] }) {
         <ul style={{gridTemplateRows: `repeat(2, auto)`, gridAutoColumns: "1fr"}}
             // <ul style={{gridTemplateRows: "repeat(4, auto)", gridAutoColumns: "1fr"}}
             className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5">
-            {props.data.map((step, stepIdx) =>
-                <React.Fragment key={stepIdx}>
-                    <div>
-                        {/*<div key={step.name} className="flex justify-center w-full">*/}
-                        {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
-                        <LaunchStepCircle step={step} stepNum={stepIdx + 1}/>
-                        {/*<div className="absolute left-96 text-green-300">*/}
-                        {/*    hi*/}
-                        {/*</div>*/}
-                    </div>
+            {props.data.map((step, stepIdx) => {
 
-                    <div
-                        className={"text-xs " + (step.status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")}>
-                        {step.date ? format(new Date(step.date), "MMM d") : "TBD"}
-                    </div>
-                </React.Fragment>
-            )}
+              const status = props.currentRoadmapStage - 1 === stepIdx ? CompletionStatus.InProgress :
+                props.currentRoadmapStage - 1 < stepIdx ? CompletionStatus.Complete : CompletionStatus.Upcoming
+              return <React.Fragment key={stepIdx}>
+                <div>
+                  {/*<div key={step.name} className="flex justify-center w-full">*/}
+                  {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
+                  <LaunchStepCircle step={step} stepNum={stepIdx + 1} status={status}/>
+                  {/*<div className="absolute left-96 text-green-300">*/}
+                  {/*    hi*/}
+                  {/*</div>*/}
+                </div>
+
+                <div
+                  className={"text-xs " + (status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")}>
+                  {step.date ? format(new Date(step.date), "MMM d") : "TBD"}
+                </div>
+              </React.Fragment>
+            })}
         </ul>
 
         {/*<div className="rounded-lg p-5 bg-gray-100">*/}
@@ -61,8 +65,8 @@ export default function OpportunityOverview(props: { data: LaunchStep[] }) {
     </nav>;
 }
 
-function LaunchStepCircle({step, stepNum}: { step: LaunchStep, stepNum: number }) {
-    switch (step.status) {
+function LaunchStepCircle({ step, stepNum, status }: { step: LaunchStep, stepNum: number, status: CompletionStatus }) {
+    switch (status) {
         case CompletionStatus.Complete:
             return <div>
                 {/*<div className="absolute inset-0 flex items-center" aria-hidden="true">*/}
