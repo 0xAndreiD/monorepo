@@ -1,4 +1,4 @@
-import React, { Suspense } from "react"
+import { Suspense } from "react"
 import "tailwindcss/tailwind.css"
 import NextStepsCard from "app/core/components/customerPortals/NextStepsCard"
 import DocumentsCard from "app/core/components/customerPortals/DocumentsCard"
