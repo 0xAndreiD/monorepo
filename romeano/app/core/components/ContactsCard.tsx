@@ -2,17 +2,16 @@ import {MailIcon} from "@heroicons/react/outline";
 import {Card, CardHeader} from "./generic/Card";
 import {getInitialsOfName, titleCase} from "../util/text";
 import Link from 'next/link';
-import {PortalContactsCard} from "../src/generated/graphql";
 import {getColourFromSting} from "../util/colour";
 
-// type ContactCard = {
-//     contacts: Array<{
-//         name: string
-//         email: string
-//         role: string
-//         imageUrl: string
-//     }>
-// }
+type ContactCard = {
+    contacts: Array<{
+        name: string
+        email: string
+        jobTitle?: string
+        photoUrl: string
+    }>
+}
 
 //idx is 0 based
 //from: https://en.wikipedia.org/wiki/Ordinal_numeral#English
@@ -45,13 +44,13 @@ function getPrecedence(idx: number): string | undefined {
 function Circle(props: { name: string }) {
     const colour = getColourFromSting(props.name);
 
-    return <div className={`relative w-10 h-10 text-sm flex items-center justify-center 
+    return <div className={`relative w-10 h-10 text-sm flex items-center justify-center
                                 bg-${colour}-500 rounded-full hover:bg-${colour}-900`}>
         <span className="text-white">{getInitialsOfName(props.name)}</span>
     </div>;
 }
 
-export function ContactsCard(props: { data: PortalContactsCard, numContactsToDisplay?: number, showProfilePictures?: boolean, narrowLayout?: boolean }) {
+export function ContactsCard(props: { data: ContactCard, numContactsToDisplay?: number, showProfilePictures?: boolean, narrowLayout?: boolean }) {
     return <Card>
         <CardHeader>Contacts</CardHeader>
         <div className="divide-y divide-gray-300">

@@ -6,7 +6,7 @@ import { ProposalCard } from "app/core/components/ProposalCard"
 import LaunchRoadmap from "app/core/components/customerPortals/LaunchRoadmap"
 import { ProductInfoCard } from "app/core/components/ProductInfoCard"
 import { ContactsCard } from "app/core/components/ContactsCard"
-import { InternalNotes } from "app/core/components/InternalNotes"
+import { InternalNotesCard } from "app/core/components/InternalNotesCard"
 import { Footer } from "app/core/components/Footer"
 import { Header } from "app/core/components/customerPortals/Header"
 import { CardDivider } from "app/core/components/generic/Card"
@@ -31,13 +31,13 @@ export default function CustomerPortal() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-4">
           <NextStepsCard {...data.nextSteps} />
-          {/*<DocumentsCard portalId={portalId} data={data.documents} />*/}
-        {/*  <ProductInfoCard data={data.productInfo} />*/}
-        {/*</div>*/}
-        {/*<div className="flex flex-col gap-4">*/}
-        {/*  <ProposalCard data={data.proposal} />*/}
-        {/*  <ContactsCard data={data.contacts} />*/}
-        {/*  <InternalNotes data={data.internalNotes} />*/}
+          <DocumentsCard portalId={portalId} data={data.documents} />
+          <ProductInfoCard data={data.productInfo} />
+        </div>
+        <div className="flex flex-col gap-4">
+          <ProposalCard data={data.proposal} />
+          <ContactsCard data={data.contacts} />
+          <InternalNotesCard data={data.internalNotes} />
         </div>
       </div>
       <div className="pt-4">

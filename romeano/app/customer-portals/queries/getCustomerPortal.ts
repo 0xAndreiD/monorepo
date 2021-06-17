@@ -133,8 +133,8 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), async ({ id }) => 
   const internalNotes = {
     messages:
       portal.internalNotes.map(x => ({
-        id: x.id.toString(),
-        user: x.userId.toString(),
+        id: x.id,
+        userId: x.userId,
         body: x.message,
         timestamp: x.createdAt.toISOString()
       })),
@@ -142,7 +142,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), async ({ id }) => 
       .filter(userPortal => userPortal.role === Role.Stakeholder)
       .map(userPortal =>
         ({
-          id: userPortal.userId.toString(),
+          id: userPortal.userId,
           name: `${userPortal.user.firstName} ${userPortal.user.lastName}`
         })
       )
