@@ -1,15 +1,14 @@
 /* This example requires Tailwind CSS v2.0+ */
 
 import {CheckIcon, CloudUploadIcon} from "@heroicons/react/solid";
-import { CardDivider,Card, CardHeader} from "./generic/Card";
+import { CardDivider,Card, CardHeader} from "../generic/Card";
 import Link from 'next/link';
 import {useCallback} from "react";
 import {useDropzone} from "react-dropzone";
 import axios from "axios";
-import { BACKEND_ENDPOINT } from "../config"
+import { BACKEND_ENDPOINT } from "../../config"
 
 export type PortalDocument = {
-  __typename?: 'PortalDocument';
   id: string,
   title:string,
   href: string,

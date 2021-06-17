@@ -2,8 +2,8 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import {Carousel} from 'react-responsive-carousel';
 import {ChevronLeftIcon, ChevronRightIcon} from "@heroicons/react/outline";
 import {CSSProperties} from "react";
-import {Card, CardHeader} from "./generic/Card";
-import Link from "./generic/Link";
+import {Card, CardHeader} from "../generic/Card";
+import Link from "../generic/Link";
 
 type Section = {
     heading: string,

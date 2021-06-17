@@ -26,7 +26,7 @@ model User {
   tokens           Token[]
   sessions         Session[]
   hashedPassword   String?
-  ///role           String   @default("USER")
+  role             String   @default("USER")
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 }
@@ -51,9 +51,7 @@ model Token {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   hashedToken String
-  type        String
-  // See note below about TokenType enum
-  // type        TokenType
+  type        TokenType
   expiresAt   DateTime
   sentTo      String
 
@@ -63,12 +61,9 @@ model Token {
   @@unique([hashedToken, type])
 }
 
-// NOTE: It's highly recommended to use an enum for the token type
-//       but enums only work in Postgres.
-//       See: https://blitzjs.com/docs/database-overview#switch-to-postgresql
-// enum TokenType {
-//   RESET_PASSWORD
-// }
+eum TokenType {
+  RESET_PASSWORD
+}
 
 model Vendor {
   id          Int          @id @default(autoincrement())

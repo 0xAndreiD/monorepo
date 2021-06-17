@@ -1,7 +1,7 @@
 import { PaperAirplaneIcon } from "@heroicons/react/outline"
-import { Card, CardDivider, CardHeader } from "./generic/Card"
-import { getColourFromSting } from "../util/colour"
-import { getInitialsOfName } from "../util/text"
+import { Card, CardDivider, CardHeader } from "../generic/Card"
+import { getColourFromSting } from "../../util/colour"
+import { getInitialsOfName } from "../../util/text"
 import { keyBy } from "lodash"
 
 type ChatMessage = {

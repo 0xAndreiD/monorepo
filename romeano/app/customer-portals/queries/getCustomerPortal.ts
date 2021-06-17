@@ -48,19 +48,14 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), async ({ id }) => 
     }))
   }
 
-  console.log(launchRoadmap)
   const nextSteps = {
     customer: {
       name: portal.customerName,
-      tasks: portal.nextStepsTasks
-        .filter(x => x.customerOrVendor === CustomerOrVendor.CUSTOMER)
-        .map(x => ({ ...x, id: x.id.toString() }))
+      tasks: portal.nextStepsTasks.filter(x => x.customerOrVendor === CustomerOrVendor.CUSTOMER)
     },
     vendor: {
       name: portal.vendor.name,
-      tasks: portal.nextStepsTasks
-        .filter(x => x.customerOrVendor === CustomerOrVendor.VENDOR)
-        .map(x => ({ ...x, id: x.id.toString() }))
+      tasks: portal.nextStepsTasks.filter(x => x.customerOrVendor === CustomerOrVendor.VENDOR)
     }
   }
 

@@ -1,13 +1,13 @@
 import { CheckIcon, PlusIcon, XIcon } from "@heroicons/react/solid"
-import { Card, CardDivider, CardHeader } from "./generic/Card"
+import { Card, CardDivider, CardHeader } from "../generic/Card"
 import Link from "next/link"
 import { Dispatch, SetStateAction, useState } from "react"
-import RevealSection from "./generic/RevealSection"
+import RevealSection from "../generic/RevealSection"
 import { Dialog } from "@headlessui/react"
-import { AddButton } from "./generic/AddButton"
-import Modal from "./generic/Modal"
-import { getColourFromSting } from "../util/colour"
-import { getInitialsOfName } from "../util/text"
+import { AddButton } from "../generic/AddButton"
+import Modal from "../generic/Modal"
+import { getColourFromSting } from "../../util/colour"
+import { getInitialsOfName } from "../../util/text"
 
 export type Stakeholder = {
   name: string,

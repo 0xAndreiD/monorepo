@@ -15,10 +15,9 @@ import getCustomerPortal from "../../customer-portals/queries/getCustomerPortal"
 
 export default function CustomerPortal() {
   const portalId = useParam("portalId", "number")
-  const [data] = useQuery(getCustomerPortal, { id: portalId })
+  const [data, { refetch }] = useQuery(getCustomerPortal, { id: portalId })
 
   if (!portalId) throw new NotFoundError()
-
   //container: https://tailwindui.com/components/application-ui/layout/containers
   return <Suspense fallback={<>Loading!</>}>
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
@@ -30,7 +29,7 @@ export default function CustomerPortal() {
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 bg-gray-100">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-4">
-          <NextStepsCard {...data.nextSteps} />
+          <NextStepsCard {...data.nextSteps} taskOnClick={(id, isCompleted) => refetch()} />
           <DocumentsCard portalId={portalId} data={data.documents} />
           <ProductInfoCard data={data.productInfo} />
         </div>
