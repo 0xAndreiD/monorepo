@@ -1,6 +1,7 @@
 import { NotFoundError, resolver } from "blitz"
 import db, { Role } from "db"
 import { z } from "zod"
+import { addDays } from "date-fns"
 
 const GetPortalDetail = z.object({
   // This accepts type of undefined, but is required at runtime
@@ -86,9 +87,45 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
     }
   }
 
+
+  const startDate = new Date(2021, 9, 28)
+  const overallEngagement = [
+    {
+      x: addDays(startDate, 0),
+      y: 40
+    },
+    {
+      x: addDays(startDate, 2),
+      y: 17
+    },
+    {
+      x: addDays(startDate, 4),
+      y: 23
+    },
+    {
+      x: addDays(startDate, 6),
+      y: 8
+    },
+    {
+      x: addDays(startDate, 8),
+      y: 35
+    },
+    {
+      x: addDays(startDate, 10),
+      y: 25
+    },
+    {
+      x: addDays(startDate, 12),
+      y: 28
+    }
+  ]
+
+
   return {
     opportunityOverview,
     contacts,
+    overallEngagement,
     documents
+
   }
 })

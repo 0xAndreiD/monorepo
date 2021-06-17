@@ -35,7 +35,7 @@ export default function CustomerPortal() {
                         narrowLayout />
         </div>
         <div className="flex flex-col gap-4">
-          <LineChart />
+          <LineChart data={portal.overallEngagement}/>
         </div>
       </div>
       <CardDivider />
