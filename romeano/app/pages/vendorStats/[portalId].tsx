@@ -8,31 +8,14 @@ import { Header } from "app/core/components/vendorStats/Header"
 import { Footer } from "app/core/components/Footer"
 import { OpportunityEngagementDemo } from "app/core/components/vendorStats/OpportunityEngagementDemo"
 import { StakeholderActivityLogDemo } from "app/core/components/vendorStats/StakeholderActivityLogDemo"
+import { NotFoundError, useParam, useQuery } from "blitz"
+import getPortalDetail from "../../portal-details/queries/getPortalDetail"
 
 export default function VendorStats() {
-  const router = useRouter()
-  const { portalId } = router.query
-  // const {data, loading, error} = usePortalQuery({
-  //     skip: (typeof portalId !== "string" || !portalId),
-  //     variables: {portalId: portalId as string}, //cast should be safe with 'skip'
-  //     client: APOLLO_CLIENT,
-  // });
-  //
-  // if (loading) {
-  //     return <>Loading!</>;
-  // }
-  //
-  // if (error) {
-  //     return <>Error! {JSON.stringify(error)}</>;
-  // }
-  //
-  // if (!portalId || typeof portalId !== "string") {
-  //     return <>Wrong Portal Id!</>;
-  // }
-  //
-  // if (!data) {
-  //     return <>No Data!</>;
-  // }
+  const portalId = useParam("portalId", "number")
+  const [portal] = useQuery(getPortalDetail, { id: portalId })
+
+  if (!portalId) throw new NotFoundError()
 
   return <>
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
