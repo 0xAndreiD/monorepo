@@ -1,7 +1,7 @@
 import { NotFoundError, resolver } from "blitz"
 import db, { Role } from "db"
 import { z } from "zod"
-import { addDays } from "date-fns"
+import { addDays, subMinutes } from "date-fns"
 
 const GetPortalDetail = z.object({
   // This accepts type of undefined, but is required at runtime
@@ -120,12 +120,46 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
     }
   ]
 
+  const now = new Date();
+  const stakeholderEngagement = [
+    {
+      stakeholderName: "George Lu",
+      stakeholderJobTitle: "Chief of Operations",
+      eventCount: 55,
+      lastActive: subMinutes(now, 25).toISOString()
+    },
+    {
+      stakeholderName: "Keenan Decker",
+      stakeholderJobTitle: "Director of Manufacturing",
+      eventCount: 49,
+      lastActive: subMinutes(now, 30).toISOString()
+    },
+    {
+      stakeholderName: "Jason Cahn",
+      stakeholderJobTitle: "Plant Manager",
+      eventCount: 38,
+      lastActive: subMinutes(now, 40).toISOString()
+    },
+    {
+      stakeholderName: "Neil Harker",
+      stakeholderJobTitle: "Senior QA Manager",
+      eventCount: 11,
+      lastActive: subMinutes(now, 60).toISOString()
+    },
+    {
+      stakeholderName: "Ashton Smith",
+      stakeholderJobTitle: "Operations manager",
+      eventCount: 9,
+      lastActive: subMinutes(now, 180).toISOString()
+    },
+  ];
 
   return {
     opportunityOverview,
     contacts,
     overallEngagement,
-    documents
+    documents,
+    stakeholderEngagement,
 
   }
 })
