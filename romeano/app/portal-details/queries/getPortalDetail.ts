@@ -67,7 +67,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
       documents: portal.documents
         .filter(x => portal.userPortals.filter(up => up.role === Role.AccountExecutive).map(up => up.userId).includes(x.userId))
         .map(x => ({
-          id: x.id.toString(),
+          id: x.id,
           title: x.title,
           href: x.href,
           isCompleted: x.isCompleted
@@ -78,7 +78,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
       documents: portal.documents
         .filter(x => portal.userPortals.filter(up => up.role === Role.Stakeholder).map(up => up.userId).includes(x.userId))
         .map(x => ({
-          id: x.id.toString(),
+          id: x.id,
           title: x.title,
           href: x.href,
           isCompleted: x.isCompleted

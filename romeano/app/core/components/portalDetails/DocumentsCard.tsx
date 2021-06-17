@@ -6,7 +6,7 @@ import Link from 'next/link';
 import {BACKEND_ENDPOINT} from "../../config";
 
 export type PortalDocument = {
-  id: string,
+  id: number,
   title:string,
   href: string,
   isCompleted:boolean

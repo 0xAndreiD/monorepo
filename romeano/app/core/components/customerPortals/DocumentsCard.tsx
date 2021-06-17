@@ -9,7 +9,7 @@ import axios from "axios";
 import { BACKEND_ENDPOINT } from "../../config"
 
 export type PortalDocument = {
-  id: string,
+  id: number,
   title:string,
   href: string,
   isCompleted:boolean
@@ -58,8 +58,8 @@ export default function DocumentsCard(props: { portalId: number, data: PortalDoc
         axios.post(`${BACKEND_ENDPOINT}/fileUpload`, formData, {
             headers: {'Content-Type': 'multipart/form-data'}
         }).then(() => {
-            const maxIdCustomer = props.data.customer.documents.reduce((currentMax, document) => Math.max(currentMax, parseInt(document.id)), 0);
-            const maxIdVendor = props.data.vendor.documents.reduce((currentMax, document) => Math.max(currentMax, parseInt(document.id)), 0);
+            const maxIdCustomer = props.data.customer.documents.reduce((currentMax, document) => Math.max(currentMax, document.id), 0);
+            const maxIdVendor = props.data.vendor.documents.reduce((currentMax, document) => Math.max(currentMax, document.id), 0);
             const maxId = Math.max(maxIdCustomer, maxIdVendor);
             acceptedFiles.forEach((file, idx) => {
                 // APOLLO_CLIENT.cache.evict({id:"ROOT_QUERY"})
