@@ -2,7 +2,7 @@ import {MailIcon} from "@heroicons/react/outline";
 import {Card, CardHeader} from "./generic/Card";
 import {getInitialsOfName, titleCase} from "../util/text";
 import Link from 'next/link';
-import {getColourFromSting} from "../util/colour";
+import {getColourFromString} from "../util/colour";
 
 type ContactCard = {
     contacts: Array<{
@@ -42,10 +42,10 @@ function getPrecedence(idx: number): string | undefined {
 // }
 
 function Circle(props: { name: string }) {
-    const colour = getColourFromSting(props.name);
+    const colour = getColourFromString(props.name);
 
     return <div className={`relative w-10 h-10 text-sm flex items-center justify-center
-                                bg-${colour}-500 rounded-full hover:bg-${colour}-900`}>
+                                ${colour} rounded-full`}>
         <span className="text-white">{getInitialsOfName(props.name)}</span>
     </div>;
 }

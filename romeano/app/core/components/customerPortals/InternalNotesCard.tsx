@@ -1,6 +1,6 @@
 import { PaperAirplaneIcon } from "@heroicons/react/outline"
 import { Card, CardDivider, CardHeader } from "../generic/Card"
-import { getColourFromSting } from "../../util/colour"
+import { getColourFromString } from "../../util/colour"
 import { getInitialsOfName } from "../../util/text"
 import { keyBy } from "lodash"
 
@@ -63,11 +63,11 @@ export function InternalNotesCard(props: { data: InternalNotes }) {
         <ul className="-my-4">
           {
             props.data.messages.map((post) => {
-              const colour = getColourFromSting(userLookup[post.userId].name)
+              const colour = getColourFromString(userLookup[post.userId].name)
 
               return <li key={post.id} className="flex items-center py-4 space-x-3">
                 <div className={`relative w-8 h-8 text-sm flex items-center justify-center
-                                bg-${colour}-500 rounded-full hover:bg-${colour}-900`}>
+                                ${colour} rounded-full`}>
                   <span className="text-white">{getInitialsOfName(userLookup[post.userId].name)}</span>
                 </div>
                 <div className="min-w-0 flex-1">

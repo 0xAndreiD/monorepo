@@ -6,7 +6,7 @@ import RevealSection from "../generic/RevealSection"
 import { Dialog } from "@headlessui/react"
 import { AddButton } from "../generic/AddButton"
 import Modal from "../generic/Modal"
-import { getColourFromSting } from "../../util/colour"
+import { getColourFromString } from "../../util/colour"
 import { getInitialsOfName } from "../../util/text"
 
 export type Stakeholder = {
@@ -27,10 +27,10 @@ function StakeholderApprovalCircles(props: { data: Array<Stakeholder> }) {
   return <>
     {
       props.data.map((stakeholder, idx) => {
-          const colour = getColourFromSting(stakeholder.name)
+          const colour = getColourFromString(stakeholder.name)
           return <div key={idx}
                       className={`relative w-10 h-10 flex items-center justify-center
-                                bg-${colour}-500 rounded-full hover:bg-${colour}-900`}>
+                                ${colour} rounded-full`}>
             <span className="text-white static">{getInitialsOfName(stakeholder.name)}</span>
 
             {
