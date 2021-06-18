@@ -156,8 +156,64 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
     },
   ];
 
+  const activePortals = [
+    {
+      customerName: "Koch",
+      customerCurrentStage: 2,
+      customerNumberOfStages: 4,
+      vendorContact: {
+        name: "Nick Franklin",
+        jobTitle: "Director of Operations",
+        email: "nick@mira.com",
+        photoUrl: ""
+      },
+      stakeholderEvents: [
+        {
+          name: "N F",
+          email: "a@a.com",
+          isApprovedBy: true,
+          eventCount: 22
+        },
+        {
+          name: "K S",
+          email: "a@a.com",
+          isApprovedBy: true,
+          eventCount: 12
+        },
+        {
+          name: "W I",
+          email: "a@a.com",
+          isApprovedBy: true,
+          eventCount: 8
+        },
+        {
+          name: "P S",
+          email: "a@a.com",
+          isApprovedBy: false,
+          eventCount: 2
+        }
+      ],
+      documentEvents: [
+        {
+          body: "Mira Sales Deck",
+          href: "",
+          eventCount: 8
+        }, {
+          body: "Mira Connect Video",
+          href: "",
+          eventCount: 6
+        }, {
+          body: "Quote Proposal",
+          href: "",
+          eventCount: 2
+        }
+      ],
+      portalHref: ""
+    }
+  ]
   return {
     opportunityEngagement,
     stakeholderActivity,
+    activePortals
   }
 })

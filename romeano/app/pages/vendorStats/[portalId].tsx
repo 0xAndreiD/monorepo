@@ -27,7 +27,7 @@ export default function VendorStats() {
         <OpportunityEngagement data={portal.opportunityEngagement}/>
         <StakeholderActivity data={portal.stakeholderActivity}/>
       </div>
-      <ActivePortalsDemo />
+      <ActivePortalsDemo data={portal.activePortals}/>
     </div>
     <Footer />
   </>

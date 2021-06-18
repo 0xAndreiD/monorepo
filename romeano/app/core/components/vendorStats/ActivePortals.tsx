@@ -9,8 +9,9 @@ import { BACKEND_ENDPOINT } from "../../config"
 import StyledLink from "../generic/Link"
 import { Card, CardHeader } from "../generic/Card"
 import { EventCounted, Link, Stakeholder, VendorContact } from "../../../../types"
+import { range } from "lodash"
 
-const portals: Array<{
+type ActivePortal = {
   customerName: string,
   customerCurrentStage: number,
   customerNumberOfStages: number,
@@ -18,100 +19,32 @@ const portals: Array<{
   stakeholderEvents: Array<EventCounted<Stakeholder>>,
   documentEvents: Array<EventCounted<Link>>,
   portalHref: string,
-}> = [
-  {
-    customerName: "Koch",
-    customerCurrentStage: 1,
-    customerNumberOfStages: 4,
-    vendorContact: {
-      name: "Nick Franklin",
-      jobTitle: "Director of Operations",
-      email: "nick@mira.com",
-      photoUrl: ""
-    },
-    stakeholderEvents: [
-      {
-        name: "N F",
-        email: "a@a.com",
-        isApprovedBy: true,
-        eventCount: 22
-      },
-      {
-        name: "K S",
-        email: "a@a.com",
-        isApprovedBy: true,
-        eventCount: 12
-      },
-      {
-        name: "W I",
-        email: "a@a.com",
-        isApprovedBy: true,
-        eventCount: 8
-      },
-      {
-        name: "P S",
-        email: "a@a.com",
-        isApprovedBy: false,
-        eventCount: 2
-      }
-    ],
-    documentEvents: [
-      {
-        body: "Mira Sales Deck",
-        href: "",
-        eventCount: 8
-      }, {
-        body: "Mira Connect Video",
-        href: "",
-        eventCount: 6
-      }, {
-        body: "Quote Proposal",
-        href: "",
-        eventCount: 2
-      }
-    ],
-    portalHref: ""
-  }
-  // More people...
-]
+}
 
 function ProgressBullets(props: { current: number, total: number }) {
-  /*
-   {
-                                                  range(portal.customerNumberOfStages).map(idx =>  )
-   */
-  const steps = [
-    { name: "Step 1", href: "#", status: "complete" },
-    { name: "Step 2", href: "#", status: "current" },
-    { name: "Step 3", href: "#", status: "upcoming" },
-    { name: "Step 4", href: "#", status: "upcoming" }
-  ]
-
   return (
     <div className="flex items-center" aria-label="Progress">
       <ol className="flex items-center space-x-3">
-        {steps.map((step) => (
-          <li key={step.name}>
-            {step.status === "complete" ? (
-              <a href={step.href}
-                 className="block w-2.5 h-2.5 bg-white rounded-full border-green-600 border-2">
-              </a>
-            ) : step.status === "current" ? (
-              <a href={step.href} className="relative flex items-center justify-center"
-                 aria-current="step">
+        {
+          range(props.total).map((idx) => (
+            <li key={idx}>
+              {idx + 1 < props.current ? (
+                <div className="block w-2.5 h-2.5 bg-white rounded-full border-green-600 border-2" />
+              ) : idx + 1 === props.current ? (
+                <div className="relative flex items-center justify-center"
+                     aria-current="step">
                                 <span className="absolute w-5 h-5 p-px flex" aria-hidden="true">
                                     <span className="w-full h-full rounded-full bg-green-200" />
                                 </span>
-                <span className="relative block w-2.5 h-2.5 bg-green-600 rounded-full"
-                      aria-hidden="true" />
-              </a>
-            ) : (
-              <a href={step.href}
-                 className="block w-2.5 h-2.5 bg-gray-200 rounded-full hover:bg-gray-400">
-              </a>
-            )}
-          </li>
-        ))}
+                  <span className="relative block w-2.5 h-2.5 bg-green-600 rounded-full"
+                        aria-hidden="true" />
+                </div>
+              ) : (
+                <div className="block w-2.5 h-2.5 bg-gray-200 rounded-full hover:bg-gray-400" />
+              )}
+            </li>
+          ))
+        }
       </ol>
     </div>
   )
@@ -148,7 +81,7 @@ function StakeholderClickCircles(props: { data: Array<Stakeholder & { eventCount
   </>
 }
 
-export function ActivePortalsDemo() {
+export function ActivePortalsDemo(props: { data: ActivePortal[] }) {
   return (
     <Card>
       <CardHeader>
@@ -188,7 +121,7 @@ export function ActivePortalsDemo() {
                 </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                {portals.map((portal, idx) => (
+                {props.data.map((portal, idx) => (
                   <tr key={idx} className="divide-x">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
