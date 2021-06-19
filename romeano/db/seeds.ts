@@ -7,7 +7,7 @@ import db, { CustomerOrVendor, Role } from "./index"
  * or https://github.com/Marak/Faker.js to easily generate
  * realistic data.
  */
-const seed = async () => {
+const seedCustomerPortal = async () => {
   console.log(`Start seeding ...`)
 
   const vendorTeam = await db.vendorTeam.create({
@@ -310,6 +310,27 @@ const seed = async () => {
     ]
   })
   console.log(`Seeding finished.`)
+}
+
+async function seedPortalDetails() {
+  await db.magicLink.create({
+    data: {
+      key: "magickey",
+      user: {
+        create: {
+          firstName: "Eric",
+          lastName: "Semeniuc",
+          email: "eric@mira.com",
+          photoUrl: "https://cdn3.iconfinder.com/data/icons/pictomisc/100/happyface-512.png"
+        }
+      }
+    }
+  })
+}
+
+async function seed() {
+  await seedCustomerPortal()
+  await seedPortalDetails()
 }
 
 export default seed
