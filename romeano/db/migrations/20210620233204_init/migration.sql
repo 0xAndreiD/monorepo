@@ -220,9 +220,9 @@ CREATE TABLE "Event" (
     "id" SERIAL NOT NULL,
     "ip" TEXT NOT NULL,
     "type" "EventType" NOT NULL,
-    "documentId" INTEGER NOT NULL,
+    "documentId" INTEGER,
     "portalId" INTEGER NOT NULL,
-    "sessionId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY ("id")
@@ -230,12 +230,12 @@ CREATE TABLE "Event" (
 
 -- CreateTable
 CREATE TABLE "MagicLink" (
-    "key" TEXT NOT NULL,
+    "id" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("key")
+    PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -314,13 +314,13 @@ ALTER TABLE "InternalNotes" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id
 ALTER TABLE "InternalNotes" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Event" ADD FOREIGN KEY ("documentId") REFERENCES "Document"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Event" ADD FOREIGN KEY ("documentId") REFERENCES "Document"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Event" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Event" ADD FOREIGN KEY ("sessionId") REFERENCES "Session"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Event" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "MagicLink" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

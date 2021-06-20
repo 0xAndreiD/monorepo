@@ -7,7 +7,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["orderByRelation"]
 }
 
 // --------------------------------------
@@ -30,6 +31,7 @@ model User {
   role             String            @default("USER")
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
+  Event            Event[]
 }
 
 model Session {
@@ -43,9 +45,8 @@ model Session {
   publicData         String?
   privateData        String?
 
-  user   User?   @relation(fields: [userId], references: [id])
+  user   User? @relation(fields: [userId], references: [id])
   userId Int?
-  events Event[]
 }
 
 model Token {
@@ -235,17 +236,17 @@ model Event {
   id         Int       @id @default(autoincrement())
   ip         String
   type       EventType
-  document   Document  @relation(fields: [documentId], references: [id])
-  documentId Int
+  document   Document? @relation(fields: [documentId], references: [id])
+  documentId Int?
   portal     Portal    @relation(fields: [portalId], references: [id])
   portalId   Int
-  session    Session   @relation(fields: [sessionId], references: [id])
-  sessionId  Int
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
   createdAt  DateTime  @default(now())
 }
 
 model MagicLink {
-  key       String   @id
+  id        String   @id
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
   createdAt DateTime @default(now())

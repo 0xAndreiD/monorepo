@@ -8,7 +8,7 @@ import db, { CustomerOrVendor, Role } from "./index"
  * realistic data.
  */
 const seedCustomerPortal = async () => {
-  console.log(`Start seeding ...`)
+  console.log(`Start seeding customerPortal...`)
 
   const vendorTeam = await db.vendorTeam.create({
     data: {
@@ -315,22 +315,17 @@ const seedCustomerPortal = async () => {
 async function seedPortalDetails() {
   await db.magicLink.create({
     data: {
-      key: "magickey",
-      user: {
-        create: {
-          firstName: "Eric",
-          lastName: "Semeniuc",
-          email: "eric@mira.com",
-          photoUrl: "https://cdn3.iconfinder.com/data/icons/pictomisc/100/happyface-512.png"
-        }
-      }
+      id: "foobar",
+      userId: 1,
     }
   })
 }
 
 async function seed() {
+  console.log(`Start seeding ...`)
   await seedCustomerPortal()
   await seedPortalDetails()
+  console.log("Done!")
 }
 
 export default seed
