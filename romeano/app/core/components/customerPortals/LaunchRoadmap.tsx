@@ -4,7 +4,6 @@ import { format } from "date-fns"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
 
-
 export enum CompletionStatus {
   Complete,
   InProgress,
