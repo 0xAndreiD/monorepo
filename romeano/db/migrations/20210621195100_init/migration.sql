@@ -8,7 +8,7 @@ CREATE TYPE "Role" AS ENUM ('AccountExecutive', 'Stakeholder');
 CREATE TYPE "CustomerOrVendor" AS ENUM ('VENDOR', 'CUSTOMER');
 
 -- CreateEnum
-CREATE TYPE "EventType" AS ENUM ('NextStepAdd', 'NextStepUpdate', 'DocumentApprove', 'DocumentOpen', 'DocumentUpload', 'ProposalApprove', 'ProposalOpen', 'CreateInternalMessage', 'ProductInfoLinkOpen');
+CREATE TYPE "EventType" AS ENUM ('LaunchRoadmapLinkOpen', 'NextStepAdd', 'NextStepUpdate', 'DocumentApprove', 'DocumentOpen', 'DocumentUpload', 'ProposalApprove', 'ProposalOpen', 'CreateInternalMessage', 'ProductInfoLinkOpen');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -194,7 +194,7 @@ CREATE TABLE "Document" (
     "id" SERIAL NOT NULL,
     "portalId" INTEGER NOT NULL,
     "title" TEXT NOT NULL,
-    "href" TEXT NOT NULL,
+    "path" TEXT NOT NULL,
     "isCompleted" BOOLEAN NOT NULL,
     "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

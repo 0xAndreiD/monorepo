@@ -1,13 +1,14 @@
 /* This example requires Tailwind CSS v2.0+ */
 
 import { CheckIcon, CloudUploadIcon } from "@heroicons/react/solid"
-import { CardDivider, Card, CardHeader } from "../generic/Card"
+import { Card, CardDivider, CardHeader } from "../generic/Card"
 import { useCallback } from "react"
 import { useDropzone } from "react-dropzone"
 import axios from "axios"
 import { BACKEND_ENDPOINT } from "../../config"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
+import { getBackendFilePath } from "../../util/upload"
 
 export type PortalDocument = {
   id: number,
@@ -153,7 +154,7 @@ function DocumentList(props: { portalId: number, companyName: string, documents:
                         <TrackedLink portalId={props.portalId}
                                      documentId={document.id}
                                      eventType={EventType.DocumentOpen}
-                                     href={`${BACKEND_ENDPOINT}/${document.href}`}>
+                                     href={document.href}>
                             <button
                               type="button"
                               className={"inline-flex items-center px-3 py-2 border shadow-sm text-sm\

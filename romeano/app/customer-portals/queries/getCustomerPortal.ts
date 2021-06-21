@@ -1,6 +1,7 @@
 import { NotFoundError, resolver } from "blitz"
 import db, { CustomerOrVendor, Role } from "db"
 import { z } from "zod"
+import { getBackendFilePath } from "../../core/util/upload"
 
 const GetCustomerPortal = z.object({
   // This accepts type of undefined, but is required at runtime
@@ -67,7 +68,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), async ({ id }) => 
         .map(x => ({
           id: x.id,
           title: x.title,
-          href: x.href,
+          href: getBackendFilePath(x.path),
           isCompleted: x.isCompleted
         }))
     },
@@ -78,7 +79,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), async ({ id }) => 
         .map(x => ({
           id: x.id,
           title: x.title,
-          href: x.href,
+          href: getBackendFilePath(x.path),
           isCompleted: x.isCompleted
         }))
     }

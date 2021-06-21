@@ -201,21 +201,21 @@ const seedCustomerPortal = async () => {
       {
         portalId: portal.id,
         title: "Security Questionnaire",
-        href: "",
+        path: "security-questionnaire.txt",
         isCompleted: false,
         userId: aeUser.id
       },
       {
         portalId: portal.id,
         title: "Vendor Setup",
-        href: "",
+        path: "vendor-setup.txt",
         isCompleted: false,
         userId: aeUser.id
       },
       {
         portalId: portal.id,
         title: "W-9 Form",
-        href: "",
+        path: "w9.txt",
         isCompleted: true,
         userId: stakeholders[0].id
       }

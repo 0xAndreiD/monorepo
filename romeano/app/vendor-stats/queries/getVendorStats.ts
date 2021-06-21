@@ -1,8 +1,7 @@
 import { NotFoundError, resolver } from "blitz"
-import db, { Role } from "db"
+import db from "db"
 import { z } from "zod"
-import { addDays, subMinutes } from "date-fns"
-import { Device } from "../../../types"
+import { BACKEND_ENDPOINT, UPLOAD_DIR } from "../../core/config"
 
 const GetVendorStats = z.object({
   // This accepts type of undefined, but is required at runtime
@@ -79,26 +78,27 @@ INNER JOIN "Portal" ON eventInfo."portalId" = "Portal".id;
     stakeholderName: string,
     customerName: string,
     documentTitle: string,
-    documentLink: string,
+    documentPath: string,
     timestamp: string,
   }>>`
 SELECT "User"."firstName" || ' ' || "User"."lastName" AS "stakeholderName",
        "Portal"."customerName",
        "Document".title                               AS "documentTitle",
-       "Document".href                                AS "documentLink",
+       "Document".path                                AS "documentPath",
        "Event"."createdAt"                            AS timestamp
 FROM "Event"
          INNER JOIN "Portal" ON "Event"."portalId" = "Portal".id
          INNER JOIN "User" ON "Event"."userId" = "User".id
          INNER JOIN "Document" ON "Event"."documentId" = "Document".id
 WHERE "Event"."portalId" IN (SELECT "UserPortal"."portalId" FROM "UserPortal" WHERE "UserPortal"."userId" = ${id})
+ORDER BY timestamp DESC
 `
   const stakeholderActivity = stakeholderActivityRaw.map(x => ({
     stakeholderName: x.stakeholderName,
     customerName: x.customerName,
     link: { //link should always exist due to joining on documentId
       body: x.documentTitle,
-      href: x.documentLink
+      href: `/${UPLOAD_DIR}/${x.documentPath}`,
     },
     timestamp: x.timestamp
   }))
