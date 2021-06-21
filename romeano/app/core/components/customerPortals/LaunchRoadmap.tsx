@@ -1,7 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 import React from "react"
 import { format } from "date-fns"
-import Link from "../generic/Link"
+import { StyledLink } from "../generic/Link"
 
 
 export enum CompletionStatus {
@@ -71,10 +71,10 @@ export default function LaunchRoadmap(props: { currentRoadmapStage: number, stag
             </ul>
             <div className="text-center">
               {
-                step.ctaLink && <Link
+                step.ctaLink && <StyledLink
                   href={step.ctaLink.href}>
                   {step.ctaLink.body}
-                </Link>
+                </StyledLink>
               }
             </div>
           </React.Fragment>

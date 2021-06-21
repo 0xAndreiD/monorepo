@@ -31,10 +31,10 @@ export default function CustomerPortal() {
         <div className="flex flex-col gap-4">
           <NextStepsCard {...data.nextSteps} taskOnClick={(id, isCompleted) => refetch()} />
           <DocumentsCard portalId={portalId} data={data.documents} />
-          <ProductInfoCard data={data.productInfo} />
+          <ProductInfoCard portalId={portalId} data={data.productInfo} />
         </div>
         <div className="flex flex-col gap-4">
-          <ProposalCard data={data.proposal} />
+          <ProposalCard portalId={portalId} data={data.proposal} />
           <ContactsCard data={data.contacts} />
           <InternalNotesCard data={data.internalNotes} />
         </div>

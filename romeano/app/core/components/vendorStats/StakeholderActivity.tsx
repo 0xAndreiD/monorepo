@@ -1,5 +1,5 @@
 import { Card, CardHeader } from "../generic/Card"
-import StyledLink from "../generic/Link"
+import { StyledLink } from "../generic/Link"
 import { timeAgo } from "../../util/relativeDate"
 import React from "react"
 import { Link } from "../../../../types"

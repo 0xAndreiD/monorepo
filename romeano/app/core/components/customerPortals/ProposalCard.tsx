@@ -1,6 +1,7 @@
 import { CheckIcon, PlusIcon, XIcon } from "@heroicons/react/solid"
 import { Card, CardDivider, CardHeader } from "../generic/Card"
-import Link from "next/link"
+
+import {TrackedLink} from "../generic/Link"
 import { Dispatch, SetStateAction, useState } from "react"
 import RevealSection from "../generic/RevealSection"
 import { Dialog } from "@headlessui/react"
@@ -8,6 +9,7 @@ import { AddButton } from "../generic/AddButton"
 import Modal from "../generic/Modal"
 import { getColourFromString } from "../../util/colour"
 import { getInitialsOfName } from "../../util/text"
+import { EventType } from "db"
 
 export type Stakeholder = {
   name: string,
@@ -48,7 +50,7 @@ function StakeholderApprovalCircles(props: { data: Array<Stakeholder> }) {
   </>
 }
 
-export function ProposalCard(props: { data: Proposal }) {
+export function ProposalCard(props: {portalId:number, data: Proposal }) {
   const [isDetailsVisible, setDetailsVisible] = useState(true)
   const [isInviteStakeholdersModalOpen, setIsInviteStakeholdersModalOpen] = useState(false)
 
@@ -59,14 +61,16 @@ export function ProposalCard(props: { data: Proposal }) {
       <h5 className="py-2 font-bold text-center">{props.data.subheading}</h5>
       <div className="sm:divide-y sm:divide-gray-200" />
 
-      <Link href={props.data.quoteLink}>
+      <TrackedLink portalId={props.portalId}
+        href={props.data.quoteLink}
+                    eventType={EventType.ProposalOpen}>
         <button
           type="button"
           className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
         >
           View Quote
         </button>
-      </Link>
+      </TrackedLink>
     </div>
     <CardDivider />
 
@@ -126,13 +130,11 @@ export function ProposalCard(props: { data: Proposal }) {
             className="relative rounded-lg bg-white flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
           >
             <div className="flex-1 min-w-0">
-              <Link href="#">
                 <>
                   <span className="absolute inset-0" aria-hidden="true" />
                   <p className="text-sm font-medium text-gray-900">{person.name}</p>
                   <p className="text-sm text-gray-500 truncate">{person.jobTitle}</p>
                 </>
-              </Link>
             </div>
           </div>
         ))}

@@ -2,7 +2,7 @@ import { Card, CardHeader } from "../generic/Card"
 import React from "react"
 import { DesktopComputerIcon, DeviceMobileIcon } from "@heroicons/react/outline"
 import { Device, Link } from "../../../../types"
-import StyledLink from "../generic/Link"
+import { StyledLink } from "../generic/Link"
 
 type StakeholderActivityEvent = {
   link: Link,

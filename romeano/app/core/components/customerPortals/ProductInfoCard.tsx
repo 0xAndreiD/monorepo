@@ -3,7 +3,8 @@ import {Carousel} from 'react-responsive-carousel';
 import {ChevronLeftIcon, ChevronRightIcon} from "@heroicons/react/outline";
 import {CSSProperties} from "react";
 import {Card, CardHeader} from "../generic/Card";
-import Link from "../generic/Link";
+import { TrackedLink } from "../generic/Link"
+import { EventType } from "db"
 
 type Section = {
     heading: string,
@@ -15,11 +16,11 @@ type ProductInfo = {
     sections: Array<Section>
 }
 
-export function ProductInfoCard(props: { data: ProductInfo }) {
+export function ProductInfoCard(props: {portalId:number, data: ProductInfo }) {
     const style: CSSProperties = {
         position: 'absolute',
         zIndex: 2,
-        top: 'calc(50% )',
+        top: 'calc(50%)',
         width: 30,
         height: 30,
         cursor: 'pointer',
@@ -56,9 +57,12 @@ export function ProductInfoCard(props: { data: ProductInfo }) {
                     <ul className="py-1 list-disc">
                         {
                             section.links.map((link, idx) => <li className="mx-4 text-sm" key={idx}>
-                                <Link href={link.href}>
+                                <TrackedLink href={link.href}
+                                             defaultStyle={true}
+                                             portalId={props.portalId}
+                                             eventType={EventType.ProductInfoLinkOpen}>
                                     {link.body}
-                                </Link>
+                                </TrackedLink>
                             </li>)
                         }
                     </ul>
