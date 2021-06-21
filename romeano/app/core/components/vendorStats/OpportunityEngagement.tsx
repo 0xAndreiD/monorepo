@@ -1,6 +1,6 @@
 import {Card, CardHeader} from "../generic/Card";
 
-export function OpportunityEngagement(props: {data: Array<{customer:string, eventCount:number}>}) {
+export function OpportunityEngagement(props: {data: Array<{customerName:string, eventCount:number}>}) {
 
     const maxClickCount = props.data.reduce((prevMax, currVal) => Math.max(prevMax, currVal.eventCount), 0);
     return <Card borderless>
@@ -12,7 +12,7 @@ export function OpportunityEngagement(props: {data: Array<{customer:string, even
             {
                 props.data.map(company =>
                     <>
-                        <span className="text-sm">{company.customer}</span>
+                        <span className="text-sm">{company.customerName}</span>
                         <div className="flex items-center gap-1">
                             <div className="h-8 w-full rounded ring-1 ring-inset ring-black ring-opacity-0 bg-green-500"
                                  style={{width: `${Math.ceil(100 * company.eventCount / maxClickCount)}%`}}/>

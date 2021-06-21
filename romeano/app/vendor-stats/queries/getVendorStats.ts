@@ -10,62 +10,76 @@ const GetVendorStats = z.object({
 })
 
 export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
-// export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize(), async ({ id }) => {
+  // export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize(), async ({ id }) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const portal = await db.portal.findFirst({
+
+  const user = await db.user.findUnique({
     where: { id },
     include: {
-      roadmapStages: {
-        include: { tasks: true } //get the associated tasks for a stage
-      },
-      nextStepsTasks: { orderBy: { id: "asc" } },
-      vendor: true,
-      documents: { orderBy: { id: "asc" } },
-      images: { orderBy: { id: "asc" } },
-      productInfoSections: { include: { links: true } },
       userPortals: {
         include: {
-          user: {
+          portal: {
             include: {
-              accountExecutive: true,
-              stakeholder: true
+              _count: {
+                select: {
+                  events: true
+                }
+              },
+              roadmapStages: {
+                include: {
+                  tasks: true //get the associated tasks for a stage
+                }
+              },
+              nextStepsTasks: { orderBy: { id: "asc" } },
+              vendor: true,
+              documents: { orderBy: { id: "asc" } },
+              images: { orderBy: { id: "asc" } },
+              productInfoSections: {
+                include: {
+                  links: true
+                }
+              },
+              userPortals: {
+                include: {
+                  user: {
+                    include: {
+                      accountExecutive: true,
+                      stakeholder: true
+                    }
+                  }
+                }
+              },
+              internalNotes: true
             }
           }
         }
-      },
-      internalNotes: true
+      }
     }
   })
 
-  if (!portal) throw new NotFoundError()
+  if (!user) throw new NotFoundError()
 
-  const opportunityEngagement = [
-    {
-      customer: "Koch",
-      eventCount: 55,
-    }, {
-      customer: "Raytheon",
-      eventCount: 49,
-    }, {
-      customer: "Nasa",
-      eventCount: 38,
-    }, {
-      customer: "Lear",
-      eventCount: 11,
-    }, {
-      customer: "Pratt & Whitney",
-      eventCount: 9,
-    },
-  ];
+  user.userPortals.map((x) => console.log(x.portal._count))
+  const opportunityEngagement = await db.$queryRaw<Array<{ portalId: number; customerName: string; eventCount: number }>>`
+WITH eventInfo("portalId", "eventCount") AS (
+    SELECT "portalId", COUNT(*)
+    FROM "Event"
+    WHERE "userId" = ${id}
+    GROUP BY "portalId"
+)
+SELECT "portalId", "Portal"."customerName", "eventCount"
+FROM eventInfo
+INNER JOIN "Portal" ON eventInfo."portalId" = "Portal".id
+`
 
-  const now = new Date();
+  const now = new Date()
   const stakeholderActivity = [
     {
       customer: "Kahili Laliji",
       company: "NASA",
       link: {
         body: "Quote Proposal",
-        href: "",
+        href: ""
       },
       timestamp: subMinutes(now, 14).toISOString()
     },
@@ -74,7 +88,7 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
       company: "Lear",
       link: {
         body: "Technical Specs",
-        href: "",
+        href: ""
       },
       timestamp: subMinutes(now, 32).toISOString()
     },
@@ -83,7 +97,7 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
       company: "Lear",
       link: {
         body: "Technical Specs",
-        href: "",
+        href: ""
       },
       timestamp: subMinutes(now, 33).toISOString()
     },
@@ -92,7 +106,7 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
       company: "Lear",
       link: {
         body: "Technical Specs",
-        href: "",
+        href: ""
       },
       timestamp: subMinutes(now, 34).toISOString()
     },
@@ -101,11 +115,11 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
       company: "Raytheon",
       link: {
         body: "Mira Sales Deck",
-        href: "",
+        href: ""
       },
       timestamp: subMinutes(now, 51).toISOString()
-    },
-  ];
+    }
+  ]
 
   const activePortals = [
     {
@@ -149,11 +163,13 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
           body: "Mira Sales Deck",
           href: "",
           eventCount: 8
-        }, {
+        },
+        {
           body: "Mira Connect Video",
           href: "",
           eventCount: 6
-        }, {
+        },
+        {
           body: "Quote Proposal",
           href: "",
           eventCount: 2
