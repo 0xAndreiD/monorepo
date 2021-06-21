@@ -8,7 +8,7 @@ CREATE TYPE "Role" AS ENUM ('AccountExecutive', 'Stakeholder');
 CREATE TYPE "CustomerOrVendor" AS ENUM ('VENDOR', 'CUSTOMER');
 
 -- CreateEnum
-CREATE TYPE "EventType" AS ENUM ('NextStepAdd', 'NextStepUpdate', 'DocumentUpload', 'DocumentOpen', 'DocumentApprove', 'ProposalApprove', 'ProposalOpen', 'CreateInternalMessage', 'ProductInfoLinkOpen');
+CREATE TYPE "EventType" AS ENUM ('NextStepAdd', 'NextStepUpdate', 'DocumentApprove', 'DocumentOpen', 'DocumentUpload', 'ProposalApprove', 'ProposalOpen', 'CreateInternalMessage', 'ProductInfoLinkOpen');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -220,6 +220,7 @@ CREATE TABLE "Event" (
     "id" SERIAL NOT NULL,
     "ip" TEXT NOT NULL,
     "type" "EventType" NOT NULL,
+    "url" TEXT NOT NULL,
     "documentId" INTEGER,
     "portalId" INTEGER NOT NULL,
     "userId" INTEGER NOT NULL,

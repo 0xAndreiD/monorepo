@@ -14,10 +14,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
   }
-  db.event.create({
+
+  //log event
+  await db.event.create({
     data: {
       ip: context.req.socket.remoteAddress ?? "0.0.0.0", //null if client disconnects: https://nodejs.org/api/net.html#net_socket_remoteaddress
-      type: EventType.DocumentOpen, //FIXME store other event types
+      type: EventType.DocumentOpen, //FIXME store other event types,
+      url: context.resolvedUrl,
       documentId: undefined,
       portalId,
       userId: session.userId

@@ -236,6 +236,7 @@ model Event {
   id         Int       @id @default(autoincrement())
   ip         String
   type       EventType
+  url        String
   document   Document? @relation(fields: [documentId], references: [id])
   documentId Int?
   portal     Portal    @relation(fields: [portalId], references: [id])
@@ -256,9 +257,9 @@ model MagicLink {
 enum EventType {
   NextStepAdd
   NextStepUpdate
-  DocumentUpload
-  DocumentOpen
   DocumentApprove
+  DocumentOpen
+  DocumentUpload
   ProposalApprove
   ProposalOpen
   CreateInternalMessage
