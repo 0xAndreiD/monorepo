@@ -56,12 +56,12 @@ function StakeholderClickCircles(props: { data: Array<Stakeholder & { eventCount
     {
       props.data.map((stakeholder, idx) => {
           const colour = getColourFromString(stakeholder.name)
-          return <div className="flex flex-col items-center">
-            <div key={idx}
-                 className={`relative w-10 h-10 flex items-center justify-center
-                                ${colour} rounded-full`}>
-                        <span
-                          className="text-white static">{getInitialsOfName(stakeholder.name)}</span>
+          return <div key={idx} className="flex flex-col items-center">
+            <div
+              className={`relative w-10 h-10 flex items-center justify-center ${colour} rounded-full`}>
+                        <span className="text-white static">
+                          {getInitialsOfName(stakeholder.name)}
+                        </span>
               {
                 stakeholder.isApprovedBy ?
                   <div

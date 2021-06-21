@@ -5,11 +5,12 @@ import React from "react"
 import { Link } from "../../../../types"
 
 type StakeholderActivityEvent = {
-  customer: string,
-  company: string,
+  stakeholderName: string,
+  customerName: string,
   link: Link,
   timestamp: string
 }
+
 
 export function StakeholderActivity(props: { data: StakeholderActivityEvent[] }) {
 
@@ -21,7 +22,7 @@ export function StakeholderActivity(props: { data: StakeholderActivityEvent[] })
           props.data.map((event, idx) =>
             <div key={idx} className="flex justify-between">
                         <span className="text-sm">
-                            {`${event.customer} from ${event.company} viewed `}
+                            {`${event.stakeholderName} from ${event.customerName} viewed `}
                           <StyledLink href={event.link.href}>{event.link.body}</StyledLink>
                         </span>
               <span

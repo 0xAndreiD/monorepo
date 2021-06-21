@@ -4,8 +4,9 @@ import { z } from "zod"
 
 //localhost:3000/redir?portalId=1&eventType=DocumentOpen&url=https://www.google.com
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { portalId, eventType, url } = z.object({
+  const { portalId, documentId, eventType, url } = z.object({
     portalId: z.string().transform(parseInt),
+    documentId: z.string().transform(parseInt).optional(),
     eventType: z.nativeEnum(EventType),
     url: z.string()
   }).parse(context.query)
@@ -23,9 +24,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   await db.event.create({
     data: {
       ip: context.req.socket.remoteAddress ?? "0.0.0.0", //null if client disconnects: https://nodejs.org/api/net.html#net_socket_remoteaddress
-      type: eventType, //FIXME store other event types,
+      type: eventType,
       url: context.resolvedUrl,
-      documentId: undefined,
+      documentId,
       portalId,
       userId: session.userId
     }

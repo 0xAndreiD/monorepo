@@ -16,7 +16,7 @@ export default function VendorStats() {
   const [portal] = useQuery(getVendorStats, { id: portalId })
 
   if (!portalId) throw new NotFoundError()
-
+console.log("ACTIVE",portal.stakeholderActivity)
   return <>
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
       <Header />

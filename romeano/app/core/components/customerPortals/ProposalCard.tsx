@@ -74,7 +74,7 @@ export function ProposalCard(props: {portalId:number, data: Proposal }) {
     </div>
     <CardDivider />
 
-    <h4 className="font-bold">Key Stakeholders' Approval:</h4>
+    <h4 className="font-bold">Key Stakeholder Approval</h4>
     <div className="py-4 flex gap-3">
       <StakeholderApprovalCircles data={props.data.stakeholders} />
       <div style={{ marginLeft: "auto" }}>

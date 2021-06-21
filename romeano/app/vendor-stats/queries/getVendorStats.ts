@@ -59,68 +59,51 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
 
   if (!user) throw new NotFoundError()
 
-  user.userPortals.map((x) => console.log(x.portal._count))
-  const opportunityEngagement = await db.$queryRaw<Array<{ portalId: number; customerName: string; eventCount: number }>>`
+  const opportunityEngagement = await db.$queryRaw<Array<{
+    portalId: number,
+    customerName: string,
+    eventCount: number
+  }>>`
 WITH eventInfo("portalId", "eventCount") AS (
     SELECT "portalId", COUNT(*)
     FROM "Event"
-    WHERE "userId" = ${id}
+    WHERE "Event"."portalId" IN (SELECT "UserPortal"."portalId" FROM "UserPortal" WHERE "UserPortal"."userId" = ${id})
     GROUP BY "portalId"
 )
 SELECT "portalId", "Portal"."customerName", "eventCount"
 FROM eventInfo
-INNER JOIN "Portal" ON eventInfo."portalId" = "Portal".id
+INNER JOIN "Portal" ON eventInfo."portalId" = "Portal".id;
 `
 
-  const now = new Date()
-  const stakeholderActivity = [
-    {
-      customer: "Kahili Laliji",
-      company: "NASA",
-      link: {
-        body: "Quote Proposal",
-        href: ""
-      },
-      timestamp: subMinutes(now, 14).toISOString()
+  const stakeholderActivityRaw = await db.$queryRaw<Array<{
+    stakeholderName: string,
+    customerName: string,
+    documentTitle: string,
+    documentLink: string,
+    timestamp: string,
+  }>>`
+SELECT "User"."firstName" || ' ' || "User"."lastName" AS "stakeholderName",
+       "Portal"."customerName",
+       "Document".title                               AS "documentTitle",
+       "Document".href                                AS "documentLink",
+       "Event"."createdAt"                            AS timestamp
+FROM "Event"
+         INNER JOIN "Portal" ON "Event"."portalId" = "Portal".id
+         INNER JOIN "User" ON "Event"."userId" = "User".id
+         INNER JOIN "Document" ON "Event"."documentId" = "Document".id
+WHERE "Event"."portalId" IN (SELECT "UserPortal"."portalId" FROM "UserPortal" WHERE "UserPortal"."userId" = ${id})
+`
+  const stakeholderActivity = stakeholderActivityRaw.map(x => ({
+    stakeholderName: x.stakeholderName,
+    customerName: x.customerName,
+    link: { //link should always exist due to joining on documentId
+      body: x.documentTitle,
+      href: x.documentLink
     },
-    {
-      customer: "Alex Hills",
-      company: "Lear",
-      link: {
-        body: "Technical Specs",
-        href: ""
-      },
-      timestamp: subMinutes(now, 32).toISOString()
-    },
-    {
-      customer: "Ken Laft",
-      company: "Lear",
-      link: {
-        body: "Technical Specs",
-        href: ""
-      },
-      timestamp: subMinutes(now, 33).toISOString()
-    },
-    {
-      customer: "Paul Nells",
-      company: "Lear",
-      link: {
-        body: "Technical Specs",
-        href: ""
-      },
-      timestamp: subMinutes(now, 34).toISOString()
-    },
-    {
-      customer: "Kischa Block",
-      company: "Raytheon",
-      link: {
-        body: "Mira Sales Deck",
-        href: ""
-      },
-      timestamp: subMinutes(now, 51).toISOString()
-    }
-  ]
+    timestamp: x.timestamp
+  }))
 
+console.log("ACTIVE", stakeholderActivity)
   const activePortals = [
     {
       customerName: "Koch",
