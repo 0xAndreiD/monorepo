@@ -23,7 +23,7 @@ export default function CustomerPortal() {
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
       <Header />
       <div className="py-3"><CardDivider /></div>
-      <LaunchRoadmap {...data.launchRoadmap} />
+      <LaunchRoadmap portalId={portalId} {...data.launchRoadmap} />
     </div>
 
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 bg-gray-100">

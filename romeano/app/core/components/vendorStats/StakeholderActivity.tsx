@@ -18,8 +18,8 @@ export function StakeholderActivity(props: { data: StakeholderActivityEvent[] })
     <div className="mt-5 bg-white overflow-hidden shadow rounded-lg">
       <div className="px-4 py-2 flex flex-col gap-y-3">
         {
-          props.data.map(event =>
-            <div className="flex justify-between">
+          props.data.map((event, idx) =>
+            <div key={idx} className="flex justify-between">
                         <span className="text-sm">
                             {`${event.customer} from ${event.company} viewed `}
                           <StyledLink href={event.link.href}>{event.link.body}</StyledLink>

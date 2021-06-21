@@ -1,7 +1,8 @@
 /* This example requires Tailwind CSS v2.0+ */
 import React from "react"
 import { format } from "date-fns"
-import { StyledLink } from "../generic/Link"
+import { TrackedLink } from "../generic/Link"
+import { EventType } from "db"
 
 
 export enum CompletionStatus {
@@ -20,8 +21,7 @@ export type LaunchStep = {
   },
 }
 
-export default function LaunchRoadmap(props: { currentRoadmapStage: number, stages: LaunchStep[] }) {
-  console.log(props.currentRoadmapStage,props.stages)
+export default function LaunchRoadmap(props: { portalId: number, currentRoadmapStage: number, stages: LaunchStep[] }) {
   return <nav>
     <div className="flex justify-between">
       <h1 className="text-lg font-bold">Launch Roadmap</h1>
@@ -71,10 +71,13 @@ export default function LaunchRoadmap(props: { currentRoadmapStage: number, stag
             </ul>
             <div className="text-center">
               {
-                step.ctaLink && <StyledLink
-                  href={step.ctaLink.href}>
+                step.ctaLink && <TrackedLink
+                  eventType={EventType.LaunchRoadmapLinkOpen}
+                  portalId={props.portalId}
+                  href={step.ctaLink.href}
+                  defaultStyle={true}>
                   {step.ctaLink.body}
-                </StyledLink>
+                </TrackedLink>
               }
             </div>
           </React.Fragment>

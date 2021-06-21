@@ -20,7 +20,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   })
 
   const portal = data?.user.userPortals[0].portal
-  if (!data || !portal) throw new RedirectError('/login')
+  if (!data || !portal) throw new RedirectError(Routes.LoginPage())
 
   const session = await getSession(context.req, context.res)
   if (portal.id) {

@@ -3,9 +3,8 @@ import { PropsWithChildren } from "react"
 import { EventType } from "db"
 import { Routes } from "blitz"
 
-
-export function StyledLink(props: PropsWithChildren<LinkProps & { type?: EventType, className?: string }>) {
-
+//no tracking on this!
+export function StyledLink(props: PropsWithChildren<LinkProps & { className?: string }>) {
   return <NextLink href={props.href}>
     <a className={props.className ?? "text-blue-600 underline"}>
       {props.children}

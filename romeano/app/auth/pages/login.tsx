@@ -1,6 +1,7 @@
-import { useRouter, BlitzPage } from "blitz"
+import { useRouter, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import { LoginForm } from "app/auth/components/LoginForm"
+import NextLink from "next/link"
 
 const LoginPage: BlitzPage = () => {
   const router = useRouter()
@@ -13,6 +14,10 @@ const LoginPage: BlitzPage = () => {
           router.push(next)
         }}
       />
+<br/>
+<br/>
+      <h1>Test bypass</h1>
+      <NextLink href={Routes.MagicLinkPage({ magicLinkId: "foobar" })}><span className="font-bold">Click me!!</span></NextLink>
     </div>
   )
 }

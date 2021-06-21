@@ -255,6 +255,7 @@ model MagicLink {
 }
 
 enum EventType {
+  LaunchRoadmapLinkOpen
   NextStepAdd
   NextStepUpdate
   DocumentApprove
