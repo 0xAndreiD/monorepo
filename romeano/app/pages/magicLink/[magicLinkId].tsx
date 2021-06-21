@@ -1,5 +1,5 @@
-import { GetServerSideProps, NotFoundError, Routes } from "blitz"
-import db from "db"
+import { GetServerSideProps, getSession, RedirectError, Routes } from "blitz"
+import db, { Role } from "db"
 import { z } from "zod"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -20,12 +20,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   })
 
   const portal = data?.user.userPortals[0].portal
-  if(!portal) throw new NotFoundError();
+  if (!data || !portal) throw new RedirectError('/login')
 
+  const session = await getSession(context.req, context.res)
   if (portal.id) {
+    await session.$create({ userId: data.user.id, role: data.user.role as Role })
     return {
       redirect: {
-        destination: Routes.CustomerPortal({ portalId: portal.id }).pathname.replace('[portalId]',portal.id.toString()),
+        destination: Routes.CustomerPortal({ portalId: portal.id }).pathname.replace("[portalId]", portal.id.toString()),
         // destination: Routes.CustomerPortal({ portalId: portal.id }), //FIXME
         permanent: false
       }
