@@ -68,11 +68,15 @@ const seedCustomerPortal = async () => {
           data: [
             {
               userId: aeUser.id,
-              role: Role.AccountExecutive
+              role: Role.AccountExecutive,
+              isPrimaryContact: true,
+              isSecondaryContact: false,
             },
             {
               userId: aeUser2.id,
-              role: Role.AccountExecutive
+              role: Role.AccountExecutive,
+              isPrimaryContact: false,
+              isSecondaryContact: true,
             }
           ]
         }
@@ -132,7 +136,7 @@ const seedCustomerPortal = async () => {
           userPortals: {
             create: {
               role: Role.Stakeholder,
-              portalId: portal.id
+              portalId: portal.id,
             }
           }
         }
@@ -315,10 +319,69 @@ const seedCustomerPortal = async () => {
 async function seedPortalDetails() {
   await db.magicLink.create({
     data: {
-      id: "foobar",
-      userId: 1,
+      id: "aeLogin",
+      userId: 1, //Greg
     }
   })
+
+  await db.magicLink.create({
+    data: {
+      id: "stakeholder1Login",
+      userId: 4,//Kristin Sanders
+    }
+  })
+
+  await db.magicLink.create({
+    data: {
+      id: "stakeholder2Login",
+      userId: 5,//Wally Iris
+    }
+  })
+
+  const aeUser = await db.user.create({
+      data: {
+        firstName: "Julia",
+        lastName: "Lin",
+        email: "julia@mira.com",
+        photoUrl: "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
+        accountExecutive: { //make AE
+          create: {
+            jobTitle: "Account Executive",
+            vendorTeamId: 1
+          }
+        }
+      },
+      include: {
+        accountExecutive: { include: { vendorTeam: { include: { vendor: true } } } }
+      }
+    }
+  )
+
+
+  const portal = await db.portal.create({
+    data: {
+      customerName: "Raytheon",
+      customerLogoUrl: "https://gray-kwch-prod.cdn.arcpublishing.com/resizer/gLAX07TEGwQfEgBOQ3quD5JAugM=/1200x400/smart/cloudfront-us-east-1.images.arcpublishing.com/gray/IKLFKUHCCJCO3GQSYNXHJOAOSU.JPG",
+      currentRoadmapStage: 3,
+      userPortals: {
+        createMany: {
+          data: [
+            {
+              userId: aeUser.id,
+              role: Role.AccountExecutive,
+              isPrimaryContact: true,
+              isSecondaryContact: false,
+            },
+          ]
+        }
+      },
+      proposalHeading: "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
+      proposalSubheading: "2 Prism Headsets + 4 User Licenses",
+      proposalQuoteLink: "https://www.google.com/?gws_rd=ssl",
+      vendorId: 1
+    }
+  })
+
 }
 
 async function seed() {

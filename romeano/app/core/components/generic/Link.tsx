@@ -13,12 +13,15 @@ export function StyledLink(props: PropsWithChildren<LinkProps & { className?: st
 }
 
 export function TrackedLink(props: PropsWithChildren<LinkProps & { portalId: number, documentId?: number, eventType: EventType, defaultStyle?: boolean, className?: string }>) {
-  const url = Routes.RedirectPage({
+  const params: Record<string, string | number> = {
     portalId: props.portalId,
-    documentId: props.documentId,
     eventType: props.eventType,
     url: props.href.toString()
-  })
+  }
+  if (props.documentId) {
+    params["documentId"] = props.documentId
+  }
+  const url = Routes.RedirectPage(params)
   const customClass = props.className ?? ""
   return <NextLink href={url}>
     <a className={props.defaultStyle ? "text-blue-600 underline " + customClass : customClass}>

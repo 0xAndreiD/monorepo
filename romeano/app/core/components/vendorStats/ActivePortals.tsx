@@ -15,7 +15,7 @@ type ActivePortal = {
   customerName: string,
   customerCurrentStage: number,
   customerNumberOfStages: number,
-  vendorContact: VendorContact,
+  primaryContact: VendorContact,
   stakeholderEvents: Array<EventCounted<Stakeholder>>,
   documentEvents: Array<EventCounted<Link>>,
   portalHref: string,
@@ -137,10 +137,10 @@ export function ActivePortalsDemo(props: { data: ActivePortal[] }) {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="relative bg-white flex items-center space-x-3">
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-gray-900">{portal.vendorContact.name}</p>
-                          <p className="text-sm truncate">{portal.vendorContact.jobTitle}</p>
+                          <p className="font-medium text-gray-900">{portal.primaryContact.name}</p>
+                          <p className="text-sm truncate">{portal.primaryContact.jobTitle}</p>
                         </div>
-                        <NextLink href={`mailto:${portal.vendorContact.email}`}>
+                        <NextLink href={`mailto:${portal.primaryContact.email}`}>
                           <div
                             className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
                             <MailIcon className="h-4 w-4 text-gray-400" />

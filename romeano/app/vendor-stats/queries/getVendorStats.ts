@@ -1,7 +1,7 @@
 import { NotFoundError, resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
-import { BACKEND_ENDPOINT, UPLOAD_DIR } from "../../core/config"
+import { getBackendFilePath } from "../../core/util/upload"
 
 const GetVendorStats = z.object({
   // This accepts type of undefined, but is required at runtime
@@ -63,15 +63,16 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
     customerName: string,
     eventCount: number
   }>>`
-WITH eventInfo("portalId", "eventCount") AS (
-    SELECT "portalId", COUNT(*)
-    FROM "Event"
-    WHERE "Event"."portalId" IN (SELECT "UserPortal"."portalId" FROM "UserPortal" WHERE "UserPortal"."userId" = ${id})
-    GROUP BY "portalId"
-)
-SELECT "portalId", "Portal"."customerName", "eventCount"
-FROM eventInfo
-INNER JOIN "Portal" ON eventInfo."portalId" = "Portal".id;
+SELECT "portalId",
+       (SELECT "customerName" FROM "Portal" WHERE id = "portalId"),
+       count(*) AS "eventCount"
+FROM "Event"
+WHERE "portalId" IN (SELECT "portalId"
+                     FROM "UserPortal"
+                     WHERE "isPrimaryContact" IS TRUE
+                       AND "userId" = ${id})
+GROUP BY "portalId"
+ORDER BY "eventCount" DESC;
 `
 
   const stakeholderActivityRaw = await db.$queryRaw<Array<{
@@ -98,18 +99,41 @@ ORDER BY timestamp DESC
     customerName: x.customerName,
     link: { //link should always exist due to joining on documentId
       body: x.documentTitle,
-      href: `/${UPLOAD_DIR}/${x.documentPath}`,
+      href: getBackendFilePath(x.documentPath)
     },
     timestamp: x.timestamp
   }))
 
-console.log("ACTIVE", stakeholderActivity)
+
+  const activePortals1 = await db.$queryRaw<Array<{
+    customerName: string,
+    currentRoadmapStage: number,
+    customerNumberOfStages: number,
+    primaryContact: {primaryContactName: string,
+      primaryContactJobTitle: string,
+      primaryContactEmail: string,
+      primaryContactPhotoUrl: string}
+  }>>`
+SELECT "Portal"."customerName"                                                          as "customerName",
+       "Portal"."currentRoadmapStage"                                                   AS "currentRoadmapStage",
+       (select count(*) FROM "RoadmapStage" WHERE "portalId" = "UserPortal"."portalId") AS "customerNumberOfStages",
+       "User"."firstName" || ' ' || "User"."lastName"                                   AS "primaryContactName",
+       "AccountExecutive"."jobTitle"                                                    AS "primaryContactJobTitle",
+       "User".email                                                                     AS "primaryContactEmail",
+       "User"."photoUrl"                                                                AS "primaryContactPhotoUrl"
+FROM "UserPortal"
+         INNER JOIN "Portal" ON "UserPortal"."portalId" = "Portal".id
+         INNER JOIN "User" ON "UserPortal"."userId" = "User".id
+         INNER JOIN "AccountExecutive" ON "User".id = "AccountExecutive"."userId"
+WHERE "UserPortal"."userId" = ${id}
+`
+
   const activePortals = [
     {
       customerName: "Koch",
       customerCurrentStage: 2,
       customerNumberOfStages: 4,
-      vendorContact: {
+      primaryContact: {
         name: "Nick Franklin",
         jobTitle: "Director of Operations",
         email: "nick@mira.com",

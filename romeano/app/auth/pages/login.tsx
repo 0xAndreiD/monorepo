@@ -14,10 +14,17 @@ const LoginPage: BlitzPage = () => {
           router.push(next)
         }}
       />
-<br/>
-<br/>
-      <h1>Test bypass</h1>
-      <NextLink href={Routes.MagicLinkPage({ magicLinkId: "foobar" })}><span className="font-bold">Click me!!</span></NextLink>
+      <br />
+      <br />
+      <h1>AE Magic Link Login</h1>
+      <NextLink href={Routes.MagicLinkPage({ magicLinkId: "aeLogin" })}><span
+        className="font-bold">Click me!!</span></NextLink>
+      <h1>Stakeholder1 Magic Link Login</h1>
+      <NextLink href={Routes.MagicLinkPage({ magicLinkId: "stakeholder1Login" })}><span
+        className="font-bold">Click me!!</span></NextLink>
+      <h1>Stakeholder2 Magic Link Login</h1>
+      <NextLink href={Routes.MagicLinkPage({ magicLinkId: "stakeholder2Login" })}><span
+        className="font-bold">Click me!!</span></NextLink>
     </div>
   )
 }

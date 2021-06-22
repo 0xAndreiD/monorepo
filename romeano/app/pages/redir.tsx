@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     data: {
       ip: context.req.socket.remoteAddress ?? "0.0.0.0", //null if client disconnects: https://nodejs.org/api/net.html#net_socket_remoteaddress
       type: eventType,
-      url: context.resolvedUrl,
+      url,
       documentId,
       portalId,
       userId: session.userId

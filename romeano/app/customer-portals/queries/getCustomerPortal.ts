@@ -1,5 +1,6 @@
 import { NotFoundError, resolver } from "blitz"
 import db, { CustomerOrVendor, Role } from "db"
+import { orderBy } from "lodash"
 import { z } from "zod"
 import { getBackendFilePath } from "../../core/util/upload"
 
@@ -113,17 +114,22 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), async ({ id }) => 
       )
   }
 
+
+  const aeContacts = orderBy((portal.userPortals
+    .filter(userPortal => userPortal.role === Role.AccountExecutive &&
+      (userPortal.isPrimaryContact === true ||
+      userPortal.isSecondaryContact === true)
+    )), ['isPrimaryContact','isSecondaryContact'], ['desc','desc'])
+
   const contacts = {
-    contacts: portal.userPortals
-      .filter(userPortal => userPortal.role === Role.AccountExecutive)
-      .map(userPortal =>
-        ({
-          name: `${userPortal.user.firstName} ${userPortal.user.lastName}`,
-          jobTitle: userPortal.user.accountExecutive?.jobTitle,
-          email: userPortal.user.email,
-          photoUrl: userPortal.user.photoUrl ?? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-        })
-      )
+    contacts: aeContacts.map(userPortal =>
+      ({
+        name: `${userPortal.user.firstName} ${userPortal.user.lastName}`,
+        jobTitle: userPortal.user.accountExecutive?.jobTitle,
+        email: userPortal.user.email,
+        photoUrl: userPortal.user.photoUrl ?? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+      })
+    )
   }
 
   const internalNotes = {

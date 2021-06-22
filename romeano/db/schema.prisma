@@ -13,6 +13,42 @@ generator client {
 
 // --------------------------------------
 
+model Portal {
+  id                  Int                  @id @default(autoincrement())
+  customerName        String
+  customerLogoUrl     String
+  currentRoadmapStage Int //1 indexed
+  roadmapStages       RoadmapStage[]
+  nextStepsTasks      NextStepsTask[]
+  documents           Document[]
+  images              PortalImage[]
+  productInfoSections ProductInfoSection[]
+  proposalHeading     String
+  proposalSubheading  String
+  proposalQuoteLink   String
+  userPortals         UserPortal[]
+  internalNotes       InternalNotes[]
+  events              Event[]
+  vendor              Vendor               @relation(fields: [vendorId], references: [id])
+  vendorId            Int
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+}
+
+model UserPortal {
+  user               User     @relation(fields: [userId], references: [id])
+  userId             Int
+  portal             Portal   @relation(fields: [portalId], references: [id])
+  portalId           Int
+  role               Role
+  isPrimaryContact   Boolean?
+  isSecondaryContact Boolean?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@id([userId, portalId])
+}
+
 model User {
   id               Int               @id @default(autoincrement())
   firstName        String
@@ -24,14 +60,14 @@ model User {
   documents        Document[]
   userPortals      UserPortal[]
   messagesSent     InternalNotes[]
+  events           Event[]
   tokens           Token[]
   sessions         Session[]
-  magicLink        MagicLink[]
+  magicLinks       MagicLink[]
   hashedPassword   String?
   role             String            @default("USER")
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
-  Event            Event[]
 }
 
 model Session {
@@ -92,17 +128,6 @@ enum Role {
   Stakeholder
 }
 
-model UserPortal {
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
-  portal    Portal   @relation(fields: [portalId], references: [id])
-  portalId  Int
-  role      Role
-  createdAt DateTime @default(now())
-
-  @@id([userId, portalId])
-}
-
 model Stakeholder {
   jobTitle     String
   isApprovedBy Boolean
@@ -119,28 +144,6 @@ model AccountExecutive {
   userId       Int        @unique
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
-}
-
-model Portal {
-  id                  Int                  @id @default(autoincrement())
-  customerName        String
-  customerLogoUrl     String
-  roadmapStages       RoadmapStage[]
-  nextStepsTasks      NextStepsTask[]
-  currentRoadmapStage Int
-  documents           Document[]
-  images              PortalImage[]
-  productInfoSections ProductInfoSection[]
-  proposalHeading     String
-  proposalSubheading  String
-  proposalQuoteLink   String
-  userPortals         UserPortal[]
-  internalNotes       InternalNotes[]
-  events              Event[]
-  vendor              Vendor               @relation(fields: [vendorId], references: [id])
-  vendorId            Int
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
 }
 
 model ProductInfoSectionLink {
