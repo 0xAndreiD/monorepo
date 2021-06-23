@@ -1,23 +1,23 @@
-import {MailIcon} from "@heroicons/react/outline";
-import {Card, CardHeader} from "./generic/Card";
-import {getInitialsOfName, titleCase} from "../util/text";
-import Link from 'next/link';
-import {getColourFromString} from "../util/colour";
+import { MailIcon } from "@heroicons/react/outline"
+import { Card, CardHeader } from "./generic/Card"
+import { getInitialsOfName, titleCase } from "../util/text"
+import Link from "next/link"
+import { getColourFromString } from "../util/colour"
 
 type ContactCard = {
-    contacts: Array<{
-        name: string
-        email: string
-        jobTitle?: string
-        photoUrl: string
-    }>
+  contacts: Array<{
+    name: string
+    email: string
+    jobTitle?: string
+    photoUrl: string
+  }>
 }
 
 //idx is 0 based
 //from: https://en.wikipedia.org/wiki/Ordinal_numeral#English
 function getPrecedence(idx: number): string | undefined {
-    const nums = ["primary", "secondary", "tertiary", "quaternary"];
-    return nums[idx];
+  const nums = ["primary", "secondary", "tertiary", "quaternary"]
+  return nums[idx]
 }
 
 // export function ContactsCardDemo() {
@@ -42,43 +42,43 @@ function getPrecedence(idx: number): string | undefined {
 // }
 
 function Circle(props: { name: string }) {
-    const colour = getColourFromString(props.name);
+  const colour = getColourFromString(props.name)
 
-    return <div className={`relative w-10 h-10 text-sm flex items-center justify-center
+  return <div className={`relative w-10 h-10 text-sm flex items-center justify-center
                                 ${colour} rounded-full`}>
-        <span className="text-white">{getInitialsOfName(props.name)}</span>
-    </div>;
+    <span className="text-white">{getInitialsOfName(props.name)}</span>
+  </div>
 }
 
 export function ContactsCard(props: { data: ContactCard, numContactsToDisplay?: number, showProfilePictures?: boolean, narrowLayout?: boolean }) {
-    return <Card>
-        <CardHeader>Contacts</CardHeader>
-        <div className="divide-y divide-gray-300">
-            {
-                props.data.contacts.slice(0, props.numContactsToDisplay).map((contact, idx) =>
-                    <div className="py-3" key={idx}>
-                        <div className="text-sm text-gray-600 pb-2">{titleCase(getPrecedence(idx) ?? "")}:</div>
-                        <div className="relative flex items-center space-x-3">
-                            <div className="flex-shrink-0">
-                                {
-                                    contact.photoUrl ? <Circle name={contact.name}/> :
-                                        <img className="h-10 w-10 rounded-full" src={contact.photoUrl} alt=""/>
-                                }
-                            </div>
-                            <div className={props.narrowLayout? "" : "flex-1"}>
-                                <p className="font-medium text-gray-900">{contact.name}</p>
-                                <p className="text-sm truncate">{contact.jobTitle}</p>
-                            </div>
-                            <Link href={`mailto:${contact.email}`}>
-                                <div
-                                    className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
-                                    <MailIcon className="h-4 w-4 text-gray-400"/>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                )
-            }
-        </div>
-    </Card>;
+  return <Card>
+    <CardHeader>Contacts</CardHeader>
+    <div className="divide-y divide-gray-300">
+      {
+        props.data.contacts.slice(0, props.numContactsToDisplay).map((contact, idx) =>
+          <div className="py-3" key={idx}>
+            <div className="text-sm text-gray-600 pb-2">{titleCase(getPrecedence(idx) ?? "")}:</div>
+            <div className="relative flex items-center space-x-3">
+              <div className="flex-shrink-0">
+                {
+                  contact.photoUrl ? <Circle name={contact.name} /> :
+                    <img className="h-10 w-10 rounded-full" src={contact.photoUrl} alt={contact.name} />
+                }
+              </div>
+              <div className={props.narrowLayout ? "" : "flex-1"}>
+                <p className="font-medium text-gray-900">{contact.name}</p>
+                <p className="text-sm truncate">{contact.jobTitle}</p>
+              </div>
+              <div
+                className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
+                <a href={`mailto:${contact.email}`}>
+                  <MailIcon className="h-4 w-4 text-gray-400" />
+                </a>
+              </div>
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </Card>
 }

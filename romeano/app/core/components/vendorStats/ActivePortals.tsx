@@ -13,7 +13,7 @@ import { range } from "lodash"
 
 type ActivePortal = {
   customerName: string,
-  customerCurrentStage: number,
+  currentRoadmapStage: number,
   customerNumberOfStages: number,
   primaryContact: VendorContact,
   stakeholderEvents: Array<EventCounted<Stakeholder>>,
@@ -130,7 +130,7 @@ export function ActivePortalsDemo(props: { data: ActivePortal[] }) {
                           <div className="text-lg font-medium text-gray-900">
                             {portal.customerName}
                           </div>
-                          <ProgressBullets current={portal.customerCurrentStage}
+                          <ProgressBullets current={portal.currentRoadmapStage}
                                            total={portal.customerNumberOfStages} />
                         </div>
                       </div>
@@ -141,12 +141,12 @@ export function ActivePortalsDemo(props: { data: ActivePortal[] }) {
                           <p className="font-medium text-gray-900">{portal.primaryContact.name}</p>
                           <p className="text-sm truncate">{portal.primaryContact.jobTitle}</p>
                         </div>
-                        <NextLink href={`mailto:${portal.primaryContact.email}`}>
-                          <div
-                            className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
+                        <div
+                          className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
+                          <a href={`mailto:${portal.primaryContact.email}`}>
                             <MailIcon className="h-4 w-4 text-gray-400" />
-                          </div>
-                        </NextLink>
+                          </a>
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -168,7 +168,7 @@ export function ActivePortalsDemo(props: { data: ActivePortal[] }) {
                             )
                           }
                         </div>
-                        <NextLink href={`${BACKEND_ENDPOINT}/${portal.portalHref}`}>
+                        <NextLink href={portal.portalHref}>
                           <button
                             type="button"
                             className="inline-flex items-center px-5 my-3 border shadow-sm text-sm\

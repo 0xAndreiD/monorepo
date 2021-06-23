@@ -186,8 +186,8 @@ GROUP BY "Event"."portalId", title, path
     primaryContact: {
       name: p.primaryContactName,
       jobTitle: p.primaryContactJobTitle,
-      contactEmail: p.primaryContactEmail,
-      contactPhotoUrl: p.primaryContactPhotoUrl
+      email: p.primaryContactEmail,
+      photoUrl: p.primaryContactPhotoUrl
     },
     stakeholderEvents: grouped2[p.portalId],
     documentEvents: grouped3[p.portalId],
