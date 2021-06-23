@@ -1,5 +1,6 @@
 import { NotFoundError, resolver } from "blitz"
 import db from "db"
+import { groupBy } from "lodash"
 import { z } from "zod"
 import { getBackendFilePath } from "../../core/util/upload"
 
@@ -104,19 +105,20 @@ ORDER BY timestamp DESC
     timestamp: x.timestamp
   }))
 
-
   const activePortals1 = await db.$queryRaw<Array<{
+    portalId: number,
     customerName: string,
     currentRoadmapStage: number,
     customerNumberOfStages: number,
-    primaryContact: {primaryContactName: string,
-      primaryContactJobTitle: string,
-      primaryContactEmail: string,
-      primaryContactPhotoUrl: string}
+    primaryContactName: string,
+    primaryContactJobTitle: string,
+    primaryContactEmail: string,
+    primaryContactPhotoUrl: string
   }>>`
-SELECT "Portal"."customerName"                                                          as "customerName",
+SELECT "Portal".id                                                                      AS "portalId",
+       "Portal"."customerName"                                                          AS "customerName",
        "Portal"."currentRoadmapStage"                                                   AS "currentRoadmapStage",
-       (select count(*) FROM "RoadmapStage" WHERE "portalId" = "UserPortal"."portalId") AS "customerNumberOfStages",
+       (SELECT COUNT(*) FROM "RoadmapStage" WHERE "portalId" = "UserPortal"."portalId") AS "customerNumberOfStages",
        "User"."firstName" || ' ' || "User"."lastName"                                   AS "primaryContactName",
        "AccountExecutive"."jobTitle"                                                    AS "primaryContactJobTitle",
        "User".email                                                                     AS "primaryContactEmail",
@@ -127,7 +129,78 @@ FROM "UserPortal"
          INNER JOIN "AccountExecutive" ON "User".id = "AccountExecutive"."userId"
 WHERE "UserPortal"."userId" = ${id}
 `
+  const activePortalsStakeholders = await db.$queryRaw<Array<{
+    portalId: number,
+    name: string,
+    email: string,
+    isApprovedBy: boolean,
+    eventCount: number
+  }>>`
+SELECT "portalId",
+       U."firstName" || ' ' || U."lastName" AS name,
+       U.email,
+       "isApprovedBy",
+       COUNT(*)                             AS "eventCount"
+FROM "Event"
+         JOIN "User" U ON U.id = "Event"."userId"
+         JOIN "Stakeholder" S ON U.id = S."userId"
+WHERE "portalId" IN (SELECT "portalId"
+                     FROM "UserPortal"
+                     WHERE ("isPrimaryContact" IS TRUE OR "isSecondaryContact" IS TRUE)
+                       AND "userId" = ${id})
+GROUP BY "portalId", "Event"."userId", name, email, "isApprovedBy"`
+  const grouped2 = groupBy(activePortalsStakeholders, "portalId")
 
+  console.log("main", activePortals1)
+  console.log("join", activePortalsStakeholders)
+  const activePortalsDocs = await db.$queryRaw<Array<{
+    portalId: number,
+    title: string,
+    path: string,
+    eventCount: number
+  }>>`
+SELECT "Event"."portalId" AS "portalId",
+       title,
+       path,
+       COUNT(*)           AS "eventCount"
+FROM "Event"
+         JOIN "Document" D ON D.id = "Event"."documentId"
+WHERE "Event"."portalId" IN (SELECT "portalId"
+                             FROM "UserPortal"
+                         WHERE ("isPrimaryContact" IS TRUE OR "isSecondaryContact" IS TRUE)
+                           AND "userId" = ${id})
+GROUP BY "Event"."portalId", title, path
+`
+  const grouped3 = groupBy(activePortalsDocs, "portalId")//.map(x=>{
+//     const
+//     ({
+//     }
+//
+//   {...x}
+//
+//   })
+//
+//
+// })
+  const all = activePortals1.map(p => ({
+    portalId: p.portalId,
+    customerName: p.customerName,
+    currentRoadmapStage: p.currentRoadmapStage,
+    customerNumberOfStages: p.customerNumberOfStages,
+    primaryContact: {
+      name: p.primaryContactName,
+      jobTitle: p.primaryContactJobTitle,
+      contactEmail: p.primaryContactEmail,
+      contactPhotoUrl: p.primaryContactPhotoUrl,
+    },
+    stakeholderEvents: grouped2[p.portalId],
+    documentEvents: grouped3[p.portalId],
+    portalHref: `/customerPortals/${p.portalId}` //fixme!
+  }))
+  console.log("final", all)
+
+
+  // debugger
   const activePortals = [
     {
       customerName: "Koch",
@@ -188,6 +261,6 @@ WHERE "UserPortal"."userId" = ${id}
   return {
     opportunityEngagement,
     stakeholderActivity,
-    activePortals
+    activePortals:all,
   }
 })

@@ -82,6 +82,7 @@ function StakeholderClickCircles(props: { data: Array<Stakeholder & { eventCount
 }
 
 export function ActivePortalsDemo(props: { data: ActivePortal[] }) {
+console.log(props.data)
   return (
     <Card>
       <CardHeader>

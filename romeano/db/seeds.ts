@@ -382,6 +382,17 @@ async function seedPortalDetails() {
     }
   })
 
+  await db.document.createMany({
+    data: [
+      {
+        portalId: portal.id,
+        title: "portal2doc",
+        path: "portal2doc.txt",
+        isCompleted: false,
+        userId: aeUser.id
+      },
+    ]
+  });
 }
 
 async function seed() {
