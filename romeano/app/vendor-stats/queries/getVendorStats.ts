@@ -171,17 +171,13 @@ WHERE "Event"."portalId" IN (SELECT "portalId"
                            AND "userId" = ${id})
 GROUP BY "Event"."portalId", title, path
 `
-  const grouped3 = groupBy(activePortalsDocs, "portalId")//.map(x=>{
-//     const
-//     ({
-//     }
-//
-//   {...x}
-//
-//   })
-//
-//
-// })
+  const grouped3 = groupBy(activePortalsDocs.map(x => ({
+    portalId: x.portalId,
+    body: x.title,
+    href: getBackendFilePath(x.path),
+    eventCount: x.eventCount
+  })),"portalId")
+
   const all = activePortals1.map(p => ({
     portalId: p.portalId,
     customerName: p.customerName,
@@ -191,7 +187,7 @@ GROUP BY "Event"."portalId", title, path
       name: p.primaryContactName,
       jobTitle: p.primaryContactJobTitle,
       contactEmail: p.primaryContactEmail,
-      contactPhotoUrl: p.primaryContactPhotoUrl,
+      contactPhotoUrl: p.primaryContactPhotoUrl
     },
     stakeholderEvents: grouped2[p.portalId],
     documentEvents: grouped3[p.portalId],
@@ -261,6 +257,6 @@ GROUP BY "Event"."portalId", title, path
   return {
     opportunityEngagement,
     stakeholderActivity,
-    activePortals:all,
+    activePortals: all
   }
 })

@@ -82,7 +82,7 @@ function StakeholderClickCircles(props: { data: Array<Stakeholder & { eventCount
 }
 
 export function ActivePortalsDemo(props: { data: ActivePortal[] }) {
-console.log(props.data)
+  console.log(props.data)
   return (
     <Card>
       <CardHeader>
@@ -159,16 +159,11 @@ console.log(props.data)
                         <div className="text-sm flex justify-center flex-col gap-y-1">
                           {
                             portal.documentEvents.slice(0, 3).map((document, idx) =>
-                              <div key={idx}>
-                                                                    <span className="flex gap-x-1">
-                                                                        <StyledLink
-                                                                          href={`${BACKEND_ENDPOINT}/${document.href}`}>
-                                                                            {document.body}
-                                                                        </StyledLink>
-                                                                        <span
-                                                                          className={"text-gray-900"}>{document.eventCount}
-                                                                        </span>
-                                                                    </span>
+                              <div key={idx} className="flex gap-x-1">
+                                <StyledLink href={document.href}>
+                                  {document.body}
+                                </StyledLink>
+                                <span className={"text-gray-900"}>{document.eventCount}</span>
                               </div>
                             )
                           }
