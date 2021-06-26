@@ -17,7 +17,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 DB Setup
 
 ```shell
-blitz prisma migrate dev --name init && blitz prisma migrate reset --force && blitz db seed
+yarn blitz prisma migrate dev --name init && yarn blitz prisma migrate reset --force && yarn blitz db seed
 ```
 
 ## Environment Variables
