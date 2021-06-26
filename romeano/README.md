@@ -14,6 +14,12 @@ blitz dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+DB Setup
+
+```shell
+blitz prisma migrate dev --name init && blitz prisma migrate reset --force && blitz db seed
+```
+
 ## Environment Variables
 
 Ensure the `.env.local` file has required environment variables:
