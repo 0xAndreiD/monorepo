@@ -1,4 +1,4 @@
-import { GetServerSideProps, getSession, RedirectError, Routes } from "blitz"
+import { GetServerSideProps, getSession, Routes } from "blitz"
 import db, { Role } from "db"
 import { z } from "zod"
 
@@ -20,8 +20,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   })
 
   const portal = data?.user.userPortals[0].portal
-  console.log('portal',data)
-  if (!data || !portal) throw new RedirectError(Routes.LoginPage())
+  if (!data || !portal) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
 
   const session = await getSession(context.req, context.res)
   if (portal.id) {
