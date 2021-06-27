@@ -16,6 +16,7 @@ declare module "blitz" {
 }
 
 export enum Device {
+  Unknown,
   Computer,
   Mobile
 }

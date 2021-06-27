@@ -23,9 +23,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   //log event
   await db.event.create({
     data: {
-      ip: context.req.socket.remoteAddress ?? "0.0.0.0", //null if client disconnects: https://nodejs.org/api/net.html#net_socket_remoteaddress
       type: eventType,
       url,
+      ip: context.req.socket.remoteAddress ?? "0.0.0.0", //null if client disconnects: https://nodejs.org/api/net.html#net_socket_remoteaddress
+      userAgent: context.req.headers["user-agent"],
       documentId,
       portalId,
       userId: session.userId

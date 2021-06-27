@@ -221,9 +221,10 @@ CREATE TABLE "InternalNotes" (
 -- CreateTable
 CREATE TABLE "Event" (
     "id" SERIAL NOT NULL,
-    "ip" TEXT NOT NULL,
     "type" "EventType" NOT NULL,
     "url" TEXT NOT NULL,
+    "ip" TEXT NOT NULL,
+    "userAgent" TEXT,
     "documentId" INTEGER,
     "portalId" INTEGER NOT NULL,
     "userId" INTEGER NOT NULL,

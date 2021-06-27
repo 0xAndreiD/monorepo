@@ -5,15 +5,15 @@ import { Device, Link } from "../../../../types"
 import { StyledLink } from "../generic/Link"
 
 type StakeholderActivityEvent = {
+  stakeholderName: string,
+  customerName: string,
   link: Link,
-  company: string,
   location: string,
   device: Device,
-  customer: string,
-  timestamp: string
+  timestamp: string,
 }
 
-export function StakeholderActivityLogCard(props: {data: StakeholderActivityEvent[]}) {
+export function StakeholderActivityLogCard(props: { data: StakeholderActivityEvent[] }) {
 
   return <Card borderless>
     <CardHeader>Stakeholder Activity Log</CardHeader>
@@ -56,7 +56,7 @@ export function StakeholderActivityLogCard(props: {data: StakeholderActivityEven
                 props.data.map((event, idx) =>
                   <tr key={idx}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {`${event.customer} from ${event.company} viewed `}
+                      {`${event.stakeholderName} from ${event.customerName} viewed `}
                       <StyledLink href={event.link.href}>{event.link.body}</StyledLink>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">

@@ -1,7 +1,7 @@
 import { NotFoundError, resolver } from "blitz"
 import db, { Role } from "db"
 import { z } from "zod"
-import { addDays, subMinutes } from "date-fns"
+import { addDays } from "date-fns"
 import { Device } from "../../../types"
 import { getBackendFilePath } from "../../core/util/upload"
 
@@ -123,7 +123,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ portalId })
   }>>`
     SELECT "userId",
            (SELECT "firstName" || ' ' || "lastName" FROM "User" WHERE id = "userId") AS "stakeholderName",
-           (SELECT "jobTitle" FROM "Stakeholder" WHERE "userId" = "Event"."userId") AS "stakeholderJobTitle",
+           (SELECT "jobTitle" FROM "Stakeholder" WHERE "userId" = "Event"."userId")  AS "stakeholderJobTitle",
            count(*)                                                                  AS "eventCount",
            (SELECT MAX("createdAt") FROM "Event" WHERE "userId" = "Event"."userId")  AS "lastActive"
     FROM "Event"
@@ -132,63 +132,39 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ portalId })
     ORDER BY "eventCount" DESC;
   `
 
-  const stakeholderActivityLog = [
-    {
-      customer: "Kahili Laliji",
-      company: "NASA",
-      link: {
-        body: "Quote Proposal",
-        href: ""
-      },
-      location: "Houston, TX, USA",
-      device: Device.Mobile,
-      timestamp: subMinutes(now, 14).toISOString()
-    },
-    {
-      customer: "Alex Hills",
-      company: "Lear",
-      link: {
-        body: "Technical Specs",
-        href: ""
-      },
-      location: "Houston, TX, USA",
-      device: Device.Computer,
-      timestamp: subMinutes(now, 32).toISOString()
-    },
-    {
-      customer: "Ken Laft",
-      company: "Lear",
-      link: {
-        body: "Technical Specs",
-        href: ""
-      },
-      location: "Cincinnati, OH, USA",
-      device: Device.Computer,
-      timestamp: subMinutes(now, 33).toISOString()
-    },
-    {
-      customer: "Paul Nells",
-      company: "Lear",
-      link: {
-        body: "Technical Specs",
-        href: ""
-      },
-      location: "Cincinnati, OH, USA",
-      device: Device.Mobile,
-      timestamp: subMinutes(now, 34).toISOString()
-    },
-    {
-      customer: "Kischa Block",
-      company: "Raytheon",
-      link: {
-        body: "Mira Sales Deck",
-        href: ""
-      },
-      location: "Dublin, Ireland",
-      device: Device.Mobile,
-      timestamp: subMinutes(now, 51).toISOString()
-    }
-  ]
+  const stakeholderActivityLogRaw = await db.$queryRaw<Array<{
+    stakeholderName: string,
+    customerName: string,
+    documentTitle: string,
+    documentPath: string,
+    url: string,
+    ip: string,
+    userAgent: number,
+    createdAt: string,
+  }>>`
+    SELECT (SELECT "firstName" || ' ' || "lastName" FROM "User" WHERE id = "Event"."userId") AS "stakeholderName",
+           "customerName",
+           title                                                                             AS "documentTitle",
+           path                                                                              AS "documentPath",
+           url,
+           ip,
+           "userAgent",
+           "Event"."createdAt"
+    FROM "Event"
+           JOIN "Portal" P on "Event"."portalId" = P.id
+           LEFT JOIN "Document" D ON "Event"."documentId" = D.id
+    WHERE "Event"."portalId" = ${portalId}
+  `
+  const stakeholderActivityLog = stakeholderActivityLogRaw.map(x => ({
+    stakeholderName: x.stakeholderName,
+    customerName: x.customerName,
+    link: x.documentTitle && x.documentPath ?
+      { body: x.documentTitle, href: getBackendFilePath(x.documentPath) } :
+      { body: "a link", href: x.url },
+    location: x.ip,
+    device: Device.Mobile,//use userAgent;
+    timestamp: new Date(x.createdAt).toISOString()
+  }))
 
   return {
     opportunityOverview,

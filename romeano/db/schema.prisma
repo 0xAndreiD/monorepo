@@ -237,9 +237,10 @@ model InternalNotes {
 
 model Event {
   id         Int       @id @default(autoincrement())
-  ip         String
   type       EventType
   url        String
+  ip         String
+  userAgent  String?
   document   Document? @relation(fields: [documentId], references: [id])
   documentId Int?
   portal     Portal    @relation(fields: [portalId], references: [id])
