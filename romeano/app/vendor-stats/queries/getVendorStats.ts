@@ -64,17 +64,17 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
     customerName: string,
     eventCount: number
   }>>`
-SELECT "portalId",
-       (SELECT "customerName" FROM "Portal" WHERE id = "portalId"),
-       count(*) AS "eventCount"
-FROM "Event"
-WHERE "portalId" IN (SELECT "portalId"
-                     FROM "UserPortal"
-                     WHERE "isPrimaryContact" IS TRUE
-                       AND "userId" = ${id})
-GROUP BY "portalId"
-ORDER BY "eventCount" DESC;
-`
+    SELECT "portalId",
+           (SELECT "customerName" FROM "Portal" WHERE id = "portalId"),
+           count(*) AS "eventCount"
+    FROM "Event"
+    WHERE "portalId" IN (SELECT "portalId"
+                         FROM "UserPortal"
+                         WHERE "isPrimaryContact" IS TRUE
+                           AND "userId" = ${id})
+    GROUP BY "portalId"
+    ORDER BY "eventCount" DESC;
+  `
 
   const stakeholderActivityRaw = await db.$queryRaw<Array<{
     stakeholderName: string,
@@ -83,18 +83,19 @@ ORDER BY "eventCount" DESC;
     documentPath: string,
     timestamp: string,
   }>>`
-SELECT "User"."firstName" || ' ' || "User"."lastName" AS "stakeholderName",
-       "Portal"."customerName",
-       "Document".title                               AS "documentTitle",
-       "Document".path                                AS "documentPath",
-       "Event"."createdAt"                            AS timestamp
-FROM "Event"
-         INNER JOIN "Portal" ON "Event"."portalId" = "Portal".id
-         INNER JOIN "User" ON "Event"."userId" = "User".id
-         INNER JOIN "Document" ON "Event"."documentId" = "Document".id
-WHERE "Event"."portalId" IN (SELECT "UserPortal"."portalId" FROM "UserPortal" WHERE "UserPortal"."userId" = ${id})
-ORDER BY timestamp DESC
-`
+    SELECT "User"."firstName" || ' ' || "User"."lastName" AS "stakeholderName",
+           "Portal"."customerName",
+           "Document".title                               AS "documentTitle",
+           "Document".path                                AS "documentPath",
+           "Event"."createdAt" AS timestamp
+    FROM "Event"
+      INNER JOIN "Portal"
+    ON "Event"."portalId" = "Portal".id
+      INNER JOIN "User" ON "Event"."userId" = "User".id
+      INNER JOIN "Document" ON "Event"."documentId" = "Document".id
+    WHERE "Event"."portalId" IN (SELECT "UserPortal"."portalId" FROM "UserPortal" WHERE "UserPortal"."userId" = ${id})
+    ORDER BY timestamp DESC
+  `
   const stakeholderActivity = stakeholderActivityRaw.map(x => ({
     stakeholderName: x.stakeholderName,
     customerName: x.customerName,
@@ -115,20 +116,20 @@ ORDER BY timestamp DESC
     primaryContactEmail: string,
     primaryContactPhotoUrl: string
   }>>`
-SELECT "Portal".id                                                                      AS "portalId",
-       "Portal"."customerName"                                                          AS "customerName",
-       "Portal"."currentRoadmapStage"                                                   AS "currentRoadmapStage",
-       (SELECT COUNT(*) FROM "RoadmapStage" WHERE "portalId" = "UserPortal"."portalId") AS "customerNumberOfStages",
-       "User"."firstName" || ' ' || "User"."lastName"                                   AS "primaryContactName",
-       "AccountExecutive"."jobTitle"                                                    AS "primaryContactJobTitle",
-       "User".email                                                                     AS "primaryContactEmail",
-       "User"."photoUrl"                                                                AS "primaryContactPhotoUrl"
-FROM "UserPortal"
-         INNER JOIN "Portal" ON "UserPortal"."portalId" = "Portal".id
-         INNER JOIN "User" ON "UserPortal"."userId" = "User".id
-         INNER JOIN "AccountExecutive" ON "User".id = "AccountExecutive"."userId"
-WHERE "UserPortal"."userId" = ${id}
-`
+    SELECT "Portal".id                                                                      AS "portalId",
+           "Portal"."customerName"                                                          AS "customerName",
+           "Portal"."currentRoadmapStage"                                                   AS "currentRoadmapStage",
+           (SELECT COUNT(*) FROM "RoadmapStage" WHERE "portalId" = "UserPortal"."portalId") AS "customerNumberOfStages",
+           "User"."firstName" || ' ' || "User"."lastName"                                   AS "primaryContactName",
+           "AccountExecutive"."jobTitle"                                                    AS "primaryContactJobTitle",
+           "User".email                                                                     AS "primaryContactEmail",
+           "User"."photoUrl"                                                                AS "primaryContactPhotoUrl"
+    FROM "UserPortal"
+           INNER JOIN "Portal" ON "UserPortal"."portalId" = "Portal".id
+           INNER JOIN "User" ON "UserPortal"."userId" = "User".id
+           INNER JOIN "AccountExecutive" ON "User".id = "AccountExecutive"."userId"
+    WHERE "UserPortal"."userId" = ${id}
+  `
   const activePortalsStakeholders = await db.$queryRaw<Array<{
     portalId: number,
     name: string,
@@ -136,19 +137,19 @@ WHERE "UserPortal"."userId" = ${id}
     isApprovedBy: boolean,
     eventCount: number
   }>>`
-SELECT "portalId",
-       U."firstName" || ' ' || U."lastName" AS name,
-       U.email,
-       "isApprovedBy",
-       COUNT(*)                             AS "eventCount"
-FROM "Event"
-         JOIN "User" U ON U.id = "Event"."userId"
-         JOIN "Stakeholder" S ON U.id = S."userId"
-WHERE "portalId" IN (SELECT "portalId"
-                     FROM "UserPortal"
-                     WHERE ("isPrimaryContact" IS TRUE OR "isSecondaryContact" IS TRUE)
-                       AND "userId" = ${id})
-GROUP BY "portalId", "Event"."userId", name, email, "isApprovedBy"`
+    SELECT "portalId",
+           U."firstName" || ' ' || U."lastName" AS name,
+           U.email,
+           "isApprovedBy",
+           COUNT(*)                             AS "eventCount"
+    FROM "Event"
+           JOIN "User" U ON U.id = "Event"."userId"
+           JOIN "Stakeholder" S ON U.id = S."userId"
+    WHERE "portalId" IN (SELECT "portalId"
+                         FROM "UserPortal"
+                         WHERE ("isPrimaryContact" IS TRUE OR "isSecondaryContact" IS TRUE)
+                           AND "userId" = ${id})
+    GROUP BY "portalId", "Event"."userId", name, email, "isApprovedBy"`
   const grouped2 = groupBy(activePortalsStakeholders, "portalId")
 
   console.log("main", activePortals1)
@@ -159,24 +160,24 @@ GROUP BY "portalId", "Event"."userId", name, email, "isApprovedBy"`
     path: string,
     eventCount: number
   }>>`
-SELECT "Event"."portalId" AS "portalId",
-       title,
-       path,
-       COUNT(*)           AS "eventCount"
-FROM "Event"
-         JOIN "Document" D ON D.id = "Event"."documentId"
-WHERE "Event"."portalId" IN (SELECT "portalId"
-                             FROM "UserPortal"
-                         WHERE ("isPrimaryContact" IS TRUE OR "isSecondaryContact" IS TRUE)
-                           AND "userId" = ${id})
-GROUP BY "Event"."portalId", title, path
-`
+    SELECT "Event"."portalId" AS "portalId",
+           title,
+           path,
+           COUNT(*)           AS "eventCount"
+    FROM "Event"
+           JOIN "Document" D ON D.id = "Event"."documentId"
+    WHERE "Event"."portalId" IN (SELECT "portalId"
+                                 FROM "UserPortal"
+                                 WHERE ("isPrimaryContact" IS TRUE OR "isSecondaryContact" IS TRUE)
+                                   AND "userId" = ${id})
+    GROUP BY "Event"."portalId", title, path
+  `
   const grouped3 = groupBy(activePortalsDocs.map(x => ({
     portalId: x.portalId,
     body: x.title,
     href: getBackendFilePath(x.path),
     eventCount: x.eventCount
-  })),"portalId")
+  })), "portalId")
 
   const all = activePortals1.map(p => ({
     portalId: p.portalId,
@@ -189,8 +190,8 @@ GROUP BY "Event"."portalId", title, path
       email: p.primaryContactEmail,
       photoUrl: p.primaryContactPhotoUrl
     },
-    stakeholderEvents: grouped2[p.portalId],
-    documentEvents: grouped3[p.portalId],
+    stakeholderEvents: grouped2[p.portalId] ?? [],
+    documentEvents: grouped3[p.portalId] ?? [],
     portalHref: `/customerPortals/${p.portalId}` //fixme!
   }))
   console.log("final", all)
