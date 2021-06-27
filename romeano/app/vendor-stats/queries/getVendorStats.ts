@@ -1,63 +1,30 @@
-import { NotFoundError, resolver } from "blitz"
-import db from "db"
+import { AuthenticationError, Ctx, NotFoundError, resolver } from "blitz"
+import db, { Prisma } from "db"
 import { groupBy } from "lodash"
 import { z } from "zod"
 import { getBackendFilePath } from "../../core/util/upload"
 
 const GetVendorStats = z.object({
   // This accepts type of undefined, but is required at runtime
-  id: z.number().optional().refine(Boolean, "Required")
+  // userId: z.number().optional().refine(Boolean, "Required")
 })
 
-export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
-  // export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize(), async ({ id }) => {
+// export default resolver.pipe(resolver.zod(GetVendorStats), async ({ userId }) => {
+export default resolver.pipe(resolver.zod(GetVendorStats), resolver.authorize(), async (input: {}, ctx: Ctx) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  const userId = ctx.session.userId
+  if (!userId) throw new AuthenticationError("no userId provided")
 
-  const user = await db.user.findUnique({
-    where: { id },
-    include: {
-      userPortals: {
-        include: {
-          portal: {
-            include: {
-              _count: {
-                select: {
-                  events: true
-                }
-              },
-              roadmapStages: {
-                include: {
-                  tasks: true //get the associated tasks for a stage
-                }
-              },
-              nextStepsTasks: { orderBy: { id: "asc" } },
-              vendor: true,
-              documents: { orderBy: { id: "asc" } },
-              images: { orderBy: { id: "asc" } },
-              productInfoSections: {
-                include: {
-                  links: true
-                }
-              },
-              userPortals: {
-                include: {
-                  user: {
-                    include: {
-                      accountExecutive: true,
-                      stakeholder: true
-                    }
-                  }
-                }
-              },
-              internalNotes: true
-            }
-          }
-        }
-      }
-    }
-  })
+  const user = await db.user.findUnique({ where: { id: userId } })
+  if (!user) throw new NotFoundError("User not found!")
 
-  if (!user) throw new NotFoundError()
+  const portalIds = (await db.$queryRaw<Array<{ portalId: number }>>`
+    SELECT "portalId"
+    FROM "UserPortal"
+    WHERE ("isPrimaryContact" IS TRUE OR "isSecondaryContact" IS TRUE)
+      AND "userId" = ${userId}
+  `).map(x => x.portalId)
+  console.log('portals',portalIds)
 
   const opportunityEngagement = await db.$queryRaw<Array<{
     portalId: number,
@@ -68,10 +35,7 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
            (SELECT "customerName" FROM "Portal" WHERE id = "portalId"),
            count(*) AS "eventCount"
     FROM "Event"
-    WHERE "portalId" IN (SELECT "portalId"
-                         FROM "UserPortal"
-                         WHERE "isPrimaryContact" IS TRUE
-                           AND "userId" = ${id})
+    WHERE "portalId" IN (${Prisma.join(portalIds)})
     GROUP BY "portalId"
     ORDER BY "eventCount" DESC;
   `
@@ -93,7 +57,7 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
     ON "Event"."portalId" = "Portal".id
       INNER JOIN "User" ON "Event"."userId" = "User".id
       INNER JOIN "Document" ON "Event"."documentId" = "Document".id
-    WHERE "Event"."portalId" IN (SELECT "UserPortal"."portalId" FROM "UserPortal" WHERE "UserPortal"."userId" = ${id})
+    WHERE "Event"."portalId" IN (${Prisma.join(portalIds)})
     ORDER BY timestamp DESC
   `
   const stakeholderActivity = stakeholderActivityRaw.map(x => ({
@@ -106,7 +70,7 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
     timestamp: x.timestamp
   }))
 
-  const activePortals1 = await db.$queryRaw<Array<{
+  const activePortals = await db.$queryRaw<Array<{
     portalId: number,
     customerName: string,
     currentRoadmapStage: number,
@@ -128,7 +92,8 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
            INNER JOIN "Portal" ON "UserPortal"."portalId" = "Portal".id
            INNER JOIN "User" ON "UserPortal"."userId" = "User".id
            INNER JOIN "AccountExecutive" ON "User".id = "AccountExecutive"."userId"
-    WHERE "UserPortal"."userId" = ${id}
+    WHERE "UserPortal"."isPrimaryContact" = TRUE
+      AND "portalId" IN (${Prisma.join(portalIds)})
   `
   const activePortalsStakeholders = await db.$queryRaw<Array<{
     portalId: number,
@@ -145,14 +110,11 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
     FROM "Event"
            JOIN "User" U ON U.id = "Event"."userId"
            JOIN "Stakeholder" S ON U.id = S."userId"
-    WHERE "portalId" IN (SELECT "portalId"
-                         FROM "UserPortal"
-                         WHERE ("isPrimaryContact" IS TRUE OR "isSecondaryContact" IS TRUE)
-                           AND "userId" = ${id})
+    WHERE "portalId" IN (${Prisma.join(portalIds)})
     GROUP BY "portalId", "Event"."userId", name, email, "isApprovedBy"`
-  const grouped2 = groupBy(activePortalsStakeholders, "portalId")
+  const stakeholderEvents = groupBy(activePortalsStakeholders, "portalId")
 
-  console.log("main", activePortals1)
+  console.log("main", activePortals)
   console.log("join", activePortalsStakeholders)
   const activePortalsDocs = await db.$queryRaw<Array<{
     portalId: number,
@@ -166,20 +128,17 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
            COUNT(*)           AS "eventCount"
     FROM "Event"
            JOIN "Document" D ON D.id = "Event"."documentId"
-    WHERE "Event"."portalId" IN (SELECT "portalId"
-                                 FROM "UserPortal"
-                                 WHERE ("isPrimaryContact" IS TRUE OR "isSecondaryContact" IS TRUE)
-                                   AND "userId" = ${id})
+    WHERE "Event"."portalId" IN (${Prisma.join(portalIds)})
     GROUP BY "Event"."portalId", title, path
   `
-  const grouped3 = groupBy(activePortalsDocs.map(x => ({
+  const documentEvents = groupBy(activePortalsDocs.map(x => ({
     portalId: x.portalId,
     body: x.title,
     href: getBackendFilePath(x.path),
     eventCount: x.eventCount
   })), "portalId")
 
-  const all = activePortals1.map(p => ({
+  const all = activePortals.map(p => ({
     portalId: p.portalId,
     customerName: p.customerName,
     currentRoadmapStage: p.currentRoadmapStage,
@@ -190,71 +149,12 @@ export default resolver.pipe(resolver.zod(GetVendorStats), async ({ id }) => {
       email: p.primaryContactEmail,
       photoUrl: p.primaryContactPhotoUrl
     },
-    stakeholderEvents: grouped2[p.portalId] ?? [],
-    documentEvents: grouped3[p.portalId] ?? [],
+    stakeholderEvents: stakeholderEvents[p.portalId] ?? [],
+    documentEvents: documentEvents[p.portalId] ?? [],
     portalHref: `/customerPortals/${p.portalId}` //fixme!
   }))
   console.log("final", all)
 
-
-  // debugger
-  const activePortals = [
-    {
-      customerName: "Koch",
-      customerCurrentStage: 2,
-      customerNumberOfStages: 4,
-      primaryContact: {
-        name: "Nick Franklin",
-        jobTitle: "Director of Operations",
-        email: "nick@mira.com",
-        photoUrl: ""
-      },
-      stakeholderEvents: [
-        {
-          name: "N F",
-          email: "a@a.com",
-          isApprovedBy: true,
-          eventCount: 22
-        },
-        {
-          name: "K S",
-          email: "a@a.com",
-          isApprovedBy: true,
-          eventCount: 12
-        },
-        {
-          name: "W I",
-          email: "a@a.com",
-          isApprovedBy: true,
-          eventCount: 8
-        },
-        {
-          name: "P S",
-          email: "a@a.com",
-          isApprovedBy: false,
-          eventCount: 2
-        }
-      ],
-      documentEvents: [
-        {
-          body: "Mira Sales Deck",
-          href: "",
-          eventCount: 8
-        },
-        {
-          body: "Mira Connect Video",
-          href: "",
-          eventCount: 6
-        },
-        {
-          body: "Quote Proposal",
-          href: "",
-          eventCount: 2
-        }
-      ],
-      portalHref: ""
-    }
-  ]
   return {
     opportunityEngagement,
     stakeholderActivity,

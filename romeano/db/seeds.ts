@@ -70,13 +70,13 @@ const seedCustomerPortal = async () => {
               userId: aeUser.id,
               role: Role.AccountExecutive,
               isPrimaryContact: true,
-              isSecondaryContact: false,
+              isSecondaryContact: false
             },
             {
               userId: aeUser2.id,
               role: Role.AccountExecutive,
               isPrimaryContact: false,
-              isSecondaryContact: true,
+              isSecondaryContact: true
             }
           ]
         }
@@ -136,7 +136,7 @@ const seedCustomerPortal = async () => {
           userPortals: {
             create: {
               role: Role.Stakeholder,
-              portalId: portal.id,
+              portalId: portal.id
             }
           }
         }
@@ -317,25 +317,25 @@ const seedCustomerPortal = async () => {
 }
 
 async function seedPortalDetails() {
-  await db.magicLink.create({
-    data: {
-      id: "aeLogin",
-      userId: 1, //Greg
-    }
-  })
-
-  await db.magicLink.create({
-    data: {
-      id: "stakeholder1Login",
-      userId: 4,//Kristin Sanders
-    }
-  })
-
-  await db.magicLink.create({
-    data: {
-      id: "stakeholder2Login",
-      userId: 5,//Wally Iris
-    }
+  await db.magicLink.createMany({
+    data: [
+      {
+        id: "ae1Login",
+        userId: 1 //Greg
+      },
+      {
+        id: "ae2Login",
+        userId: 2 //Alexis
+      },
+      {
+        id: "stakeholder1Login",
+        userId: 4//Kristin Sanders
+      },
+      {
+        id: "stakeholder2Login",
+        userId: 5//Wally Iris
+      }
+    ]
   })
 
   const aeUser = await db.user.create({
@@ -370,8 +370,8 @@ async function seedPortalDetails() {
               userId: aeUser.id,
               role: Role.AccountExecutive,
               isPrimaryContact: true,
-              isSecondaryContact: false,
-            },
+              isSecondaryContact: false
+            }
           ]
         }
       },
@@ -380,6 +380,38 @@ async function seedPortalDetails() {
       proposalQuoteLink: "https://www.google.com/?gws_rd=ssl",
       vendorId: 1
     }
+  })
+  const stakeholder = await db.user.create({
+    data: {
+      firstName: "Ali",
+      lastName: "G",
+      email: "ali@raytheon.com",
+      stakeholder: {
+        create: {
+          jobTitle: "Director",
+          isApprovedBy: true
+        }
+      },
+      userPortals: {
+        create: {
+          role: Role.Stakeholder,
+          portalId: portal.id
+        }
+      }
+    }
+  })
+
+  await db.magicLink.createMany({
+    data: [
+      {
+        id: "ae3Login",
+        userId: aeUser.id //Julia
+      },
+      {
+        id: "stakeholder3Login",
+        userId: stakeholder.id //Ali
+      }
+    ]
   })
 
   await db.document.createMany({
@@ -390,9 +422,9 @@ async function seedPortalDetails() {
         path: "portal2doc.txt",
         isCompleted: false,
         userId: aeUser.id
-      },
+      }
     ]
-  });
+  })
 }
 
 async function seed() {
