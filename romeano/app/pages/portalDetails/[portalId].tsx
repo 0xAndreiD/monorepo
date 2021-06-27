@@ -15,7 +15,7 @@ import getPortalDetail from "../../portal-details/queries/getPortalDetail"
 
 export default function CustomerPortal() {
   const portalId = useParam("portalId", "number")
-  const [portal] = useQuery(getPortalDetail, { id: portalId })
+  const [portal] = useQuery(getPortalDetail, { portalId })
 
   if (!portalId) throw new NotFoundError()
 

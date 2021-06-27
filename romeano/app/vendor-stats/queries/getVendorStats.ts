@@ -24,7 +24,6 @@ export default resolver.pipe(resolver.zod(GetVendorStats), resolver.authorize(),
     WHERE ("isPrimaryContact" IS TRUE OR "isSecondaryContact" IS TRUE)
       AND "userId" = ${userId}
   `).map(x => x.portalId)
-  console.log('portals',portalIds)
 
   const opportunityEngagement = await db.$queryRaw<Array<{
     portalId: number,

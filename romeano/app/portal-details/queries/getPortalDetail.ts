@@ -3,17 +3,18 @@ import db, { Role } from "db"
 import { z } from "zod"
 import { addDays, subMinutes } from "date-fns"
 import { Device } from "../../../types"
+import { getBackendFilePath } from "../../core/util/upload"
 
 const GetPortalDetail = z.object({
   // This accepts type of undefined, but is required at runtime
-  id: z.number().optional().refine(Boolean, "Required")
+  portalId: z.number().optional().refine(Boolean, "Required")
 })
 
-export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
+export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ portalId }) => {
 // export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize(), async ({ id }) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const portal = await db.portal.findFirst({
-    where: { id },
+    where: { id: portalId },
     include: {
       roadmapStages: true,
       vendor: true,
@@ -27,7 +28,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
             }
           }
         }
-      },
+      }
     }
   })
 
@@ -55,7 +56,6 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
       )
   }
 
-
   const documents = {
     customer: {
       name: portal.customerName,
@@ -64,7 +64,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
         .map(x => ({
           id: x.id,
           title: x.title,
-          href: x.href,
+          href: getBackendFilePath(x.path),
           isCompleted: x.isCompleted
         }))
     },
@@ -75,12 +75,11 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
         .map(x => ({
           id: x.id,
           title: x.title,
-          href: x.href,
+          href: getBackendFilePath(x.path),
           isCompleted: x.isCompleted
         }))
     }
   }
-
 
   const startDate = new Date(2021, 9, 28)
   const overallEngagement = [
@@ -113,40 +112,25 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ id }) => {
       y: 28
     }
   ]
-
   const now = new Date()
-  const stakeholderEngagement = [
-    {
-      stakeholderName: "George Lu",
-      stakeholderJobTitle: "Chief of Operations",
-      eventCount: 55,
-      lastActive: subMinutes(now, 25).toISOString()
-    },
-    {
-      stakeholderName: "Keenan Decker",
-      stakeholderJobTitle: "Director of Manufacturing",
-      eventCount: 49,
-      lastActive: subMinutes(now, 30).toISOString()
-    },
-    {
-      stakeholderName: "Jason Cahn",
-      stakeholderJobTitle: "Plant Manager",
-      eventCount: 38,
-      lastActive: subMinutes(now, 40).toISOString()
-    },
-    {
-      stakeholderName: "Neil Harker",
-      stakeholderJobTitle: "Senior QA Manager",
-      eventCount: 11,
-      lastActive: subMinutes(now, 60).toISOString()
-    },
-    {
-      stakeholderName: "Ashton Smith",
-      stakeholderJobTitle: "Operations manager",
-      eventCount: 9,
-      lastActive: subMinutes(now, 180).toISOString()
-    }
-  ]
+
+  const stakeholderEngagement = await db.$queryRaw<Array<{
+    userId: number,
+    stakeholderName: string,
+    stakeholderJobTitle: string,
+    eventCount: number
+    lastActive: string
+  }>>`
+    SELECT "userId",
+           (SELECT "firstName" || ' ' || "lastName" FROM "User" WHERE id = "userId") AS "stakeholderName",
+           (SELECT "jobTitle" FROM "Stakeholder" WHERE "userId" = "Event"."userId") AS "stakeholderJobTitle",
+           count(*)                                                                  AS "eventCount",
+           (SELECT MAX("createdAt") FROM "Event" WHERE "userId" = "Event"."userId")  AS "lastActive"
+    FROM "Event"
+    WHERE "portalId" = ${portalId}
+    GROUP BY "userId"
+    ORDER BY "eventCount" DESC;
+  `
 
   const stakeholderActivityLog = [
     {
