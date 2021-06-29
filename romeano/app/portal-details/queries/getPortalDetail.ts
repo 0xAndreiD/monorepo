@@ -1,9 +1,14 @@
 import { NotFoundError, resolver } from "blitz"
 import db, { Role } from "db"
 import { z } from "zod"
-import { addDays } from "date-fns"
 import { Device } from "../../../types"
 import { getBackendFilePath } from "../../core/util/upload"
+import { Reader } from "@maxmind/geoip2-node"
+import { readFileSync } from "fs"
+import { getOrElse, tryCatch } from "fp-ts/Option"
+import { pipe } from "fp-ts/function"
+
+const reader = Reader.openBuffer(readFileSync("db/geoip/GeoLite2-City.mmdb"))
 
 const GetPortalDetail = z.object({
   // This accepts type of undefined, but is required at runtime
@@ -81,38 +86,16 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ portalId })
     }
   }
 
-  const startDate = new Date(2021, 9, 28)
-  const overallEngagement = [
-    {
-      x: addDays(startDate, 0),
-      y: 40
-    },
-    {
-      x: addDays(startDate, 2),
-      y: 17
-    },
-    {
-      x: addDays(startDate, 4),
-      y: 23
-    },
-    {
-      x: addDays(startDate, 6),
-      y: 8
-    },
-    {
-      x: addDays(startDate, 8),
-      y: 35
-    },
-    {
-      x: addDays(startDate, 10),
-      y: 25
-    },
-    {
-      x: addDays(startDate, 12),
-      y: 28
-    }
-  ]
-  const now = new Date()
+  const overallEngagement = (await db.$queryRaw<Array<{
+    timestamp: string,
+    eventCount: number
+  }>>`
+    SELECT DATE_TRUNC('day', "createdAt") AS timestamp,
+           COUNT(*)                       AS "eventCount"
+    FROM "Event"
+    GROUP BY TIMESTAMP
+    ORDER BY TIMESTAMP ASC;
+  `).map(x => ({ x: new Date(x.timestamp), y: x.eventCount }))
 
   const stakeholderEngagement = await db.$queryRaw<Array<{
     userId: number,
@@ -154,17 +137,26 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ portalId })
            JOIN "Portal" P on "Event"."portalId" = P.id
            LEFT JOIN "Document" D ON "Event"."documentId" = D.id
     WHERE "Event"."portalId" = ${portalId}
+    ORDER BY "Event"."createdAt" DESC
+    LIMIT 25
   `
-  const stakeholderActivityLog = stakeholderActivityLogRaw.map(x => ({
-    stakeholderName: x.stakeholderName,
-    customerName: x.customerName,
-    link: x.documentTitle && x.documentPath ?
-      { body: x.documentTitle, href: getBackendFilePath(x.documentPath) } :
-      { body: "a link", href: x.url },
-    location: x.ip,
-    device: Device.Mobile,//use userAgent;
-    timestamp: new Date(x.createdAt).toISOString()
-  }))
+  const stakeholderActivityLog = stakeholderActivityLogRaw.map(x => {
+    const location = pipe(tryCatch(() => {
+      const location = reader.city(x.ip)
+      return `${location.city?.names.en ?? 'Unknown'}, ${location.country?.names.en ?? 'Unknown'}`
+    }), getOrElse(() => "Unknown"))
+
+    return {
+      stakeholderName: x.stakeholderName,
+      customerName: x.customerName,
+      link: x.documentTitle && x.documentPath ?
+        { body: x.documentTitle, href: getBackendFilePath(x.documentPath) } :
+        { body: "a link", href: x.url },
+      location,
+      device: Device.Mobile,//use userAgent;
+      timestamp: new Date(x.createdAt).toISOString()
+    }
+  })
 
   return {
     opportunityOverview,

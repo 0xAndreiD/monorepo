@@ -1,4 +1,6 @@
-import db, { CustomerOrVendor, Role } from "./index"
+import db, { CustomerOrVendor, EventType, Role } from "./index"
+import { range } from "lodash"
+import { addHours } from "date-fns"
 
 /*
  * This seed function is executed when you run `blitz db seed`.
@@ -427,10 +429,32 @@ async function seedPortalDetails() {
   })
 }
 
+async function seedEvents() {
+  const start = new Date("2021-06-23T16:36:13.695Z")
+
+  const events = range(500).map(i =>
+    ({
+      type: EventType.DocumentOpen,
+      url: "demo1",
+      ip: "0.0.0.0",
+      userAgent: "some useragent",
+      documentId: 1,
+      portalId: 1,
+      userId: 4,
+      createdAt: addHours(start, i)
+    })
+  )
+
+  await db.event.createMany({
+    data: events
+  })
+}
+
 async function seed() {
   console.log(`Start seeding ...`)
   await seedCustomerPortal()
   await seedPortalDetails()
+  await seedEvents()
   console.log("Done!")
 }
 

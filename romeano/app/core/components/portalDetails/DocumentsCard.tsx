@@ -47,9 +47,9 @@ function DocumentList(props: { companyName: string, documents: PortalDocument[] 
             {
                 props.documents.map((task, idx) =>
                     <span key={idx}>
-                        <Link href={`${BACKEND_ENDPOINT}/${task.href}`}>
-                            <button
-                                type="button"
+                        <Link href={task.href}>
+                          <a>
+                            <div
                                 className={"inline-flex items-center px-3 py-2 border shadow-sm text-sm\
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 " +
@@ -57,7 +57,8 @@ function DocumentList(props: { companyName: string, documents: PortalDocument[] 
                             >
                                 {task.isCompleted && <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-green-500"/>}
                                 {task.title}
-                            </button>
+                            </div>
+                            </a>
                         </Link>
                     </span>
                 )
