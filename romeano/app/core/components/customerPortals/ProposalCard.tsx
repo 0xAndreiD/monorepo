@@ -1,7 +1,7 @@
 import { CheckIcon, PlusIcon, XIcon } from "@heroicons/react/solid"
 import { Card, CardDivider, CardHeader } from "../generic/Card"
 
-import {TrackedLink} from "../generic/Link"
+import { TrackedLink } from "../generic/Link"
 import { Dispatch, SetStateAction, useState } from "react"
 import RevealSection from "../generic/RevealSection"
 import { Dialog } from "@headlessui/react"
@@ -10,6 +10,8 @@ import Modal from "../generic/Modal"
 import { getColourFromString } from "../../util/colour"
 import { getInitialsOfName } from "../../util/text"
 import { EventType } from "db"
+import { useMutation } from "blitz"
+import updateProposalApproval from "../../../customer-portals/mutations/updateProposalApproval"
 
 export type Stakeholder = {
   name: string,
@@ -50,9 +52,11 @@ function StakeholderApprovalCircles(props: { data: Array<Stakeholder> }) {
   </>
 }
 
-export function ProposalCard(props: {portalId:number, data: Proposal }) {
+export function ProposalCard(props: { portalId: number, data: Proposal }) {
   const [isDetailsVisible, setDetailsVisible] = useState(true)
   const [isInviteStakeholdersModalOpen, setIsInviteStakeholdersModalOpen] = useState(false)
+  const [updateProposalApprovalMutation] = useMutation(updateProposalApproval)
+
 
   return <Card>
     <div className="flex flex-col items-center pb-6">
@@ -62,8 +66,8 @@ export function ProposalCard(props: {portalId:number, data: Proposal }) {
       <div className="sm:divide-y sm:divide-gray-200" />
 
       <TrackedLink portalId={props.portalId}
-        href={props.data.quoteLink}
-                    eventType={EventType.ProposalOpen}>
+                   href={props.data.quoteLink}
+                   eventType={EventType.ProposalOpen}>
         <button
           type="button"
           className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
@@ -109,7 +113,11 @@ export function ProposalCard(props: {portalId:number, data: Proposal }) {
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
         >
           <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500" />
-          <span className="flex-1">Approve</span>
+          <span className="flex-1"
+                onClick={() => updateProposalApprovalMutation({ portalId: props.portalId, isApprove: true })}
+          >
+            Approve
+          </span>
         </button>
 
         <button
@@ -119,7 +127,11 @@ export function ProposalCard(props: {portalId:number, data: Proposal }) {
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
         >
           <XIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500" />
-          <span className="flex-1">Decline</span>
+          <span className="flex-1"
+                onClick={() => updateProposalApprovalMutation({ portalId: props.portalId, isApprove: false })}
+          >
+            Decline
+          </span>
         </button>
       </div>
 
@@ -130,11 +142,11 @@ export function ProposalCard(props: {portalId:number, data: Proposal }) {
             className="relative rounded-lg bg-white flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
           >
             <div className="flex-1 min-w-0">
-                <>
-                  <span className="absolute inset-0" aria-hidden="true" />
-                  <p className="text-sm font-medium text-gray-900">{person.name}</p>
-                  <p className="text-sm text-gray-500 truncate">{person.jobTitle}</p>
-                </>
+              <>
+                <span className="absolute inset-0" aria-hidden="true" />
+                <p className="text-sm font-medium text-gray-900">{person.name}</p>
+                <p className="text-sm text-gray-500 truncate">{person.jobTitle}</p>
+              </>
             </div>
           </div>
         ))}
