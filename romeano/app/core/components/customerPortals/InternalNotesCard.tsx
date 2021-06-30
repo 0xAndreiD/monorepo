@@ -82,7 +82,7 @@ export function InternalNotesCard(props: { data: InternalNotes }) {
 
       <div className="mt-6 flex gap-2 items-center justify-center">
         <label htmlFor="phone" className="sr-only">
-          Phone
+          Message
         </label>
         <input
           type="text"
