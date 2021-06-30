@@ -7,9 +7,9 @@ import { Reader } from "@maxmind/geoip2-node"
 import { readFileSync } from "fs"
 import { getOrElse, tryCatch } from "fp-ts/Option"
 import { pipe } from "fp-ts/function"
+import UAParser from "ua-parser-js"
 
 const reader = Reader.openBuffer(readFileSync("db/geoip/GeoLite2-City.mmdb"))
-
 const GetPortalDetail = z.object({
   // This accepts type of undefined, but is required at runtime
   portalId: z.number().optional().refine(Boolean, "Required")
@@ -122,7 +122,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ portalId })
     documentPath: string,
     url: string,
     ip: string,
-    userAgent: number,
+    userAgent: string,
     createdAt: string,
   }>>`
     SELECT (SELECT "firstName" || ' ' || "lastName" FROM "User" WHERE id = "Event"."userId") AS "stakeholderName",
@@ -143,7 +143,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ portalId })
   const stakeholderActivityLog = stakeholderActivityLogRaw.map(x => {
     const location = pipe(tryCatch(() => {
       const location = reader.city(x.ip)
-      return `${location.city?.names.en ?? 'Unknown'}, ${location.country?.names.en ?? 'Unknown'}`
+      return `${location.city?.names.en ?? "Unknown"}, ${location.country?.names.en ?? "Unknown"}`
     }), getOrElse(() => "Unknown"))
 
     return {
@@ -153,7 +153,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ portalId })
         { body: x.documentTitle, href: getBackendFilePath(x.documentPath) } :
         { body: "a link", href: x.url },
       location,
-      device: Device.Mobile,//use userAgent;
+      device: UAParser(x.userAgent).device.type === "mobile" ? Device.Mobile : Device.Computer,
       timestamp: new Date(x.createdAt).toISOString()
     }
   })
