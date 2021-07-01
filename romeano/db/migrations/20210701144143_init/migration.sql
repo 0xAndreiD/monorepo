@@ -5,9 +5,6 @@ CREATE TYPE "TokenType" AS ENUM ('RESET_PASSWORD');
 CREATE TYPE "Role" AS ENUM ('AccountExecutive', 'Stakeholder');
 
 -- CreateEnum
-CREATE TYPE "CustomerOrVendor" AS ENUM ('VENDOR', 'CUSTOMER');
-
--- CreateEnum
 CREATE TYPE "EventType" AS ENUM ('LaunchRoadmapLinkOpen', 'NextStepAdd', 'NextStepUpdate', 'DocumentApprove', 'DocumentOpen', 'DocumentUpload', 'ProposalApprove', 'ProposalOpen', 'CreateInternalMessage', 'ProductInfoLinkOpen');
 
 -- CreateTable
@@ -184,8 +181,8 @@ CREATE TABLE "NextStepsTask" (
     "id" SERIAL NOT NULL,
     "portalId" INTEGER NOT NULL,
     "description" TEXT NOT NULL,
-    "isCompleted" BOOLEAN NOT NULL,
-    "customerOrVendor" "CustomerOrVendor" NOT NULL,
+    "isCompleted" BOOLEAN NOT NULL DEFAULT false,
+    "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -198,7 +195,7 @@ CREATE TABLE "Document" (
     "portalId" INTEGER NOT NULL,
     "title" TEXT NOT NULL,
     "path" TEXT NOT NULL,
-    "isCompleted" BOOLEAN NOT NULL,
+    "isCompleted" BOOLEAN NOT NULL DEFAULT false,
     "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -237,6 +234,7 @@ CREATE TABLE "Event" (
 CREATE TABLE "MagicLink" (
     "id" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
+    "hasClicked" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -305,6 +303,9 @@ ALTER TABLE "RoadmapStageTask" ADD FOREIGN KEY ("roadmapStageId") REFERENCES "Ro
 
 -- AddForeignKey
 ALTER TABLE "NextStepsTask" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "NextStepsTask" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Document" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;

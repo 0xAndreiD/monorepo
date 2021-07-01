@@ -1,4 +1,4 @@
-import db, { CustomerOrVendor, EventType, Role } from "./index"
+import db, { EventType, Role } from "./index"
 import { range } from "lodash"
 import { addHours, min, subDays } from "date-fns"
 import * as faker from "faker"
@@ -186,19 +186,19 @@ const seedCustomerPortal = async () => {
         portalId: portal.id,
         description: "Schedule AR Headset Demo Call",
         isCompleted: true,
-        customerOrVendor: CustomerOrVendor.CUSTOMER
+        userId: aeUser.id,
       },
       {
         portalId: portal.id,
         description: "Invite IT to next meeting",
         isCompleted: false,
-        customerOrVendor: CustomerOrVendor.CUSTOMER
+        userId: aeUser.id,
       },
       {
         portalId: portal.id,
         description: "Send Penelope a revised proposal",
         isCompleted: false,
-        customerOrVendor: CustomerOrVendor.VENDOR
+        userId: stakeholders[0].id
       }
     ]
   })
@@ -324,7 +324,8 @@ async function seedPortalDetails() {
     data: [
       {
         id: "ae1Login",
-        userId: 1 //Greg
+        userId: 1, //Greg
+        hasClicked: false,
       },
       {
         id: "ae2Login",

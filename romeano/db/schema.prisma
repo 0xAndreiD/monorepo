@@ -61,9 +61,10 @@ model User {
   userPortals      UserPortal[]
   messagesSent     InternalNotes[]
   events           Event[]
+  nextStepsTasks   NextStepsTask[]
+  magicLinks       MagicLink[]
   tokens           Token[]
   sessions         Session[]
-  magicLinks       MagicLink[]
   hashedPassword   String?
   role             String            @default("USER")
   createdAt        DateTime          @default(now())
@@ -150,22 +151,22 @@ model ProductInfoSectionLink {
   id                   Int                @id @default(autoincrement())
   linkText             String
   link                 String
-  productInfoSectionId Int
   productInfoSection   ProductInfoSection @relation(fields: [productInfoSectionId], references: [id])
+  productInfoSectionId Int
 }
 
 model ProductInfoSection {
   id       Int                      @id @default(autoincrement())
-  portalId Int
   portal   Portal                   @relation(fields: [portalId], references: [id])
+  portalId Int
   heading  String
   links    ProductInfoSectionLink[]
 }
 
 model PortalImage {
   id        Int      @id @default(autoincrement())
-  portalId  Int
   portal    Portal   @relation(fields: [portalId], references: [id])
+  portalId  Int
   href      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -193,21 +194,16 @@ model RoadmapStageTask {
   updatedAt      DateTime     @updatedAt
 }
 
-enum CustomerOrVendor {
-  VENDOR
-  CUSTOMER
-}
-
-//TODO: add creator
 model NextStepsTask {
-  id               Int              @id @default(autoincrement())
-  portalId         Int
-  portal           Portal           @relation(fields: [portalId], references: [id])
-  description      String
-  isCompleted      Boolean
-  customerOrVendor CustomerOrVendor
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
+  id          Int      @id @default(autoincrement())
+  portalId    Int
+  portal      Portal   @relation(fields: [portalId], references: [id])
+  description String
+  isCompleted Boolean  @default(false)
+  creator     User     @relation(fields: [userId], references: [id])
+  userId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Document {
@@ -216,7 +212,7 @@ model Document {
   portal      Portal   @relation(fields: [portalId], references: [id])
   title       String
   path        String
-  isCompleted Boolean
+  isCompleted Boolean  @default(false)
   uploader    User     @relation(fields: [userId], references: [id])
   userId      Int
   events      Event[]
@@ -251,11 +247,12 @@ model Event {
 }
 
 model MagicLink {
-  id        String   @id
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  hasClicked Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 enum EventType {

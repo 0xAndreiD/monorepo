@@ -3,7 +3,6 @@
 import { Card, CardDivider, CardHeader } from "../generic/Card"
 import { AddButton } from "../generic/AddButton"
 import { PaperAirplaneIcon, TrashIcon } from "@heroicons/react/outline"
-import { CustomerOrVendor } from "db"
 import createNextStepsTask from "../../../customer-portals/mutations/createNextStepsTask"
 import updateNextStepsTask from "../../../customer-portals/mutations/updateNextStepsTask"
 import deleteNextStepsTask from "../../../customer-portals/mutations/deleteNextStepsTask"
@@ -85,12 +84,8 @@ export default function NextStepsCard(props: NextSteps & { portalId: number, ref
 
 type NextStepsTask = {
   id: number,
-  portalId: number,
   description: string,
   isCompleted: boolean,
-  customerOrVendor: CustomerOrVendor,
-  createdAt: Date,
-  updatedAt: Date
 }
 
 function NextStepsTaskList(props: { isElementDeletable: boolean, name: string, tasks: NextStepsTask[], refetchHandler: () => void }) {

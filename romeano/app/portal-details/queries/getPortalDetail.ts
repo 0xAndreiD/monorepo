@@ -15,8 +15,7 @@ const GetPortalDetail = z.object({
   portalId: z.number().optional().refine(Boolean, "Required")
 })
 
-export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ portalId }) => {
-// export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize(), async ({ id }) => {
+export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize(), async ({ portalId }) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const portal = await db.portal.findFirst({
     where: { id: portalId },

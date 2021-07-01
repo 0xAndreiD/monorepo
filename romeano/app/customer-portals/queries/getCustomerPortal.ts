@@ -1,5 +1,5 @@
 import { NotFoundError, resolver } from "blitz"
-import db, { CustomerOrVendor, Role } from "db"
+import db, { Role } from "db"
 import { orderBy } from "lodash"
 import { z } from "zod"
 import { getBackendFilePath } from "../../core/util/upload"
@@ -10,8 +10,7 @@ const GetCustomerPortal = z.object({
 })
 
 
-export default resolver.pipe(resolver.zod(GetCustomerPortal), async ({ id }) => {
-// export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize(), async ({ id }) => {
+export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize(), async ({ id }) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const portal = await db.portal.findFirst({
     where: { id },
@@ -19,7 +18,14 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), async ({ id }) => 
       roadmapStages: {
         include: { tasks: true } //get the associated tasks for a stage
       },
-      nextStepsTasks: { orderBy: { id: "asc" } },
+      nextStepsTasks: {
+        include: {
+          portal: {
+            include: { userPortals: true }
+          }
+        },
+        orderBy: { id: "asc" }
+      },
       vendor: true,
       documents: { orderBy: { id: "asc" } },
       images: { orderBy: { id: "asc" } },
@@ -50,14 +56,31 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), async ({ id }) => 
     }))
   }
 
+  const accountExecutives = new Set(portal.userPortals.filter(x => x.role === Role.AccountExecutive).map(x => x.userId))
+  const stakeholders = new Set(portal.userPortals.filter(x => x.role === Role.Stakeholder).map(x => x.userId))
+
   const nextSteps = {
     customer: {
       name: portal.customerName,
-      tasks: portal.nextStepsTasks.filter(x => x.customerOrVendor === CustomerOrVendor.CUSTOMER)
+      tasks: portal
+        .nextStepsTasks
+        .filter(x => accountExecutives.has(x.userId))
+        .map(x => ({
+          id: x.id,
+          description: x.description,
+          isCompleted: x.isCompleted
+        }))
     },
     vendor: {
       name: portal.vendor.name,
-      tasks: portal.nextStepsTasks.filter(x => x.customerOrVendor === CustomerOrVendor.VENDOR)
+      tasks: portal
+        .nextStepsTasks
+        .filter(x => stakeholders.has(x.userId))
+        .map(x => ({
+          id: x.id,
+          description: x.description,
+          isCompleted: x.isCompleted
+        }))
     }
   }
 
@@ -114,12 +137,11 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), async ({ id }) => 
       )
   }
 
-
   const aeContacts = orderBy((portal.userPortals
     .filter(userPortal => userPortal.role === Role.AccountExecutive &&
       (userPortal.isPrimaryContact === true ||
-      userPortal.isSecondaryContact === true)
-    )), ['isPrimaryContact','isSecondaryContact'], ['desc','desc'])
+        userPortal.isSecondaryContact === true)
+    )), ["isPrimaryContact", "isSecondaryContact"], ["desc", "desc"])
 
   const contacts = {
     contacts: aeContacts.map(userPortal =>

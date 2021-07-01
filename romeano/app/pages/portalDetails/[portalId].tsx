@@ -11,9 +11,9 @@ import { StakeholderEngagementCard } from "app/core/components/portalDetails/Sta
 import { StakeholderActivityLogCard } from "app/core/components/portalDetails/StakeholderActivityLogCard"
 import { NotFoundError, useParam, useQuery } from "blitz"
 import getPortalDetail from "../../portal-details/queries/getPortalDetail"
+import VendorStats from "../vendorStats"
 
-
-export default function CustomerPortal() {
+export default function PortalDetails() {
   const portalId = useParam("portalId", "number")
   const [portal] = useQuery(getPortalDetail, { portalId })
 
@@ -47,3 +47,5 @@ export default function CustomerPortal() {
     </div>
   </Suspense>
 }
+
+PortalDetails.authenticate = true

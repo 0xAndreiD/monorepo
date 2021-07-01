@@ -9,7 +9,6 @@ const GetVendorStats = z.object({
   // userId: z.number().optional().refine(Boolean, "Required")
 })
 
-// export default resolver.pipe(resolver.zod(GetVendorStats), async ({ userId }) => {
 export default resolver.pipe(resolver.zod(GetVendorStats), resolver.authorize(), async (input: {}, ctx: Ctx) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const userId = ctx.session.userId

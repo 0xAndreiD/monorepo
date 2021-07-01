@@ -12,6 +12,7 @@ import { Header } from "app/core/components/customerPortals/Header"
 import { CardDivider } from "app/core/components/generic/Card"
 import { NotFoundError, useParam, useQuery } from "blitz"
 import getCustomerPortal from "../../customer-portals/queries/getCustomerPortal"
+import VendorStats from "../vendorStats"
 
 export default function CustomerPortal() {
   const portalId = useParam("portalId", "number")
@@ -45,3 +46,5 @@ export default function CustomerPortal() {
     </div>
   </Suspense>
 }
+
+CustomerPortal.authenticate = true
