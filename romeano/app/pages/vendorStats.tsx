@@ -12,7 +12,6 @@ import getVendorStats from "../vendor-stats/queries/getVendorStats"
 
 export default function VendorStats() {
   const [vendorStats] = useQuery(getVendorStats, {})
-
   return <>
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
       <Header />

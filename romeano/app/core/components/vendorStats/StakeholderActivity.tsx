@@ -17,7 +17,7 @@ export function StakeholderActivity(props: { data: StakeholderActivityEvent[] })
   return <Card borderless>
     <CardHeader>Stakeholder Activity Log</CardHeader>
     <div className="mt-5 bg-white overflow-hidden shadow rounded-lg">
-      <div className="px-4 py-2 flex flex-col gap-y-3">
+      <div className="px-4 py-2 flex flex-col gap-y-3 overflow-y-auto h-64">
         {
           props.data.map((event, idx) =>
             <div key={idx} className="flex justify-between">

@@ -5,7 +5,6 @@ import { MailIcon } from "@heroicons/react/outline"
 import { getColourFromString } from "../../util/colour"
 import { getInitialsOfName } from "../../util/text"
 import { CheckIcon } from "@heroicons/react/solid"
-import { BACKEND_ENDPOINT } from "../../config"
 import { StyledLink } from "../generic/Link"
 import { Card, CardHeader } from "../generic/Card"
 import { EventCounted, Link, Stakeholder, VendorContact } from "../../../../types"
@@ -82,7 +81,6 @@ function StakeholderClickCircles(props: { data: Array<Stakeholder & { eventCount
 }
 
 export function ActivePortalsDemo(props: { data: ActivePortal[] }) {
-  console.log(props.data)
   return (
     <Card>
       <CardHeader>

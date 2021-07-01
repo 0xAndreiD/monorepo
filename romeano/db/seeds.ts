@@ -1,6 +1,7 @@
 import db, { CustomerOrVendor, EventType, Role } from "./index"
 import { range } from "lodash"
-import { addHours } from "date-fns"
+import { addHours, min, subDays } from "date-fns"
+import * as faker from "faker"
 
 /*
  * This seed function is executed when you run `blitz db seed`.
@@ -430,18 +431,20 @@ async function seedPortalDetails() {
 }
 
 async function seedEvents() {
-  const start = new Date("2021-06-23T16:36:13.695Z")
+  const days = 14
+  const now = new Date()
+  const start = subDays(now, days)
 
-  const events = range(500).map(i =>
+  const events = range(days * 24).map(i =>
     ({
       type: EventType.DocumentOpen,
-      url: "demo1",
-      ip: "0.0.0.0",
-      userAgent: "some useragent",
-      documentId: 1,
+      url: faker.internet.url(),
+      ip: faker.internet.ip(),
+      userAgent: faker.internet.userAgent(),
+      documentId: faker.datatype.number({ min: 1, max: 3 }),
       portalId: 1,
       userId: 4,
-      createdAt: addHours(start, i)
+      createdAt: min([addHours(start, i + faker.datatype.number({ min: -10, max: 10 })), now])
     })
   )
 

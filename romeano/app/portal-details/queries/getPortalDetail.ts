@@ -143,7 +143,9 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), async ({ portalId })
   const stakeholderActivityLog = stakeholderActivityLogRaw.map(x => {
     const location = pipe(tryCatch(() => {
       const location = reader.city(x.ip)
-      return `${location.city?.names.en ?? "Unknown"}, ${location.country?.names.en ?? "Unknown"}`
+      return location.city?.names.en && location.country?.names.en ?
+        `${location.city?.names.en}, ${location.country?.names.en}` :
+        location.country?.names.en ?? "Unknown"
     }), getOrElse(() => "Unknown"))
 
     return {

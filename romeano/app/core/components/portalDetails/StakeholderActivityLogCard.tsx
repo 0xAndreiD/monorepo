@@ -21,7 +21,7 @@ export function StakeholderActivityLogCard(props: { data: StakeholderActivityEve
     <div className="flex flex-col pt-4">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-          <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+          <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-y-auto" style={{height:"32rem"}}>
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
               <tr>
@@ -67,9 +67,9 @@ export function StakeholderActivityLogCard(props: { data: StakeholderActivityEve
                       {event.device === Device.Computer && <DesktopComputerIcon className="h-5 w-5" />}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className="text-right text-sm text-gray-500">
-                                                {new Date(event.timestamp).toISOString()}
-                                            </span>
+                      <span className="text-right text-sm text-gray-500">
+                          {new Date(event.timestamp).toISOString()}
+                      </span>
                     </td>
                   </tr>
                 )
