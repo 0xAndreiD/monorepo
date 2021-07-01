@@ -1,9 +1,12 @@
 import { DefaultCtx, SessionContext, SimpleRolesIsAuthorized } from "blitz"
 import { Role, User } from "db"
+import { IncomingHttpHeaders } from "http"
 
 declare module "blitz" {
   export interface Ctx extends DefaultCtx {
-    session: SessionContext
+    session: SessionContext,
+    ip?:string,
+    headers?: IncomingHttpHeaders,
   }
 
   export interface Session {
