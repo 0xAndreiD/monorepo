@@ -38,12 +38,15 @@ function StakeholderApprovalCircles(props: { data: Array<Stakeholder> }) {
             <span className="text-white static">{getInitialsOfName(stakeholder.name)}</span>
 
             {
-              stakeholder.hasStakeholderApproved ?
+              stakeholder.hasStakeholderApproved === true ?
                 <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-green-500">
-                  <CheckIcon className="text-white " />
+                  <CheckIcon className="text-white" />
                 </div>
-                :
-                <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-gray-300" />
+                : stakeholder.hasStakeholderApproved === false ?
+                <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-red-500">
+                  <XIcon className="text-white" />
+                </div>
+                : <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-gray-300" />
             }
           </div>
         }
