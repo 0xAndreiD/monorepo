@@ -2,26 +2,25 @@ import { AuthenticationError, resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
 
-export const CreateNextStepsTask = z.object({
+export const CreateInternalNote = z.object({
   portalId: z.number(),
-  description: z.string().nonempty()
+  message: z.string().nonempty()
 })
 
-export default resolver.pipe(resolver.zod(CreateNextStepsTask),
+export default resolver.pipe(resolver.zod(CreateInternalNote),
   resolver.authorize(),
-  async ({ portalId, description }, ctx) => {
+  async ({ portalId, message }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const userId = ctx.session.userId
     if (!userId) throw new AuthenticationError("no userId provided")
 
-    const task = await db.nextStepsTask.create({
+    const note = await db.internalNote.create({
       data: {
         portalId,
-        description,
-        isCompleted:false,
+        message,
         userId
       }
     })
 
-    return task
+    return note
   })

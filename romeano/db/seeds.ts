@@ -302,7 +302,7 @@ const seedCustomerPortal = async () => {
     })
   }
 
-  await db.internalNotes.createMany({
+  await db.internalNote.createMany({
     data: [
       {
         portalId: portal.id,

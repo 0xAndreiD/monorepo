@@ -204,7 +204,7 @@ CREATE TABLE "Document" (
 );
 
 -- CreateTable
-CREATE TABLE "InternalNotes" (
+CREATE TABLE "InternalNote" (
     "id" SERIAL NOT NULL,
     "portalId" INTEGER NOT NULL,
     "message" TEXT NOT NULL,
@@ -314,10 +314,10 @@ ALTER TABLE "Document" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON
 ALTER TABLE "Document" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "InternalNotes" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "InternalNote" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "InternalNotes" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "InternalNote" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Event" ADD FOREIGN KEY ("documentId") REFERENCES "Document"("id") ON DELETE SET NULL ON UPDATE CASCADE;

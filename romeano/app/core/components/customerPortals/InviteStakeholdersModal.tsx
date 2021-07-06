@@ -68,7 +68,7 @@ export function InviteStakeholdersModal(props: {
         </div>
 
         <span className="flex py-4 justify-end">
-          <AddButton onClick={onSubmit} />
+          <AddButton />
         </span>
 
         <div className="pt-4 flex flex-col gap-3">

@@ -10,7 +10,6 @@ import { useMutation } from "blitz"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
 
 type NextSteps = {
   customer: {
@@ -72,8 +71,7 @@ export default function NextStepsCard(props: NextSteps & { portalId: number, ref
                {...register("description", { required: true, maxLength: 80 })}
         />
 
-        <button type="submit"
-                className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
+        <button className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
           <PaperAirplaneIcon
             fill="#00ddb9"
             className="ml-1 mb-1 transform rotate-45 h-6 w-6 text-green-400" />

@@ -27,7 +27,7 @@ model Portal {
   proposalSubheading  String
   proposalQuoteLink   String
   userPortals         UserPortal[]
-  internalNotes       InternalNotes[]
+  internalNotes       InternalNote[]
   events              Event[]
   vendor              Vendor               @relation(fields: [vendorId], references: [id])
   vendorId            Int
@@ -60,7 +60,7 @@ model User {
   stakeholder      Stakeholder?
   documents        Document[]
   userPortals      UserPortal[]
-  messagesSent     InternalNotes[]
+  messagesSent     InternalNote[]
   events           Event[]
   nextStepsTasks   NextStepsTask[]
   magicLinks       MagicLink[]
@@ -220,7 +220,7 @@ model Document {
   updatedAt   DateTime @updatedAt
 }
 
-model InternalNotes {
+model InternalNote {
   id        Int      @id @default(autoincrement())
   portalId  Int
   portal    Portal   @relation(fields: [portalId], references: [id])

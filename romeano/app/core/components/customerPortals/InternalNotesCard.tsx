@@ -3,6 +3,10 @@ import { Card, CardDivider, CardHeader } from "../generic/Card"
 import { getColourFromString } from "../../util/colour"
 import { getInitialsOfName } from "../../util/text"
 import { keyBy } from "lodash"
+import { useMutation } from "blitz"
+import createInternalNote, { CreateInternalNote } from "../../../customer-portals/mutations/createInternalNote"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
 type ChatMessage = {
   id: number
@@ -47,9 +51,29 @@ type InternalNotes = {
 //     return <InternalNotes messages={trendingPosts}/>;
 // }
 
-export function InternalNotesCard(props: { data: InternalNotes }) {
+export function InternalNotesCard(props: {
+  portalId: number,
+  data: InternalNotes,
+  refetchHandler: () => void
+}) {
   // const stakeholders= props.data.;
   const userLookup = keyBy(props.data.users, "id")
+  const [createInternalNoteMutation] = useMutation(createInternalNote)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<z.infer<typeof CreateInternalNote>>({
+    // resolver: zodResolver(CreateInternalNote.omit({portalId:true}))
+  })
+
+  const onSubmit = handleSubmit(async (data) => {
+    await createInternalNoteMutation({
+      portalId: props.portalId,
+      message: data.message
+    })
+    props.refetchHandler()
+  })
 
   return <Card>
     <CardHeader>
@@ -66,6 +90,7 @@ export function InternalNotesCard(props: { data: InternalNotes }) {
             props.data.messages.map((post) => {
               const initials = getInitialsOfName(userLookup[post.userId].firstName, userLookup[post.userId].lastName)
               const colour = getColourFromString(initials)
+
               return <li key={post.id} className="flex items-center py-4 space-x-3">
                 <div className={`relative w-8 h-8 text-sm flex items-center justify-center
                                 ${colour} rounded-full`}>
@@ -81,25 +106,24 @@ export function InternalNotesCard(props: { data: InternalNotes }) {
         </ul>
       </div>
 
-      <div className="mt-6 flex gap-2 items-center justify-center">
+      <form onSubmit={onSubmit}
+            className="mt-6 flex gap-2 items-center justify-center">
         <label htmlFor="phone" className="sr-only">
           Message
         </label>
         <input
           type="text"
-          name="phone"
-          id="phone"
-          className="block w-full shadow-sm border py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
           placeholder="Type comment.."
+          className="block w-full shadow-sm border py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+          {...register("message")}
         />
 
-        <div
-          className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
+        <button className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
           <PaperAirplaneIcon
             fill="#00ddb9"
             className="ml-1 mb-1 transform rotate-45 h-6 w-6 text-green-400" />
-        </div>
-      </div>
+        </button>
+      </form>
     </div>
   </Card>
 }
