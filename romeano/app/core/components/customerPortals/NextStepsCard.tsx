@@ -3,12 +3,14 @@
 import { Card, CardDivider, CardHeader } from "../generic/Card"
 import { AddButton } from "../generic/AddButton"
 import { PaperAirplaneIcon, TrashIcon } from "@heroicons/react/outline"
-import createNextStepsTask from "../../../customer-portals/mutations/createNextStepsTask"
+import createNextStepsTask, { CreateNextStepsTask } from "../../../customer-portals/mutations/createNextStepsTask"
 import updateNextStepsTask from "../../../customer-portals/mutations/updateNextStepsTask"
 import deleteNextStepsTask from "../../../customer-portals/mutations/deleteNextStepsTask"
 import { useMutation } from "blitz"
 import { useEffect, useState } from "react"
-import { SubmitHandler, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 type NextSteps = {
   customer: {
@@ -21,26 +23,29 @@ type NextSteps = {
   }
 }
 
-type FormValues = {
-  description: string;
-};
-
 export default function NextStepsCard(props: NextSteps & { portalId: number, refetchHandler: () => void }) {
   //reference: https://tailwindui.com/components/application-ui/data-display/description-lists#component-e1b5917b21bbe76a73a96c5ca876225f
   const [isAdding, setIsAdding] = useState(false)
   const [createNextStep] = useMutation(createNextStepsTask)
 
-  const { register, handleSubmit, reset, formState: { errors,isSubmitSuccessful } } = useForm<FormValues>()
-  const onSubmit: SubmitHandler<FormValues> = async data => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitSuccessful }
+  } = useForm<z.infer<typeof CreateNextStepsTask>>({
+    // resolver: zodResolver(CreateNextStepsTask.omit({ portalId: true }))
+  })
+  const onSubmit = handleSubmit(async data => {
     await createNextStep({ portalId: props.portalId, description: data.description })
     props.refetchHandler()
-  }
+  })
 
   useEffect(() => {
     if (isSubmitSuccessful) {
-      reset();
+      reset()
     }
-  }, [ isSubmitSuccessful,reset]);
+  }, [isSubmitSuccessful, reset])
 
   return <Card>
 
@@ -60,7 +65,7 @@ export default function NextStepsCard(props: NextSteps & { portalId: number, ref
 
     {
       isAdding && <form className="mb-2 flex gap-2 items-center justify-center"
-                        onSubmit={handleSubmit(onSubmit)}>
+                        onSubmit={onSubmit}>
         <input type="text"
                placeholder="Next steps"
                className="block w-full shadow-sm border py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
@@ -77,7 +82,6 @@ export default function NextStepsCard(props: NextSteps & { portalId: number, ref
     }
 
     <AddButton onClick={() => setIsAdding(!isAdding)} />
-
 
   </Card>
 }

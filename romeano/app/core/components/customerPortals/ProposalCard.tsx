@@ -2,16 +2,15 @@ import { CheckIcon, PlusIcon, XIcon } from "@heroicons/react/solid"
 import { Card, CardDivider, CardHeader } from "../generic/Card"
 
 import { TrackedLink } from "../generic/Link"
-import { Dispatch, SetStateAction, useState } from "react"
+import { useState } from "react"
 import RevealSection from "../generic/RevealSection"
-import { Dialog } from "@headlessui/react"
-import { AddButton } from "../generic/AddButton"
 import Modal from "../generic/Modal"
 import { getColourFromString } from "../../util/colour"
 import { getInitialsOfName } from "../../util/text"
 import { EventType } from "db"
 import { useMutation } from "blitz"
 import updateProposalApproval from "../../../customer-portals/mutations/updateProposalApproval"
+import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
 
 export type Stakeholder = {
   name: string,
@@ -99,8 +98,11 @@ export function ProposalCard(props: { portalId: number, data: Proposal, refetchH
     {/*Show stakeholder invitation*/}
     <Modal isOpen={isInviteStakeholdersModalOpen}
            setIsOpen={setIsInviteStakeholdersModalOpen}>
-      <InviteStakeholdersContent stakeholders={props.data.stakeholders}
-                                 setIsOpen={setIsInviteStakeholdersModalOpen} />
+      <InviteStakeholdersModal stakeholders={props.data.stakeholders}
+                               portalId={props.portalId}
+                               onClose={setIsInviteStakeholdersModalOpen}
+                               refetchHandler={props.refetchHandler}
+      />
     </Modal>
 
     <RevealSection isRevealed={isDetailsVisible}
@@ -127,7 +129,7 @@ export function ProposalCard(props: { portalId: number, data: Proposal, refetchH
             Approve
           </span>
         </button>
-z
+
         <button
           type="button"
           className="w-full text-center inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
@@ -170,63 +172,3 @@ z
 }
 
 
-function InviteStakeholdersContent(props: { stakeholders: Array<Stakeholder>, setIsOpen: Dispatch<SetStateAction<boolean>> }) {
-  return <>
-    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-      <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-        Invite Stakeholders
-      </Dialog.Title>
-      <div className="mt-6">
-        <div className="border-2 border-b-0">
-          <input type="email"
-                 className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
-                 placeholder="Email"
-          />
-        </div>
-
-        <div className="pt-2 flex gap-4">
-          <div className="border-2 border-b-0">
-            <input type="text"
-                   className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
-                   placeholder="Full Name"
-            />
-          </div>
-
-          <div className="border-2 border-b-0">
-            <input type="text"
-                   className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
-                   placeholder="Job Title"
-            />
-          </div>
-        </div>
-
-        <span className="flex py-4 justify-end">
-                    <AddButton />
-                </span>
-
-        <div className="pt-4 flex flex-col gap-3">
-          {
-            props.stakeholders.map((person, idx) =>
-              <div key={idx}>
-                <h4 className="text-sm font-medium text-gray-900">{person.name}</h4>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-500 text-left">{person.email}</span>
-                  <span className="text-sm text-gray-500 text-right">{person.jobTitle}</span>
-                </div>
-              </div>
-            )
-          }
-        </div>
-      </div>
-    </div>
-    <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-      <button
-        type="button"
-        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-500 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
-        onClick={() => props.setIsOpen(false)}
-      >
-        Done
-      </button>
-    </div>
-  </>
-}

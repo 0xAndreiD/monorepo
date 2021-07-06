@@ -3,7 +3,7 @@ import db from "db"
 import { z } from "zod"
 
 
-const CreateNextStepsTask = z.object({
+export const CreateNextStepsTask = z.object({
   portalId: z.number(),
   description: z.string().nonempty()
 })
