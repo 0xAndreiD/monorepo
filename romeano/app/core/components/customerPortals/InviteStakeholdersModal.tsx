@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from "react"
 import { Dialog } from "@headlessui/react"
 import { AddButton } from "../generic/AddButton"
 import { Stakeholder } from "./ProposalCard"
@@ -7,12 +6,12 @@ import { useMutation } from "blitz"
 import createStakeholder, { CreateStakeholder } from "../../../customer-portals/mutations/createStakeholder"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { getName } from "../../util/text"
 
 export function InviteStakeholdersModal(props: {
   stakeholders: Array<Stakeholder>,
   portalId: number,
-  onClose: Dispatch<SetStateAction<boolean>>,
+  onClose: () => void,
   refetchHandler: () => void
 }) {
   const [inviteStakeholderMutation] = useMutation(createStakeholder)
@@ -20,6 +19,7 @@ export function InviteStakeholdersModal(props: {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors }
   } = useForm<z.infer<typeof CreateStakeholder>>({
     // resolver: zodResolver(CreateStakeholder.omit({portalId:true}))
@@ -29,8 +29,9 @@ export function InviteStakeholdersModal(props: {
       portalId: props.portalId,
       email: data.email,
       fullName: data.fullName,
-      jobTitle: data.jobTitle,
+      jobTitle: data.jobTitle
     })
+    reset()
     props.refetchHandler()
   })
 
@@ -70,27 +71,27 @@ export function InviteStakeholdersModal(props: {
         <span className="flex py-4 justify-end">
           <AddButton />
         </span>
-
-        <div className="pt-4 flex flex-col gap-3">
-          {
-            props.stakeholders.map((person, idx) =>
-              <div key={idx}>
-                <h4 className="text-sm font-medium text-gray-900">{person.name}</h4>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-500 text-left">{person.email}</span>
-                  <span className="text-sm text-gray-500 text-right">{person.jobTitle}</span>
-                </div>
-              </div>
-            )
-          }
-        </div>
       </form>
+
+      <div className="pt-4 flex flex-col gap-3">
+        {
+          props.stakeholders.map((person, idx) =>
+            <div key={idx}>
+              <h4 className="text-sm font-medium text-gray-900">{getName(person.firstName, person.lastName)}</h4>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-500 text-left">{person.email}</span>
+                <span className="text-sm text-gray-500 text-right">{person.jobTitle}</span>
+              </div>
+            </div>
+          )
+        }
+      </div>
     </div>
     <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
       <button
         type="button"
         className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-500 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
-        onClick={() => props.onClose(false)}
+        onClick={props.onClose}
       >
         Done
       </button>

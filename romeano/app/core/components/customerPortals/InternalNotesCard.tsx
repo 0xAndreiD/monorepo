@@ -62,6 +62,7 @@ export function InternalNotesCard(props: {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors }
   } = useForm<z.infer<typeof CreateInternalNote>>({
     // resolver: zodResolver(CreateInternalNote.omit({portalId:true}))
@@ -72,6 +73,7 @@ export function InternalNotesCard(props: {
       portalId: props.portalId,
       message: data.message
     })
+    reset()
     props.refetchHandler()
   })
 

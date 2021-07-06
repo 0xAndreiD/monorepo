@@ -37,14 +37,10 @@ export default function NextStepsCard(props: NextSteps & { portalId: number, ref
   })
   const onSubmit = handleSubmit(async data => {
     await createNextStep({ portalId: props.portalId, description: data.description })
+    reset()
     props.refetchHandler()
   })
 
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset()
-    }
-  }, [isSubmitSuccessful, reset])
 
   return <Card>
 

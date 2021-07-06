@@ -100,10 +100,10 @@ export function ProposalCard(props: { portalId: number, data: Proposal, refetchH
 
     {/*Show stakeholder invitation*/}
     <Modal isOpen={isInviteStakeholdersModalOpen}
-           setIsOpen={setIsInviteStakeholdersModalOpen}>
+           onClose={() => setIsInviteStakeholdersModalOpen(false)}>
       <InviteStakeholdersModal stakeholders={props.data.stakeholders}
                                portalId={props.portalId}
-                               onClose={setIsInviteStakeholdersModalOpen}
+                               onClose={() => setIsInviteStakeholdersModalOpen(false)}
                                refetchHandler={props.refetchHandler}
       />
     </Modal>
