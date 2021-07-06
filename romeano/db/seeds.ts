@@ -97,28 +97,28 @@ const seedCustomerPortal = async () => {
       lastName: "Franklin",
       jobTitle: "Director of Operations",
       email: "nick@mira.com",
-      isApprovedBy: true
+      hasStakeholderApproved: true
     },
     {
       firstName: "Kristin",
       lastName: "Sanders",
       jobTitle: "Head of Technical Services",
       email: "kristin@mira.com",
-      isApprovedBy: true
+      hasStakeholderApproved: true
     },
     {
       firstName: "Wally",
       lastName: "Iris",
       jobTitle: "Senior QA Manager",
       email: "wally@mira.com",
-      isApprovedBy: true
+      hasStakeholderApproved: true
     },
     {
       firstName: "Penelope",
       lastName: "Star",
       jobTitle: "Plant Manager",
       email: "penelope@mira.com",
-      isApprovedBy: false
+      hasStakeholderApproved: false
     }
   ]
 
@@ -133,13 +133,13 @@ const seedCustomerPortal = async () => {
           stakeholder: {
             create: {
               jobTitle: stakeholder.jobTitle,
-              isApprovedBy: stakeholder.isApprovedBy
             }
           },
           userPortals: {
             create: {
+              portalId: portal.id,
               role: Role.Stakeholder,
-              portalId: portal.id
+              hasStakeholderApproved: stakeholder.hasStakeholderApproved
             }
           }
         }
@@ -393,7 +393,6 @@ async function seedPortalDetails() {
       stakeholder: {
         create: {
           jobTitle: "Director",
-          isApprovedBy: true
         }
       },
       userPortals: {

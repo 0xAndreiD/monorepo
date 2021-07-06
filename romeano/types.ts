@@ -30,7 +30,7 @@ export type Contact = {
   email: string,
 };
 export type Stakeholder = Contact & {
-  isApprovedBy: boolean,
+  hasStakeholderApproved: boolean|null,
 }
 export type VendorContact = Contact & { photoUrl: string }
 export type Link = {

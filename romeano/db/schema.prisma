@@ -41,6 +41,7 @@ model UserPortal {
   portal             Portal   @relation(fields: [portalId], references: [id])
   portalId           Int
   role               Role
+  hasStakeholderApproved Boolean?
   isPrimaryContact   Boolean?
   isSecondaryContact Boolean?
   createdAt          DateTime @default(now())
@@ -131,9 +132,8 @@ enum Role {
 
 model Stakeholder {
   jobTitle     String
-  isApprovedBy Boolean
-  user         User    @relation(fields: [userId], references: [id])
-  userId       Int     @unique
+  user         User     @relation(fields: [userId], references: [id])
+  userId       Int      @unique
 }
 
 model AccountExecutive {

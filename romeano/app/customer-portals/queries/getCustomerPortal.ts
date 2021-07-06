@@ -132,7 +132,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
           name: `${userPortal.user.firstName} ${userPortal.user.lastName}`,
           jobTitle: userPortal.user.stakeholder?.jobTitle,
           email: userPortal.user.email,
-          isApprovedBy: userPortal.user.stakeholder?.isApprovedBy ?? false
+          hasStakeholderApproved: userPortal.hasStakeholderApproved
         })
       )
   }

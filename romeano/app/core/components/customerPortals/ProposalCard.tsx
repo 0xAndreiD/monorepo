@@ -17,7 +17,7 @@ export type Stakeholder = {
   name: string,
   email: string,
   jobTitle?: string,
-  isApprovedBy?: boolean
+  hasStakeholderApproved?: boolean
 };
 
 type Proposal = {
@@ -38,7 +38,7 @@ function StakeholderApprovalCircles(props: { data: Array<Stakeholder> }) {
             <span className="text-white static">{getInitialsOfName(stakeholder.name)}</span>
 
             {
-              stakeholder.isApprovedBy ?
+              stakeholder.hasStakeholderApproved ?
                 <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-green-500">
                   <CheckIcon className="text-white " />
                 </div>
@@ -114,7 +114,10 @@ export function ProposalCard(props: { portalId: number, data: Proposal }) {
         >
           <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500" />
           <span className="flex-1"
-                onClick={() => updateProposalApprovalMutation({ portalId: props.portalId, isApprove: true })}
+                onClick={() => updateProposalApprovalMutation({
+                  portalId: props.portalId,
+                  hasStakeholderApproved: true
+                })}
           >
             Approve
           </span>
@@ -128,7 +131,10 @@ export function ProposalCard(props: { portalId: number, data: Proposal }) {
         >
           <XIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500" />
           <span className="flex-1"
-                onClick={() => updateProposalApprovalMutation({ portalId: props.portalId, isApprove: false })}
+                onClick={() => updateProposalApprovalMutation({
+                  portalId: props.portalId,
+                  hasStakeholderApproved: false
+                })}
           >
             Decline
           </span>

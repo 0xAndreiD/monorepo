@@ -62,7 +62,7 @@ function StakeholderClickCircles(props: { data: Array<Stakeholder & { eventCount
                           {getInitialsOfName(stakeholder.name)}
                         </span>
               {
-                stakeholder.isApprovedBy ?
+                stakeholder.hasStakeholderApproved ?
                   <div
                     className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-green-500">
                     <CheckIcon className="text-white " />

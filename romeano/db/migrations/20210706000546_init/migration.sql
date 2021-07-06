@@ -28,6 +28,7 @@ CREATE TABLE "UserPortal" (
     "userId" INTEGER NOT NULL,
     "portalId" INTEGER NOT NULL,
     "role" "Role" NOT NULL,
+    "hasStakeholderApproved" BOOLEAN,
     "isPrimaryContact" BOOLEAN,
     "isSecondaryContact" BOOLEAN,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -105,7 +106,6 @@ CREATE TABLE "VendorTeam" (
 -- CreateTable
 CREATE TABLE "Stakeholder" (
     "jobTitle" TEXT NOT NULL,
-    "isApprovedBy" BOOLEAN NOT NULL,
     "userId" INTEGER NOT NULL
 );
 

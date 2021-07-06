@@ -4,8 +4,7 @@ import { z } from "zod"
 
 const GetPortalDetail = z.object({
   // This accepts type of undefined, but is required at runtime
-  portalId: z.number().optional().refine(Boolean, "Required")
-  // portalId: z.string().transform(parseInt),
+  portalId: z.string().transform(parseInt),
   documentId: z.string().transform(parseInt).optional(),
   eventType: z.nativeEnum(EventType),
   url: z.string()

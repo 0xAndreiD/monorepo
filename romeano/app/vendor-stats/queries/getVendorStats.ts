@@ -97,19 +97,19 @@ export default resolver.pipe(resolver.zod(GetVendorStats), resolver.authorize(),
     portalId: number,
     name: string,
     email: string,
-    isApprovedBy: boolean,
+    hasStakeholderApproved: boolean|null,
     eventCount: number
   }>>`
     SELECT "portalId",
            U."firstName" || ' ' || U."lastName" AS name,
            U.email,
-           "isApprovedBy",
+           "hasStakeholderApproved",
            COUNT(*)                             AS "eventCount"
     FROM "Event"
            JOIN "User" U ON U.id = "Event"."userId"
            JOIN "Stakeholder" S ON U.id = S."userId"
     WHERE "portalId" IN (${Prisma.join(portalIds)})
-    GROUP BY "portalId", "Event"."userId", name, email, "isApprovedBy"`
+    GROUP BY "portalId", "Event"."userId", name, email, "hasStakeholderApproved"`
   const stakeholderEvents = groupBy(activePortalsStakeholders, "portalId")
 
   console.log("main", activePortals)
