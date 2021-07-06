@@ -3,7 +3,7 @@ import "tailwindcss/tailwind.css"
 import { default as NextLink } from "next/link"
 import { MailIcon } from "@heroicons/react/outline"
 import { getColourFromString } from "../../util/colour"
-import { getInitialsOfName } from "../../util/text"
+import { getInitialsOfName, getName } from "../../util/text"
 import { CheckIcon } from "@heroicons/react/solid"
 import { StyledLink } from "../generic/Link"
 import { Card, CardHeader } from "../generic/Card"
@@ -54,12 +54,13 @@ function StakeholderClickCircles(props: { data: Array<Stakeholder & { eventCount
   return <>
     {
       props.data.map((stakeholder, idx) => {
-          const colour = getColourFromString(stakeholder.name)
+          const initials = getInitialsOfName(stakeholder.firstName, stakeholder.lastName)
+          const colour = getColourFromString(initials)
           return <div key={idx} className="flex flex-col items-center">
             <div
               className={`relative w-10 h-10 flex items-center justify-center ${colour} rounded-full`}>
                         <span className="text-white static">
-                          {getInitialsOfName(stakeholder.name)}
+                          {initials}
                         </span>
               {
                 stakeholder.hasStakeholderApproved ?
@@ -136,7 +137,9 @@ export function ActivePortalsDemo(props: { data: ActivePortal[] }) {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="relative bg-white flex items-center space-x-3">
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-gray-900">{portal.primaryContact.name}</p>
+                          <p className="font-medium text-gray-900">
+                            {getName(portal.primaryContact.firstName, portal.primaryContact.lastName)}
+                          </p>
                           <p className="text-sm truncate">{portal.primaryContact.jobTitle}</p>
                         </div>
                         <div

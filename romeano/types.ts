@@ -25,7 +25,8 @@ export enum Device {
 }
 export type EventCounted<T> = T & { eventCount: number }
 export type Contact = {
-  name: string,
+  firstName: string,
+  lastName: string,
   jobTitle?: string,
   email: string,
 };

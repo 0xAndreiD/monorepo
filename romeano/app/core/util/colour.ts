@@ -1,6 +1,6 @@
 export function getColourFromString(seed: string) {
 //colour ref: https://tailwindcss.com/docs/customizing-colors#color-palette-reference
-  const colours = ["bg-gray-500",
+  const colours = [//"bg-gray-500",
     "bg-red-500",
     "bg-yellow-500",
     "bg-green-500",
