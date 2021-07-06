@@ -118,7 +118,7 @@ const seedCustomerPortal = async () => {
       lastName: "Star",
       jobTitle: "Plant Manager",
       email: "penelope@mira.com",
-      hasStakeholderApproved: false
+      hasStakeholderApproved: null
     }
   ]
 

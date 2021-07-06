@@ -17,7 +17,7 @@ export type Stakeholder = {
   name: string,
   email: string,
   jobTitle?: string,
-  hasStakeholderApproved?: boolean
+  hasStakeholderApproved: boolean | null
 };
 
 type Proposal = {
@@ -55,7 +55,7 @@ function StakeholderApprovalCircles(props: { data: Array<Stakeholder> }) {
   </>
 }
 
-export function ProposalCard(props: { portalId: number, data: Proposal }) {
+export function ProposalCard(props: { portalId: number, data: Proposal, refetchHandler: () => void }) {
   const [isDetailsVisible, setDetailsVisible] = useState(true)
   const [isInviteStakeholdersModalOpen, setIsInviteStakeholdersModalOpen] = useState(false)
   const [updateProposalApprovalMutation] = useMutation(updateProposalApproval)
@@ -117,15 +117,17 @@ export function ProposalCard(props: { portalId: number, data: Proposal }) {
         >
           <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500" />
           <span className="flex-1"
-                onClick={() => updateProposalApprovalMutation({
-                  portalId: props.portalId,
-                  hasStakeholderApproved: true
-                })}
-          >
+                onClick={async () => {
+                  await updateProposalApprovalMutation({
+                    portalId: props.portalId,
+                    hasStakeholderApproved: true
+                  })
+                  props.refetchHandler()
+                }}>
             Approve
           </span>
         </button>
-
+z
         <button
           type="button"
           className="w-full text-center inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
@@ -134,11 +136,13 @@ export function ProposalCard(props: { portalId: number, data: Proposal }) {
         >
           <XIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500" />
           <span className="flex-1"
-                onClick={() => updateProposalApprovalMutation({
-                  portalId: props.portalId,
-                  hasStakeholderApproved: false
-                })}
-          >
+                onClick={async () => {
+                  await updateProposalApprovalMutation({
+                    portalId: props.portalId,
+                    hasStakeholderApproved: false
+                  })
+                  props.refetchHandler()
+                }}>
             Decline
           </span>
         </button>

@@ -35,7 +35,7 @@ export default function CustomerPortal() {
           <ProductInfoCard portalId={portalId} data={data.productInfo} />
         </div>
         <div className="flex flex-col gap-4">
-          <ProposalCard portalId={portalId} data={data.proposal} />
+          <ProposalCard portalId={portalId} data={data.proposal} refetchHandler={refetch} />
           <ContactsCard data={data.contacts} />
           <InternalNotesCard data={data.internalNotes} />
         </div>
