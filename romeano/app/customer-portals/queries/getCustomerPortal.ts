@@ -129,7 +129,8 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
       .filter(userPortal => userPortal.role === Role.Stakeholder)
       .map(userPortal =>
         ({
-          name: `${userPortal.user.firstName} ${userPortal.user.lastName}`,
+          firstName: userPortal.user.firstName,
+          lastName: userPortal.user.lastName,
           jobTitle: userPortal.user.stakeholder?.jobTitle,
           email: userPortal.user.email,
           hasStakeholderApproved: userPortal.hasStakeholderApproved
@@ -146,7 +147,8 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   const contacts = {
     contacts: aeContacts.map(userPortal =>
       ({
-        name: `${userPortal.user.firstName} ${userPortal.user.lastName}`,
+        firstName: userPortal.user.firstName,
+        lastName: userPortal.user.lastName,
         jobTitle: userPortal.user.accountExecutive?.jobTitle,
         email: userPortal.user.email,
         photoUrl: userPortal.user.photoUrl ?? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
@@ -167,7 +169,8 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
       .map(userPortal =>
         ({
           id: userPortal.userId,
-          name: `${userPortal.user.firstName} ${userPortal.user.lastName}`
+          firstName: userPortal.user.firstName,
+          lastName: userPortal.user.lastName
         })
       )
   }

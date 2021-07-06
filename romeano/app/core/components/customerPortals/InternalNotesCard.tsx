@@ -13,7 +13,8 @@ type ChatMessage = {
 
 export type User = {
   id: number,
-  name: string
+  firstName: string
+  lastName: string
 }
 
 type InternalNotes = {
@@ -63,12 +64,12 @@ export function InternalNotesCard(props: { data: InternalNotes }) {
         <ul className="-my-4">
           {
             props.data.messages.map((post) => {
-              const colour = getColourFromString(userLookup[post.userId].name)
-
+              const initials = getInitialsOfName(userLookup[post.userId].firstName, userLookup[post.userId].lastName)
+              const colour = getColourFromString(initials)
               return <li key={post.id} className="flex items-center py-4 space-x-3">
                 <div className={`relative w-8 h-8 text-sm flex items-center justify-center
                                 ${colour} rounded-full`}>
-                  <span className="text-white">{getInitialsOfName(userLookup[post.userId].name)}</span>
+                  <span className="text-white">{initials}</span>
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm text-gray-800 flex items-center"><span

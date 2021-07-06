@@ -1,18 +1,24 @@
-import {startCase, toLower} from "lodash";
+import { startCase, toLower } from "lodash"
 
-export function titleCase(input:string){
-    return startCase(toLower(input));
+export function titleCase(input: string) {
+  return startCase(toLower(input))
 }
 
-export function getInitialsOfName(name: string) {
-    const parts = name.split(' ');
+export function splitName(fullName: string): [string, string] {
+  const idx = fullName.indexOf(" ")
 
-    switch (parts.length) {
-        case 1:
-            return parts[0][0];
-        case 0:
-            return "";
-        default:
-            return parts[0][0] + parts[1][0];
-    }
+  if (idx < 0) {
+    return [fullName, ""]
+  }
+  const firstName = fullName.substring(0, idx)
+  const lastName = fullName.substring(idx + 1) ?? ""
+  return [firstName, lastName]
+}
+
+
+export function getInitialsOfName(firstName: string, lastName: string) {
+  return (firstName[0] ?? "") + (lastName[0] ?? "")
+}
+export function getName(firstName: string, lastName: string) {
+  return `${firstName} ${lastName}`
 }

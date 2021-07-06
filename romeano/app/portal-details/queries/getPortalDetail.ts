@@ -52,7 +52,8 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
       .filter(userPortal => userPortal.role === Role.AccountExecutive)
       .map(userPortal =>
         ({
-          name: `${userPortal.user.firstName} ${userPortal.user.lastName}`,
+          firstName: userPortal.user.firstName,
+          lastName: userPortal.user.lastName,
           jobTitle: userPortal.user.accountExecutive?.jobTitle,
           email: userPortal.user.email,
           photoUrl: userPortal.user.photoUrl ?? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"

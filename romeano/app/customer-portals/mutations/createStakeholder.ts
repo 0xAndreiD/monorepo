@@ -1,6 +1,7 @@
 import { AuthenticationError, resolver } from "blitz"
 import db, { Role } from "db"
 import { z } from "zod"
+import { splitName } from "../../core/util/text"
 
 export const CreateStakeholder = z.object({
   portalId: z.number(),
@@ -16,13 +17,14 @@ export default resolver.pipe(resolver.zod(CreateStakeholder),
     const userId = ctx.session.userId
     if (!userId) throw new AuthenticationError("no userId provided")
 
+    const [firstName, lastName] = splitName(fullName)
     const stakeholder = await db.stakeholder.create({
       data: {
         jobTitle,
         user: {
           create: {
-            firstName: fullName.substring(0, fullName.indexOf(" ")),
-            lastName: fullName.substring(fullName.indexOf(" ") + 1) ?? "",
+            firstName,
+            lastName,
             email,
             userPortals: {
               create: {

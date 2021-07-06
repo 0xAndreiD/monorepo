@@ -6,14 +6,15 @@ import { useState } from "react"
 import RevealSection from "../generic/RevealSection"
 import Modal from "../generic/Modal"
 import { getColourFromString } from "../../util/colour"
-import { getInitialsOfName } from "../../util/text"
+import { getInitialsOfName, getName } from "../../util/text"
 import { EventType } from "db"
 import { useMutation } from "blitz"
 import updateProposalApproval from "../../../customer-portals/mutations/updateProposalApproval"
 import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
 
 export type Stakeholder = {
-  name: string,
+  firstName: string,
+  lastName: string,
   email: string,
   jobTitle?: string,
   hasStakeholderApproved: boolean | null
@@ -30,11 +31,13 @@ function StakeholderApprovalCircles(props: { data: Array<Stakeholder> }) {
   return <>
     {
       props.data.map((stakeholder, idx) => {
-          const colour = getColourFromString(stakeholder.name)
+          const initials = getInitialsOfName(stakeholder.firstName, stakeholder.lastName)
+          const colour = getColourFromString(initials)
+
           return <div key={idx}
                       className={`relative w-10 h-10 flex items-center justify-center
                                 ${colour} rounded-full`}>
-            <span className="text-white static">{getInitialsOfName(stakeholder.name)}</span>
+            <span className="text-white static">{initials}</span>
 
             {
               stakeholder.hasStakeholderApproved === true ?
@@ -159,7 +162,7 @@ export function ProposalCard(props: { portalId: number, data: Proposal, refetchH
             <div className="flex-1 min-w-0">
               <>
                 <span className="absolute inset-0" aria-hidden="true" />
-                <p className="text-sm font-medium text-gray-900">{person.name}</p>
+                <p className="text-sm font-medium text-gray-900">{getName(person.firstName, person.lastName)}</p>
                 <p className="text-sm text-gray-500 truncate">{person.jobTitle}</p>
               </>
             </div>
