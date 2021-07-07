@@ -49,12 +49,12 @@ export default resolver.pipe(resolver.zod(GetVendorStats), resolver.authorize(),
            "Portal"."customerName",
            "Document".title                               AS "documentTitle",
            "Document".path                                AS "documentPath",
-           "Event"."createdAt" AS timestamp
+           "Event"."createdAt"                            AS timestamp
     FROM "Event"
-      INNER JOIN "Portal"
-    ON "Event"."portalId" = "Portal".id
-      INNER JOIN "User" ON "Event"."userId" = "User".id
-      INNER JOIN "Document" ON "Event"."documentId" = "Document".id
+           INNER JOIN "Portal"
+                      ON "Event"."portalId" = "Portal".id
+           INNER JOIN "User" ON "Event"."userId" = "User".id
+           INNER JOIN "Document" ON "Event"."documentId" = "Document".id
     WHERE "Event"."portalId" IN (${Prisma.join(portalIds)})
     ORDER BY timestamp DESC
   `
@@ -73,7 +73,8 @@ export default resolver.pipe(resolver.zod(GetVendorStats), resolver.authorize(),
     customerName: string,
     currentRoadmapStage: number,
     customerNumberOfStages: number,
-    primaryContactName: string,
+    primaryContactFirstName: string,
+    primaryContactLastName: string,
     primaryContactJobTitle: string,
     primaryContactEmail: string,
     primaryContactPhotoUrl: string
@@ -82,7 +83,8 @@ export default resolver.pipe(resolver.zod(GetVendorStats), resolver.authorize(),
            "Portal"."customerName"                                                          AS "customerName",
            "Portal"."currentRoadmapStage"                                                   AS "currentRoadmapStage",
            (SELECT COUNT(*) FROM "RoadmapStage" WHERE "portalId" = "UserPortal"."portalId") AS "customerNumberOfStages",
-           "User"."firstName" || ' ' || "User"."lastName"                                   AS "primaryContactName",
+           "User"."firstName"                                                               AS "primaryContactFirstName",
+           "User"."lastName"                                                                AS "primaryContactLastName",
            "AccountExecutive"."jobTitle"                                                    AS "primaryContactJobTitle",
            "User".email                                                                     AS "primaryContactEmail",
            "User"."photoUrl"                                                                AS "primaryContactPhotoUrl"
@@ -95,21 +97,23 @@ export default resolver.pipe(resolver.zod(GetVendorStats), resolver.authorize(),
   `
   const activePortalsStakeholders = await db.$queryRaw<Array<{
     portalId: number,
-    name: string,
+    firstName: string,
+    lastName: string,
     email: string,
-    hasStakeholderApproved: boolean|null,
+    hasStakeholderApproved: boolean | null,
     eventCount: number
   }>>`
-    SELECT "portalId",
-           U."firstName" || ' ' || U."lastName" AS name,
+    SELECT E."portalId",
+           U."firstName",
+           U."lastName",
            U.email,
            "hasStakeholderApproved",
-           COUNT(*)                             AS "eventCount"
-    FROM "Event"
-           JOIN "User" U ON U.id = "Event"."userId"
-           JOIN "Stakeholder" S ON U.id = S."userId"
-    WHERE "portalId" IN (${Prisma.join(portalIds)})
-    GROUP BY "portalId", "Event"."userId", name, email, "hasStakeholderApproved"`
+           COUNT(*) AS "eventCount"
+    FROM "Event" E
+           JOIN "User" U ON U.id = E."userId"
+           JOIN "UserPortal" UP ON U.id = UP."userId" AND E."portalId" = UP."portalId"
+    WHERE E."portalId" IN (${Prisma.join(portalIds)})
+    GROUP BY E."portalId", E."userId", U."firstName", U."lastName", email, "hasStakeholderApproved"`
   const stakeholderEvents = groupBy(activePortalsStakeholders, "portalId")
 
   console.log("main", activePortals)
@@ -142,7 +146,8 @@ export default resolver.pipe(resolver.zod(GetVendorStats), resolver.authorize(),
     currentRoadmapStage: p.currentRoadmapStage,
     customerNumberOfStages: p.customerNumberOfStages,
     primaryContact: {
-      name: p.primaryContactName,
+      firstName: p.primaryContactFirstName,
+      lastName: p.primaryContactLastName,
       jobTitle: p.primaryContactJobTitle,
       email: p.primaryContactEmail,
       photoUrl: p.primaryContactPhotoUrl
