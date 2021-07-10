@@ -1,6 +1,7 @@
 import { GetServerSideProps, getSession, Routes } from "blitz"
 import db, { Role } from "db"
 import { z } from "zod"
+import { sendMagicLink } from "../../core/util/email"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { magicLinkId } = z.object({ magicLinkId: z.string() }).parse(context.params)
