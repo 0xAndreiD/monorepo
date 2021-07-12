@@ -1,12 +1,14 @@
 import { Dialog } from "@headlessui/react"
 import { AddButton } from "../generic/AddButton"
 import { Stakeholder } from "./ProposalCard"
-import { useMutation } from "blitz"
+import { invoke, useMutation } from "blitz"
 
 import createStakeholder, { CreateStakeholder } from "../../../customer-portals/mutations/createStakeholder"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { getName } from "../../util/text"
+import createEvent from "../../../event/mutations/createEvent"
+import { EventType } from "db"
 
 export function InviteStakeholdersModal(props: {
   stakeholders: Array<Stakeholder>,
@@ -69,7 +71,9 @@ export function InviteStakeholdersModal(props: {
         </div>
 
         <span className="flex py-4 justify-end">
-          <AddButton />
+          <AddButton onClick={() =>
+            invoke(createEvent, { portalId: props.portalId, type: EventType.InviteStakeholder })
+          } />
         </span>
       </form>
 
@@ -77,7 +81,7 @@ export function InviteStakeholdersModal(props: {
         {
           props.stakeholders.map((person, idx) =>
             <div key={idx}>
-              <h4 className="text-sm font-medium text-gray-900">{getName(person.firstName, person.lastName)}</h4>
+              <h4 className="text-sm text-gray-900 text-left">{getName(person.firstName, person.lastName)}</h4>
               <div className="flex justify-between">
                 <span className="text-sm text-gray-500 text-left">{person.email}</span>
                 <span className="text-sm text-gray-500 text-right">{person.jobTitle}</span>

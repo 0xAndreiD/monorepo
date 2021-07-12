@@ -6,10 +6,12 @@ import { PaperAirplaneIcon, TrashIcon } from "@heroicons/react/outline"
 import createNextStepsTask, { CreateNextStepsTask } from "../../../customer-portals/mutations/createNextStepsTask"
 import updateNextStepsTask from "../../../customer-portals/mutations/updateNextStepsTask"
 import deleteNextStepsTask from "../../../customer-portals/mutations/deleteNextStepsTask"
-import { useMutation } from "blitz"
+import { invoke, useMutation } from "blitz"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import createEvent from "../../../event/mutations/createEvent"
+import { EventType } from "../../../../db"
 
 type NextSteps = {
   customer: {
@@ -31,29 +33,33 @@ export default function NextStepsCard(props: NextSteps & { portalId: number, ref
     register,
     handleSubmit,
     reset,
+    setFocus,
     formState: { errors, isSubmitSuccessful }
   } = useForm<z.infer<typeof CreateNextStepsTask>>({
     // resolver: zodResolver(CreateNextStepsTask.omit({ portalId: true }))
   })
   const onSubmit = handleSubmit(async data => {
     await createNextStep({ portalId: props.portalId, description: data.description })
+    invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepCreate })
+    setIsAdding(false)
     reset()
     props.refetchHandler()
   })
-
 
   return <Card>
 
     <CardHeader>Next Steps</CardHeader>
 
-    <NextStepsTaskList isElementDeletable={false}
+    <NextStepsTaskList portalId={props.portalId}
+                       isElementDeletable={false}
                        name={props.customer.name}
                        tasks={props.customer.tasks}
                        refetchHandler={props.refetchHandler} />
 
     <CardDivider />
 
-    <NextStepsTaskList isElementDeletable={true}
+    <NextStepsTaskList portalId={props.portalId}
+                       isElementDeletable={true}
                        name={props.vendor.name}
                        tasks={props.vendor.tasks}
                        refetchHandler={props.refetchHandler} />
@@ -62,7 +68,7 @@ export default function NextStepsCard(props: NextSteps & { portalId: number, ref
       isAdding && <form className="mb-2 flex gap-2 items-center justify-center"
                         onSubmit={onSubmit}>
         <input type="text"
-               placeholder="Next steps"
+               placeholder="New task item..."
                className="block w-full shadow-sm border py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
                {...register("description", { required: true, maxLength: 80 })}
         />
@@ -86,7 +92,7 @@ type NextStepsTask = {
   isCompleted: boolean,
 }
 
-function NextStepsTaskList(props: { isElementDeletable: boolean, name: string, tasks: NextStepsTask[], refetchHandler: () => void }) {
+function NextStepsTaskList(props: { portalId: number, isElementDeletable: boolean, name: string, tasks: NextStepsTask[], refetchHandler: () => void }) {
   const [updateIsCompleted] = useMutation(updateNextStepsTask)
   const [deleteNextStep] = useMutation(deleteNextStepsTask)
 
@@ -107,8 +113,8 @@ function NextStepsTaskList(props: { isElementDeletable: boolean, name: string, t
                 props.isElementDeletable &&
                 <button style={{ marginLeft: "auto" }}
                         onClick={async () => {
-                          //FIXME add event tracking
                           await deleteNextStep({ id: task.id })
+                          invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepDelete })
                           props.refetchHandler()
                         }}>
                   <TrashIcon className="w-4 h-4 text-gray-400" />

@@ -5,7 +5,7 @@ CREATE TYPE "TokenType" AS ENUM ('RESET_PASSWORD');
 CREATE TYPE "Role" AS ENUM ('AccountExecutive', 'Stakeholder');
 
 -- CreateEnum
-CREATE TYPE "EventType" AS ENUM ('LaunchRoadmapLinkOpen', 'NextStepAdd', 'NextStepUpdate', 'DocumentApprove', 'DocumentOpen', 'DocumentUpload', 'ProposalApprove', 'ProposalOpen', 'CreateInternalMessage', 'ProductInfoLinkOpen');
+CREATE TYPE "EventType" AS ENUM ('LaunchRoadmapLinkOpen', 'NextStepCreate', 'NextStepUpdate', 'NextStepDelete', 'DocumentApprove', 'DocumentOpen', 'DocumentUpload', 'ProposalApprove', 'ProposalOpen', 'CreateInternalMessage', 'ProductInfoLinkOpen', 'InviteStakeholder');
 
 -- CreateTable
 CREATE TABLE "Portal" (
@@ -219,7 +219,7 @@ CREATE TABLE "InternalNote" (
 CREATE TABLE "Event" (
     "id" SERIAL NOT NULL,
     "type" "EventType" NOT NULL,
-    "url" TEXT NOT NULL,
+    "url" TEXT,
     "ip" TEXT NOT NULL,
     "userAgent" TEXT,
     "documentId" INTEGER,

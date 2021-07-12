@@ -234,7 +234,7 @@ model InternalNote {
 model Event {
   id         Int       @id @default(autoincrement())
   type       EventType
-  url        String
+  url        String?
   ip         String
   userAgent  String?
   document   Document? @relation(fields: [documentId], references: [id])
@@ -257,8 +257,9 @@ model MagicLink {
 
 enum EventType {
   LaunchRoadmapLinkOpen
-  NextStepAdd
+  NextStepCreate
   NextStepUpdate
+  NextStepDelete
   DocumentApprove
   DocumentOpen
   DocumentUpload
@@ -266,4 +267,5 @@ enum EventType {
   ProposalOpen
   CreateInternalMessage
   ProductInfoLinkOpen
+  InviteStakeholder
 }

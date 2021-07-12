@@ -1,13 +1,14 @@
-import { GetServerSideProps, getSession, Routes } from "blitz"
+import { GetServerSideProps, getSession, invokeWithMiddleware, Routes } from "blitz"
 import db, { EventType } from "db"
 import { z } from "zod"
+import createEvent from "../event/mutations/createEvent"
 
 //localhost:3000/redir?portalId=1&eventType=DocumentOpen&url=https://www.google.com
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { portalId, documentId, eventType, url } = z.object({
     portalId: z.string().transform(parseInt),
-    documentId: z.string().transform(parseInt).optional(),
     eventType: z.nativeEnum(EventType),
+    documentId: z.string().transform(parseInt).optional(),
     url: z.string()
   }).parse(context.query)
   const session = await getSession(context.req, context.res)
@@ -20,18 +21,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   }
 
-  //log event
-  await db.event.create({
-    data: {
-      type: eventType,
-      url,
-      ip: context.req.socket.remoteAddress ?? "0.0.0.0", //null if client disconnects: https://nodejs.org/api/net.html#net_socket_remoteaddress
-      userAgent: context.req.headers["user-agent"],
-      documentId,
-      portalId,
-      userId: session.userId
-    }
-  })
+  await invokeWithMiddleware(createEvent,{
+    type: eventType,
+    url,
+    documentId,
+    portalId,
+  }, {req:context.req, res:context.res})
 
   return {
     redirect: {

@@ -1,21 +1,15 @@
-import { Ctx, getSession, Middleware, resolver, Routes } from "blitz"
+import { Ctx, Middleware, resolver } from "blitz"
 import db, { EventType } from "db"
 import { z } from "zod"
 
-const GetPortalDetail = z.object({
-  // This accepts type of undefined, but is required at runtime
-  portalId: z.string().transform(parseInt),
-  documentId: z.string().transform(parseInt).optional(),
-  eventType: z.nativeEnum(EventType),
-  url: z.string()
-
-
-  type: eventType,
-  url,
-  ip: z.ip
-  userAgent: z.string(),
-  documentId: z.number().optional()
-
+const CreateEvent = z.object({
+  portalId: z.number().nonnegative(),
+  type: z.nativeEnum(EventType),
+  url: z.string().optional(),
+  // ip: z.string(),
+  // userAgent: z.string().optional(),
+  documentId: z.number().optional(),
+  // userId: z.number()
 })
 
 
@@ -27,20 +21,17 @@ export const middleware: Middleware[] = [
   }
 ]
 
-export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize(), async ({ portalId }, context: Ctx) => {
-
-  context.session.context.session.userId
-  //log event
-  await db.event.create({
-    data: {
-      type: eventType,
-      url,
-      ip: context.req.socket.remoteAddress ?? "0.0.0.0", //null if client disconnects: https://nodejs.org/api/net.html#net_socket_remoteaddress
-      userAgent: context.req.headers["user-agent"],
-      documentId,
-      portalId,
-      userId: session.userId
-    }
-  })
-
-}
+export default resolver.pipe(resolver.zod(CreateEvent), resolver.authorize(), async (params, context: Ctx) => {
+    await db.event.create({
+      data: {
+        type: params.type,
+        url: params.url,
+        ip: context.ip ?? "0.0.0.0",
+        userAgent: context.headers?.["user-agent"],
+        documentId: params.documentId,
+        portalId: params.portalId,
+        userId: context.session.userId ?? 0
+      }
+    })
+  }
+)
