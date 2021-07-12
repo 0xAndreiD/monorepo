@@ -30,7 +30,6 @@
     "@hookform/resolvers": "2.6.0",
     "@maxmind/geoip2-node": "^3.1.0",
     "@prisma/client": "2.26.0",
-    "@types/multer": "^1.4.7",
     "analytics": "^0.7.5",
     "axios": "^0.21.1",
     "blitz": "^0.38.5",
@@ -45,6 +44,7 @@
     "lodash": "^4.17.21",
     "multer": "^1.4.2",
     "nanoid": "^3.1.23",
+    "next-connect": "^0.10.1",
     "prettier": "2.3.2",
     "prettier-plugin-prisma": "0.13.2",
     "pretty-quick": "3.1.1",
@@ -64,6 +64,7 @@
   "devDependencies": {
     "@types/faker": "^5.5.7",
     "@types/lodash": "^4.14.171",
+    "@types/multer": "^1.4.7",
     "@types/nanoid": "^3.0.0",
     "@types/node": "^16.3.1",
     "@types/preview-email": "2.0.1",

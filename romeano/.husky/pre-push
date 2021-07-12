@@ -1,6 +1,7 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npx tsc
-npm run lint
-npm run test
+cd romeano || exit
+yarn tsc
+yarn run lint
+#npm run test

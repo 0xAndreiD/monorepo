@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form"
 import { getName } from "../../util/text"
 import createEvent from "../../../event/mutations/createEvent"
 import { EventType } from "db"
+import { useEffect } from "react"
 
 export function InviteStakeholdersModal(props: {
   stakeholders: Array<Stakeholder>,
@@ -22,6 +23,7 @@ export function InviteStakeholdersModal(props: {
     register,
     handleSubmit,
     reset,
+    setFocus,
     formState: { errors }
   } = useForm<z.infer<typeof CreateStakeholder>>({
     // resolver: zodResolver(CreateStakeholder.omit({portalId:true}))
@@ -36,6 +38,10 @@ export function InviteStakeholdersModal(props: {
     reset()
     props.refetchHandler()
   })
+
+  useEffect(() => {
+    setFocus("email")
+  }, [setFocus])
 
   return <>
     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
