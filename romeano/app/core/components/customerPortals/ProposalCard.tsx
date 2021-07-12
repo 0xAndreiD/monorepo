@@ -8,9 +8,10 @@ import Modal from "../generic/Modal"
 import { getColourFromString } from "../../util/colour"
 import { getInitialsOfName, getName } from "../../util/text"
 import { EventType } from "db"
-import { useMutation } from "blitz"
+import { invoke, useMutation } from "blitz"
 import updateProposalApproval from "../../../customer-portals/mutations/updateProposalApproval"
 import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
+import createEvent from "../../../event/mutations/createEvent"
 
 export type Stakeholder = {
   firstName: string,
@@ -127,6 +128,7 @@ export function ProposalCard(props: { portalId: number, data: Proposal, refetchH
                     portalId: props.portalId,
                     hasStakeholderApproved: true
                   })
+                  invoke(createEvent, { portalId: props.portalId, type: EventType.ProposalApprove })
                   props.refetchHandler()
                 }}>
             Approve
@@ -146,6 +148,7 @@ export function ProposalCard(props: { portalId: number, data: Proposal, refetchH
                     portalId: props.portalId,
                     hasStakeholderApproved: false
                   })
+                  invoke(createEvent, { portalId: props.portalId, type: EventType.ProposalDecline })
                   props.refetchHandler()
                 }}>
             Decline

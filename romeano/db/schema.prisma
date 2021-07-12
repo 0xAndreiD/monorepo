@@ -264,6 +264,7 @@ enum EventType {
   DocumentOpen
   DocumentUpload
   ProposalApprove
+  ProposalDecline
   ProposalOpen
   CreateInternalMessage
   ProductInfoLinkOpen
