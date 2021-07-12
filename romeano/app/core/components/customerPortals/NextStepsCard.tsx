@@ -46,6 +46,10 @@ export default function NextStepsCard(props: NextSteps & { portalId: number, ref
     props.refetchHandler()
   })
 
+  useEffect(() => {
+    if (isAdding) setFocus("description")
+  }, [isAdding,setFocus])
+
   return <Card>
 
     <CardHeader>Next Steps</CardHeader>
