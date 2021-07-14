@@ -8,7 +8,7 @@ import axios from "axios"
 import { BACKEND_ENDPOINT } from "../../config"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
-import { getBackendFilePath } from "../../util/upload"
+import { getAntiCSRFToken } from "blitz"
 
 export type PortalDocument = {
   id: number,
@@ -49,75 +49,28 @@ export type PortalDocumentsCard = {
 // }
 
 
-export default function DocumentsCard(props: { portalId: number, data: PortalDocumentsCard }) {
+export default function DocumentsCard(props: {
+  portalId: number,
+  data: PortalDocumentsCard,
+  refetchHandler: () => void
+}) {
 //reference: https://tailwindui.com/components/application-ui/data-display/title-lists#component-e1b5917b21bbe76a73a96c5ca876225f
-
+  const antiCSRFToken = getAntiCSRFToken()
   const onDrop = useCallback((acceptedFiles: File[]) => {
     // Do something with the files
     const formData = new FormData()
     formData.append("portalId", props.portalId.toString())
     acceptedFiles.forEach((file, idx) => formData.append(`file_${idx}`, file))
-    axios.post(`${BACKEND_ENDPOINT}/fileUpload`, formData, {
-      headers: { "Content-Type": "multipart/form-data" }
-    }).then(() => {
-      const maxIdCustomer = props.data.customer.documents.reduce((currentMax, document) => Math.max(currentMax, document.id), 0)
-      const maxIdVendor = props.data.vendor.documents.reduce((currentMax, document) => Math.max(currentMax, document.id), 0)
-      const maxId = Math.max(maxIdCustomer, maxIdVendor)
-      acceptedFiles.forEach((file, idx) => {
-        // APOLLO_CLIENT.cache.evict({id:"ROOT_QUERY"})
-
-        // const gqlTypename = 'PortalDocument';
-        // const data = {
-        //     __typename: gqlTypename,
-        //     id: (maxId + idx + 1).toString(),
-        //     title: file.name,
-        //     href: `${BACKEND_ENDPOINT}/${UPLOAD_DIR}/${file.name}`,
-        //     isCompleted: false
-        // };
-
-        // APOLLO_CLIENT.writeFragment({
-        //     fragment: DocumentsListFragmentFragmentDoc,
-        //     id: `${gqlTypename}:${maxId + idx + 1}`,
-        //     data
-        // });
-
-        // APOLLO_CLIENT.writeQuery({
-        //     query: gql`
-        //         query portal($portalId: ID!) {
-        //             getDocuments(id: $portalId) {
-        //                 vendor {
-        //                     documents {
-        //                         id
-        //                         title
-        //                         href
-        //                         isCompleted
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     `,
-        //     // id: `${gqlTypename}:${maxId + idx + 1}`,
-        //     variables: {id: props.portalId},
-        //     data: {
-        //         getDocuments:{
-        //         vendor: {
-        //             documents: [data]
-        //             // documents: [props.data.vendor.documents, data]
-        //         }
-        //     }}
-        // });
-      })
-    })
-  }, [])
+    axios.post(`${BACKEND_ENDPOINT}/api/fileUpload`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "anti-csrf": antiCSRFToken
+      }
+    }).then(props.refetchHandler)
+  }, [antiCSRFToken, props.portalId, props.refetchHandler])
 
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({ onDrop })
 
-  // console.log("cache", (APOLLO_CLIENT.cache.extract()));
-  // const todo = APOLLO_CLIENT.readFragment({
-  //     id: 'PortalDocument:2', // The value of the to-do item's unique identifier
-  //     fragment: DocumentsListFragmentFragmentDoc
-  // });
-  // console.log("cache search:", todo);
   return <Card>
     <CardHeader>Documents </CardHeader>
 

@@ -30,7 +30,7 @@ export default function CustomerPortal() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-4">
           <NextStepsCard {...data.nextSteps} portalId={portalId} refetchHandler={refetch} />
-          <DocumentsCard portalId={portalId} data={data.documents} />
+          <DocumentsCard portalId={portalId} data={data.documents} refetchHandler={refetch} />
           <ProductInfoCard portalId={portalId} data={data.productInfo} />
         </div>
         <div className="flex flex-col gap-4">

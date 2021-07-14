@@ -1,68 +1,65 @@
-import { BlitzApiHandler, getSession, NotFoundError } from "blitz"
+import { AuthorizationError, getSession, NotFoundError } from "blitz"
 import db from "../../db"
-import multer from "multer"
 import { NextApiRequest, NextApiResponse } from "next"
 import { z } from "zod"
+import nc from "next-connect"
+import { UPLOAD_DIR } from "../core/config"
+import formidable, { Fields, Files } from "formidable"
+import { flatten, isNil } from "lodash"
 
-const upload = multer({
-  limits: { fileSize: 25 * 1024 * 1024 },
-  storage: multer.diskStorage({
-    destination: "uploads"
-    // filename: (req, file, callback) => {
-    //   callback(null, generateFilename())
-    // },
-  })
-})
+export const config = {
+  api: {
+    bodyParser: false
+  }
+}
+const uploadPath = `public/${UPLOAD_DIR}`
 
+const fileUpload = nc<NextApiRequest & { fields: Fields, files: Files }, NextApiResponse>()
+  .use((req, res, next) => {
+    const form = formidable({
+      multiples: true,
+      uploadDir: uploadPath,
+      maxFileSize: 25 * 1000 * 1000,
+      keepExtensions: true
+      // //@ts-ignore
+      // filename: (name,ext, part, form) => {
+      //   console.log("in filename")
+      //   console.log(name,ext,part,form)
+      //   return path.join(UPLOAD_DIR, part )//?? uuid());
+      // },
+    })
 
-// Helper method to wait for a middleware to execute before continuing
-// And to throw an error when an error happens in a middleware
-function runMiddleware(req: NextApiRequest, res: NextApiResponse, fn: any) {
-  return new Promise((resolve, reject) => {
-    fn(req, res, (result) => {
-      if (result instanceof Error) {
-        return reject(result)
+    form.parse(req, (err, fields, files) => {
+      if (err) {
+        return next(err)
       }
-
-      return resolve(result)
+      req.fields = fields
+      req.files = files
+      next()
     })
   })
-}
+  .post(async (req, res,next) => {
+    const session = await getSession(req, res)
+    const userId = session.userId
+    if (isNil(userId)) throw new AuthorizationError("invalid user id")
+    const fields = z.object({ portalId: z.string().nonempty().transform(parseInt) }).parse(req.fields)
+    const portalId = fields.portalId
 
-const stats: BlitzApiHandler = async (req, res) => {
-  const session = await getSession(req, res)
-  console.log("User ID:", session)
+    const portal = await db.portal.findUnique({ where: { id: portalId } })
+    if (!portal) throw new NotFoundError("customer portal not found")
 
-  await runMiddleware(req, res, upload.single("file"))
+    console.log("fileUpload(): file uploaded with portalId:", portalId)
 
-  const schema = z.object({ portalId: z.string() })
-  const parsedPortalId = schema.safeParse(req.body)
-  if (!parsedPortalId.success) {
-    // res.body = "portalId parameter not found";
-    // res.status = 404; //not found
-    return
-  }
-  const portalId = parseInt(parsedPortalId.data.portalId)
-
-  const portal = await db.portal.findUnique({ where: { id: portalId } })
-  if (!portal) {
-    throw new NotFoundError("customer portal not found")
-  }
-  console.log("fileUpload(): file uploaded with portalId:", portalId)
-  // console.log("fileUpload(): files:", ctx.request.files);
-  // if (!ctx.request.files) {
-  //   ctx.throw(400, "no files attached");
-  //   return; //needed since typescript doesnt type narrow with ctx.throw
-  // }
-
-  await db.document.create({
-    data: {
-      portalId: portalId,
-      title: req.file.filename ?? "Untitled File",
-      href: `${req.file.filename}`,
-      isCompleted: false,
-      userId: 1 //FIXME!
-    }
+    const documentInserts = flatten(Object.values(req.files))
+      .map(file => ({
+        portalId: portalId,
+        title: file.name ?? "Untitled File",
+        path: file.path.substring(uploadPath.length + 1),//+1 for slash
+        isCompleted: false,
+        userId
+      }))
+    await db.document.createMany({ data: documentInserts })
+    res.status(200).end()
   })
-}
-export default stats
+
+export default fileUpload
