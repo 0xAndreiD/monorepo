@@ -3,6 +3,7 @@ import React from "react"
 import { DesktopComputerIcon, DeviceMobileIcon } from "@heroicons/react/outline"
 import { Device, Link } from "../../../../types"
 import { StyledLink } from "../generic/Link"
+import { timeAgo } from "../../util/relativeDate"
 
 type StakeholderActivityEvent = {
   stakeholderName: string,
@@ -47,7 +48,7 @@ export function StakeholderActivityLogCard(props: { data: StakeholderActivityEve
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  Time
+                  Event&nbsp;time
                 </th>
               </tr>
               </thead>
@@ -68,7 +69,7 @@ export function StakeholderActivityLogCard(props: { data: StakeholderActivityEve
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="text-right text-sm text-gray-500">
-                          {new Date(event.timestamp).toISOString()}
+                          {timeAgo(new Date(event.timestamp))}
                       </span>
                     </td>
                   </tr>
