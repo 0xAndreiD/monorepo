@@ -4,14 +4,47 @@ import { DesktopComputerIcon, DeviceMobileIcon } from "@heroicons/react/outline"
 import { Device, Link } from "../../../../types"
 import { StyledLink } from "../generic/Link"
 import { timeAgo } from "../../util/relativeDate"
+import { EventType } from "db"
 
-type StakeholderActivityEvent = {
+export type StakeholderActivityEvent = {
   stakeholderName: string,
   customerName: string,
-  link: Link,
+  type: EventType,
+  link: Link | null,
   location: string,
   device: Device,
   timestamp: string,
+}
+
+function getActionText(eventType: EventType): string {
+  switch (eventType) {
+    case EventType.LaunchRoadmapLinkOpen:
+      return "opened a Roadmap link" //TODO: have actual link
+    case EventType.NextStepCreate:
+      return "created a Next Step item"
+    case EventType.NextStepUpdate:
+      return "updated a Next Step item"
+    case EventType.NextStepDelete:
+      return "deleted a Next Step item"
+    case EventType.DocumentApprove:
+      return "approved a document"
+    case EventType.DocumentOpen:
+      return "opened" //link following this
+    case EventType.DocumentUpload:
+      return "uploaded a document" //TODO: have actual link
+    case EventType.ProposalApprove:
+      return "approved the proposal"
+    case EventType.ProposalDecline:
+      return "declined the proposal"
+    case EventType.ProposalOpen:
+      return "opened the proposal"
+    case EventType.CreateInternalMessage:
+      return "sent an internal note"
+    case EventType.ProductInfoLinkOpen:
+      return "opened a product info link" //TODO: have actual link
+    case EventType.InviteStakeholder:
+      return "invited a stakeholder"
+  }
 }
 
 export function StakeholderActivityLogCard(props: { data: StakeholderActivityEvent[] }) {
@@ -22,7 +55,8 @@ export function StakeholderActivityLogCard(props: { data: StakeholderActivityEve
     <div className="flex flex-col pt-4">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-          <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-y-auto" style={{height:"32rem"}}>
+          <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-y-auto"
+               style={{ height: "32rem" }}>
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
               <tr>
@@ -57,8 +91,8 @@ export function StakeholderActivityLogCard(props: { data: StakeholderActivityEve
                 props.data.map((event, idx) =>
                   <tr key={idx}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {`${event.stakeholderName} from ${event.customerName} viewed `}
-                      <StyledLink href={event.link.href}>{event.link.body}</StyledLink>
+                      {`${event.stakeholderName} from ${event.customerName} ${getActionText(event.type)} `}
+                      {event.link && <StyledLink href={event.link.href}>{event.link.body}</StyledLink>}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {event.location}

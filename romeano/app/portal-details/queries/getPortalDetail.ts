@@ -1,15 +1,12 @@
 import { NotFoundError, resolver } from "blitz"
-import db, { Role } from "db"
+import db, { EventType, Role } from "db"
 import { z } from "zod"
-import { Device } from "../../../types"
+import { Device, Link } from "../../../types"
 import { getBackendFilePath } from "../../core/util/upload"
-import { Reader } from "@maxmind/geoip2-node"
-import { readFileSync } from "fs"
-import { getOrElse, tryCatch } from "fp-ts/Option"
-import { pipe } from "fp-ts/function"
 import UAParser from "ua-parser-js"
+import { getLocation } from "../../core/util/location"
+import { StakeholderActivityEvent } from "app/core/components/portalDetails/StakeholderActivityLogCard"
 
-const reader = Reader.openBuffer(readFileSync("db/geoip/GeoLite2-City.mmdb"))
 const GetPortalDetail = z.object({
   // This accepts type of undefined, but is required at runtime
   portalId: z.number().optional().refine(Boolean, "Required")
@@ -115,50 +112,32 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
     ORDER BY "eventCount" DESC;
   `
 
-  const stakeholderActivityLogRaw = await db.$queryRaw<Array<{
-    stakeholderName: string,
-    customerName: string,
-    documentTitle: string,
-    documentPath: string,
-    url: string,
-    ip: string,
-    userAgent: string,
-    createdAt: string,
-  }>>`
-    SELECT (SELECT "firstName" || ' ' || "lastName" FROM "User" WHERE id = "Event"."userId") AS "stakeholderName",
+  const stakeholderActivityLogRaw = await db.$queryRaw<DenormalizedEvent[]>`
+    SELECT (SELECT "firstName" || ' ' || "lastName" FROM "User" WHERE id = E."userId") AS "stakeholderName",
            "customerName",
-           title                                                                             AS "documentTitle",
-           path                                                                              AS "documentPath",
+           type,
+           title                                                                       AS "documentTitle",
+           path                                                                        AS "documentPath",
            url,
            ip,
            "userAgent",
-           "Event"."createdAt"
-    FROM "Event"
-           JOIN "Portal" P on "Event"."portalId" = P.id
-           LEFT JOIN "Document" D ON "Event"."documentId" = D.id
-    WHERE "Event"."portalId" = ${portalId}
-    ORDER BY "Event"."createdAt" DESC
+           E."createdAt"
+    FROM "Event" E
+           JOIN "Portal" P on E."portalId" = P.id
+           LEFT JOIN "Document" D ON E."documentId" = D.id
+    WHERE E."portalId" = ${portalId}
+    ORDER BY E."createdAt" DESC
     LIMIT 25
   `
-  const stakeholderActivityLog = stakeholderActivityLogRaw.map(x => {
-    const location = pipe(tryCatch(() => {
-      const location = reader.city(x.ip)
-      return location.city?.names.en && location.country?.names.en ?
-        `${location.city?.names.en}, ${location.country?.names.en}` :
-        location.country?.names.en ?? "Unknown"
-    }), getOrElse(() => "Unknown"))
-
-    return {
-      stakeholderName: x.stakeholderName,
-      customerName: x.customerName,
-      link: x.documentTitle && x.documentPath ?
-        { body: x.documentTitle, href: getBackendFilePath(x.documentPath) } :
-        { body: "a link", href: x.url },
-      location,
-      device: UAParser(x.userAgent).device.type === "mobile" ? Device.Mobile : Device.Computer,
-      timestamp: new Date(x.createdAt).toISOString()
-    }
-  })
+  const stakeholderActivityLog: StakeholderActivityEvent[] = stakeholderActivityLogRaw.map(x => ({
+    stakeholderName: x.stakeholderName,
+    customerName: x.customerName,
+    type: x.type,
+    link: generateLink(x),
+    location: getLocation(x.ip),
+    device: UAParser(x.userAgent).device.type === "mobile" ? Device.Mobile : Device.Computer,
+    timestamp: new Date(x.createdAt).toISOString()
+  }))
 
   return {
     opportunityOverview,
@@ -169,3 +148,46 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
     stakeholderActivityLog
   }
 })
+
+type DenormalizedEvent = {
+  stakeholderName: string,
+  customerName: string,
+  type: EventType,
+  documentTitle: string,
+  documentPath: string,
+  url: string,
+  ip: string,
+  userAgent: string,
+  createdAt: string,
+}
+
+function generateLink(event: DenormalizedEvent): Link | null {
+  switch (event.type) {
+    case EventType.LaunchRoadmapLinkOpen:
+      return null //TODO: have actual link
+    case EventType.NextStepCreate:
+      return null
+    case EventType.NextStepUpdate:
+      return null
+    case EventType.NextStepDelete:
+      return null
+    case EventType.DocumentApprove:
+      return null
+    case EventType.DocumentOpen:
+      return { body: event.documentTitle, href: getBackendFilePath(event.documentPath) }
+    case EventType.DocumentUpload:
+      return null //TODO: have actual link
+    case EventType.ProposalApprove:
+      return null
+    case EventType.ProposalDecline:
+      return null
+    case EventType.ProposalOpen:
+      return null
+    case EventType.CreateInternalMessage:
+      return null
+    case EventType.ProductInfoLinkOpen:
+      return null //TODO: have actual link
+    case EventType.InviteStakeholder:
+      return null
+  }
+}
