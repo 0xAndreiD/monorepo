@@ -66,6 +66,7 @@ export default resolver.pipe(resolver.zod(CreateStakeholder),
       data: {
         id: nanoid(),
         userId: user.id,
+        portalId: portalId,
         hasClicked: false
       }
     })

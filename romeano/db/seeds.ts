@@ -132,7 +132,7 @@ const seedCustomerPortal = async () => {
           email: stakeholder.email,
           stakeholder: {
             create: {
-              jobTitle: stakeholder.jobTitle,
+              jobTitle: stakeholder.jobTitle
             }
           },
           userPortals: {
@@ -186,13 +186,13 @@ const seedCustomerPortal = async () => {
         portalId: portal.id,
         description: "Schedule AR Headset Demo Call",
         isCompleted: true,
-        userId: aeUser.id,
+        userId: aeUser.id
       },
       {
         portalId: portal.id,
         description: "Invite IT to next meeting",
         isCompleted: false,
-        userId: aeUser.id,
+        userId: aeUser.id
       },
       {
         portalId: portal.id,
@@ -316,32 +316,35 @@ const seedCustomerPortal = async () => {
       }
     ]
   })
-  console.log(`Seeding finished.`)
-}
 
-async function seedPortalDetails() {
   await db.magicLink.createMany({
     data: [
       {
         id: "ae1Login",
         userId: 1, //Greg
-        hasClicked: false,
+        portalId: portal.id
       },
       {
         id: "ae2Login",
-        userId: 2 //Alexis
+        userId: 2, //Alexis
+        portalId: portal.id
       },
       {
         id: "stakeholder1Login",
-        userId: 4//Kristin Sanders
+        userId: 4,//Kristin Sanders
+        portalId: portal.id
       },
       {
         id: "stakeholder2Login",
-        userId: 5//Wally Iris
+        userId: 5,//Wally Iris
+        portalId: portal.id
       }
     ]
   })
+  console.log(`Seeding finished.`)
+}
 
+async function seedPortalDetails() {
   const aeUser = await db.user.create({
       data: {
         firstName: "Julia",
@@ -392,7 +395,7 @@ async function seedPortalDetails() {
       email: "ali@raytheon.com",
       stakeholder: {
         create: {
-          jobTitle: "Director",
+          jobTitle: "Director"
         }
       },
       userPortals: {
@@ -408,11 +411,13 @@ async function seedPortalDetails() {
     data: [
       {
         id: "ae3Login",
-        userId: aeUser.id //Julia
+        userId: aeUser.id, //Julia
+        portalId: portal.id
       },
       {
         id: "stakeholder3Login",
-        userId: stakeholder.id //Ali
+        userId: stakeholder.id, //Ali
+        portalId: portal.id
       }
     ]
   })

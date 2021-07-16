@@ -1,6 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
 import "tailwindcss/tailwind.css"
-import { default as NextLink } from "next/link"
 import { MailIcon } from "@heroicons/react/outline"
 import { getColourFromString } from "../../util/colour"
 import { getInitialsOfName, getName } from "../../util/text"
@@ -9,6 +8,7 @@ import { StyledLink } from "../generic/Link"
 import { Card, CardHeader } from "../generic/Card"
 import { EventCounted, Link, Stakeholder, VendorContact } from "../../../../types"
 import { range } from "lodash"
+import { Link as BlitzLink, Routes } from "blitz"
 
 type ActivePortal = {
   customerName: string,
@@ -17,7 +17,7 @@ type ActivePortal = {
   primaryContact: VendorContact,
   stakeholderEvents: Array<EventCounted<Stakeholder>>,
   documentEvents: Array<EventCounted<Link>>,
-  portalHref: string,
+  portalId: number,
 }
 
 function ProgressBullets(props: { current: number, total: number }) {
@@ -121,67 +121,68 @@ export function ActivePortalsDemo(props: { data: ActivePortal[] }) {
                 </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                {props.data.map((portal, idx) => (
-                  <tr key={idx} className="divide-x">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="flex flex-col gap-y-1">
-                          <div className="text-lg font-medium text-gray-900">
-                            {portal.customerName}
+                {
+                  props.data.map((portal, idx) => (
+                    <tr key={idx} className="divide-x">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="flex flex-col gap-y-1">
+                            <div className="text-lg font-medium text-gray-900">
+                              {portal.customerName}
+                            </div>
+                            <ProgressBullets current={portal.currentRoadmapStage}
+                                             total={portal.customerNumberOfStages} />
                           </div>
-                          <ProgressBullets current={portal.currentRoadmapStage}
-                                           total={portal.customerNumberOfStages} />
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="relative bg-white flex items-center space-x-3">
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-gray-900">
-                            {getName(portal.primaryContact.firstName, portal.primaryContact.lastName)}
-                          </p>
-                          <p className="text-sm truncate">{portal.primaryContact.jobTitle}</p>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="relative bg-white flex items-center space-x-3">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900">
+                              {getName(portal.primaryContact.firstName, portal.primaryContact.lastName)}
+                            </p>
+                            <p className="text-sm truncate">{portal.primaryContact.jobTitle}</p>
+                          </div>
+                          <div
+                            className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
+                            <a href={`mailto:${portal.primaryContact.email}`}>
+                              <MailIcon className="h-4 w-4 text-gray-400" />
+                            </a>
+                          </div>
                         </div>
-                        <div
-                          className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
-                          <a href={`mailto:${portal.primaryContact.email}`}>
-                            <MailIcon className="h-4 w-4 text-gray-400" />
-                          </a>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex gap-3">
+                          <StakeholderClickCircles data={portal.stakeholderEvents} />
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex gap-3">
-                        <StakeholderClickCircles data={portal.stakeholderEvents} />
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex justify-between">
-                        <div className="text-sm flex justify-center flex-col gap-y-1">
-                          {
-                            portal.documentEvents.slice(0, 3).map((document, idx) =>
-                              <div key={idx} className="flex gap-x-1">
-                                <StyledLink href={document.href}>
-                                  {document.body}
-                                </StyledLink>
-                                <span className={"text-gray-900"}>{document.eventCount}</span>
-                              </div>
-                            )
-                          }
-                        </div>
-                        <NextLink href={portal.portalHref}>
-                          <button
-                            type="button"
-                            className="inline-flex items-center px-5 my-3 border shadow-sm text-sm\
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex justify-between">
+                          <div className="text-sm flex justify-center flex-col gap-y-1">
+                            {
+                              portal.documentEvents.slice(0, 3).map((document, idx) =>
+                                <div key={idx} className="flex gap-x-1">
+                                  <StyledLink href={document.href}>
+                                    {document.body}
+                                  </StyledLink>
+                                  <span className={"text-gray-900"}>{document.eventCount}</span>
+                                </div>
+                              )
+                            }
+                          </div>
+                          <BlitzLink href={Routes.PortalDetails({ portalId: portal.portalId })}>
+                            <a
+                              className="inline-flex items-center px-5 my-3 border shadow-sm text-sm\
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300">
-                            View
-                          </button>
-                        </NextLink>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                              View
+                            </a>
+                          </BlitzLink>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                }
                 </tbody>
               </table>
             </div>

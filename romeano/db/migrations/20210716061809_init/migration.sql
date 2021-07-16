@@ -5,7 +5,7 @@ CREATE TYPE "TokenType" AS ENUM ('RESET_PASSWORD');
 CREATE TYPE "Role" AS ENUM ('AccountExecutive', 'Stakeholder');
 
 -- CreateEnum
-CREATE TYPE "EventType" AS ENUM ('LaunchRoadmapLinkOpen', 'NextStepCreate', 'NextStepUpdate', 'NextStepDelete', 'DocumentApprove', 'DocumentOpen', 'DocumentUpload', 'ProposalApprove', 'ProposalOpen', 'CreateInternalMessage', 'ProductInfoLinkOpen', 'InviteStakeholder');
+CREATE TYPE "EventType" AS ENUM ('LaunchRoadmapLinkOpen', 'NextStepCreate', 'NextStepUpdate', 'NextStepDelete', 'DocumentApprove', 'DocumentOpen', 'DocumentUpload', 'ProposalApprove', 'ProposalDecline', 'ProposalOpen', 'CreateInternalMessage', 'ProductInfoLinkOpen', 'InviteStakeholder');
 
 -- CreateTable
 CREATE TABLE "Portal" (
@@ -234,6 +234,7 @@ CREATE TABLE "Event" (
 CREATE TABLE "MagicLink" (
     "id" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
+    "portalId" INTEGER NOT NULL,
     "hasClicked" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -329,4 +330,4 @@ ALTER TABLE "Event" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DE
 ALTER TABLE "Event" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MagicLink" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "MagicLink" ADD FOREIGN KEY ("userId", "portalId") REFERENCES "UserPortal"("userId", "portalId") ON DELETE CASCADE ON UPDATE CASCADE;

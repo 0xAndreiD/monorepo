@@ -36,16 +36,17 @@ model Portal {
 }
 
 model UserPortal {
-  user               User     @relation(fields: [userId], references: [id])
-  userId             Int
-  portal             Portal   @relation(fields: [portalId], references: [id])
-  portalId           Int
-  role               Role
+  user                   User        @relation(fields: [userId], references: [id])
+  userId                 Int
+  portal                 Portal      @relation(fields: [portalId], references: [id])
+  portalId               Int
+  role                   Role
   hasStakeholderApproved Boolean?
-  isPrimaryContact   Boolean?
-  isSecondaryContact Boolean?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  isPrimaryContact       Boolean?
+  isSecondaryContact     Boolean?
+  magicLinks             MagicLink[]
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
 
   @@id([userId, portalId])
 }
@@ -63,7 +64,6 @@ model User {
   messagesSent     InternalNote[]
   events           Event[]
   nextStepsTasks   NextStepsTask[]
-  magicLinks       MagicLink[]
   tokens           Token[]
   sessions         Session[]
   hashedPassword   String?
@@ -131,9 +131,9 @@ enum Role {
 }
 
 model Stakeholder {
-  jobTitle     String
-  user         User     @relation(fields: [userId], references: [id])
-  userId       Int      @unique
+  jobTitle String
+  user     User   @relation(fields: [userId], references: [id])
+  userId   Int    @unique
 }
 
 model AccountExecutive {
@@ -247,12 +247,13 @@ model Event {
 }
 
 model MagicLink {
-  id         String   @id
-  user       User     @relation(fields: [userId], references: [id])
+  id         String     @id
+  userPortal UserPortal @relation(fields: [userId, portalId], references: [userId, portalId])
   userId     Int
-  hasClicked Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  portalId   Int
+  hasClicked Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
 enum EventType {

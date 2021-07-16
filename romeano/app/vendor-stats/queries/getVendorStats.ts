@@ -154,7 +154,6 @@ export default resolver.pipe(resolver.zod(GetVendorStats), resolver.authorize(),
     },
     stakeholderEvents: stakeholderEvents[p.portalId] ?? [],
     documentEvents: documentEvents[p.portalId] ?? [],
-    portalHref: `/customerPortals/${p.portalId}` //fixme!
   }))
   console.log("final", all)
 

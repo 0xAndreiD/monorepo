@@ -21,7 +21,7 @@ export default function PortalDetails() {
   //container: https://tailwindui.com/components/application-ui/layout/containers
   return <Suspense fallback={<>Loading!</>}>
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
-      <Header />
+      <Header portalId={portalId}/>
       <div className="py-3"><CardDivider /></div>
     </div>
 

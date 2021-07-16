@@ -7,19 +7,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const magicLink = await db.magicLink.findFirst({
     where: { id: magicLinkId },
     include: {
-      user: {
+      userPortal: {
         include: {
-          userPortals: {
-            include: {
-              portal: true
-            }
-          }
-        }!
+          portal: true,
+          user: true
+        }
       }
     }
   })
 
-  const portal = magicLink?.user.userPortals[0].portal
+  const portal = magicLink?.userPortal.portal
   if (!magicLink || magicLink.hasClicked || !portal) {
     //TODO: add modal for hasClicked
     return {
@@ -32,17 +29,29 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const session = await getSession(context.req, context.res)
   if (portal.id) {
-    await session.$create({ userId: magicLink.user.id, role: magicLink.user.role as Role })
+    await session.$create({ userId: magicLink.userPortal.userId, role: magicLink.userPortal.user.role as Role })
     await db.magicLink.update({
       where: { id: magicLinkId },
       data: { hasClicked: true }
     })
-    return {
-      redirect: {
-        destination: Routes.CustomerPortal({ portalId: portal.id }).pathname.replace("[portalId]", portal.id.toString()),
-        // destination: Routes.CustomerPortal({ portalId: portal.id }), //FIXME
-        permanent: false
-      }
+
+    switch (magicLink.userPortal.role) {
+      case Role.AccountExecutive:
+        return {
+          redirect: {
+            destination: Routes.VendorStats().pathname,
+            // destination: Routes.VendorStats(),
+            permanent: false
+          }
+        }
+      case Role.Stakeholder:
+        return {
+          redirect: {
+            destination: Routes.CustomerPortal({ portalId: portal.id }).pathname.replace("[portalId]", portal.id.toString()),
+            // destination: Routes.CustomerPortal({ portalId: portal.id }),
+            permanent: false
+          }
+        }
     }
   }
   return { props: {} } //no redirect case
