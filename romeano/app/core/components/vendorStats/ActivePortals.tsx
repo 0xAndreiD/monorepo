@@ -11,13 +11,13 @@ import { range } from "lodash"
 import { Link as BlitzLink, Routes } from "blitz"
 
 type ActivePortal = {
+  portalId: number,
   customerName: string,
   currentRoadmapStage: number,
   customerNumberOfStages: number,
   primaryContact: VendorContact,
   stakeholderEvents: Array<EventCounted<Stakeholder>>,
   documentEvents: Array<EventCounted<Link>>,
-  portalId: number,
 }
 
 function ProgressBullets(props: { current: number, total: number }) {
@@ -81,7 +81,7 @@ function StakeholderClickCircles(props: { data: Array<Stakeholder & { eventCount
   </>
 }
 
-export function ActivePortalsDemo(props: { data: ActivePortal[] }) {
+export function ActivePortals(props: { data: ActivePortal[] }) {
   return (
     <Card>
       <CardHeader>

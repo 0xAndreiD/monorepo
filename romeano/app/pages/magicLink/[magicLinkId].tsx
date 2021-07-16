@@ -54,6 +54,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }
     }
   }
+
   return { props: {} } //no redirect case
 }
 

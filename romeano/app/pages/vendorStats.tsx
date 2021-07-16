@@ -2,7 +2,7 @@ import React from "react"
 import "tailwindcss/tailwind.css"
 import { CardDivider } from "app/core/components/generic/Card"
 
-import { ActivePortalsDemo } from "app/core/components/vendorStats/ActivePortals"
+import { ActivePortals } from "app/core/components/vendorStats/ActivePortals"
 import { Header } from "app/core/components/vendorStats/Header"
 import { Footer } from "app/core/components/Footer"
 import { OpportunityEngagement } from "app/core/components/vendorStats/OpportunityEngagement"
@@ -22,7 +22,7 @@ export default function VendorStats() {
         <OpportunityEngagement data={vendorStats.opportunityEngagement} />
         <StakeholderActivity data={vendorStats.stakeholderActivity} />
       </div>
-      <ActivePortalsDemo data={vendorStats.activePortals} />
+      <ActivePortals data={vendorStats.activePortals} />
     </div>
     <Footer />
   </>
