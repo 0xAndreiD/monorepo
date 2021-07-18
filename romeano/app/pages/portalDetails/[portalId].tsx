@@ -48,3 +48,4 @@ export default function PortalDetails() {
 }
 
 PortalDetails.authenticate = true
+PortalDetails.suppressFirstRenderFlicker = true

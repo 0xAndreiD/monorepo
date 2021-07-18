@@ -10,25 +10,45 @@ const transporter = nodemailer.createTransport({
   }
 })
 
-function magicLinkMessage(firstName: string, code: string) {
-  return `
-  <h1>${firstName} has shared a customer portal with you</h1>
-  <br/>
-  <a href="${BACKEND_ENDPOINT}/magicLink/${code}">Open Portal</a>
-  `
-}
+//invitation for a new stakeholder
+export async function sendInvite(customerName: string,
+                                 vendorName: string,
+                                 inviterFirstName: string,
+                                 inviteeEmailAddress: string,
+                                 magicLink: string) {
+  const body = `<h1>${inviterFirstName} has shared a customer portal with you</h1>
+<br/>
+<a href="${BACKEND_ENDPOINT}/magicLink/${magicLink}">Open Portal</a>`
 
-export async function sendMagicLink(customerName: string,
-                                    vendorName: string,
-                                    inviterFirstName:string,
-                                    inviteeEmailAddress: string,
-                                    magicLink: string) {
   const info = await transporter.sendMail({
-    from: `"Romeano" <welcome@romeano.com>`,
-    to: "eric.semeniuc@gmail.com",
+    from: `"Romeano" <hey@romeano.com>`,
+    to: [inviteeEmailAddress, "eric.semeniuc@gmail.com"],
     // to: emailAddress,
     subject: `${customerName} Customer Portal Invitation - ${vendorName}`, // Subject line
-    html: magicLinkMessage(inviterFirstName, magicLink)
+    html: body
+  })
+
+}
+
+//login for existing stakeholder
+export async function sendLoginLink(customerName: string,
+                                    vendorName: string,
+                                    inviterFirstName: string,
+                                    inviteeEmailAddress: string,
+                                    magicLink: string) {
+  const body = `<h1>Hello!</h1>
+<p>
+You asked us to send you a magic link for quickly signing in to your ${customerName} portal from ${vendorName}. Your wish is our command!
+</p>
+<br/>
+<a href="${BACKEND_ENDPOINT}/magicLink/${magicLink}">Sign in to ${customerName} portal</a>`
+
+  const info = await transporter.sendMail({
+    from: `"Romeano" <hey@romeano.com>`,
+    to: [inviteeEmailAddress, "eric.semeniuc@gmail.com"],
+    // to: emailAddress,
+    subject: `${customerName} Customer Portal Login - ${vendorName}`, // Subject line
+    html: body
   })
 
 }

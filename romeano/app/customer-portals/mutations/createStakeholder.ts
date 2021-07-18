@@ -3,7 +3,7 @@ import db, { Role } from "db"
 import { nanoid } from "nanoid"
 import { z } from "zod"
 import { splitName } from "../../core/util/text"
-import { sendMagicLink } from "../../core/util/email"
+import { sendInvite } from "../../core/util/email"
 
 export const CreateStakeholder = z.object({
   portalId: z.number(),
@@ -71,7 +71,7 @@ export default resolver.pipe(resolver.zod(CreateStakeholder),
       }
     })
 
-    sendMagicLink(portal.customerName,
+    sendInvite(portal.customerName,
       portal.vendor.name,
       userPortal.user.firstName,
       userPortal.user.email,

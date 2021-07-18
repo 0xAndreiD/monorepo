@@ -13,13 +13,13 @@ const CreateEvent = z.object({
 })
 
 
-export const middleware: Middleware[] = [
-  async (req, res, next) => {
-    res.blitzCtx.ip = req.socket.remoteAddress
-    res.blitzCtx.headers = req.headers
-    return next()
-  }
-]
+// export const middleware: Middleware[] = [
+//   async (req, res, next) => {
+//     res.blitzCtx.ip = req.socket.remoteAddress
+//     res.blitzCtx.headers = req.headers
+//     return next()
+//   }
+// ]
 
 export default resolver.pipe(resolver.zod(CreateEvent), resolver.authorize(), async (params, context: Ctx) => {
     await db.event.create({

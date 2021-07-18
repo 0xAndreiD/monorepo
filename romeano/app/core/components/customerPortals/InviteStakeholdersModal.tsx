@@ -24,7 +24,7 @@ export function InviteStakeholdersModal(props: {
     handleSubmit,
     reset,
     setFocus,
-    formState: { errors }
+    formState
   } = useForm<z.infer<typeof CreateStakeholder>>({
     // resolver: zodResolver(CreateStakeholder.omit({portalId:true}))
   })
@@ -77,9 +77,11 @@ export function InviteStakeholdersModal(props: {
         </div>
 
         <span className="flex py-4 justify-end">
-          <AddButton onClick={() =>
-            invoke(createEvent, { portalId: props.portalId, type: EventType.InviteStakeholder })
-          } />
+          <AddButton disabled={formState.isSubmitting}
+                     onClick={() =>
+                       invoke(createEvent, { portalId: props.portalId, type: EventType.InviteStakeholder })
+                     }
+          />
         </span>
       </form>
 
@@ -99,7 +101,7 @@ export function InviteStakeholdersModal(props: {
     </div>
     <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
       <button
-        type="button"
+        disabled={formState.isSubmitting}
         className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-500 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
         onClick={props.onClose}
       >

@@ -10,10 +10,10 @@ import { InternalNotesCard } from "app/core/components/customerPortals/InternalN
 import { Footer } from "app/core/components/Footer"
 import { Header } from "app/core/components/customerPortals/Header"
 import { CardDivider } from "app/core/components/generic/Card"
-import { NotFoundError, useParam, useQuery } from "blitz"
+import { NotFoundError, useParam, useQuery,Routes } from "blitz"
 import getCustomerPortal from "../../customer-portals/queries/getCustomerPortal"
 
-export default function CustomerPortal() {
+function CustomerPortal() {
   const portalId = useParam("portalId", "number")
   const [data, { refetch }] = useQuery(getCustomerPortal, { id: portalId })
 
@@ -46,4 +46,5 @@ export default function CustomerPortal() {
   </Suspense>
 }
 
-CustomerPortal.authenticate = true
+CustomerPortal.authenticate = {redirectTo: "/"}
+export default CustomerPortal

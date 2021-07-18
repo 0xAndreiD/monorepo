@@ -1,28 +1,25 @@
-import { AuthenticationError, Link, Routes, useMutation } from "blitz"
+import { AuthenticationError, Routes, useMutation } from "blitz"
 import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
 import login from "app/auth/mutations/login"
 import { Login } from "app/auth/validations"
 import NextLink from "next/link"
 
-type LoginFormProps = {
-  onSuccess?: () => void
-}
-
-export const LoginForm = (props: LoginFormProps) => {
+export const LoginForm = (props: {
+  onSuccess?: () => void,
+  portalId?: number
+}) => {
   const [loginMutation] = useMutation(login)
 
   return (
     <div>
-      <h1>Login</h1>
-
+      <h1>Please verify your email address</h1>
       <Form
-        submitText="Login"
+        submitText="Submit"
         schema={Login}
-        initialValues={{ email: "", password: "" }}
         onSubmit={async (values) => {
           try {
-            await loginMutation(values)
+            await loginMutation({ portalId: props.portalId, email: values.email })
             props.onSuccess?.()
           } catch (error) {
             if (error instanceof AuthenticationError) {
@@ -36,18 +33,9 @@ export const LoginForm = (props: LoginFormProps) => {
           }
         }}
       >
-        <LabeledTextField name="email" label="Email" placeholder="Email" />
-        <LabeledTextField name="password" label="Password" placeholder="Password" type="password" />
-        <div>
-          <Link href={Routes.ForgotPasswordPage()}>
-            <a>Forgot your password?</a>
-          </Link>
-        </div>
+        <LabeledTextField name="email" label="" placeholder="Email" />
       </Form>
 
-      <div style={{ marginTop: "1rem" }}>
-        Or <Link href={Routes.SignupPage()}>Sign Up</Link>
-      </div>
       <br />
       <br />
       <h1>AE1P1 Greg Login</h1>
