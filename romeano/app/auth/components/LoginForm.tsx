@@ -41,36 +41,36 @@ export const LoginForm = (props: {
         <LabeledTextField name="email" label="" placeholder="Email" />
       </Form>
 
-      <br />
-      <br />
-      <h1>AE1P1 Greg Login</h1>
-      <NextLink href={Routes.MagicLinkPage({ magicLinkId: "ae1Login" })}>
-        <a><span className="font-bold">Click me!!</span></a>
-      </NextLink>
-      <h1>AE2P1 Alexis Login</h1>
-      <NextLink href={Routes.MagicLinkPage({ magicLinkId: "ae2Login" })}>
-        <a><span className="font-bold">Click me!!</span></a>
-      </NextLink>
-      <h1>AE3P2 Julia Login</h1>
-      <NextLink href={Routes.MagicLinkPage({ magicLinkId: "ae3Login" })}>
-        <a><span className="font-bold">Click me!!</span></a>
-      </NextLink>
+      {/*<br />*/}
+      {/*<br />*/}
+      {/*<h1>AE1P1 Greg Login</h1>*/}
+      {/*<NextLink href={Routes.MagicLinkPage({ magicLinkId: "ae1Login" })}>*/}
+      {/*  <a><span className="font-bold">Click me!!</span></a>*/}
+      {/*</NextLink>*/}
+      {/*<h1>AE2P1 Alexis Login</h1>*/}
+      {/*<NextLink href={Routes.MagicLinkPage({ magicLinkId: "ae2Login" })}>*/}
+      {/*  <a><span className="font-bold">Click me!!</span></a>*/}
+      {/*</NextLink>*/}
+      {/*<h1>AE3P2 Julia Login</h1>*/}
+      {/*<NextLink href={Routes.MagicLinkPage({ magicLinkId: "ae3Login" })}>*/}
+      {/*  <a><span className="font-bold">Click me!!</span></a>*/}
+      {/*</NextLink>*/}
 
-      <br />
-      <br />
+      {/*<br />*/}
+      {/*<br />*/}
 
-      <h1>Stakeholder1P1 Kristin Login</h1>
-      <NextLink href={Routes.MagicLinkPage({ magicLinkId: "stakeholder1Login" })}>
-        <a><span className="font-bold">Click me!!</span></a>
-      </NextLink>
-      <h1>Stakeholder2P1 Wally Login</h1>
-      <NextLink href={Routes.MagicLinkPage({ magicLinkId: "stakeholder2Login" })}>
-        <a><span className="font-bold">Click me!!</span></a>
-      </NextLink>
-      <h1>Stakeholder3P2 Ali Login</h1>
-      <NextLink href={Routes.MagicLinkPage({ magicLinkId: "stakeholder3Login" })}>
-        <a><span className="font-bold">Click me!!</span></a>
-      </NextLink>
+      {/*<h1>Stakeholder1P1 Kristin Login</h1>*/}
+      {/*<NextLink href={Routes.MagicLinkPage({ magicLinkId: "stakeholder1Login" })}>*/}
+      {/*  <a><span className="font-bold">Click me!!</span></a>*/}
+      {/*</NextLink>*/}
+      {/*<h1>Stakeholder2P1 Wally Login</h1>*/}
+      {/*<NextLink href={Routes.MagicLinkPage({ magicLinkId: "stakeholder2Login" })}>*/}
+      {/*  <a><span className="font-bold">Click me!!</span></a>*/}
+      {/*</NextLink>*/}
+      {/*<h1>Stakeholder3P2 Ali Login</h1>*/}
+      {/*<NextLink href={Routes.MagicLinkPage({ magicLinkId: "stakeholder3Login" })}>*/}
+      {/*  <a><span className="font-bold">Click me!!</span></a>*/}
+      {/*</NextLink>*/}
     </div>
   )
 }

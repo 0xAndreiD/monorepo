@@ -20,24 +20,13 @@ export default resolver.pipe(resolver.zod(Login),
     })
     if (!portal) throw new AuthenticationError("Could not find portal!")
 
-    const userPortal = (await db.$queryRaw<Array<{
-      userId: number,
-      portalId: number,
-      firstName: string,
-      lastName: string,
-      email: string
-    }>>
-      `SELECT "userId",
-              "portalId",
-              "firstName",
-              "lastName",
-              email
-       FROM "UserPortal" UP
-              JOIN "User" U ON UP."userId" = U.id
-       WHERE U.email = ${email}
-         AND "portalId" = ${portalId}
-       LIMIT 1
-      `)[0]
+    const userPortal = await db.userPortal.findFirst({
+      include: { user: true },
+      where: {
+        portalId,
+        user: { email }
+      }
+    })
 
     if (!userPortal) throw new AuthenticationError("Could not find email address associated to portal!")
 
@@ -52,8 +41,8 @@ export default resolver.pipe(resolver.zod(Login),
 
     sendLoginLink(portal.customerName,
       portal.vendor.name,
-      userPortal.firstName,
-      userPortal.email,
+      userPortal.user.firstName,
+      userPortal.user.email,
       magicLink.id
     )
 
