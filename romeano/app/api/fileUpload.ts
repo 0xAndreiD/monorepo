@@ -1,11 +1,12 @@
-import { AuthorizationError, getSession, NotFoundError } from "blitz"
-import db from "../../db"
+import { AuthorizationError, getSession, invokeWithMiddleware, NotFoundError } from "blitz"
+import db, { EventType } from "../../db"
 import { NextApiRequest, NextApiResponse } from "next"
 import { z } from "zod"
 import nc from "next-connect"
 import { UPLOAD_DIR } from "../core/config"
 import formidable, { Fields, Files } from "formidable"
 import { flatten, isNil } from "lodash"
+import createEvent from "../event/mutations/createEvent"
 
 export const config = {
   api: {
@@ -38,7 +39,7 @@ const fileUpload = nc<NextApiRequest & { fields: Fields, files: Files }, NextApi
       next()
     })
   })
-  .post(async (req, res,next) => {
+  .post(async (req, res, next) => {
     const session = await getSession(req, res)
     const userId = session.userId
     if (isNil(userId)) throw new AuthorizationError("invalid user id")
@@ -51,14 +52,24 @@ const fileUpload = nc<NextApiRequest & { fields: Fields, files: Files }, NextApi
     console.log("fileUpload(): file uploaded with portalId:", portalId)
 
     const documentInserts = flatten(Object.values(req.files))
-      .map(file => ({
-        portalId: portalId,
-        title: file.name ?? "Untitled File",
-        path: file.path.substring(uploadPath.length + 1),//+1 for slash
-        isCompleted: false,
-        userId
-      }))
-    await db.document.createMany({ data: documentInserts })
+      .map(file =>
+        db.document.create({
+          data: {
+            portalId: portalId,
+            title: file.name ?? "Untitled File",
+            path: file.path.substring(uploadPath.length + 1),//+1 for slash
+            isCompleted: false,
+            userId
+          }
+        }).then(document => invokeWithMiddleware(createEvent, {
+          portalId,
+          type: EventType.DocumentUpload,
+          documentId: document.id
+        }, { req, res }))
+      )
+    // const documents = await db.document.createMany({ data: documentInserts })
+    await Promise.all(documentInserts)
+
     res.status(200).end()
   })
 

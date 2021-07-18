@@ -8,7 +8,8 @@ import axios from "axios"
 import { BACKEND_ENDPOINT } from "../../config"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
-import { getAntiCSRFToken } from "blitz"
+import { getAntiCSRFToken, invoke } from "blitz"
+import createEvent from "../../../event/mutations/createEvent"
 
 export type PortalDocument = {
   id: number,
