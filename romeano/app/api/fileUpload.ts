@@ -67,7 +67,6 @@ const fileUpload = nc<NextApiRequest & { fields: Fields, files: Files }, NextApi
           documentId: document.id
         }, { req, res }))
       )
-    // const documents = await db.document.createMany({ data: documentInserts })
     await Promise.all(documentInserts)
 
     res.status(200).end()

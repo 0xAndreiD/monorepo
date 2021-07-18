@@ -1,15 +1,16 @@
 import { AuthenticationError, Routes, useMutation, useParam, useRouter } from "blitz"
 import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
-import login from "app/auth/mutations/login"
+import loginAE from "app/auth/mutations/loginNoPortal"
+import loginStakeholder from "app/auth/mutations/loginPortal"
 import { Login } from "app/auth/validations"
-import NextLink from "next/link"
 
 export const LoginForm = (props: {
   onSuccess?: () => void,
 }) => {
   const portalId = useParam("portalId", "number")
-  const [loginMutation] = useMutation(login)
+  const [loginAEMutation] = useMutation(loginAE)
+  const [loginStakeholderMutation] = useMutation(loginStakeholder)
   const router = useRouter()
 
   return (
@@ -20,9 +21,9 @@ export const LoginForm = (props: {
         schema={Login}
         onSubmit={async (values) => {
           try {
-            if (!portalId) return { [FORM_ERROR]: "Missing Portal ID" }
-
-            const magicLink = await loginMutation({ portalId: portalId, email: values.email })
+            const magicLink = portalId ?
+              await loginStakeholderMutation({ portalId: portalId, email: values.email }) :
+              await loginAEMutation({ email: values.email })
             props.onSuccess?.() //catch error boundary auth error
             router.push(Routes.MagicLinkPage({ magicLinkId: magicLink }))
 

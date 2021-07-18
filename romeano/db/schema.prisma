@@ -247,13 +247,13 @@ model Event {
 }
 
 model MagicLink {
-  id         String     @id
-  userPortal UserPortal @relation(fields: [userId, portalId], references: [userId, portalId])
+  id         String      @id
+  hasClicked Boolean     @default(false)
   userId     Int
-  portalId   Int
-  hasClicked Boolean    @default(false)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  portalId   Int?
+  userPortal UserPortal? @relation(fields: [userId, portalId], references: [userId, portalId])
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
 
 enum EventType {

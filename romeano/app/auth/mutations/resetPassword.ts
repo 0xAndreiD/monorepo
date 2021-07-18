@@ -1,7 +1,7 @@
 import { resolver, SecurePassword, hash256 } from "blitz"
 import db from "db"
 import { ResetPassword } from "../validations"
-import login from "./login"
+import login from "./loginNoPortal"
 
 export class ResetPasswordError extends Error {
   name = "ResetPasswordError"
@@ -41,7 +41,7 @@ export default resolver.pipe(resolver.zod(ResetPassword), async ({ password, tok
   await db.session.deleteMany({ where: { userId: user.id } })
 
   // 7. Now log the user in with the new credentials
-  await login({ email: user.email, password }, ctx)
+  await login({ email: user.email }, ctx)
 
   return true
 })

@@ -12,7 +12,6 @@ const CreateEvent = z.object({
   // userId: z.number()
 })
 
-
 export const middleware: Middleware[] = [
   async (req, res, next) => {
     res.blitzCtx.ip = req.socket.remoteAddress

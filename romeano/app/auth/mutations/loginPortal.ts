@@ -1,14 +1,14 @@
-import { AuthenticationError, resolver } from "blitz"
+import { AuthenticationError, generateToken, resolver } from "blitz"
 import db from "db"
-import { nanoid } from "nanoid"
 import { z } from "zod"
-import { sendLoginLink } from "../../core/util/email"
+import { sendPortalLoginLink } from "../../core/util/email"
 
 export const Login = z.object({
   portalId: z.number().nonnegative(),
   email: z.string().email().nonempty()
 })
 
+//for Stakeholder
 export default resolver.pipe(resolver.zod(Login),
   async ({ portalId, email }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
@@ -32,14 +32,14 @@ export default resolver.pipe(resolver.zod(Login),
 
     const magicLink = await db.magicLink.create({
       data: {
-        id: nanoid(),
+        id: generateToken(),
         userId: userPortal.userId,
         portalId: portalId,
         hasClicked: false
       }
     })
 
-    sendLoginLink(portal.customerName,
+    sendPortalLoginLink(portal.customerName,
       portal.vendor.name,
       userPortal.user.firstName,
       email,
