@@ -74,7 +74,7 @@ export default resolver.pipe(resolver.zod(CreateStakeholder),
     sendInvite(portal.customerName,
       portal.vendor.name,
       userPortal.user.firstName,
-      userPortal.user.email,
+      email,
       magicLink.id
     )
 

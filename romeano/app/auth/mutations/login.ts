@@ -42,7 +42,7 @@ export default resolver.pipe(resolver.zod(Login),
     sendLoginLink(portal.customerName,
       portal.vendor.name,
       userPortal.user.firstName,
-      userPortal.user.email,
+      email,
       magicLink.id
     )
 
