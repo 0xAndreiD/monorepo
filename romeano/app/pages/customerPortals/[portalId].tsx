@@ -19,7 +19,7 @@ function CustomerPortal() {
 
   if (!portalId) throw new NotFoundError()
   //container: https://tailwindui.com/components/application-ui/layout/containers
-  return <Suspense fallback={<>Loading!</>}>
+  return <>
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
       <Header portalId={portalId} data={data.proposal.stakeholders} refetchHandler={refetch} />
       <div className="py-3"><CardDivider /></div>
@@ -43,8 +43,8 @@ function CustomerPortal() {
         <Footer />
       </div>
     </div>
-  </Suspense>
+  </>
 }
 
-CustomerPortal.authenticate = {redirectTo: "/"}
+CustomerPortal.authenticate = true
 export default CustomerPortal

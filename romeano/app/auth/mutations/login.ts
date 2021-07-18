@@ -10,7 +10,6 @@ export const Login = z.object({
 })
 
 export default resolver.pipe(resolver.zod(Login),
-  resolver.authorize(),
   async ({ portalId, email }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const portal = await db.portal.findUnique({
@@ -21,13 +20,13 @@ export default resolver.pipe(resolver.zod(Login),
     })
     if (!portal) throw new AuthenticationError("Could not find portal!")
 
-    const userPortal = await db.$queryRaw<{
+    const userPortal = (await db.$queryRaw<Array<{
       userId: number,
       portalId: number,
       firstName: string,
       lastName: string,
       email: string
-    }>
+    }>>
       `SELECT "userId",
               "portalId",
               "firstName",
@@ -37,8 +36,8 @@ export default resolver.pipe(resolver.zod(Login),
               JOIN "User" U ON UP."userId" = U.id
        WHERE U.email = ${email}
          AND "portalId" = ${portalId}
-       LIMIT 0
-      `
+       LIMIT 1
+      `)[0]
 
     if (!userPortal) throw new AuthenticationError("Could not find email address associated to portal!")
 
@@ -58,5 +57,5 @@ export default resolver.pipe(resolver.zod(Login),
       magicLink.id
     )
 
-    return magicLink
+    return magicLink.id
   })

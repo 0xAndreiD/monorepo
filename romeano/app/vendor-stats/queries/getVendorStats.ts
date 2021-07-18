@@ -1,5 +1,5 @@
-import { AuthenticationError, Ctx, NotFoundError, resolver } from "blitz"
-import db, { Prisma, Role } from "db"
+import { AuthenticationError, AuthorizationError, Ctx, resolver } from "blitz"
+import db, { Prisma } from "db"
 import { groupBy } from "lodash"
 import { z } from "zod"
 import { getBackendFilePath } from "../../core/util/upload"
@@ -14,12 +14,15 @@ export default resolver.pipe(
   resolver.authorize(),
   async (input: {}, ctx: Ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    ctx.session.$authorize(Role.AccountExecutive)
+    // ctx.session.$authorize(Role.AccountExecutive)
     const userId = ctx.session.userId
     if (!userId) throw new AuthenticationError("no userId provided")
 
-    const user = await db.user.findUnique({ where: { id: userId } })
-    if (!user) throw new NotFoundError("User not found!")
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      include: { accountExecutive: true }
+    })
+    if (!user || !user.accountExecutive) throw new AuthorizationError("Not an account executive")
 
     const portalIds = (await db.$queryRaw<Array<{ portalId: number }>>`
       SELECT "portalId"
