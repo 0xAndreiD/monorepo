@@ -176,7 +176,7 @@ function generateLink(event: DenormalizedEvent): Link | null {
     case EventType.DocumentOpen:
       return { body: event.documentTitle, href: getBackendFilePath(event.documentPath) }
     case EventType.DocumentUpload:
-      return null //TODO: have actual link
+      return { body: event.documentTitle, href: getBackendFilePath(event.documentPath) }
     case EventType.ProposalApprove:
       return null
     case EventType.ProposalDecline:

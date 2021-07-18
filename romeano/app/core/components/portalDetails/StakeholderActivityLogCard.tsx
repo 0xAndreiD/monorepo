@@ -31,7 +31,7 @@ function getActionText(eventType: EventType): string {
     case EventType.DocumentOpen:
       return "opened" //link following this
     case EventType.DocumentUpload:
-      return "uploaded a document" //TODO: have actual link
+      return "uploaded document"
     case EventType.ProposalApprove:
       return "approved the proposal"
     case EventType.ProposalDecline:
