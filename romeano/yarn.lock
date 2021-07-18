@@ -2417,7 +2417,7 @@ bl@^4.0.3, bl@^4.1.0:
     inherits "^2.0.4"
     readable-stream "^3.4.0"
 
-blitz@^0.38.5:
+blitz@0.38.5:
   version "0.38.5"
   resolved "https://registry.yarnpkg.com/blitz/-/blitz-0.38.5.tgz#2f5b373c28fa851bce53d91b2eb5a2f28e2f8182"
   integrity sha512-b2zZ9+hyjL5xhAce/An6o39LbOkpMz0oovI0ViH69BzzdGP/mya7A0j5+i4caI/TZMj9dFt09Atdk5vUBds3pA==
