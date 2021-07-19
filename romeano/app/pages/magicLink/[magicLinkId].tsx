@@ -17,6 +17,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   })
 
   if (!magicLink || magicLink.hasClicked) {
+    console.log("Invalid magiclink!!!", magicLink)
     //TODO: add modal for hasClicked
     return {
       redirect: {
@@ -33,28 +34,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       where: { id: magicLinkId },
       data: { hasClicked: true }
     })
-
-    switch (magicLink.userPortal.role) {
-      case Role.AccountExecutive:
-        return {
-          redirect: {
-            destination: Routes.VendorStats().pathname,
-            // destination: Routes.VendorStats(),
-            permanent: false
-          }
-        }
-      case Role.Stakeholder:
-        return {
-          redirect: {
-            destination: Routes.CustomerPortal({ portalId: magicLink.userPortal.portalId }).pathname.replace("[portalId]", magicLink.userPortal.portalId.toString()),
-            // destination: Routes.CustomerPortal({ portalId: portal.id }),
-            permanent: false
-          }
-        }
+    return {
+      redirect: {
+        destination: Routes.CustomerPortal({ portalId: magicLink.userPortal.portalId }).pathname.replace("[portalId]", magicLink.userPortal.portalId.toString()),
+        // destination: Routes.CustomerPortal({ portalId: portal.id }),
+        permanent: false
+      }
     }
+
   }
 
-  return { props: {} } //no redirect case
+  //no associated portal, send to user's home
+  await session.$create({ userId: magicLink.userId, role: Role.Stakeholder }) //FIXME: check if role is correct
+  return {
+    redirect: {
+      destination: Routes.Home().pathname,
+      permanent: false
+    }
+  }
 }
 
 export default function MagicLinkPage() {

@@ -4,9 +4,7 @@ import { LoginForm } from "app/auth/components/LoginForm"
 
 const LoginPage: BlitzPage = () => {
   const router = useRouter()
-  const portalId = useParam("portalId", "number")
 
-  if (!portalId) throw new NotFoundError("Portal ID is required")
   return (
     <div>
       <LoginForm
