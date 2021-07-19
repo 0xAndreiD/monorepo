@@ -5,13 +5,13 @@ import { TrackedLink } from "../generic/Link"
 import { useState } from "react"
 import RevealSection from "../generic/RevealSection"
 import Modal from "../generic/Modal"
-import { getColourFromString } from "../../util/colour"
-import { getInitialsOfName, getName } from "../../util/text"
+import { getName } from "../../util/text"
 import { EventType } from "db"
 import { invoke, useMutation } from "blitz"
 import updateProposalApproval from "../../../customer-portals/mutations/updateProposalApproval"
 import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
 import createEvent from "../../../event/mutations/createEvent"
+import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircles"
 
 export type Stakeholder = {
   firstName: string,
@@ -28,41 +28,10 @@ type Proposal = {
   stakeholders: Array<Stakeholder>
 }
 
-function StakeholderApprovalCircles(props: { data: Array<Stakeholder> }) {
-  return <>
-    {
-      props.data.map((stakeholder, idx) => {
-          const initials = getInitialsOfName(stakeholder.firstName, stakeholder.lastName)
-          const colour = getColourFromString(initials)
-
-          return <div key={idx}
-                      className={`relative w-10 h-10 flex items-center justify-center
-                                ${colour} rounded-full`}>
-            <span className="text-white static">{initials}</span>
-
-            {
-              stakeholder.hasStakeholderApproved === true ?
-                <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-green-500">
-                  <CheckIcon className="text-white" />
-                </div>
-                : stakeholder.hasStakeholderApproved === false ?
-                <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-red-500">
-                  <XIcon className="text-white" />
-                </div>
-                : <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-gray-300" />
-            }
-          </div>
-        }
-      )
-    }
-  </>
-}
-
 export function ProposalCard(props: { portalId: number, data: Proposal, refetchHandler: () => void }) {
   const [isDetailsVisible, setDetailsVisible] = useState(true)
   const [isInviteStakeholdersModalOpen, setIsInviteStakeholdersModalOpen] = useState(false)
   const [updateProposalApprovalMutation] = useMutation(updateProposalApproval)
-
 
   return <Card>
     <div className="flex flex-col items-center pb-6">

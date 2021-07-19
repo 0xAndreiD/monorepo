@@ -14,14 +14,14 @@ import getPortalDetail from "../../portal-details/queries/getPortalDetail"
 
 export default function PortalDetails() {
   const portalId = useParam("portalId", "number")
-  const [portal] = useQuery(getPortalDetail, { portalId })
+  const [portal] = useQuery(getPortalDetail, { portalId }, { refetchOnWindowFocus: false })
 
   if (!portalId) throw new NotFoundError()
 
   //container: https://tailwindui.com/components/application-ui/layout/containers
   return <Suspense fallback={<>Loading!</>}>
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
-      <Header portalId={portalId}/>
+      <Header portalId={portalId} />
       <div className="py-3"><CardDivider /></div>
     </div>
 
@@ -41,7 +41,7 @@ export default function PortalDetails() {
       <DocumentsCard portalId={portalId} data={portal.documents} />
       <CardDivider />
       <StakeholderEngagementCard data={portal.stakeholderEngagement} />
-      <StakeholderActivityLogCard data={portal.stakeholderActivityLog}/>
+      <StakeholderActivityLogCard data={portal.stakeholderActivityLog} />
       <Footer />
     </div>
   </Suspense>

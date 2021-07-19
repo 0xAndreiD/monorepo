@@ -87,9 +87,10 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
     timestamp: string,
     eventCount: number
   }>>`
-    SELECT DATE_TRUNC('day', "createdAt") AS timestamp,
+    SELECT DATE_TRUNC('day', E."createdAt") AS timestamp,
            COUNT(*)                       AS "eventCount"
-    FROM "Event"
+    FROM "Event" E
+           JOIN "UserPortal" UP ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
     GROUP BY TIMESTAMP
     ORDER BY TIMESTAMP ASC;
   `).map(x => ({ x: new Date(x.timestamp), y: x.eventCount }))
@@ -101,14 +102,15 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
     eventCount: number
     lastActive: string
   }>>`
-    SELECT "userId",
-           (SELECT "firstName" || ' ' || "lastName" FROM "User" WHERE id = "userId") AS "stakeholderName",
-           (SELECT "jobTitle" FROM "Stakeholder" WHERE "userId" = "Event"."userId")  AS "stakeholderJobTitle",
-           count(*)                                                                  AS "eventCount",
-           (SELECT MAX("createdAt") FROM "Event" WHERE "userId" = "Event"."userId")  AS "lastActive"
-    FROM "Event"
-    WHERE "portalId" = ${portalId}
-    GROUP BY "userId"
+    SELECT E."userId",
+           (SELECT "firstName" || ' ' || "lastName" FROM "User" WHERE id = E."userId") AS "stakeholderName",
+           (SELECT "jobTitle" FROM "Stakeholder" WHERE "userId" = E."userId")          AS "stakeholderJobTitle",
+           COUNT(*)                                                                    AS "eventCount",
+           (SELECT MAX("createdAt") FROM "Event" WHERE "userId" = E."userId")          AS "lastActive"
+    FROM "Event" E
+           JOIN "UserPortal" UP ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+    WHERE E."portalId" = ${portalId}
+    GROUP BY E."userId"
     ORDER BY "eventCount" DESC;
   `
 
@@ -123,6 +125,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
            "userAgent",
            E."createdAt"
     FROM "Event" E
+           JOIN "UserPortal" UP ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
            JOIN "Portal" P on E."portalId" = P.id
            LEFT JOIN "Document" D ON E."documentId" = D.id
     WHERE E."portalId" = ${portalId}

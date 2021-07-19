@@ -9,6 +9,7 @@ import { Card, CardHeader } from "../generic/Card"
 import { EventCounted, Link, Stakeholder, VendorContact } from "../../../../types"
 import { range } from "lodash"
 import { Link as BlitzLink, Routes } from "blitz"
+import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircles"
 
 type ActivePortal = {
   portalId: number,
@@ -48,37 +49,6 @@ function ProgressBullets(props: { current: number, total: number }) {
     </div>
   )
 
-}
-
-function StakeholderClickCircles(props: { data: Array<Stakeholder & { eventCount: number }> }) {
-  return <>
-    {
-      props.data.map((stakeholder, idx) => {
-          const initials = getInitialsOfName(stakeholder.firstName, stakeholder.lastName)
-          const colour = getColourFromString(initials)
-          return <div key={idx} className="flex flex-col items-center">
-            <div
-              className={`relative w-10 h-10 flex items-center justify-center ${colour} rounded-full`}>
-                        <span className="text-white static">
-                          {initials}
-                        </span>
-              {
-                stakeholder.hasStakeholderApproved ?
-                  <div
-                    className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-green-500">
-                    <CheckIcon className="text-white " />
-                  </div>
-                  :
-                  <div
-                    className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-gray-300" />
-              }
-            </div>
-            <span className="text-xs">{stakeholder.eventCount}</span>
-          </div>
-        }
-      )
-    }
-  </>
 }
 
 export function ActivePortals(props: { data: ActivePortal[] }) {
@@ -135,6 +105,7 @@ export function ActivePortals(props: { data: ActivePortal[] }) {
                           </div>
                         </div>
                       </td>
+
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="relative bg-white flex items-center space-x-3">
                           <div className="flex-1 min-w-0">
@@ -153,9 +124,10 @@ export function ActivePortals(props: { data: ActivePortal[] }) {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex gap-3">
-                          <StakeholderClickCircles data={portal.stakeholderEvents} />
+                          <StakeholderApprovalCircles data={portal.stakeholderEvents} />
                         </div>
                       </td>
+
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex justify-between">
                           <div className="text-sm flex justify-center flex-col gap-y-1">

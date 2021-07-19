@@ -120,7 +120,7 @@ export default resolver.pipe(
              COUNT(*) AS "eventCount"
       FROM "Event" E
              JOIN "User" U ON U.id = E."userId"
-             JOIN "UserPortal" UP ON U.id = UP."userId" AND E."portalId" = UP."portalId"
+             JOIN "UserPortal" UP ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
       WHERE E."portalId" IN (${Prisma.join(portalIds)})
       GROUP BY E."portalId", E."userId", U."firstName", U."lastName", email, "hasStakeholderApproved"`
     const stakeholderEvents = groupBy(activePortalsStakeholders, "portalId")
@@ -133,14 +133,15 @@ export default resolver.pipe(
       path: string,
       eventCount: number
     }>>`
-      SELECT "Event"."portalId" AS "portalId",
+      SELECT E."portalId" AS "portalId",
              title,
              path,
              COUNT(*)           AS "eventCount"
-      FROM "Event"
-             JOIN "Document" D ON D.id = "Event"."documentId"
-      WHERE "Event"."portalId" IN (${Prisma.join(portalIds)})
-      GROUP BY "Event"."portalId", title, path
+      FROM "Event" E
+             JOIN "Document" D ON D.id = E."documentId"
+             JOIN "UserPortal" UP ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+      WHERE E."portalId" IN (${Prisma.join(portalIds)})
+      GROUP BY E."portalId", title, path
     `
     const documentEvents = groupBy(activePortalsDocs.map(x => ({
       portalId: x.portalId,

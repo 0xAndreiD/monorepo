@@ -10,6 +10,12 @@ const transporter = nodemailer.createTransport({
   }
 })
 
+function recipientProcessor(recipients: string[]) {
+  return process.env.NODE_ENV === "production" ?
+    recipients :
+    ["eric.semeniuc@gmail.com"]
+}
+
 //invitation for a new stakeholder
 export async function sendInvite(customerName: string,
                                  vendorName: string,
@@ -22,7 +28,7 @@ export async function sendInvite(customerName: string,
 
   const info = await transporter.sendMail({
     from: `"Romeano" <hey@romeano.com>`,
-    to: [inviteeEmailAddress, "eric.semeniuc@gmail.com"],
+    to: recipientProcessor([inviteeEmailAddress]),
     // to: emailAddress,
     subject: `${customerName} Customer Portal Invitation - ${vendorName}`, // Subject line
     html: body
@@ -45,7 +51,7 @@ You asked us to send you a magic link for quickly signing in to your ${customerN
 
   const info = await transporter.sendMail({
     from: `"Romeano" <hey@romeano.com>`,
-    to: [inviteeEmailAddress, "eric.semeniuc@gmail.com"],
+    to: recipientProcessor([inviteeEmailAddress]),
     // to: emailAddress,
     subject: `${customerName} Customer Portal Login - ${vendorName}`, // Subject line
     html: body
@@ -64,7 +70,7 @@ You asked us to send you a magic link for quickly signing in to your AE dashboar
 
   const info = await transporter.sendMail({
     from: `"Romeano" <hey@romeano.com>`,
-    to: [aeEmail, "eric.semeniuc@gmail.com"],
+    to: recipientProcessor([aeEmail]),
     // to: emailAddress,
     subject: `Magic sign-in link for ${aeFirstName} on Romeano`, // Subject line
     html: body

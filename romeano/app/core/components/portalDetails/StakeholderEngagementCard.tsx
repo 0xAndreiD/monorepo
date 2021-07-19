@@ -17,7 +17,7 @@ export function StakeholderEngagementCard(props: { data: StakeholderStats[] }) {
         <CardHeader>Stakeholder Engagement</CardHeader>
         <span className="text-sm text-gray-700">(clicks)</span>
       </div>
-      <span className="text-sm text-gray-700">Last Active</span>
+      <span className="text-sm text-gray-700">Last Action</span>
     </div>
     <div className="py-3 grid gap-x-6 gap-y-2 items-center" style={{ gridTemplateColumns: "auto minmax(0, 1fr) auto" }}>
       {
