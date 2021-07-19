@@ -110,7 +110,11 @@ function NextStepsTaskList(props: { portalId: number, isElementDeletable: boolea
           props.tasks.map(task =>
             <li key={task.id} className="flex items-center">
               <input type="checkbox" checked={task.isCompleted} onChange={async () => {
-                const updatedTask = await updateIsCompleted({ id: task.id, isCompleted: !task.isCompleted })
+                const newCompletionStatus = !task.isCompleted
+                const updatedTask = await updateIsCompleted({ id: task.id, isCompleted: newCompletionStatus })
+                newCompletionStatus ?
+                  invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepMarkCompleted }) :
+                  invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepMarkNotCompleted })
                 props.refetchHandler()
               }} />
               <span className="px-2">{task.description}</span>

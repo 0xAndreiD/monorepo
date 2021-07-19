@@ -259,7 +259,8 @@ model MagicLink {
 enum EventType {
   LaunchRoadmapLinkOpen
   NextStepCreate
-  NextStepUpdate
+  NextStepMarkCompleted
+  NextStepMarkNotCompleted
   NextStepDelete
   DocumentApprove
   DocumentOpen

@@ -88,7 +88,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
     eventCount: number
   }>>`
     SELECT DATE_TRUNC('day', E."createdAt") AS timestamp,
-           COUNT(*)                       AS "eventCount"
+           COUNT(*)                         AS "eventCount"
     FROM "Event" E
            JOIN "UserPortal" UP ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
     GROUP BY TIMESTAMP
@@ -115,17 +115,18 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
   `
 
   const stakeholderActivityLogRaw = await db.$queryRaw<DenormalizedEvent[]>`
-    SELECT (SELECT "firstName" || ' ' || "lastName" FROM "User" WHERE id = E."userId") AS "stakeholderName",
-           "customerName",
-           type,
-           title                                                                       AS "documentTitle",
-           path                                                                        AS "documentPath",
-           url,
-           ip,
-           "userAgent",
+    SELECT U."firstName" || ' ' || U."lastName" AS "stakeholderName",
+           P."customerName",
+           E.type,
+           D.title                              AS "documentTitle",
+           D.path                               AS "documentPath",
+           E.url,
+           E.ip,
+           E."userAgent",
            E."createdAt"
     FROM "Event" E
            JOIN "UserPortal" UP ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+           JOIN "User" U on U.id = E."userId"
            JOIN "Portal" P on E."portalId" = P.id
            LEFT JOIN "Document" D ON E."documentId" = D.id
     WHERE E."portalId" = ${portalId}
@@ -152,7 +153,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
   }
 })
 
-type DenormalizedEvent = {
+export type DenormalizedEvent = {
   stakeholderName: string,
   customerName: string,
   type: EventType,
@@ -164,13 +165,19 @@ type DenormalizedEvent = {
   createdAt: string,
 }
 
-function generateLink(event: DenormalizedEvent): Link | null {
+export function generateLink(event: {
+  type: EventType,
+  documentTitle: string,
+  documentPath: string
+}): Link | null {
   switch (event.type) {
     case EventType.LaunchRoadmapLinkOpen:
       return null //TODO: have actual link
     case EventType.NextStepCreate:
       return null
-    case EventType.NextStepUpdate:
+    case EventType.NextStepMarkCompleted:
+      return null
+    case EventType.NextStepMarkNotCompleted:
       return null
     case EventType.NextStepDelete:
       return null

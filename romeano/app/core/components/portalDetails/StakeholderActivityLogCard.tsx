@@ -16,14 +16,16 @@ export type StakeholderActivityEvent = {
   timestamp: string,
 }
 
-function getActionText(eventType: EventType): string {
+export function getActionText(eventType: EventType): string {
   switch (eventType) {
     case EventType.LaunchRoadmapLinkOpen:
       return "opened a Roadmap link" //TODO: have actual link
     case EventType.NextStepCreate:
       return "created a Next Step item"
-    case EventType.NextStepUpdate:
-      return "updated a Next Step item"
+    case EventType.NextStepMarkCompleted:
+      return "marked a Next Step item as completed"
+    case EventType.NextStepMarkNotCompleted:
+      return "marked a Next Step item as not completed"
     case EventType.NextStepDelete:
       return "deleted a Next Step item"
     case EventType.DocumentApprove:

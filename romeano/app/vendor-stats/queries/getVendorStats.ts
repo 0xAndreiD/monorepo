@@ -1,8 +1,9 @@
 import { AuthenticationError, AuthorizationError, Ctx, resolver } from "blitz"
-import db, { Prisma } from "db"
+import db, { EventType, Prisma } from "db"
 import { groupBy } from "lodash"
 import { z } from "zod"
 import { getBackendFilePath } from "../../core/util/upload"
+import { generateLink } from "../../portal-details/queries/getPortalDetail"
 
 const GetVendorStats = z.object({
   // This accepts type of undefined, but is required at runtime
@@ -45,34 +46,35 @@ export default resolver.pipe(
       ORDER BY "eventCount" DESC;
     `
 
-    const stakeholderActivityRaw = await db.$queryRaw<Array<{
+    const stakeholderActivityLogRaw = await db.$queryRaw<Array<{
       stakeholderName: string,
       customerName: string,
+      type: EventType,
       documentTitle: string,
       documentPath: string,
-      timestamp: string,
+      createdAt: string,
     }>>`
-      SELECT "User"."firstName" || ' ' || "User"."lastName" AS "stakeholderName",
-             "Portal"."customerName",
-             "Document".title                               AS "documentTitle",
-             "Document".path                                AS "documentPath",
-             "Event"."createdAt"                            AS timestamp
-      FROM "Event"
-             INNER JOIN "Portal"
-                        ON "Event"."portalId" = "Portal".id
-             INNER JOIN "User" ON "Event"."userId" = "User".id
-             INNER JOIN "Document" ON "Event"."documentId" = "Document".id
-      WHERE "Event"."portalId" IN (${Prisma.join(portalIds)})
-      ORDER BY timestamp DESC
+      SELECT U."firstName" || ' ' || U."lastName" AS "stakeholderName",
+             P."customerName",
+             E.type,
+             D.title                              AS "documentTitle",
+             D.path                               AS "documentPath",
+             E."createdAt"
+      FROM "Event" E
+             JOIN "UserPortal" UP
+                  ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+             JOIN "User" U on U.id = E."userId"
+             JOIN "Portal" P on E."portalId" = P.id
+             LEFT JOIN "Document" D ON E."documentId" = D.id
+      ORDER BY E."createdAt" DESC
+      LIMIT 25
     `
-    const stakeholderActivity = stakeholderActivityRaw.map(x => ({
+    const stakeholderActivityLog = stakeholderActivityLogRaw.map(x => ({
       stakeholderName: x.stakeholderName,
       customerName: x.customerName,
-      link: { //link should always exist due to joining on documentId
-        body: x.documentTitle,
-        href: getBackendFilePath(x.documentPath)
-      },
-      timestamp: x.timestamp
+      type: x.type,
+      link: generateLink(x),
+      timestamp: new Date(x.createdAt).toISOString()
     }))
 
     const activePortals = await db.$queryRaw<Array<{
@@ -120,7 +122,8 @@ export default resolver.pipe(
              COUNT(*) AS "eventCount"
       FROM "Event" E
              JOIN "User" U ON U.id = E."userId"
-             JOIN "UserPortal" UP ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+             JOIN "UserPortal" UP
+                  ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
       WHERE E."portalId" IN (${Prisma.join(portalIds)})
       GROUP BY E."portalId", E."userId", U."firstName", U."lastName", email, "hasStakeholderApproved"`
     const stakeholderEvents = groupBy(activePortalsStakeholders, "portalId")
@@ -136,10 +139,11 @@ export default resolver.pipe(
       SELECT E."portalId" AS "portalId",
              title,
              path,
-             COUNT(*)           AS "eventCount"
+             COUNT(*)     AS "eventCount"
       FROM "Event" E
              JOIN "Document" D ON D.id = E."documentId"
-             JOIN "UserPortal" UP ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+             JOIN "UserPortal" UP
+                  ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
       WHERE E."portalId" IN (${Prisma.join(portalIds)})
       GROUP BY E."portalId", title, path
     `
@@ -169,7 +173,7 @@ export default resolver.pipe(
 
     return {
       opportunityEngagement,
-      stakeholderActivity,
+      stakeholderActivity: stakeholderActivityLog,
       activePortals: all
     }
   })

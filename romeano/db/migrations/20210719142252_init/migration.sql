@@ -5,7 +5,7 @@ CREATE TYPE "TokenType" AS ENUM ('RESET_PASSWORD');
 CREATE TYPE "Role" AS ENUM ('AccountExecutive', 'Stakeholder');
 
 -- CreateEnum
-CREATE TYPE "EventType" AS ENUM ('LaunchRoadmapLinkOpen', 'NextStepCreate', 'NextStepUpdate', 'NextStepDelete', 'DocumentApprove', 'DocumentOpen', 'DocumentUpload', 'ProposalApprove', 'ProposalDecline', 'ProposalOpen', 'CreateInternalMessage', 'ProductInfoLinkOpen', 'InviteStakeholder');
+CREATE TYPE "EventType" AS ENUM ('LaunchRoadmapLinkOpen', 'NextStepCreate', 'NextStepMarkCompleted', 'NextStepMarkNotCompleted', 'NextStepDelete', 'DocumentApprove', 'DocumentOpen', 'DocumentUpload', 'ProposalApprove', 'ProposalDecline', 'ProposalOpen', 'CreateInternalMessage', 'ProductInfoLinkOpen', 'InviteStakeholder');
 
 -- CreateTable
 CREATE TABLE "Portal" (
@@ -233,9 +233,9 @@ CREATE TABLE "Event" (
 -- CreateTable
 CREATE TABLE "MagicLink" (
     "id" TEXT NOT NULL,
-    "userId" INTEGER NOT NULL,
-    "portalId" INTEGER NOT NULL,
     "hasClicked" BOOLEAN NOT NULL DEFAULT false,
+    "userId" INTEGER NOT NULL,
+    "portalId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
