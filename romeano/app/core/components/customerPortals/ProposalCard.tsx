@@ -24,7 +24,7 @@ export type Stakeholder = {
 type Proposal = {
   heading: string,
   subheading: string,
-  quote: { documentId: number, href: string },
+  quote: { documentId: number, href: string } | null,
   stakeholders: Array<Stakeholder>
 }
 
