@@ -15,7 +15,7 @@ CREATE TABLE "Portal" (
     "currentRoadmapStage" INTEGER NOT NULL,
     "proposalHeading" TEXT NOT NULL,
     "proposalSubheading" TEXT NOT NULL,
-    "proposalQuoteLink" TEXT NOT NULL,
+    "proposalDocumentId" INTEGER,
     "vendorId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -243,6 +243,9 @@ CREATE TABLE "MagicLink" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Portal_proposalDocumentId_unique" ON "Portal"("proposalDocumentId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "User.email_unique" ON "User"("email");
 
 -- CreateIndex
@@ -259,6 +262,9 @@ CREATE UNIQUE INDEX "Stakeholder.userId_unique" ON "Stakeholder"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "AccountExecutive.userId_unique" ON "AccountExecutive"("userId");
+
+-- AddForeignKey
+ALTER TABLE "Portal" ADD FOREIGN KEY ("proposalDocumentId") REFERENCES "Document"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Portal" ADD FOREIGN KEY ("vendorId") REFERENCES "Vendor"("id") ON DELETE CASCADE ON UPDATE CASCADE;

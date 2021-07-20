@@ -1,17 +1,10 @@
 import { AuthenticationError, AuthorizationError, Ctx, resolver } from "blitz"
 import db, { EventType, Prisma } from "db"
 import { groupBy } from "lodash"
-import { z } from "zod"
 import { getBackendFilePath } from "../../core/util/upload"
-import { generateLink } from "../../portal-details/queries/getPortalDetail"
-
-const GetVendorStats = z.object({
-  // This accepts type of undefined, but is required at runtime
-  // userId: z.number().optional().refine(Boolean, "Required")
-})
+import { generateLinkFromEventType } from "../../portal-details/queries/getPortalDetail"
 
 export default resolver.pipe(
-  resolver.zod(GetVendorStats),
   resolver.authorize(),
   async (input: {}, ctx: Ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
@@ -73,7 +66,7 @@ export default resolver.pipe(
       stakeholderName: x.stakeholderName,
       customerName: x.customerName,
       type: x.type,
-      link: generateLink(x),
+      link: generateLinkFromEventType(x),
       timestamp: new Date(x.createdAt).toISOString()
     }))
 

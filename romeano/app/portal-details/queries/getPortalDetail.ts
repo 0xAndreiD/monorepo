@@ -137,7 +137,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
     stakeholderName: x.stakeholderName,
     customerName: x.customerName,
     type: x.type,
-    link: generateLink(x),
+    link: generateLinkFromEventType(x),
     location: getLocation(x.ip),
     device: UAParser(x.userAgent).device.type === "mobile" ? Device.Mobile : Device.Computer,
     timestamp: new Date(x.createdAt).toISOString()
@@ -165,7 +165,7 @@ export type DenormalizedEvent = {
   createdAt: string,
 }
 
-export function generateLink(event: {
+export function generateLinkFromEventType(event: {
   type: EventType,
   documentTitle: string,
   documentPath: string
@@ -192,7 +192,7 @@ export function generateLink(event: {
     case EventType.ProposalDecline:
       return null
     case EventType.ProposalOpen:
-      return null
+      return { body: "the proposal", href: getBackendFilePath(event.documentPath) }
     case EventType.CreateInternalMessage:
       return null
     case EventType.ProductInfoLinkOpen:

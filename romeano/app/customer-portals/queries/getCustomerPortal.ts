@@ -14,6 +14,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   const portal = await db.portal.findFirst({
     where: { id },
     include: {
+      proposalDocument: true,
       roadmapStages: {
         include: { tasks: true } //get the associated tasks for a stage
       },
@@ -35,7 +36,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
             include: {
               accountExecutive: true,
               stakeholder: true
-            },
+            }
           }
         },
         orderBy: { userId: "asc" }
@@ -124,7 +125,10 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   const proposal = {
     heading: portal.proposalHeading,
     subheading: portal.proposalSubheading,
-    quoteLink: portal.proposalQuoteLink,
+    quote: portal.proposalDocument && {
+      documentId: portal.proposalDocument.id,
+      href:getBackendFilePath(portal.proposalDocument.path),
+    },
     stakeholders: portal.userPortals
       .filter(userPortal => userPortal.role === Role.Stakeholder)
       .map(userPortal =>

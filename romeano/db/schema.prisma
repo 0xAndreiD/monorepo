@@ -20,12 +20,13 @@ model Portal {
   currentRoadmapStage Int //1 indexed
   roadmapStages       RoadmapStage[]
   nextStepsTasks      NextStepsTask[]
-  documents           Document[]
+  documents           Document[]           @relation(name: "uploadedDocument")
   images              PortalImage[]
   productInfoSections ProductInfoSection[]
   proposalHeading     String
   proposalSubheading  String
-  proposalQuoteLink   String
+  proposalDocument    Document?            @relation(name: "proposalDocument", fields: [proposalDocumentId], references: [id])
+  proposalDocumentId  Int?
   userPortals         UserPortal[]
   internalNotes       InternalNote[]
   events              Event[]
@@ -209,7 +210,8 @@ model NextStepsTask {
 model Document {
   id          Int      @id @default(autoincrement())
   portalId    Int
-  portal      Portal   @relation(fields: [portalId], references: [id])
+  portal      Portal   @relation(name: "uploadedDocument", fields: [portalId], references: [id])
+  proposal    Portal?  @relation("proposalDocument")
   title       String
   path        String
   isCompleted Boolean  @default(false)

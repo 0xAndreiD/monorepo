@@ -39,7 +39,7 @@ export function getActionText(eventType: EventType): string {
     case EventType.ProposalDecline:
       return "declined the proposal"
     case EventType.ProposalOpen:
-      return "opened the proposal"
+      return "opened"
     case EventType.CreateInternalMessage:
       return "sent an internal note"
     case EventType.ProductInfoLinkOpen:

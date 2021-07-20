@@ -24,7 +24,7 @@ export type Stakeholder = {
 type Proposal = {
   heading: string,
   subheading: string,
-  quoteLink: string,
+  quote: { documentId: number, href: string },
   stakeholders: Array<Stakeholder>
 }
 
@@ -40,8 +40,10 @@ export function ProposalCard(props: { portalId: number, data: Proposal, refetchH
       <h5 className="py-2 font-bold text-center">{props.data.subheading}</h5>
       <div className="sm:divide-y sm:divide-gray-200" />
 
+      {props.data.quote &&
       <TrackedLink portalId={props.portalId}
-                   href={props.data.quoteLink}
+                   documentId={props.data.quote.documentId}
+                   href={props.data.quote.href}
                    eventType={EventType.ProposalOpen}>
         <button
           type="button"
@@ -50,6 +52,7 @@ export function ProposalCard(props: { portalId: number, data: Proposal, refetchH
           View Quote
         </button>
       </TrackedLink>
+      }
     </div>
     <CardDivider />
 

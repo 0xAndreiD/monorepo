@@ -86,7 +86,6 @@ const seedCustomerPortal = async () => {
       },
       proposalHeading: "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
       proposalSubheading: "2 Prism Headsets + 4 User Licenses",
-      proposalQuoteLink: "https://www.google.com/?gws_rd=ssl",
       vendorId: vendorTeam.vendorId
     }
   })
@@ -203,7 +202,7 @@ const seedCustomerPortal = async () => {
     ]
   })
 
-  await db.document.createMany({
+  const documents = await db.document.createMany({
     data: [
       {
         portalId: portal.id,
@@ -227,6 +226,21 @@ const seedCustomerPortal = async () => {
         userId: stakeholders[0].id
       }
     ]
+  })
+
+  await db.portal.update({
+    where: { id: portal.id },
+    data: {
+      proposalDocument: {
+        create: {
+          portalId: portal.id,
+          title: "Mira Proposal",
+          path: "proposal.txt",
+          isCompleted: false,
+          userId: aeUser.id
+        }
+      }
+    }
   })
 
   await db.portalImage.createMany({
@@ -384,7 +398,6 @@ async function seedPortalDetails() {
       },
       proposalHeading: "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
       proposalSubheading: "2 Prism Headsets + 4 User Licenses",
-      proposalQuoteLink: "https://www.google.com/?gws_rd=ssl",
       vendorId: 1
     }
   })
@@ -432,6 +445,21 @@ async function seedPortalDetails() {
         userId: aeUser.id
       }
     ]
+  })
+
+  await db.portal.update({
+    where: { id: portal.id },
+    data: {
+      proposalDocument: {
+        create: {
+          portalId: portal.id,
+          title: "Mira Proposal",
+          path: "proposal2.txt",
+          isCompleted: false,
+          userId: aeUser.id
+        }
+      }
+    }
   })
 }
 
