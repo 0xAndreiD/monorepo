@@ -157,14 +157,14 @@ const seedCustomerPortal = async () => {
       date: new Date(2021, 9, 8),
       tasks: { create: { task: "Go over Mira's platform." } },
       ctaLinkText: "Mira's Slide Deck",
-      ctaLink: "#"
+      ctaLink: "https://www.google.com/webhp?client=firefox-b-d"
     },
     {
       heading: "AR Headset Demo",
       date: new Date(2021, 10, 11),
       tasks: { create: { task: "Demonstrate a live Mira Connect call from headset." } },
       ctaLinkText: "Join Zoom 📞",
-      ctaLink: "#"
+      ctaLink: "https://www.google.com/webhp?client=firefox-b-d"
     },
     {
       heading: "Use-Case Planning Workshop",

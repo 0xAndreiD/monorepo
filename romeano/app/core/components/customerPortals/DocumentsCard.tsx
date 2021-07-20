@@ -8,8 +8,7 @@ import axios from "axios"
 import { BACKEND_ENDPOINT } from "../../config"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
-import { getAntiCSRFToken, invoke } from "blitz"
-import createEvent from "../../../event/mutations/createEvent"
+import { getAntiCSRFToken } from "blitz"
 
 export type PortalDocument = {
   id: number,
@@ -104,23 +103,23 @@ function DocumentList(props: { portalId: number, companyName: string, documents:
     <div className="py-4 flex justify-self-start gap-1.5">
       {
         props.documents.map((document, idx) =>
-          <span key={idx}>
-                        <TrackedLink portalId={props.portalId}
-                                     documentId={document.id}
-                                     eventType={EventType.DocumentOpen}
-                                     href={document.href}>
-                            <button
-                              type="button"
-                              className={"inline-flex items-center px-3 py-2 border shadow-sm text-sm\
-             leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 " +
-                              (document.isCompleted ? "border-green-300" : "border-gray-300")}
-                            >
-                                {document.isCompleted && <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-green-500" />}
-                              {document.title}
-                            </button>
-                        </TrackedLink>
-                    </span>
+          <div key={idx}>
+            <TrackedLink portalId={props.portalId}
+                         documentId={document.id}
+                         eventType={EventType.DocumentOpen}
+                         href={document.href}
+                         anchorProps={{ target: "_blank" }}>
+              <button
+                className={"inline-flex items-center px-3 py-2 border shadow-sm text-sm\
+ leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
+  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 " +
+                (document.isCompleted ? "border-green-300" : "border-gray-300")}
+              >
+                {document.isCompleted && <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-green-500" />}
+                {document.title}
+              </button>
+            </TrackedLink>
+          </div>
         )
       }
     </div>

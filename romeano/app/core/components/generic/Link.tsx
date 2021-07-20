@@ -1,7 +1,8 @@
 import NextLink, { LinkProps } from "next/link"
-import { PropsWithChildren } from "react"
+import { ComponentProps, PropsWithChildren } from "react"
 import { EventType } from "db"
 import { Routes } from "blitz"
+import { ParsedUrlQueryInput } from "querystring"
 
 //no tracking on this!
 export function StyledLink(props: PropsWithChildren<LinkProps & { className?: string }>) {
@@ -12,8 +13,15 @@ export function StyledLink(props: PropsWithChildren<LinkProps & { className?: st
   </NextLink>
 }
 
-export function TrackedLink(props: PropsWithChildren<LinkProps & { portalId: number, documentId?: number, eventType: EventType, defaultStyle?: boolean, className?: string }>) {
-  const params: Record<string, string | number> = {
+export function TrackedLink(props: PropsWithChildren<LinkProps & {
+  portalId: number,
+  documentId?: number,
+  eventType: EventType,
+  defaultStyle?: boolean,
+  className?: string
+  anchorProps?: ComponentProps<"a">
+}>) {
+  const params: ParsedUrlQueryInput = {
     portalId: props.portalId,
     eventType: props.eventType,
     url: props.href.toString()
@@ -21,10 +29,11 @@ export function TrackedLink(props: PropsWithChildren<LinkProps & { portalId: num
   if (props.documentId) {
     params["documentId"] = props.documentId
   }
-  const url = Routes.RedirectPage(params)
+
   const customClass = props.className ?? ""
-  return <NextLink href={url}>
-    <a className={props.defaultStyle ? "text-blue-600 underline " + customClass : customClass}>
+  return <NextLink href={Routes.RedirectPage(params)}>
+    <a className={(props.defaultStyle ? "text-blue-600 underline " : "") + customClass}
+       {...props.anchorProps}>
       {props.children}
     </a>
   </NextLink>

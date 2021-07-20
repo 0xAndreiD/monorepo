@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     redirect: {
-      destination: decodeURI(url),
+      destination: url,
       permanent: false
     }
   }

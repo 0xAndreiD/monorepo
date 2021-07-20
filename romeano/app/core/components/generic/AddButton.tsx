@@ -1,6 +1,7 @@
 import { PlusIcon } from "@heroicons/react/solid"
+import { ComponentProps } from "react"
 
-export function AddButton(props: React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>) {
+export function AddButton(props: ComponentProps<'button'>) {
   return <button    {...props}
                     className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
