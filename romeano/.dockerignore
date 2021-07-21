@@ -1,0 +1,10 @@
+# add git-ignore syntax here of things you don't want copied into docker image
+
+.git
+.blitz
+.next
+*Dockerfile*
+*docker-compose*
+node_modules
+.blitz-console-history
+.tsbuildinfo
