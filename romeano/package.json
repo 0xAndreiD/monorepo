@@ -10,7 +10,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "prepare": "husky install",
-    "postinstall": "curl -fsSl 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=YIvvlo88zRdlQ40h&suffix=tar.gz' | tar xz --strip-components=1 -C db/geoip"
+    "postinstall": "mkdir -p db/geoip && wget -O - 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=YIvvlo88zRdlQ40h&suffix=tar.gz' | tar xz --strip-components=1 -C db/geoip"
   },
   "prisma": {
     "schema": "db/schema.prisma"
