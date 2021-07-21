@@ -20,6 +20,11 @@ DB Setup
 yarn blitz prisma migrate dev --name init && yarn blitz prisma migrate reset --force && yarn blitz db seed
 ```
 
+Docker Seed
+```
+docker exec -it --user root romeano_web_1 npx blitz db seed
+```
+
 ## Environment Variables
 
 Ensure the `.env.local` file has required environment variables:

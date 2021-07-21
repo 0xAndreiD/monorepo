@@ -25,8 +25,7 @@ export const LoginForm = (props: {
               await loginStakeholderMutation({ portalId: portalId, email: values.email }) :
               await loginAEMutation({ email: values.email })
             props.onSuccess?.() //catch error boundary auth error
-            router.push(Routes.MagicLinkPage({ magicLinkId: magicLink }))
-
+            await router.push(Routes.MagicLinkPage({ magicLinkId: magicLink }))
           } catch (error) {
             if (error instanceof AuthenticationError) {
               return { [FORM_ERROR]: "You currently don't have access, please contact your admin if this is a mistake" }
