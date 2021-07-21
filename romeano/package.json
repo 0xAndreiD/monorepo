@@ -44,6 +44,7 @@
     "lint-staged": "11.0.1",
     "lodash": "^4.17.21",
     "next-connect": "^0.10.1",
+    "nodemailer": "^6.6.3",
     "prettier": "2.3.2",
     "prettier-plugin-prisma": "0.14.0",
     "pretty-quick": "3.1.1",
@@ -64,13 +65,14 @@
     "@types/formidable": "^1.2.3",
     "@types/lodash": "^4.14.171",
     "@types/node": "^16.3.2",
-    "@types/preview-email": "2.0.1",
+    "@types/nodemailer": "^6.4.4",
+    "@types/preview-email": "^2.0.1",
     "@types/react": "^17.0.14",
     "@types/ua-parser-js": "^0.7.36",
-    "autoprefixer": "10.3.1",
-    "preview-email": "3.0.4",
+    "autoprefixer": "^10.3.1",
     "postcss": "latest",
-    "tailwindcss": "2.2.4",
+    "preview-email": "^3.0.4",
+    "tailwindcss": "^2.2.4",
     "typescript": "~4.3.5"
   }
 }
