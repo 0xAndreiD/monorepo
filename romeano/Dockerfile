@@ -12,6 +12,8 @@ RUN yarn install --frozen-lockfile
 FROM node:alpine AS builder
 WORKDIR /app
 COPY . .
+#geoip is added during yarn postinstall, which would not be in node_modules by default
+COPY --from=deps /app/db/geoip ./db/geoip
 COPY --from=deps /app/node_modules ./node_modules
 RUN yarn prisma generate && yarn build && yarn install --production --ignore-scripts --prefer-offline
 
