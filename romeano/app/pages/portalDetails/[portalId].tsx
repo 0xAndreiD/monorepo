@@ -1,24 +1,24 @@
-import React, { Suspense } from "react"
+import { Suspense } from "react"
 import "tailwindcss/tailwind.css"
-import DocumentsCard from "app/core/components/portalDetails/DocumentsCard"
-import OpportunityOverview from "app/core/components/portalDetails/OpportunityOverview"
-import { ContactsCard } from "app/core/components/ContactsCard"
-import { Footer } from "app/core/components/Footer"
-import { Header } from "app/core/components/portalDetails/Header"
-import { CardDivider } from "app/core/components/generic/Card"
 import LineChart from "app/core/components/portalDetails/LineChart"
-import { StakeholderEngagementCard } from "app/core/components/portalDetails/StakeholderEngagementCard"
-import { StakeholderActivityLogCard } from "app/core/components/portalDetails/StakeholderActivityLogCard"
-import { NotFoundError, useParam, useQuery } from "blitz"
+import { useParam, useQuery } from "blitz"
 import getPortalDetail from "../../portal-details/queries/getPortalDetail"
+import { ContactsCard } from "../../core/components/ContactsCard"
+import DocumentsCard from "../../core/components/portalDetails/DocumentsCard"
+import { CardDivider } from "../../core/components/generic/Card"
+import { Footer } from "../../core/components/Footer"
+import { StakeholderEngagementCard } from "../../core/components/portalDetails/StakeholderEngagementCard"
+import { StakeholderActivityLogCard } from "../../core/components/portalDetails/StakeholderActivityLogCard"
+import OpportunityOverview from "../../core/components/portalDetails/OpportunityOverview"
+import { Header } from "../../core/components/portalDetails/Header"
 
 export default function PortalDetails() {
   const portalId = useParam("portalId", "number")
-  const [portal] = useQuery(getPortalDetail, { portalId }, { refetchOnWindowFocus: false })
-
-  if (!portalId) throw new NotFoundError()
+  const [portal] = useQuery(getPortalDetail, { portalId },
+    { refetchOnWindowFocus: false, enabled: !!portalId })
 
   //container: https://tailwindui.com/components/application-ui/layout/containers
+  if (!portalId || !portal) return <>Loading!</>
   return <Suspense fallback={<>Loading!</>}>
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
       <Header portalId={portalId} />

@@ -44,7 +44,8 @@ export function ProposalCard(props: { portalId: number, data: Proposal, refetchH
       <TrackedLink portalId={props.portalId}
                    documentId={props.data.quote.documentId}
                    href={props.data.quote.href}
-                   eventType={EventType.ProposalOpen}>
+                   eventType={EventType.ProposalOpen}
+                   anchorProps={{ target: "_blank" }}>
         <button
           type="button"
           className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"

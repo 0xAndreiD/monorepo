@@ -4,6 +4,7 @@ import "chartjs-adapter-date-fns"
 import { Card, CardHeader } from "../generic/Card"
 
 const options = {
+  animation: false,
   responsive: true,
   scales: {
     x: {
