@@ -46,12 +46,12 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
 
   const contacts = {
     contacts: portal.userPortals
-      .filter(userPortal => userPortal.role === Role.AccountExecutive)
+      .filter(userPortal => userPortal.role === Role.Stakeholder && userPortal.isPrimaryContact === true)
       .map(userPortal =>
         ({
           firstName: userPortal.user.firstName,
           lastName: userPortal.user.lastName,
-          jobTitle: userPortal.user.accountExecutive?.jobTitle,
+          jobTitle: userPortal.user.stakeholder?.jobTitle,
           email: userPortal.user.email,
           photoUrl: userPortal.user.photoUrl ?? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
         })

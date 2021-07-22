@@ -138,7 +138,8 @@ const seedCustomerPortal = async () => {
             create: {
               portalId: portal.id,
               role: Role.Stakeholder,
-              hasStakeholderApproved: stakeholder.hasStakeholderApproved
+              hasStakeholderApproved: stakeholder.hasStakeholderApproved,
+              isPrimaryContact: stakeholder.firstName === "Kristin"
             }
           }
         }

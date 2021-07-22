@@ -81,22 +81,22 @@ export default resolver.pipe(
       primaryContactEmail: string,
       primaryContactPhotoUrl: string
     }>>`
-      SELECT "Portal".id                                  AS "portalId",
-             "Portal"."customerName"                      AS "customerName",
-             "Portal"."currentRoadmapStage"               AS "currentRoadmapStage",
+      SELECT P.id                               AS "portalId",
+             P."customerName"                   AS "customerName",
+             P."currentRoadmapStage"            AS "currentRoadmapStage",
              (SELECT COUNT(*)
               FROM "RoadmapStage"
-              WHERE "portalId" = "UserPortal"."portalId") AS "customerNumberOfStages",
-             "User"."firstName"                           AS "primaryContactFirstName",
-             "User"."lastName"                            AS "primaryContactLastName",
-             "AccountExecutive"."jobTitle"                AS "primaryContactJobTitle",
-             "User".email                                 AS "primaryContactEmail",
-             "User"."photoUrl"                            AS "primaryContactPhotoUrl"
-      FROM "UserPortal"
-             INNER JOIN "Portal" ON "UserPortal"."portalId" = "Portal".id
-             INNER JOIN "User" ON "UserPortal"."userId" = "User".id
-             INNER JOIN "AccountExecutive" ON "User".id = "AccountExecutive"."userId"
-      WHERE "UserPortal"."isPrimaryContact" = TRUE
+              WHERE "portalId" = UP."portalId") AS "customerNumberOfStages",
+             "User"."firstName"                 AS "primaryContactFirstName",
+             "User"."lastName"                  AS "primaryContactLastName",
+             "Stakeholder"."jobTitle"           AS "primaryContactJobTitle",
+             "User".email                       AS "primaryContactEmail",
+             "User"."photoUrl"                  AS "primaryContactPhotoUrl"
+      FROM "UserPortal" UP
+             INNER JOIN "Portal" P ON UP."portalId" = P.id
+             INNER JOIN "User" ON UP."userId" = "User".id
+             INNER JOIN "Stakeholder" ON "User".id = "Stakeholder"."userId"
+      WHERE UP."isPrimaryContact" = TRUE
         AND "portalId" IN (${Prisma.join(portalIds)})
     `
     const activePortalsStakeholders = await db.$queryRaw<Array<{
