@@ -1,4 +1,3 @@
-import { Suspense } from "react"
 import "tailwindcss/tailwind.css"
 import LineChart from "app/core/components/portalDetails/LineChart"
 import { useParam, useQuery } from "blitz"
@@ -12,14 +11,14 @@ import { StakeholderActivityLogCard } from "../../core/components/portalDetails/
 import OpportunityOverview from "../../core/components/portalDetails/OpportunityOverview"
 import { Header } from "../../core/components/portalDetails/Header"
 
-export default function PortalDetails() {
+function PortalDetails() {
   const portalId = useParam("portalId", "number")
   const [portal] = useQuery(getPortalDetail, { portalId },
     { refetchOnWindowFocus: false, enabled: !!portalId })
 
   //container: https://tailwindui.com/components/application-ui/layout/containers
   if (!portalId || !portal) return <>Loading!</>
-  return <Suspense fallback={<>Loading!</>}>
+  return <div>
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
       <Header portalId={portalId} />
       <div className="py-3"><CardDivider /></div>
@@ -44,8 +43,8 @@ export default function PortalDetails() {
       <StakeholderActivityLogCard data={portal.stakeholderActivityLog} />
       <Footer />
     </div>
-  </Suspense>
+  </div>
 }
 
 PortalDetails.authenticate = true
-PortalDetails.suppressFirstRenderFlicker = true
+export default PortalDetails

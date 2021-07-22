@@ -17,9 +17,10 @@ export default resolver.pipe(resolver.authorize(), async (params, ctx) => {
              U."lastName",
              U."email",
              UP1."hasStakeholderApproved" AS status,
-             UP1."portalId"
+             UP1."portalId",
+             UP1.role
       FROM "UserPortal" UP1
-             JOIN "UserPortal" UP2 ON UP1."portalId" = UP2."portalId"
+             JOIN "UserPortal" UP2 ON UP1."portalId" = UP2."portalId" AND UP2.role = 'AccountExecutive'
              JOIN "Portal" P on P.id = UP1."portalId"
              JOIN "Vendor" V on P."vendorId" = V.id
              JOIN "User" U ON UP2."userId" = U.id

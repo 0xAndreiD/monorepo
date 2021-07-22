@@ -9,7 +9,7 @@ type ContactCard = {
     lastName: string
     email: string
     jobTitle?: string
-    photoUrl: string
+    photoUrl: string | null
   }>
 }
 
@@ -50,7 +50,12 @@ function Circle(props: { firstName: string, lastName: string }) {
   </div>
 }
 
-export function ContactsCard(props: { data: ContactCard, numContactsToDisplay?: number, showProfilePictures?: boolean, narrowLayout?: boolean }) {
+export function ContactsCard(props: {
+  data: ContactCard,
+  numContactsToDisplay?: number,
+  showProfilePictures?: boolean,
+  narrowLayout?: boolean
+}) {
   return <Card>
     <CardHeader>Contacts</CardHeader>
     <div className="divide-y divide-gray-300">
@@ -63,13 +68,12 @@ export function ContactsCard(props: { data: ContactCard, numContactsToDisplay?: 
               <div className="relative flex items-center space-x-3">
                 <div className="flex-shrink-0">
                   {
-                    contact.photoUrl ? <Circle firstName={contact.firstName} lastName={contact.lastName} /> :
-                      <img className="h-10 w-10 rounded-full" src={contact.photoUrl}
-                           alt={getName(contact.firstName, contact.lastName)} />
+                    props.showProfilePictures && contact.photoUrl ? <img className="h-10 w-10 rounded-full" src={contact.photoUrl} alt={name} /> :
+                      <Circle firstName={contact.firstName} lastName={contact.lastName} />
                   }
                 </div>
                 <div className={props.narrowLayout ? "" : "flex-1"}>
-                  <p className="font-medium text-gray-900">{getName(contact.firstName, contact.lastName)}</p>
+                  <p className="font-medium text-gray-900">{name}</p>
                   <p className="text-sm truncate">{contact.jobTitle}</p>
                 </div>
                 <div

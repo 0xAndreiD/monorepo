@@ -96,28 +96,32 @@ const seedCustomerPortal = async () => {
       lastName: "Franklin",
       jobTitle: "Director of Operations",
       email: "nick@mira.com",
-      hasStakeholderApproved: true
+      hasStakeholderApproved: true,
+      photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1234&q=80"
     },
     {
       firstName: "Kristin",
       lastName: "Sanders",
       jobTitle: "Head of Technical Services",
       email: "kristin@mira.com",
-      hasStakeholderApproved: true
+      hasStakeholderApproved: true,
+      photoUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
     },
     {
       firstName: "Wally",
       lastName: "Iris",
       jobTitle: "Senior QA Manager",
       email: "wally@mira.com",
-      hasStakeholderApproved: true
+      hasStakeholderApproved: true,
+      photoUrl: "https://images.unsplash.com/photo-1554384645-13eab165c24b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1275&q=80"
     },
     {
       firstName: "Penelope",
       lastName: "Star",
       jobTitle: "Plant Manager",
       email: "penelope@mira.com",
-      hasStakeholderApproved: null
+      hasStakeholderApproved: null,
+      photoUrl: "https://images.unsplash.com/photo-1593529467220-9d721ceb9a78?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1271&q=80"
     }
   ]
 
@@ -129,6 +133,7 @@ const seedCustomerPortal = async () => {
           firstName: stakeholder.firstName,
           lastName: stakeholder.lastName,
           email: stakeholder.email,
+          photoUrl: stakeholder.photoUrl,
           stakeholder: {
             create: {
               jobTitle: stakeholder.jobTitle

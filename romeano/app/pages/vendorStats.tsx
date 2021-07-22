@@ -10,7 +10,7 @@ import { StakeholderActivity } from "app/core/components/vendorStats/Stakeholder
 import { useQuery } from "blitz"
 import getVendorStats from "../vendor-stats/queries/getVendorStats"
 
-export default function VendorStats() {
+function VendorStats() {
   const [vendorStats] = useQuery(getVendorStats, {})
   return <>
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
@@ -29,3 +29,4 @@ export default function VendorStats() {
 }
 
 VendorStats.authenticate = true
+export default VendorStats
