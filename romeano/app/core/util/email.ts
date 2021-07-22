@@ -63,10 +63,10 @@ export async function sendAELoginLink(aeFirstName: string,
                                       magicLink: string) {
   const body = `<h1>Hello!</h1>
 <p>
-You asked us to send you a magic link for quickly signing in to your AE dashboard. Your wish is our command!
+You asked us to send you a magic link for quickly signing in to your buyer portal. Your wish is our command!
 </p>
 <br/>
-<a href="${BACKEND_ENDPOINT}/magicLink/${magicLink}">Sign in to AE Dashboard</a>`
+<a href="${BACKEND_ENDPOINT}/magicLink/${magicLink}">Sign in</a>`
 
   const info = await transporter.sendMail({
     from: `"Romeano" <hey@romeano.com>`,
