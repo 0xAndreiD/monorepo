@@ -25,6 +25,11 @@ Docker Seed
 docker exec -it --user root romeano_web_1 npx blitz db seed
 ```
 
+Docker Edit DB
+```
+docker exec -it romeano_db_1 psql -U postgres
+```
+
 ## Environment Variables
 
 Ensure the `.env.local` file has required environment variables:
