@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Event" ALTER COLUMN "ip" DROP NOT NULL,
+ALTER COLUMN "userAgent" DROP NOT NULL;

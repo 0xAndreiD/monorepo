@@ -69,7 +69,11 @@ export default function DocumentsCard(props: {
     }).then(props.refetchHandler)
   }, [antiCSRFToken, props.portalId, props.refetchHandler])
 
-  const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({ onDrop })
+  const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
+    onDrop,
+    noClick: true,
+    noKeyboard: true
+  })
 
   return <Card>
     <CardHeader>Documents </CardHeader>

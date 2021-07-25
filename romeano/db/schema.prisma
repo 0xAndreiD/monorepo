@@ -237,7 +237,7 @@ model Event {
   id         Int       @id @default(autoincrement())
   type       EventType
   url        String?
-  ip         String
+  ip         String?
   userAgent  String?
   document   Document? @relation(fields: [documentId], references: [id])
   documentId Int?

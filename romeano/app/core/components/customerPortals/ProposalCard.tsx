@@ -88,42 +88,38 @@ export function ProposalCard(props: { portalId: number, data: Proposal, refetchH
       <CardDivider />
 
       <div className="flex gap-2">
-        <button
-          type="button"
-          className="w-full text-center inline flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+        <button className="w-full text-center inline flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+             onClick={async () => {
+               await updateProposalApprovalMutation({
+                 portalId: props.portalId,
+                 hasStakeholderApproved: true
+               })
+               invoke(createEvent, { portalId: props.portalId, type: EventType.ProposalApprove })
+               props.refetchHandler()
+             }}
         >
           <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500" />
-          <span className="flex-1"
-                onClick={async () => {
-                  await updateProposalApprovalMutation({
-                    portalId: props.portalId,
-                    hasStakeholderApproved: true
-                  })
-                  invoke(createEvent, { portalId: props.portalId, type: EventType.ProposalApprove })
-                  props.refetchHandler()
-                }}>
+          <span className="flex-1">
             Approve
           </span>
         </button>
 
-        <button
-          type="button"
-          className="w-full text-center inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+        <button className="w-full text-center inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+             onClick={async () => {
+               await updateProposalApprovalMutation({
+                 portalId: props.portalId,
+                 hasStakeholderApproved: false
+               })
+               invoke(createEvent, { portalId: props.portalId, type: EventType.ProposalDecline })
+               props.refetchHandler()
+             }}
         >
           <XIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500" />
-          <span className="flex-1"
-                onClick={async () => {
-                  await updateProposalApprovalMutation({
-                    portalId: props.portalId,
-                    hasStakeholderApproved: false
-                  })
-                  invoke(createEvent, { portalId: props.portalId, type: EventType.ProposalDecline })
-                  props.refetchHandler()
-                }}>
+          <span className="flex-1">
             Decline
           </span>
         </button>

@@ -25,7 +25,7 @@ export default resolver.pipe(resolver.zod(CreateEvent), resolver.authorize(), as
       data: {
         type: params.type,
         url: params.url,
-        ip: context.ip ?? "0.0.0.0",
+        ip: context.ip,
         userAgent: context.headers?.["user-agent"],
         documentId: params.documentId,
         portalId: params.portalId,
