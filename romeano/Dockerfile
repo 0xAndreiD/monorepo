@@ -12,7 +12,7 @@ RUN yarn install --frozen-lockfile
 FROM node:alpine AS builder
 WORKDIR /app
 COPY . .
-#geoip is added during yarn postinstall, which would not be in node_modules by default
+# geoip is added during yarn postinstall, which would not be in node_modules by default
 COPY --from=deps /app/db/geoip ./db/geoip
 COPY --from=deps /app/node_modules ./node_modules
 RUN yarn prisma generate && yarn build && yarn install --production --ignore-scripts --prefer-offline
@@ -34,12 +34,14 @@ COPY --from=builder --chown=nextjs:nodejs /app/.blitz ./.blitz
 COPY --from=builder --chown=nextjs:nodejs /app/blitz.config.ts .
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
-# for migrations
+# need migrations folder to be available run migrate on startup
 COPY --from=builder /app/db ./db
-#use prod environment (prisma doesn't support .env hierarchy)
+# use prod environment (prisma doesn't support .env hierarchy)
 COPY --from=builder /app/.env.production ./.env
-#need session key for prod
+# need session key for prod
 RUN echo SESSION_SECRET_KEY=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 32 ; echo '') >> .env
+# non-root user needs rw access to uploads dir
+RUN chown -R nextjs:nodejs public/uploads
 
 USER nextjs
 
