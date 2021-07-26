@@ -5,7 +5,6 @@ import { Card, CardDivider, CardHeader } from "../generic/Card"
 import { useCallback } from "react"
 import { useDropzone } from "react-dropzone"
 import axios from "axios"
-import { BACKEND_ENDPOINT } from "../../config"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
 import { getAntiCSRFToken } from "blitz"
@@ -61,7 +60,7 @@ export default function DocumentsCard(props: {
     const formData = new FormData()
     formData.append("portalId", props.portalId.toString())
     acceptedFiles.forEach((file, idx) => formData.append(`file_${idx}`, file))
-    axios.post(`${BACKEND_ENDPOINT}/api/fileUpload`, formData, {
+    axios.post("/api/fileUpload", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         "anti-csrf": antiCSRFToken

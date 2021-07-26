@@ -32,6 +32,7 @@ const fileUpload = nc<NextApiRequest & { fields: Fields, files: Files }, NextApi
 
     form.parse(req, (err, fields, files) => {
       if (err) {
+        console.error("Error parsing upload: ", err)
         return next(err)
       }
       req.fields = fields
