@@ -1,7 +1,7 @@
 import { AuthenticationError, AuthorizationError, Ctx, resolver } from "blitz"
 import db, { EventType, Prisma } from "db"
 import { groupBy } from "lodash"
-import { getBackendFilePath } from "../../core/util/upload"
+import { getExternalUploadPath } from "../../core/util/upload"
 import { generateLinkFromEventType } from "../../portal-details/queries/getPortalDetail"
 
 export default resolver.pipe(
@@ -143,7 +143,7 @@ export default resolver.pipe(
     const documentEvents = groupBy(activePortalsDocs.map(x => ({
       portalId: x.portalId,
       body: x.title,
-      href: getBackendFilePath(x.path),
+      href: getExternalUploadPath(x.path),
       eventCount: x.eventCount
     })), "portalId")
 

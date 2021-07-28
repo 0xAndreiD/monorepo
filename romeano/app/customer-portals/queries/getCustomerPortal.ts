@@ -2,7 +2,7 @@ import { NotFoundError, resolver } from "blitz"
 import db, { Role } from "db"
 import { orderBy } from "lodash"
 import { z } from "zod"
-import { getBackendFilePath } from "../../core/util/upload"
+import { getExternalUploadPath } from "../../core/util/upload"
 
 const GetCustomerPortal = z.object({
   // This accepts type of undefined, but is required at runtime
@@ -93,7 +93,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
         .map(x => ({
           id: x.id,
           title: x.title,
-          href: getBackendFilePath(x.path),
+          href: getExternalUploadPath(x.path),
           isCompleted: x.isCompleted
         }))
     },
@@ -104,7 +104,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
         .map(x => ({
           id: x.id,
           title: x.title,
-          href: getBackendFilePath(x.path),
+          href: getExternalUploadPath(x.path),
           isCompleted: x.isCompleted
         }))
     }
@@ -127,7 +127,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
     subheading: portal.proposalSubheading,
     quote: portal.proposalDocument && {
       documentId: portal.proposalDocument.id,
-      href:getBackendFilePath(portal.proposalDocument.path),
+      href: getExternalUploadPath(portal.proposalDocument.path)
     },
     stakeholders: portal.userPortals
       .filter(userPortal => userPortal.role === Role.Stakeholder)

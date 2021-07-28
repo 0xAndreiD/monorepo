@@ -56,11 +56,10 @@ export default function DocumentsCard(props: {
 //reference: https://tailwindui.com/components/application-ui/data-display/title-lists#component-e1b5917b21bbe76a73a96c5ca876225f
   const antiCSRFToken = getAntiCSRFToken()
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    // Do something with the files
     const formData = new FormData()
     formData.append("portalId", props.portalId.toString())
     acceptedFiles.forEach((file, idx) => formData.append(`file_${idx}`, file))
-    axios.post("/api/fileUpload", formData, {
+    axios.post("/api/uploadDocument", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         "anti-csrf": antiCSRFToken

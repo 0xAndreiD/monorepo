@@ -2,7 +2,7 @@ import { NotFoundError, resolver } from "blitz"
 import db, { EventType, Role } from "db"
 import { z } from "zod"
 import { Device, Link } from "../../../types"
-import { getBackendFilePath } from "../../core/util/upload"
+import { getExternalUploadPath } from "../../core/util/upload"
 import UAParser from "ua-parser-js"
 import { getLocation } from "../../core/util/location"
 import { StakeholderActivityEvent } from "app/core/components/portalDetails/StakeholderActivityLogCard"
@@ -66,7 +66,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
         .map(x => ({
           id: x.id,
           title: x.title,
-          href: getBackendFilePath(x.path),
+          href: getExternalUploadPath(x.path),
           isCompleted: x.isCompleted
         }))
     },
@@ -77,7 +77,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
         .map(x => ({
           id: x.id,
           title: x.title,
-          href: getBackendFilePath(x.path),
+          href: getExternalUploadPath(x.path),
           isCompleted: x.isCompleted
         }))
     }
@@ -184,15 +184,15 @@ export function generateLinkFromEventType(event: {
     case EventType.DocumentApprove:
       return null
     case EventType.DocumentOpen:
-      return { body: event.documentTitle, href: getBackendFilePath(event.documentPath) }
+      return { body: event.documentTitle, href: getExternalUploadPath(event.documentPath) }
     case EventType.DocumentUpload:
-      return { body: event.documentTitle, href: getBackendFilePath(event.documentPath) }
+      return { body: event.documentTitle, href: getExternalUploadPath(event.documentPath) }
     case EventType.ProposalApprove:
       return null
     case EventType.ProposalDecline:
       return null
     case EventType.ProposalOpen:
-      return { body: "the proposal", href: getBackendFilePath(event.documentPath) }
+      return { body: "the proposal", href: getExternalUploadPath(event.documentPath) }
     case EventType.CreateInternalMessage:
       return null
     case EventType.ProductInfoLinkOpen:

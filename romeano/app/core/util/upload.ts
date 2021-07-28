@@ -1,5 +1,6 @@
-import { UPLOAD_DIR } from "../config"
+import { EXTERNAL_UPLOAD_PATH } from "../config"
 
-export function getBackendFilePath(path:string) {
-  return `/${UPLOAD_DIR}/${path}`
+//returns a route to a file relative to the site root
+export function getExternalUploadPath(filePath: string) {
+  return `${EXTERNAL_UPLOAD_PATH}/${filePath}`
 }

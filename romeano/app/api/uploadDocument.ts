@@ -3,7 +3,7 @@ import db, { EventType } from "../../db"
 import { NextApiRequest, NextApiResponse } from "next"
 import { z } from "zod"
 import nc from "next-connect"
-import { UPLOAD_DIR } from "../core/config"
+import { INTERNAL_UPLOAD_FS_PATH, UPLOAD_SIZE_LIMIT } from "../core/config"
 import formidable, { Fields, Files } from "formidable"
 import { flatten, isNil } from "lodash"
 import createEvent from "../event/mutations/createEvent"
@@ -13,14 +13,13 @@ export const config = {
     bodyParser: false
   }
 }
-const uploadPath = `public/${UPLOAD_DIR}`
 
-const fileUpload = nc<NextApiRequest & { fields: Fields, files: Files }, NextApiResponse>()
+const uploadDocument = nc<NextApiRequest & { fields: Fields, files: Files }, NextApiResponse>()
   .use((req, res, next) => {
     const form = formidable({
       multiples: true,
-      uploadDir: uploadPath,
-      maxFileSize: 25 * 1000 * 1000,
+      uploadDir: INTERNAL_UPLOAD_FS_PATH,
+      maxFileSize: UPLOAD_SIZE_LIMIT,
       keepExtensions: true
       // //@ts-ignore
       // filename: (name,ext, part, form) => {
@@ -58,7 +57,8 @@ const fileUpload = nc<NextApiRequest & { fields: Fields, files: Files }, NextApi
           data: {
             portalId: portalId,
             title: file.name ?? "Untitled File",
-            path: file.path.substring(uploadPath.length + 1),//+1 for slash
+            //file.path looks like $INTERNAL_UPLOAD_FS_PATH/upload.jpg
+            path: file.path.substring(INTERNAL_UPLOAD_FS_PATH.length + 1),//+1 to omit the slash
             isCompleted: false,
             userId
           }
@@ -73,4 +73,4 @@ const fileUpload = nc<NextApiRequest & { fields: Fields, files: Files }, NextApi
     res.status(200).end()
   })
 
-export default fileUpload
+export default uploadDocument
