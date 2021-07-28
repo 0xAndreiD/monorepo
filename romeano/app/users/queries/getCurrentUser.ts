@@ -5,9 +5,14 @@ export default async function getCurrentUser(_ = null, { session }: Ctx) {
   if (!session.userId) return null
 
   const user = await db.user.findFirst({
-    include: { accountExecutive: true, stakeholder: true },
+    include: {
+      accountExecutive: true,
+      stakeholder: true,
+      userPortals: true
+    },
     where: { id: session.userId }
   })
 
-  return user
+
+  return { ...user, userPortals: user?.userPortals.map((x) => x.portalId) }
 }
