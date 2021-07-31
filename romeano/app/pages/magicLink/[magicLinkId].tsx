@@ -1,6 +1,7 @@
 import { GetServerSideProps, getSession, Routes } from "blitz"
 import db, { Role } from "db"
 import { z } from "zod"
+import { isNil } from "lodash"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { magicLinkId } = z.object({ magicLinkId: z.string().nonempty() }).parse(context.params)
@@ -26,16 +27,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     redirect: {
       destination: magicLink.destUrl,
-      permanent: false
-    }
-  }
-
-
-  //no associated portal, send to user's home
-  await session.$create({ userId: magicLink.userId, role: Role.Stakeholder }) //FIXME: check if role is correct
-  return {
-    redirect: {
-      destination: Routes.Home().pathname,
       permanent: false
     }
   }

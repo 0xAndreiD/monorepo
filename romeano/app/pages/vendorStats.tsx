@@ -11,7 +11,7 @@ import { useQuery } from "blitz"
 import getVendorStats from "../vendor-stats/queries/getVendorStats"
 
 function VendorStats() {
-  const [vendorStats] = useQuery(getVendorStats, null, { refetchOnWindowFocus: false })
+  const [vendorStats] = useQuery(getVendorStats, {}, { refetchOnWindowFocus: false })
   return <>
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
       <Header />
