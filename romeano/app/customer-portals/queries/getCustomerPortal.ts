@@ -6,13 +6,13 @@ import { getExternalUploadPath } from "../../core/util/upload"
 
 const GetCustomerPortal = z.object({
   // This accepts type of undefined, but is required at runtime
-  id: z.number().optional().refine(Boolean, "Required")
+  portalId: z.number().optional().refine(Boolean, "Required")
 })
 
-export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize(), async ({ id }) => {
+export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize(), async ({ portalId }) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const portal = await db.portal.findFirst({
-    where: { id },
+    where: { id: portalId },
     include: {
       proposalDocument: true,
       roadmapStages: {

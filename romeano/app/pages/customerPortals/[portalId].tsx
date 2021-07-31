@@ -13,14 +13,20 @@ import getCustomerPortal from "../../customer-portals/queries/getCustomerPortal"
 import StakeholderLoginForm from "../../auth/components/StakeholderLoginForm"
 
 function CustomerPortal() {
+  const portalId = useParam("portalId", "number")
   const session = useSession()
   console.log("session", session)
-  const portalId = useParam("portalId", "number")
-  const [data, { refetch }] = useQuery(getCustomerPortal, { id: portalId })
+  const [data, { refetch }] = useQuery(getCustomerPortal, { portalId }, {
+    refetchOnWindowFocus: false,
+    enabled: !!portalId && !session.isLoading && !!session.userId
+  })
 
-  if (!portalId) throw new NotFoundError()
   if (!session.isLoading && !session.userId) {
     return <StakeholderLoginForm />
+  }
+
+  if (!portalId || !data) {
+    return <>Loading!</>
   }
   //container: https://tailwindui.com/components/application-ui/layout/containers
   return <>

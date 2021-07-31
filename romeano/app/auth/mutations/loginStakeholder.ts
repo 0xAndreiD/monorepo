@@ -47,5 +47,5 @@ export default resolver.pipe(resolver.zod(LoginStakeholder),
       magicLink.id
     )
 
-    return magicLink.id
+    // return magicLink.id //FIXME: dev speed hack, frontend shouldn't get this
   })

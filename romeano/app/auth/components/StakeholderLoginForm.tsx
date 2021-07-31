@@ -1,26 +1,31 @@
-import { AuthenticationError, Routes, useMutation, useParam, useRouter } from "blitz"
+import { AuthenticationError, useMutation, useRouter } from "blitz"
 import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
 import loginStakeholder from "app/auth/mutations/loginStakeholder"
-import { Login } from "app/auth/validations"
+import { MagicLink } from "app/auth/validations"
 
 export const LoginForm = (props: {
   onSuccess?: () => void,
 }) => {
   const router = useRouter()
   const [loginStakeholderMutation] = useMutation(loginStakeholder)
-
+  console.log(router)
   return (
     <div>
       <h1>Please verify your email address</h1>
       <Form
         submitText="Submit"
-        schema={Login}
+        schema={MagicLink}
         onSubmit={async (values) => {
           try {
-            const magicLink = await loginStakeholderMutation({ destUrl: router.pathname, email: values.email }) //router.pathname doesnt include query params
+            console.log("run")
+            const magicLink = await loginStakeholderMutation({
+              email: values.email,
+              portalId: parseInt(router.params.portalId),
+              destUrl: router.pathname.replace("[portalId]", router.params.portalId)
+            }) //router.pathname doesnt include query params
             props.onSuccess?.() //catch error boundary auth error
-            await router.push(Routes.MagicLinkPage({ magicLinkId: magicLink })) //TODO: disable this
+            // await router.push(Routes.MagicLinkPage({ magicLinkId: magicLink })) //TODO: dev speed hack
           } catch (error) {
             if (error instanceof AuthenticationError) {
               return { [FORM_ERROR]: "You currently don't have access, please contact your admin if this is a mistake" }
