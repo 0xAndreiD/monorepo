@@ -45,7 +45,7 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "photoUrl" TEXT,
     "hashedPassword" TEXT,
-    "role" TEXT NOT NULL DEFAULT E'USER',
+    "role" "Role" NOT NULL DEFAULT E'Stakeholder',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

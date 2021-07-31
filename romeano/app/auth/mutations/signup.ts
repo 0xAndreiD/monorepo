@@ -10,9 +10,9 @@ export default resolver.pipe(resolver.zod(Signup), async ({ email, password }, c
       lastName: "User",
       email: email.toLowerCase().trim(),
       hashedPassword,
-      role: "USER"
+      role: Role.AccountExecutive,
     },
-    select: { id: true, firstName: true, email: true, role: true }
+    select: { id: true, firstName: true, email: true, role: true },
   })
 
   await ctx.session.$create({ userId: user.id, role: user.role as Role })

@@ -4,9 +4,7 @@ import { Form, FORM_ERROR } from "app/core/components/Form"
 import loginStakeholder from "app/auth/mutations/loginStakeholder"
 import { MagicLink } from "app/auth/validations"
 
-export const LoginForm = (props: {
-  onSuccess?: () => void,
-}) => {
+export const LoginForm = (props: { onSuccess?: () => void }) => {
   const router = useRouter()
   const [loginStakeholderMutation] = useMutation(loginStakeholder)
   console.log(router)
@@ -18,11 +16,10 @@ export const LoginForm = (props: {
         schema={MagicLink}
         onSubmit={async (values) => {
           try {
-            console.log("run")
             const magicLink = await loginStakeholderMutation({
               email: values.email,
               portalId: parseInt(router.params.portalId),
-              destUrl: router.pathname.replace("[portalId]", router.params.portalId)
+              destUrl: router.pathname.replace("[portalId]", router.params.portalId),
             }) //router.pathname doesnt include query params
             props.onSuccess?.() //catch error boundary auth error
             // await router.push(Routes.MagicLinkPage({ magicLinkId: magicLink })) //TODO: dev speed hack
@@ -31,8 +28,7 @@ export const LoginForm = (props: {
               return { [FORM_ERROR]: "You currently don't have access, please contact your admin if this is a mistake" }
             } else {
               return {
-                [FORM_ERROR]:
-                "Sorry, we had an unexpected error. Please try again. - " + error.toString()
+                [FORM_ERROR]: "Sorry, we had an unexpected error. Please try again. - " + error.toString(),
               }
             }
           }
