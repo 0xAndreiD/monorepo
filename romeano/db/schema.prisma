@@ -45,7 +45,6 @@ model UserPortal {
   hasStakeholderApproved Boolean?
   isPrimaryContact       Boolean?
   isSecondaryContact     Boolean?
-  magicLinks             MagicLink[]
   createdAt              DateTime    @default(now())
   updatedAt              DateTime    @updatedAt
 
@@ -252,8 +251,7 @@ model MagicLink {
   id         String      @id
   hasClicked Boolean     @default(false)
   userId     Int
-  portalId   Int?
-  userPortal UserPortal? @relation(fields: [userId, portalId], references: [userId, portalId])
+  url        String
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
 }

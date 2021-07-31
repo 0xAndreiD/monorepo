@@ -3,12 +3,12 @@ import db from "db"
 import { z } from "zod"
 import { sendAELoginLink } from "../../core/util/email"
 
-export const LoginNoPortal = z.object({
+export const LoginAE = z.object({
   email: z.string().email().nonempty()
 })
 
 //for AE
-export default resolver.pipe(resolver.zod(LoginNoPortal),
+export default resolver.pipe(resolver.zod(LoginAE),
   async ({ email }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
 
@@ -27,10 +27,12 @@ export default resolver.pipe(resolver.zod(LoginNoPortal),
     const magicLink = await db.magicLink.create({
       data: {
         id: generateToken(),
-        userId: userPortal.userId,
-        hasClicked: false
-      }
-    })
+        url:
+        userId
+  :
+    userPortal.userId,
+  }
+  })
 
     sendAELoginLink(userPortal.user.firstName, email, magicLink.id)
     return magicLink.id

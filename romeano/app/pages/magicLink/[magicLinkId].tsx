@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     //TODO: add modal for hasClicked
     return {
       redirect: {
-        destination: "/login",
+        destination: "/",
         permanent: false
       }
     }
@@ -29,11 +29,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const session = await getSession(context.req, context.res)
   if (magicLink.userPortal) {
-    await session.$create({ userId: magicLink.userPortal.userId, role: magicLink.userPortal.user.role as Role })
     await db.magicLink.update({
       where: { id: magicLinkId },
       data: { hasClicked: true }
     })
+    await session.$create({ userId: magicLink.userPortal.userId, role: magicLink.userPortal.user.role as Role })
     return {
       redirect: {
         destination: Routes.CustomerPortal({ portalId: magicLink.userPortal.portalId }).pathname.replace("[portalId]", magicLink.userPortal.portalId.toString()),
@@ -41,7 +41,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         permanent: false
       }
     }
-
   }
 
   //no associated portal, send to user's home

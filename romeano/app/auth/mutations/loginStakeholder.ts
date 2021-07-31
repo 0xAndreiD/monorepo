@@ -3,13 +3,13 @@ import db from "db"
 import { z } from "zod"
 import { sendPortalLoginLink } from "../../core/util/email"
 
-export const Login = z.object({
+export const LoginStakeholder = z.object({
   portalId: z.number().nonnegative(),
   email: z.string().email().nonempty()
 })
 
 //for Stakeholder
-export default resolver.pipe(resolver.zod(Login),
+export default resolver.pipe(resolver.zod(LoginStakeholder),
   async ({ portalId, email }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const portal = await db.portal.findUnique({

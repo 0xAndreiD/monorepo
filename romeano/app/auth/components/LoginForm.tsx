@@ -1,17 +1,14 @@
 import { AuthenticationError, Routes, useMutation, useParam, useRouter } from "blitz"
 import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
-import loginAE from "app/auth/mutations/loginNoPortal"
-import loginStakeholder from "app/auth/mutations/loginPortal"
+import login from "app/auth/mutations/login"
 import { Login } from "app/auth/validations"
 
 export const LoginForm = (props: {
   onSuccess?: () => void,
 }) => {
-  const portalId = useParam("portalId", "number")
-  const [loginAEMutation] = useMutation(loginAE)
-  const [loginStakeholderMutation] = useMutation(loginStakeholder)
   const router = useRouter()
+  const [loginMutation] = useMutation(login)
 
   return (
     <div>
@@ -21,11 +18,9 @@ export const LoginForm = (props: {
         schema={Login}
         onSubmit={async (values) => {
           try {
-            const magicLink = portalId ?
-              await loginStakeholderMutation({ portalId: portalId, email: values.email }) :
-              await loginAEMutation({ email: values.email })
+            const magicLink = await loginMutation({ url: router.pathname, email: values.email }) //router.pathname doesnt include query params
             props.onSuccess?.() //catch error boundary auth error
-            await router.push(Routes.MagicLinkPage({ magicLinkId: magicLink }))
+            await router.push(Routes.MagicLinkPage({ magicLinkId: magicLink.id })) //TODO: disable this
           } catch (error) {
             if (error instanceof AuthenticationError) {
               return { [FORM_ERROR]: "You currently don't have access, please contact your admin if this is a mistake" }

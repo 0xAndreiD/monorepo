@@ -11,6 +11,7 @@ import { CheckIcon, QuestionMarkCircleIcon, XIcon } from "@heroicons/react/solid
 import { useCurrentUser } from "../core/hooks/useCurrentUser"
 import VendorStats from "./vendorStats"
 import { StyledLink } from "app/core/components/generic/Link"
+import Layout from "../core/layouts/Layout"
 
 function PortalsList() {
   const [portalsList] = useQuery(getPortalList, null)
@@ -134,6 +135,6 @@ const Home: BlitzPage = () => {
 
 // Home.suppressFirstRenderFlicker = true
 Home.authenticate = true
-// Home.getLayout = (page) => <Layout title="Home">{page}</Layout>
+Home.getLayout = (page) => <Layout title="Home">{page}</Layout>
 
 export default Home
