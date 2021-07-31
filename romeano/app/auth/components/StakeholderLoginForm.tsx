@@ -7,7 +7,6 @@ import { MagicLink } from "app/auth/validations"
 export const LoginForm = (props: { onSuccess?: () => void }) => {
   const router = useRouter()
   const [loginStakeholderMutation] = useMutation(loginStakeholder)
-  console.log(router)
   return (
     <div>
       <h1>Please verify your email address</h1>
