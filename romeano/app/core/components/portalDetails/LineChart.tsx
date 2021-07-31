@@ -11,31 +11,32 @@ const options = {
       type: "time",
       position: "bottom",
       ticks: {
-        maxRotation: 0
-      }
+        maxRotation: 0,
+      },
     },
     y: {
-      display: true
-    }
-  }
+      display: true,
+    },
+  },
 }
 
-export default function LineChart(props: { data: Array<{ x: Date, y: number }> }) {
+export default function LineChart(props: { data: Array<{ x: Date; y: number }> }) {
   const chartData = {
-    datasets: [{
-      label: "Clicks",
-      fill: false,
-      data: props.data,
-      borderColor: "#34D399",
-      backgroundColor: "#34D399"
-    }]
+    datasets: [
+      {
+        label: "Clicks",
+        fill: false,
+        data: props.data,
+        borderColor: "#34D399",
+        backgroundColor: "#34D399",
+      },
+    ],
   }
 
-  return <Card borderless>
-    <CardHeader>
-      Overall Engagement
-    </CardHeader>
-    <Line data={chartData} options={options} type="line" />
-  </Card>
+  return (
+    <Card borderless>
+      <CardHeader>Overall Engagement</CardHeader>
+      <Line data={chartData} options={options} />
+    </Card>
+  )
 }
-
