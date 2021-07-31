@@ -3,10 +3,23 @@ import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
 import loginStakeholder from "app/auth/mutations/loginStakeholder"
 import { MagicLink } from "app/auth/validations"
+import { useState } from "react"
 
-export const LoginForm = (props: { onSuccess?: () => void }) => {
+export const StakeholderLoginForm = (props: { onSuccess?: () => void }) => {
   const router = useRouter()
   const [loginStakeholderMutation] = useMutation(loginStakeholder)
+  const [hasSubmitted, setHasSubmitted] = useState(false)
+
+  if (hasSubmitted) {
+    return (
+      <>
+        <div>Please check your email to log in!</div>
+        <a className="cursor-pointer text-blue-600 underline" onClick={() => setHasSubmitted(false)}>
+          Send again
+        </a>
+      </>
+    )
+  }
   return (
     <div>
       <h1>Please verify your email address</h1>
@@ -18,8 +31,9 @@ export const LoginForm = (props: { onSuccess?: () => void }) => {
             const magicLink = await loginStakeholderMutation({
               email: values.email,
               portalId: parseInt(router.params.portalId),
-              destUrl: router.pathname.replace("[portalId]", router.params.portalId),
+              destUrl: router.asPath,
             }) //router.pathname doesnt include query params
+            setHasSubmitted(true)
             props.onSuccess?.() //catch error boundary auth error
             // await router.push(Routes.MagicLinkPage({ magicLinkId: magicLink })) //TODO: dev speed hack
           } catch (error) {
@@ -70,4 +84,4 @@ export const LoginForm = (props: { onSuccess?: () => void }) => {
   )
 }
 
-export default LoginForm
+export default StakeholderLoginForm
