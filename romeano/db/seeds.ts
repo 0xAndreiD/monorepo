@@ -30,6 +30,7 @@ const seedCustomerPortal = async () => {
         lastName: "Miller",
         email: "greg@mira.com",
         photoUrl: "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
+        hashedPassword: "", //only works in dev mode!
         accountExecutive: { //make AE
           create: {
             jobTitle: "Account Executive",
@@ -337,30 +338,30 @@ const seedCustomerPortal = async () => {
     ]
   })
 
-  await db.magicLink.createMany({
-    data: [
-      {
-        id: "ae1Login",
-        userId: 1, //Greg
-        portalId: portal.id
-      },
-      {
-        id: "ae2Login",
-        userId: 2, //Alexis
-        portalId: portal.id
-      },
-      {
-        id: "stakeholder1Login",
-        userId: 4,//Kristin Sanders
-        portalId: portal.id
-      },
-      {
-        id: "stakeholder2Login",
-        userId: 5,//Wally Iris
-        portalId: portal.id
-      }
-    ]
-  })
+  // await db.magicLink.createMany({
+  //   data: [
+  //     {
+  //       id: "ae1Login",
+  //       userId: 1, //Greg
+  //       portalId: portal.id
+  //     },
+  //     {
+  //       id: "ae2Login",
+  //       userId: 2, //Alexis
+  //       portalId: portal.id
+  //     },
+  //     {
+  //       id: "stakeholder1Login",
+  //       userId: 4,//Kristin Sanders
+  //       portalId: portal.id
+  //     },
+  //     {
+  //       id: "stakeholder2Login",
+  //       userId: 5,//Wally Iris
+  //       portalId: portal.id
+  //     }
+  //   ]
+  // })
   console.log(`Seeding finished.`)
 }
 
@@ -426,20 +427,20 @@ async function seedPortalDetails() {
     }
   })
 
-  await db.magicLink.createMany({
-    data: [
-      {
-        id: "ae3Login",
-        userId: aeUser.id, //Julia
-        portalId: portal.id
-      },
-      {
-        id: "stakeholder3Login",
-        userId: stakeholder.id, //Ali
-        portalId: portal.id
-      }
-    ]
-  })
+  // await db.magicLink.createMany({
+  //   data: [
+  //     {
+  //       id: "ae3Login",
+  //       userId: aeUser.id, //Julia
+  //       portalId: portal.id
+  //     },
+  //     {
+  //       id: "stakeholder3Login",
+  //       userId: stakeholder.id, //Ali
+  //       portalId: portal.id
+  //     }
+  //   ]
+  // })
 
   await db.document.createMany({
     data: [

@@ -1,48 +1,36 @@
-import { AuthenticationError, generateToken, resolver } from "blitz"
-import db from "db"
-import { z } from "zod"
-import { sendAELoginLink, sendPortalLoginLink } from "../../core/util/email"
+import { AuthenticationError, resolver, SecurePassword } from "blitz"
+import db, { Role } from "db"
+import { Login } from "../validations"
 
-export const Login = z.object({
-  portalId: z.number().nonnegative(),
-  email: z.string().email().nonempty()
+export const authenticateUser = async (rawEmail: string, rawPassword: string) => {
+  const email = rawEmail.toLowerCase().trim()
+  const password = rawPassword.trim()
+  const user = await db.user.findFirst({ where: { email } })
+  if (!user) throw new AuthenticationError()
+  
+  //FIXME: dev mode skips auth!
+  if (process.env.NODE_ENV !== "production") {
+    console.log("SKIPPING AUTH")
+    const { hashedPassword, ...rest } = user
+    return rest
+  }
+  const result = await SecurePassword.verify(user.hashedPassword, password)
+
+  if (result === SecurePassword.VALID_NEEDS_REHASH) {
+    // Upgrade hashed password with a more secure hash
+    const improvedHash = await SecurePassword.hash(password)
+    await db.user.update({ where: { id: user.id }, data: { hashedPassword: improvedHash } })
+  }
+
+  const { hashedPassword, ...rest } = user
+  return rest
+}
+
+export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ctx) => {
+  // This throws an error if credentials are invalid
+  const user = await authenticateUser(email, password)
+
+  await ctx.session.$create({ userId: user.id, role: user.role as Role })
+
+  return user
 })
-
-//for Stakeholder
-export default resolver.pipe(resolver.zod(Login),
-  async ({ url, email }, ctx) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-
-    const user = await db.user.findFirst({
-      include: {
-        accountExecutive: true,
-        stakeholder: true
-      },
-      where: {
-        email
-      }
-    })
-
-    if (!user) throw new AuthenticationError("Could not find email address associated to portal!")
-
-    const magicLink = await db.magicLink.create({
-      data: {
-        id: generateToken(),
-        userId: user.id,
-        url,
-        hasClicked: false
-      }
-    })
-
-    if (user.accountExecutive) {
-      sendAELoginLink(user.firstName, email, magicLink.id)
-    } else {
-      sendPortalLoginLink(user.firstName
-          .vendor.name,
-        user.firstName,
-        email,
-        magicLink.id
-      )
-    }
-    return magicLink //TODO: use only in dev!
-  })

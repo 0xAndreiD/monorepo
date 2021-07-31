@@ -1,4 +1,3 @@
-import { Suspense } from "react"
 import "tailwindcss/tailwind.css"
 import NextStepsCard from "app/core/components/customerPortals/NextStepsCard"
 import DocumentsCard from "app/core/components/customerPortals/DocumentsCard"
@@ -6,18 +5,23 @@ import { ProposalCard } from "app/core/components/customerPortals/ProposalCard"
 import LaunchRoadmap from "app/core/components/customerPortals/LaunchRoadmap"
 import { ProductInfoCard } from "app/core/components/customerPortals/ProductInfoCard"
 import { ContactsCard } from "app/core/components/ContactsCard"
-import { InternalNotesCard } from "app/core/components/customerPortals/InternalNotesCard"
 import { Footer } from "app/core/components/Footer"
 import { Header } from "app/core/components/customerPortals/Header"
 import { CardDivider } from "app/core/components/generic/Card"
-import { NotFoundError, useParam, useQuery,Routes } from "blitz"
+import { NotFoundError, useParam, useQuery, useSession } from "blitz"
 import getCustomerPortal from "../../customer-portals/queries/getCustomerPortal"
+import StakeholderLoginForm from "../../auth/components/StakeholderLoginForm"
 
 function CustomerPortal() {
+  const session = useSession()
+  console.log("session", session)
   const portalId = useParam("portalId", "number")
   const [data, { refetch }] = useQuery(getCustomerPortal, { id: portalId })
 
   if (!portalId) throw new NotFoundError()
+  if (!session.isLoading && !session.userId) {
+    return <StakeholderLoginForm />
+  }
   //container: https://tailwindui.com/components/application-ui/layout/containers
   return <>
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
@@ -46,5 +50,5 @@ function CustomerPortal() {
   </>
 }
 
-CustomerPortal.authenticate = true
+// CustomerPortal.authenticate = true
 export default CustomerPortal

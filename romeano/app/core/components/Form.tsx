@@ -16,24 +16,23 @@ export interface FormProps<S extends z.ZodType<any, any>>
 
 interface OnSubmitResult {
   FORM_ERROR?: string
-
   [prop: string]: any
 }
 
 export const FORM_ERROR = "FORM_ERROR"
 
 export function Form<S extends z.ZodType<any, any>>({
-                                                      children,
-                                                      submitText,
-                                                      schema,
-                                                      initialValues,
-                                                      onSubmit,
-                                                      ...props
-                                                    }: FormProps<S>) {
+  children,
+  submitText,
+  schema,
+  initialValues,
+  onSubmit,
+  ...props
+}: FormProps<S>) {
   const ctx = useForm<z.infer<S>>({
     mode: "onBlur",
     resolver: schema ? zodResolver(schema) : undefined,
-    defaultValues: initialValues
+    defaultValues: initialValues,
   })
   const [formError, setFormError] = useState<string | null>(null)
 
@@ -48,7 +47,7 @@ export function Form<S extends z.ZodType<any, any>>({
             } else {
               ctx.setError(key as any, {
                 type: "submit",
-                message: value
+                message: value,
               })
             }
           }
@@ -71,6 +70,11 @@ export function Form<S extends z.ZodType<any, any>>({
           </button>
         )}
 
+        <style global jsx>{`
+          .form > * + * {
+            margin-top: 1rem;
+          }
+        `}</style>
       </form>
     </FormProvider>
   )

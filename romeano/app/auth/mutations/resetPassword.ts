@@ -1,7 +1,7 @@
 import { resolver, SecurePassword, hash256 } from "blitz"
 import db from "db"
 import { ResetPassword } from "../validations"
-import login from "./loginAE"
+import login from "./login"
 
 export class ResetPasswordError extends Error {
   name = "ResetPasswordError"
@@ -13,7 +13,7 @@ export default resolver.pipe(resolver.zod(ResetPassword), async ({ password, tok
   const hashedToken = hash256(token)
   const possibleToken = await db.token.findFirst({
     where: { hashedToken, type: "RESET_PASSWORD" },
-    include: { user: true }
+    include: { user: true },
   })
 
   // 2. If token not found, error
@@ -34,14 +34,14 @@ export default resolver.pipe(resolver.zod(ResetPassword), async ({ password, tok
   const hashedPassword = await SecurePassword.hash(password.trim())
   const user = await db.user.update({
     where: { id: savedToken.userId },
-    data: { hashedPassword }
+    data: { hashedPassword },
   })
 
   // 6. Revoke all existing login sessions for this user
   await db.session.deleteMany({ where: { userId: user.id } })
 
   // 7. Now log the user in with the new credentials
-  await login({ email: user.email }, ctx)
+  await login({ email: user.email, password }, ctx)
 
   return true
 })

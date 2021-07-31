@@ -251,7 +251,7 @@ model MagicLink {
   id         String      @id
   hasClicked Boolean     @default(false)
   userId     Int
-  url        String
+  destUrl    String
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
 }

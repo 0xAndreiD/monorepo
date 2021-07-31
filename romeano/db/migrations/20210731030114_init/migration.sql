@@ -220,7 +220,7 @@ CREATE TABLE "Event" (
     "id" SERIAL NOT NULL,
     "type" "EventType" NOT NULL,
     "url" TEXT,
-    "ip" TEXT NOT NULL,
+    "ip" TEXT,
     "userAgent" TEXT,
     "documentId" INTEGER,
     "portalId" INTEGER NOT NULL,
@@ -235,7 +235,7 @@ CREATE TABLE "MagicLink" (
     "id" TEXT NOT NULL,
     "hasClicked" BOOLEAN NOT NULL DEFAULT false,
     "userId" INTEGER NOT NULL,
-    "portalId" INTEGER,
+    "destUrl" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -334,6 +334,3 @@ ALTER TABLE "Event" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DE
 
 -- AddForeignKey
 ALTER TABLE "Event" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "MagicLink" ADD FOREIGN KEY ("userId", "portalId") REFERENCES "UserPortal"("userId", "portalId") ON DELETE CASCADE ON UPDATE CASCADE;
