@@ -1,12 +1,10 @@
 /* This example requires Tailwind CSS v2.0+ */
 import "tailwindcss/tailwind.css"
 import { MailIcon } from "@heroicons/react/outline"
-import { getColourFromString } from "../../util/colour"
-import { getInitialsOfName, getName } from "../../util/text"
-import { CheckIcon } from "@heroicons/react/solid"
+import { getName } from "../../util/text"
 import { StyledLink } from "../generic/Link"
 import { Card, CardHeader } from "../generic/Card"
-import { EventCounted, Link, Stakeholder, VendorContact } from "../../../../types"
+import { Contact, EventCounted, Link, Stakeholder } from "../../../../types"
 import { range } from "lodash"
 import { Link as BlitzLink, Routes } from "blitz"
 import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircles"
@@ -16,7 +14,7 @@ type ActivePortal = {
   customerName: string,
   currentRoadmapStage: number,
   customerNumberOfStages: number,
-  primaryContact: VendorContact,
+  primaryContact: Contact | null,
   stakeholderEvents: Array<EventCounted<Stakeholder>>,
   documentEvents: Array<EventCounted<Link>>,
 }
@@ -107,20 +105,23 @@ export function ActivePortals(props: { data: ActivePortal[] }) {
                       </td>
 
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="relative bg-white flex items-center space-x-3">
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-gray-900">
-                              {getName(portal.primaryContact.firstName, portal.primaryContact.lastName)}
-                            </p>
-                            <p className="text-sm truncate">{portal.primaryContact.jobTitle}</p>
+                        {
+                          portal.primaryContact &&
+                          <div className="relative bg-white flex items-center space-x-3">
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-gray-900">
+                                {getName(portal.primaryContact.firstName, portal.primaryContact.lastName)}
+                              </p>
+                              <p className="text-sm truncate">{portal.primaryContact.jobTitle}</p>
+                            </div>
+                            <div
+                              className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
+                              <a href={`mailto:${portal.primaryContact.email}`}>
+                                <MailIcon className="h-4 w-4 text-gray-400" />
+                              </a>
+                            </div>
                           </div>
-                          <div
-                            className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
-                            <a href={`mailto:${portal.primaryContact.email}`}>
-                              <MailIcon className="h-4 w-4 text-gray-400" />
-                            </a>
-                          </div>
-                        </div>
+                        }
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex gap-3">

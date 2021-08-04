@@ -2,14 +2,15 @@ import Link from 'next/link';
 import React from 'react';
 import {CogIcon, PlusIcon} from "@heroicons/react/solid";
 
-export function Header() {
+export function Header(props: {vendorLogo?:string}) {
     const data = {
-        vendorLogo: "https://images.squarespace-cdn.com/content/v1/59ecb4ff4c0dbfd368993258/1519077349473-M7ADD9VEABMQSHAJB6ZL/ke17ZwdGBToddI8pDm48kEEk35wlJZsUCSxoPFFCfNNZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PICXa7_N5J40iYbFYBr4Oop3ePWNkItV5sPMJ0tw-x6KIKMshLAGzx4R3EDFOm1kBS/Mira+Labs+logo.jpg",
         manageTemplatesLink: "http://google.com"
     };
 
     return <div className="grid grid-cols-2 grid-rows-1 items-center">
-        <img alt="vendor logo" src={data.vendorLogo} width={150} height={121}/>
+        {
+            props.vendorLogo && <img alt="vendor logo" src={props.vendorLogo} width={150} height={121}/>
+        }
 
         <div className="flex justify-self-end gap-x-3">
             {/*FIXME change link*/}

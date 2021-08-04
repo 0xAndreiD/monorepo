@@ -14,9 +14,14 @@ export default resolver.pipe(
 
     const user = await db.user.findUnique({
       where: { id: userId },
-      include: { accountExecutive: true }
+      include: { accountExecutive: { include: { vendorTeam: { include: { vendor: true } } } } }
     })
     if (!user || !user.accountExecutive) throw new AuthorizationError("Not an account executive")
+
+
+    const header = {
+      vendorLogo: user.accountExecutive.vendorTeam.vendor.logoUrl
+    }
 
     const portalIds = (await db.$queryRaw<Array<{ portalId: number }>>`
       SELECT "portalId"
@@ -55,10 +60,13 @@ export default resolver.pipe(
              E."createdAt"
       FROM "Event" E
              JOIN "UserPortal" UP
-                  ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+                  ON E."userId" = UP."userId" AND
+                     E."portalId" = UP."portalId" AND
+                     UP.role = 'Stakeholder'
              JOIN "User" U on U.id = E."userId"
              JOIN "Portal" P on E."portalId" = P.id
              LEFT JOIN "Document" D ON E."documentId" = D.id
+      WHERE E."portalId" IN (${Prisma.join(portalIds)})
       ORDER BY E."createdAt" DESC
       LIMIT 25
     `
@@ -75,11 +83,11 @@ export default resolver.pipe(
       customerName: string,
       currentRoadmapStage: number,
       customerNumberOfStages: number,
+      hasPrimaryContact: boolean,
       primaryContactFirstName: string,
       primaryContactLastName: string,
       primaryContactJobTitle: string,
       primaryContactEmail: string,
-      primaryContactPhotoUrl: string
     }>>`
       SELECT P.id                               AS "portalId",
              P."customerName"                   AS "customerName",
@@ -87,15 +95,15 @@ export default resolver.pipe(
              (SELECT COUNT(*)
               FROM "RoadmapStage"
               WHERE "portalId" = UP."portalId") AS "customerNumberOfStages",
-             "User"."firstName"                 AS "primaryContactFirstName",
-             "User"."lastName"                  AS "primaryContactLastName",
-             "Stakeholder"."jobTitle"           AS "primaryContactJobTitle",
-             "User".email                       AS "primaryContactEmail",
-             "User"."photoUrl"                  AS "primaryContactPhotoUrl"
+             S."userId" IS NOT NULL             AS "hasPrimaryContact",
+             U."firstName"                      AS "primaryContactFirstName",
+             U."lastName"                       AS "primaryContactLastName",
+             S."jobTitle"                       AS "primaryContactJobTitle",
+             U.email                            AS "primaryContactEmail"
       FROM "UserPortal" UP
              INNER JOIN "Portal" P ON UP."portalId" = P.id
-             INNER JOIN "User" ON UP."userId" = "User".id
-             INNER JOIN "Stakeholder" ON "User".id = "Stakeholder"."userId"
+             INNER JOIN "User" U ON UP."userId" = U.id
+             LEFT JOIN "Stakeholder" S ON U.id = S."userId"
       WHERE UP."isPrimaryContact" = TRUE
         AND "portalId" IN (${Prisma.join(portalIds)})
     `
@@ -152,21 +160,21 @@ export default resolver.pipe(
       customerName: p.customerName,
       currentRoadmapStage: p.currentRoadmapStage,
       customerNumberOfStages: p.customerNumberOfStages,
-      primaryContact: {
+      primaryContact: p.hasPrimaryContact ? {
         firstName: p.primaryContactFirstName,
         lastName: p.primaryContactLastName,
         jobTitle: p.primaryContactJobTitle,
         email: p.primaryContactEmail,
-        photoUrl: p.primaryContactPhotoUrl
-      },
+      } : null,
       stakeholderEvents: stakeholderEvents[p.portalId] ?? [],
       documentEvents: documentEvents[p.portalId] ?? []
     }))
     console.log("final", all)
 
     return {
+      header,
       opportunityEngagement,
-      stakeholderActivity: stakeholderActivityLog,
+      stakeholderActivityLog,
       activePortals: all
     }
   })

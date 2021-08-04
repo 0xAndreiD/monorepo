@@ -576,14 +576,13 @@ async function seedMira() {
   const stages = [
     {
       heading: "Intro Meeting",
-      date: new Date(2021, 9, 8),
+      date: new Date(2021, 9, 4),
       tasks: { create: { task: "Go over Mira's platform." } },
       ctaLinkText: "Mira's Slide Deck",
       ctaLink: "https://www.google.com/webhp?client=firefox-b-d",
     },
     {
       heading: "Live AR Headset Demo",
-      date: new Date(2021, 10, 11),
       tasks: { create: { task: "Demonstrate a live Mira Connect call for your stakeholders." } },
       ctaLinkText: "Join Zoom 📞",
       ctaLink: "https://www.google.com/webhp?client=firefox-b-d",

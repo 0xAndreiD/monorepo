@@ -14,13 +14,13 @@ function VendorStats() {
   const [vendorStats] = useQuery(getVendorStats, {}, { refetchOnWindowFocus: false })
   return <>
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
-      <Header />
+      <Header vendorLogo={vendorStats.header.vendorLogo} />
       <div className="py-3"><CardDivider /></div>
     </div>
     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <OpportunityEngagement data={vendorStats.opportunityEngagement} />
-        <StakeholderActivity data={vendorStats.stakeholderActivity} />
+        <StakeholderActivity data={vendorStats.stakeholderActivityLog} />
       </div>
       <ActivePortals data={vendorStats.activePortals} />
     </div>
