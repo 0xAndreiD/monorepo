@@ -6,7 +6,9 @@ services:
     ports:
       - "80:3000"
     volumes:
-      - uploads:/app/.blitz/build/public/uploads
+      - type: bind
+        source: ${PWD}/prod_data/uploads
+        target: /app/.blitz/build/public/uploads
 
   db:
     image: postgres:alpine
@@ -14,8 +16,6 @@ services:
     environment:
       POSTGRES_PASSWORD: password
     volumes:
-      - pgdata:/var/lib/postgresql/data
-
-volumes:
-  uploads:
-  pgdata:
+      - type: bind
+        source: ${PWD}/prod_data/pgdata
+        target: /var/lib/postgresql/data
