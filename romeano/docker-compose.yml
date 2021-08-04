@@ -17,5 +17,5 @@ services:
       - pgdata:/var/lib/postgresql/data
 
 volumes:
-  uploads: prod_data/uploads
-  pgdata: prod_data/pgdata
+  uploads:
+  pgdata:
