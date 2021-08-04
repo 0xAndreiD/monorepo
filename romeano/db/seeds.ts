@@ -2,6 +2,7 @@ import db, { EventType, Role } from "./index"
 import { range } from "lodash"
 import { addHours, min, subDays } from "date-fns"
 import * as faker from "faker"
+import { SecurePassword } from "blitz"
 
 /*
  * This seed function is executed when you run `blitz db seed`.
@@ -33,7 +34,7 @@ const seedCustomerPortal = async () => {
       email: "greg@mira.com",
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
-      hashedPassword: "", //only works in dev mode!
+      hashedPassword: await SecurePassword.hash("password123"),
       accountExecutive: {
         //make AE
         create: {
@@ -53,6 +54,7 @@ const seedCustomerPortal = async () => {
       email: "alexis@mira.com",
       photoUrl:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+      hashedPassword: await SecurePassword.hash("password123"),
       accountExecutive: {
         //make AE
         create: {
@@ -535,7 +537,7 @@ async function seedMira() {
       email: "aetest@romeano.com",
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
-      hashedPassword: "", //only works in dev mode!
+      hashedPassword: await SecurePassword.hash("password123"),
       accountExecutive: {
         //make AE
         create: {
