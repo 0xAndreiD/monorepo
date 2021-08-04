@@ -108,6 +108,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
            COUNT(*)                         AS "eventCount"
     FROM "Event" E
            JOIN "UserPortal" UP ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+    WHERE E."portalId" = ${portalId}
     GROUP BY TIMESTAMP
     ORDER BY TIMESTAMP ASC;
   `
