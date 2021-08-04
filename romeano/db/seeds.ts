@@ -568,7 +568,7 @@ async function seedMira() {
       },
       proposalHeading:
         "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
-      proposalSubheading: "Bronze Deployment Tier (ex)",
+      proposalSubheading: "",
       vendorId: vendorTeam.vendorId,
     },
   })
@@ -628,7 +628,7 @@ async function seedMira() {
       heading: "Customer Case Studies",
       links: [
         {
-          body: "Cogentrix Case Study - Remote Audits",
+          body: "Cogentrix – Remote Audits",
           href: "/api/viewDocument/Cogentrix Remote Audit Case Study.pdf",
         },
         {
@@ -680,6 +680,23 @@ async function seedMira() {
       },
     })
   }
+
+  await db.portalImage.createMany({
+    data: [
+      {
+        portalId: portal.id,
+        href: "/api/viewDocument/H1_XW_Render_w_NewIndoorLens.jpg",
+      },
+      {
+        portalId: portal.id,
+        href: "/api/viewDocument/H1_HH_Render_w_NewOutdoorLens.jpg",
+      },
+      {
+        portalId: portal.id,
+        href: "/api/viewDocument/Outdoor Lens Tint Both Headsets Bottom View.jpg",
+      },
+    ],
+  })
 }
 
 async function seed() {
