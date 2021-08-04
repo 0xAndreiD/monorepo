@@ -55,3 +55,4 @@ lib-cov
 #custom
 .idea/
 db/geoip/
+public/uploads

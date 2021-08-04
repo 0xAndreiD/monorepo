@@ -13,37 +13,43 @@ import { Header } from "../../core/components/portalDetails/Header"
 
 function PortalDetails() {
   const portalId = useParam("portalId", "number")
-  const [portal] = useQuery(getPortalDetail, { portalId },
-    { refetchOnWindowFocus: false, enabled: !!portalId })
+  const [portal] = useQuery(getPortalDetail, { portalId }, { refetchOnWindowFocus: false, enabled: !!portalId })
 
   //container: https://tailwindui.com/components/application-ui/layout/containers
   if (!portalId || !portal) return <>Loading!</>
-  return <div>
-    <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
-      <Header portalId={portalId} />
-      <div className="py-3"><CardDivider /></div>
-    </div>
-
-    <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="flex flex-col gap-4">
-          <OpportunityOverview {...portal.opportunityOverview} />
-          <ContactsCard data={portal.contacts}
-                        numContactsToDisplay={1}
-                        narrowLayout />
-        </div>
-        <div className="flex flex-col gap-4">
-          <LineChart data={portal.overallEngagement} />
+  return (
+    <div>
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
+        <Header
+          portalId={portalId}
+          vendorLogo={portal.header.vendorLogo}
+          customerName={portal.header.customerName}
+          customerLogo={portal.header.customerLogo}
+        />
+        <div className="py-3">
+          <CardDivider />
         </div>
       </div>
-      <CardDivider />
-      <DocumentsCard portalId={portalId} data={portal.documents} />
-      <CardDivider />
-      <StakeholderEngagementCard data={portal.stakeholderEngagement} />
-      <StakeholderActivityLogCard data={portal.stakeholderActivityLog} />
-      <Footer />
+
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-4">
+            <OpportunityOverview {...portal.opportunityOverview} />
+            <ContactsCard data={portal.contacts} numContactsToDisplay={1} narrowLayout />
+          </div>
+          <div className="flex flex-col gap-4">
+            <LineChart data={portal.overallEngagement} />
+          </div>
+        </div>
+        <CardDivider />
+        <DocumentsCard portalId={portalId} data={portal.documents} />
+        <CardDivider />
+        <StakeholderEngagementCard data={portal.stakeholderEngagement} />
+        <StakeholderActivityLogCard data={portal.stakeholderActivityLog} />
+        <Footer />
+      </div>
     </div>
-  </div>
+  )
 }
 
 PortalDetails.authenticate = true

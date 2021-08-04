@@ -9,7 +9,7 @@ import { StakeholderActivityEvent } from "app/core/components/portalDetails/Stak
 
 const GetPortalDetail = z.object({
   // This accepts type of undefined, but is required at runtime
-  portalId: z.number().optional().refine(Boolean, "Required")
+  portalId: z.number().optional().refine(Boolean, "Required"),
 })
 
 export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize(), async ({ portalId }) => {
@@ -25,83 +25,103 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
           user: {
             include: {
               accountExecutive: true,
-              stakeholder: true
-            }
-          }
-        }
-      }
-    }
+              stakeholder: true,
+            },
+          },
+        },
+      },
+    },
   })
 
   if (!portal) throw new NotFoundError()
 
+  const header = {
+    vendorLogo: portal.vendor.logoUrl,
+    customerName: portal.customerName,
+    customerLogo: portal.customerLogoUrl,
+  }
+
   const opportunityOverview = {
     currentRoadmapStage: portal.currentRoadmapStage,
-    stages: portal.roadmapStages.map(stage => ({
+    stages: portal.roadmapStages.map((stage) => ({
       heading: stage.heading,
       date: stage.date?.toISOString(),
-      ctaLink: stage.ctaLinkText && stage.ctaLink ? { body: stage.ctaLinkText, href: stage.ctaLink } : undefined
-    }))
+      ctaLink: stage.ctaLinkText && stage.ctaLink ? { body: stage.ctaLinkText, href: stage.ctaLink } : undefined,
+    })),
   }
 
   const contacts = {
     contacts: portal.userPortals
-      .filter(userPortal => userPortal.role === Role.Stakeholder && userPortal.isPrimaryContact === true)
-      .map(userPortal =>
-        ({
-          firstName: userPortal.user.firstName,
-          lastName: userPortal.user.lastName,
-          jobTitle: userPortal.user.stakeholder?.jobTitle,
-          email: userPortal.user.email,
-          photoUrl: userPortal.user.photoUrl
-        })
-      )
+      .filter((userPortal) => userPortal.role === Role.Stakeholder && userPortal.isPrimaryContact === true)
+      .map((userPortal) => ({
+        firstName: userPortal.user.firstName,
+        lastName: userPortal.user.lastName,
+        jobTitle: userPortal.user.stakeholder?.jobTitle,
+        email: userPortal.user.email,
+        photoUrl: userPortal.user.photoUrl,
+      })),
   }
 
   const documents = {
     customer: {
       name: portal.customerName,
       documents: portal.documents
-        .filter(x => portal.userPortals.filter(up => up.role === Role.AccountExecutive).map(up => up.userId).includes(x.userId))
-        .map(x => ({
+        .filter((x) =>
+          portal.userPortals
+            .filter((up) => up.role === Role.AccountExecutive)
+            .map((up) => up.userId)
+            .includes(x.userId)
+        )
+        .map((x) => ({
           id: x.id,
           title: x.title,
           href: getExternalUploadPath(x.path),
-          isCompleted: x.isCompleted
-        }))
+          isCompleted: x.isCompleted,
+        })),
     },
     vendor: {
       name: portal.vendor.name,
       documents: portal.documents
-        .filter(x => portal.userPortals.filter(up => up.role === Role.Stakeholder).map(up => up.userId).includes(x.userId))
-        .map(x => ({
+        .filter((x) =>
+          portal.userPortals
+            .filter((up) => up.role === Role.Stakeholder)
+            .map((up) => up.userId)
+            .includes(x.userId)
+        )
+        .map((x) => ({
           id: x.id,
           title: x.title,
           href: getExternalUploadPath(x.path),
-          isCompleted: x.isCompleted
-        }))
-    }
+          isCompleted: x.isCompleted,
+        })),
+    },
   }
 
-  const overallEngagement = (await db.$queryRaw<Array<{
-    timestamp: string,
-    eventCount: number
-  }>>`
+  const overallEngagement = (
+    await db.$queryRaw<
+      Array<{
+        timestamp: string
+        eventCount: number
+      }>
+    >`
     SELECT DATE_TRUNC('day', E."createdAt") AS timestamp,
            COUNT(*)                         AS "eventCount"
     FROM "Event" E
            JOIN "UserPortal" UP ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
     GROUP BY TIMESTAMP
     ORDER BY TIMESTAMP ASC;
-  `).map(x => ({ x: new Date(x.timestamp), y: x.eventCount }))
+  `
+  ).map((x) => ({ x: new Date(x.timestamp), y: x.eventCount }))
 
-  const stakeholderEngagement = await db.$queryRaw<Array<{
-    userId: number,
-    stakeholderName: string,
-    stakeholderJobTitle: string,
-    eventCount: number
-    lastActive: string
-  }>>`
+  const stakeholderEngagement = await db.$queryRaw<
+    Array<{
+      userId: number
+      stakeholderName: string
+      stakeholderJobTitle: string
+      eventCount: number
+      lastActive: string
+    }>
+  >`
     SELECT E."userId",
            (SELECT "firstName" || ' ' || "lastName" FROM "User" WHERE id = E."userId") AS "stakeholderName",
            (SELECT "jobTitle" FROM "Stakeholder" WHERE "userId" = E."userId")          AS "stakeholderJobTitle",
@@ -133,41 +153,42 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
     ORDER BY E."createdAt" DESC
     LIMIT 25
   `
-  const stakeholderActivityLog: StakeholderActivityEvent[] = stakeholderActivityLogRaw.map(x => ({
+  const stakeholderActivityLog: StakeholderActivityEvent[] = stakeholderActivityLogRaw.map((x) => ({
     stakeholderName: x.stakeholderName,
     customerName: x.customerName,
     type: x.type,
     link: generateLinkFromEventType(x),
     location: getLocation(x.ip),
     device: UAParser(x.userAgent).device.type === "mobile" ? Device.Mobile : Device.Computer,
-    timestamp: new Date(x.createdAt).toISOString()
+    timestamp: new Date(x.createdAt).toISOString(),
   }))
 
   return {
+    header,
     opportunityOverview,
     contacts,
     overallEngagement,
     documents,
     stakeholderEngagement,
-    stakeholderActivityLog
+    stakeholderActivityLog,
   }
 })
 
 export type DenormalizedEvent = {
-  stakeholderName: string,
-  customerName: string,
-  type: EventType,
-  documentTitle: string,
-  documentPath: string,
-  url: string,
-  ip: string,
-  userAgent: string,
-  createdAt: string,
+  stakeholderName: string
+  customerName: string
+  type: EventType
+  documentTitle: string
+  documentPath: string
+  url: string
+  ip: string
+  userAgent: string
+  createdAt: string
 }
 
 export function generateLinkFromEventType(event: {
-  type: EventType,
-  documentTitle: string,
+  type: EventType
+  documentTitle: string
   documentPath: string
 }): Link | null {
   switch (event.type) {
