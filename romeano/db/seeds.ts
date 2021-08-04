@@ -18,7 +18,7 @@ const seedCustomerPortal = async () => {
       vendor: {
         //make vendor
         create: {
-          name: "Mira",
+          name: "MiraDemo",
           logoUrl:
             "https://images.squarespace-cdn.com/content/v1/59ecb4ff4c0dbfd368993258/1519077349473-M7ADD9VEABMQSHAJB6ZL/ke17ZwdGBToddI8pDm48kEEk35wlJZsUCSxoPFFCfNNZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PICXa7_N5J40iYbFYBr4Oop3ePWNkItV5sPMJ0tw-x6KIKMshLAGzx4R3EDFOm1kBS/Mira+Labs+logo.jpg",
         },
@@ -306,7 +306,7 @@ const seedCustomerPortal = async () => {
       links: [
         {
           body: "Cogentrix Case Study - Remote Audits",
-          href: "#",
+          href: "",
         },
         {
           body: "Orica Case Study - Remote Troubleshooting",
@@ -514,11 +514,180 @@ async function seedEvents() {
   })
 }
 
+async function seedMira() {
+  const vendorTeam = await db.vendorTeam.create({
+    data: {
+      vendor: {
+        //make vendor
+        create: {
+          name: "Mira",
+          logoUrl:
+            "https://images.squarespace-cdn.com/content/v1/59ecb4ff4c0dbfd368993258/1519077349473-M7ADD9VEABMQSHAJB6ZL/ke17ZwdGBToddI8pDm48kEEk35wlJZsUCSxoPFFCfNNZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PICXa7_N5J40iYbFYBr4Oop3ePWNkItV5sPMJ0tw-x6KIKMshLAGzx4R3EDFOm1kBS/Mira+Labs+logo.jpg",
+        },
+      },
+    },
+  })
+
+  const aeUser = await db.user.create({
+    data: {
+      firstName: "Alexis",
+      lastName: "Miller",
+      email: "aetest@romeano.com",
+      photoUrl:
+        "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
+      hashedPassword: "", //only works in dev mode!
+      accountExecutive: {
+        //make AE
+        create: {
+          jobTitle: "Account Executive",
+          vendorTeamId: vendorTeam.vendorId,
+        },
+      },
+    },
+    include: {
+      accountExecutive: { include: { vendorTeam: { include: { vendor: true } } } },
+    },
+  })
+
+  const portal = await db.portal.create({
+    data: {
+      customerName: "Leggett & Platt",
+      customerLogoUrl: "https://leggett.com/image/view/leggett-logo-2.svg",
+      currentRoadmapStage: 2,
+      userPortals: {
+        createMany: {
+          data: [
+            {
+              userId: aeUser.id,
+              role: Role.AccountExecutive,
+              isPrimaryContact: true,
+              isSecondaryContact: false,
+            },
+          ],
+        },
+      },
+      proposalHeading:
+        "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
+      proposalSubheading: "Bronze Deployment Tier (ex)",
+      vendorId: vendorTeam.vendorId,
+    },
+  })
+
+  const stages = [
+    {
+      heading: "Intro Meeting",
+      date: new Date(2021, 9, 8),
+      tasks: { create: { task: "Go over Mira's platform." } },
+      ctaLinkText: "Mira's Slide Deck",
+      ctaLink: "https://www.google.com/webhp?client=firefox-b-d",
+    },
+    {
+      heading: "Live AR Headset Demo",
+      date: new Date(2021, 10, 11),
+      tasks: { create: { task: "Demonstrate a live Mira Connect call for your stakeholders." } },
+      ctaLinkText: "Join Zoom 📞",
+      ctaLink: "https://www.google.com/webhp?client=firefox-b-d",
+    },
+    {
+      heading: "Use-Case & Value Stream Workshop",
+      tasks: {
+        createMany: {
+          data: [
+            { task: "Define primary use-case where Mira will be used" },
+            { task: "Build interaction web" },
+            { task: "Value map/ROI calculations" },
+          ],
+        },
+      },
+    },
+    {
+      heading: "Deployment Configuration",
+      tasks: { create: { task: "Quantity deployment size & scope" } },
+    },
+  ]
+
+  for (const stage of stages) {
+    await db.roadmapStage.create({ data: { portalId: portal.id, ...stage } })
+  }
+
+  const productInfoSections = [
+    {
+      heading: "Product Videos",
+      links: [
+        {
+          body: "Mira Connect",
+          href: "https://vimeo.com/399786915",
+        },
+        {
+          body: "Mira Flow",
+          href: "https://vimeo.com/435822126",
+        },
+      ],
+    },
+    {
+      heading: "Customer Case Studies",
+      links: [
+        {
+          body: "Cogentrix Case Study - Remote Audits",
+          href: "/api/viewDocument/Cogentrix Remote Audit Case Study.pdf",
+        },
+        {
+          body: "TAI – Remote Audits",
+          href: "/api/viewDocument/TAI Remote Audits Case Study.pdf",
+        },
+        {
+          body: "Orica – Pre-Start Compliance",
+          href: "/api/viewDocument/Orica PreStart Compliance.pdf",
+        },
+        {
+          body: "Orica – Remote Troubleshooting",
+          href: "/api/viewDocument/Orica Remote Troubleshooting.pdf",
+        },
+        {
+          body: "Orica – Virtual Safety Audits",
+          href: "/api/viewDocument/Orica Virtual Safety Audits.pdf",
+        },
+      ],
+    },
+    {
+      heading: "Misc",
+      links: [
+        {
+          body: "Mira Connect Call Network Requirements",
+          href: "https://support.mirareality.com/hc/en-us/articles/360039081634-Network-Requirements-and-Configuration-for-Using-Connect",
+        },
+        {
+          body: "Mira Website",
+          href: "https://www.mirareality.com/",
+        },
+      ],
+    },
+  ]
+
+  for (const section of productInfoSections) {
+    await db.productInfoSection.create({
+      data: {
+        portalId: portal.id,
+        heading: section.heading,
+        links: {
+          createMany: {
+            data: section.links.map((linkElem) => ({
+              linkText: linkElem.body,
+              link: linkElem.href,
+            })),
+          },
+        },
+      },
+    })
+  }
+}
+
 async function seed() {
   console.log(`Start seeding ...`)
   await seedCustomerPortal()
   await seedPortalDetails()
   await seedEvents()
+  await seedMira()
   console.log("Done!")
 }
 
