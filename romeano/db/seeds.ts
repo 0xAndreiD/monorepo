@@ -589,7 +589,7 @@ async function seedMira() {
             {
               userId: testUser.id,
               role: Role.AccountExecutive,
-              isPrimaryContact: true,
+              isPrimaryContact: false,
               isSecondaryContact: false,
             },
           ],
