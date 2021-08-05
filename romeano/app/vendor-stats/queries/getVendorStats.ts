@@ -88,25 +88,52 @@ export default resolver.pipe(
       primaryContactLastName: string,
       primaryContactJobTitle: string,
       primaryContactEmail: string,
-    }>>`
-      SELECT P.id                               AS "portalId",
-             P."customerName"                   AS "customerName",
-             P."currentRoadmapStage"            AS "currentRoadmapStage",
-             (SELECT COUNT(*)
-              FROM "RoadmapStage"
-              WHERE "portalId" = UP."portalId") AS "customerNumberOfStages",
-             S."userId" IS NOT NULL             AS "hasPrimaryContact",
-             U."firstName"                      AS "primaryContactFirstName",
-             U."lastName"                       AS "primaryContactLastName",
-             S."jobTitle"                       AS "primaryContactJobTitle",
-             U.email                            AS "primaryContactEmail"
-      FROM "UserPortal" UP
-             INNER JOIN "Portal" P ON UP."portalId" = P.id
-             INNER JOIN "User" U ON UP."userId" = U.id
-             LEFT JOIN "Stakeholder" S ON U.id = S."userId"
-      WHERE UP."isPrimaryContact" = TRUE
-        AND "portalId" IN (${Prisma.join(portalIds)})
+    }>>`WITH "hasStakeholder" AS (SELECT P.id                               AS "portalId",
+                                         P."customerName"                   AS "customerName",
+                                         P."currentRoadmapStage"            AS "currentRoadmapStage",
+                                         (SELECT COUNT(*)
+                                          FROM "RoadmapStage"
+                                          WHERE "portalId" = UP."portalId") AS "customerNumberOfStages",
+                                         S."userId" IS NOT NULL             AS "hasPrimaryContact",
+                                         U."firstName"                      AS "primaryContactFirstName",
+                                         U."lastName"                       AS "primaryContactLastName",
+                                         S."jobTitle"                       AS "primaryContactJobTitle",
+                                         U.email                            AS "primaryContactEmail"
+                                  FROM "UserPortal" UP
+                                         INNER JOIN "Portal" P ON UP."portalId" = P.id
+                                         INNER JOIN "User" U ON UP."userId" = U.id
+                                         JOIN "Stakeholder" S ON U.id = S."userId"
+                                  WHERE UP."isPrimaryContact" = TRUE
+                                    AND UP.role = 'Stakeholder'
+                                    AND UP."portalId" IN (${Prisma.join(portalIds)})),
+             "noStakeholder" AS (SELECT P.id                               AS "portalId",
+                                        P."customerName"                   AS "customerName",
+                                        P."currentRoadmapStage"            AS "currentRoadmapStage",
+                                        (SELECT COUNT(*)
+                                         FROM "RoadmapStage"
+                                         WHERE "portalId" = UP."portalId") AS "customerNumberOfStages",
+                                        S."userId" IS NOT NULL             AS "hasPrimaryContact",
+                                        U."firstName"                      AS "primaryContactFirstName",
+                                        U."lastName"                       AS "primaryContactLastName",
+                                        S."jobTitle"                       AS "primaryContactJobTitle",
+                                        U.email                            AS "primaryContactEmail"
+                                 FROM "UserPortal" UP
+                                        INNER JOIN "Portal" P ON UP."portalId" = P.id
+                                        INNER JOIN "User" U ON UP."userId" = U.id
+                                        LEFT JOIN "Stakeholder" S ON U.id = S."userId"
+                                 WHERE UP."portalId" IN (${Prisma.join(portalIds)})
+                                   AND UP."portalId" NOT IN (SELECT "portalId" FROM "hasStakeholder")
+                                   AND UP."userId" = ${userId}),
+             combined AS (
+               SELECT *
+               FROM "hasStakeholder"
+               UNION ALL
+               SELECT *
+               FROM "noStakeholder")
+        SELECT *
+        FROM combined
     `
+
     const activePortalsStakeholders = await db.$queryRaw<Array<{
       portalId: number,
       firstName: string,
@@ -123,8 +150,9 @@ export default resolver.pipe(
              COUNT(*) AS "eventCount"
       FROM "Event" E
              JOIN "User" U ON U.id = E."userId"
-             JOIN "UserPortal" UP
-                  ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+             JOIN "UserPortal" UP ON E."userId" = UP."userId"
+        AND E."portalId" = UP."portalId"
+        AND UP.role = 'Stakeholder'
       WHERE E."portalId" IN (${Prisma.join(portalIds)})
       GROUP BY E."portalId", E."userId", U."firstName", U."lastName", email, "hasStakeholderApproved"`
     const stakeholderEvents = groupBy(activePortalsStakeholders, "portalId")
@@ -143,8 +171,9 @@ export default resolver.pipe(
              COUNT(*)     AS "eventCount"
       FROM "Event" E
              JOIN "Document" D ON D.id = E."documentId"
-             JOIN "UserPortal" UP
-                  ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+             JOIN "UserPortal" UP ON E."userId" = UP."userId"
+        AND E."portalId" = UP."portalId"
+        AND UP.role = 'Stakeholder'
       WHERE E."portalId" IN (${Prisma.join(portalIds)})
       GROUP BY E."portalId", title, path
     `

@@ -60,7 +60,8 @@ export function ProductInfoCard(props: {portalId:number, data: ProductInfo }) {
                                 <TrackedLink href={link.href}
                                              defaultStyle={true}
                                              portalId={props.portalId}
-                                             eventType={EventType.ProductInfoLinkOpen}>
+                                             eventType={EventType.ProductInfoLinkOpen}
+                                             anchorProps={{ target: "_blank" }}>
                                     {link.body}
                                 </TrackedLink>
                             </li>)

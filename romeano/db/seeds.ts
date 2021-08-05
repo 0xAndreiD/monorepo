@@ -534,6 +534,27 @@ async function seedMira() {
     data: {
       firstName: "Alexis",
       lastName: "Miller",
+      email: "alexis.miller@miralabs.io",
+      photoUrl:
+        "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
+      hashedPassword: await SecurePassword.hash("password123"),
+      accountExecutive: {
+        //make AE
+        create: {
+          jobTitle: "Account Executive",
+          vendorTeamId: vendorTeam.vendorId,
+        },
+      },
+    },
+    include: {
+      accountExecutive: { include: { vendorTeam: { include: { vendor: true } } } },
+    },
+  })
+
+  const testUser = await db.user.create({
+    data: {
+      firstName: "AE Test",
+      lastName: "User",
       email: "aetest@romeano.com",
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
@@ -565,6 +586,12 @@ async function seedMira() {
               isPrimaryContact: true,
               isSecondaryContact: false,
             },
+            {
+              userId: testUser.id,
+              role: Role.AccountExecutive,
+              isPrimaryContact: true,
+              isSecondaryContact: false,
+            },
           ],
         },
       },
@@ -578,7 +605,7 @@ async function seedMira() {
   const stages = [
     {
       heading: "Intro Meeting",
-      date: new Date(2021, 9, 4),
+      date: new Date(2021, 7, 4),
       tasks: { create: { task: "Go over Mira's platform." } },
       ctaLinkText: "Mira's Slide Deck",
       ctaLink: "https://www.google.com/webhp?client=firefox-b-d",
@@ -603,7 +630,7 @@ async function seedMira() {
     },
     {
       heading: "Deployment Configuration",
-      tasks: { create: { task: "Quantity deployment size & scope" } },
+      tasks: { create: { task: "Quantify deployment size & scope" } },
     },
   ]
 

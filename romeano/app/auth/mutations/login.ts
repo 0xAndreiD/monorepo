@@ -7,13 +7,13 @@ export const authenticateUser = async (rawEmail: string, rawPassword: string) =>
   const password = rawPassword.trim()
   const user = await db.user.findFirst({ where: { email } })
   if (!user) throw new AuthenticationError()
-  
+
   //FIXME: dev mode skips auth!
-  if (process.env.NODE_ENV !== "production") {
-    console.log("SKIPPING AUTH")
-    const { hashedPassword, ...rest } = user
-    return rest
-  }
+  // if (process.env.NODE_ENV !== "production") {
+  //   console.log("SKIPPING AUTH")
+  //   const { hashedPassword, ...rest } = user
+  //   return rest
+  // }
   const result = await SecurePassword.verify(user.hashedPassword, password)
 
   if (result === SecurePassword.VALID_NEEDS_REHASH) {
