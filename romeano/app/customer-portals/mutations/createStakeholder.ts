@@ -46,6 +46,7 @@ export default resolver.pipe(
           firstName,
           lastName,
           email,
+          role: Role.Stakeholder,
         },
       }))
 
