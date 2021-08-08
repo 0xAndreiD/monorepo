@@ -223,6 +223,7 @@ CREATE TABLE "Event" (
     "ip" TEXT,
     "userAgent" TEXT,
     "documentId" INTEGER,
+    "productInfoSectionLinkId" INTEGER,
     "portalId" INTEGER NOT NULL,
     "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -328,6 +329,9 @@ ALTER TABLE "InternalNote" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON
 
 -- AddForeignKey
 ALTER TABLE "Event" ADD FOREIGN KEY ("documentId") REFERENCES "Document"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Event" ADD FOREIGN KEY ("productInfoSectionLinkId") REFERENCES "ProductInfoSectionLink"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Event" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;

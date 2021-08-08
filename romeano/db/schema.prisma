@@ -153,6 +153,7 @@ model ProductInfoSectionLink {
   link                 String
   productInfoSection   ProductInfoSection @relation(fields: [productInfoSectionId], references: [id])
   productInfoSectionId Int
+  events               Event[]
 }
 
 model ProductInfoSection {
@@ -233,18 +234,20 @@ model InternalNote {
 }
 
 model Event {
-  id         Int       @id @default(autoincrement())
-  type       EventType
-  url        String?
-  ip         String?
-  userAgent  String?
-  document   Document? @relation(fields: [documentId], references: [id])
-  documentId Int?
-  portal     Portal    @relation(fields: [portalId], references: [id])
-  portalId   Int
-  user       User      @relation(fields: [userId], references: [id])
-  userId     Int
-  createdAt  DateTime  @default(now())
+  id                       Int                     @id @default(autoincrement())
+  type                     EventType
+  url                      String?
+  ip                       String?
+  userAgent                String?
+  document                 Document?               @relation(fields: [documentId], references: [id])
+  documentId               Int?
+  productInfoSectionLink   ProductInfoSectionLink? @relation(fields: [productInfoSectionLinkId], references: [id])
+  productInfoSectionLinkId Int?
+  portal                   Portal                  @relation(fields: [portalId], references: [id])
+  portalId                 Int
+  user                     User                    @relation(fields: [userId], references: [id])
+  userId                   Int
+  createdAt                DateTime                @default(now())
 }
 
 model MagicLink {

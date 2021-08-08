@@ -6,15 +6,30 @@ import { getExternalUploadPath } from "../../core/util/upload"
 import UAParser from "ua-parser-js"
 import { getLocation } from "../../core/util/location"
 import { StakeholderActivityEvent } from "app/core/components/portalDetails/StakeholderActivityLogCard"
+import { getStakeholderActivityLogRaw } from "../../vendor-stats/queries/getVendorStats"
 
 const GetPortalDetail = z.object({
   // This accepts type of undefined, but is required at runtime
   portalId: z.number().optional().refine(Boolean, "Required"),
 })
 
+export type DenormalizedEvent = {
+  stakeholderName: string
+  customerName: string
+  type: EventType
+  documentTitle: string
+  documentPath: string
+  productInfoLinkTitle: string
+  productInfoLinkTitlePath: string
+  url: string
+  ip: string
+  userAgent: string
+  createdAt: string
+}
+
 export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize(), async ({ portalId }) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const portal = await db.portal.findFirst({
+  const portal = await db.portal.findUnique({
     where: { id: portalId },
     include: {
       roadmapStages: true,
@@ -33,7 +48,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
     },
   })
 
-  if (!portal) throw new NotFoundError()
+  if (!portalId || !portal) throw new NotFoundError()
 
   const header = {
     vendorLogo: portal.vendor.logoUrl,
@@ -135,25 +150,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
     ORDER BY "eventCount" DESC;
   `
 
-  const stakeholderActivityLogRaw = await db.$queryRaw<DenormalizedEvent[]>`
-    SELECT U."firstName" || ' ' || U."lastName" AS "stakeholderName",
-           P."customerName",
-           E.type,
-           D.title                              AS "documentTitle",
-           D.path                               AS "documentPath",
-           E.url,
-           E.ip,
-           E."userAgent",
-           E."createdAt"
-    FROM "Event" E
-           JOIN "UserPortal" UP ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
-           JOIN "User" U on U.id = E."userId"
-           JOIN "Portal" P on E."portalId" = P.id
-           LEFT JOIN "Document" D ON E."documentId" = D.id
-    WHERE E."portalId" = ${portalId}
-    ORDER BY E."createdAt" DESC
-    LIMIT 25
-  `
+  const stakeholderActivityLogRaw = await getStakeholderActivityLogRaw([portalId])
   const stakeholderActivityLog: StakeholderActivityEvent[] = stakeholderActivityLogRaw.map((x) => ({
     stakeholderName: x.stakeholderName,
     customerName: x.customerName,
@@ -175,22 +172,12 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
   }
 })
 
-export type DenormalizedEvent = {
-  stakeholderName: string
-  customerName: string
-  type: EventType
-  documentTitle: string
-  documentPath: string
-  url: string
-  ip: string
-  userAgent: string
-  createdAt: string
-}
-
 export function generateLinkFromEventType(event: {
   type: EventType
   documentTitle: string
   documentPath: string
+  productInfoLinkTitle: string
+  productInfoLinkTitlePath: string
 }): Link | null {
   switch (event.type) {
     case EventType.LaunchRoadmapLinkOpen:
@@ -218,7 +205,7 @@ export function generateLinkFromEventType(event: {
     case EventType.CreateInternalMessage:
       return null
     case EventType.ProductInfoLinkOpen:
-      return null //TODO: have actual link
+      return { body: event.productInfoLinkTitle, href: event.productInfoLinkTitlePath }
     case EventType.InviteStakeholder:
       return null
   }

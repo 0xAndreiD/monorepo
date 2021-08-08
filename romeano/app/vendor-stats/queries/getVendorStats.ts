@@ -1,8 +1,36 @@
 import { AuthenticationError, AuthorizationError, Ctx, resolver } from "blitz"
-import db, { EventType, Prisma } from "db"
+import db, { Prisma } from "db"
 import { groupBy } from "lodash"
 import { getExternalUploadPath } from "../../core/util/upload"
-import { generateLinkFromEventType } from "../../portal-details/queries/getPortalDetail"
+import { DenormalizedEvent, generateLinkFromEventType } from "../../portal-details/queries/getPortalDetail"
+
+export async function getStakeholderActivityLogRaw(portalIds: number[]) {
+  return await db.$queryRaw<DenormalizedEvent[]>`
+    SELECT U."firstName" || ' ' || U."lastName" AS "stakeholderName",
+           P."customerName",
+           E.type,
+           D.title                              AS "documentTitle",
+           D.path                               AS "documentPath",
+           P."linkText"                         AS "productInfoLinkTitle",
+           P.link                               AS "productInfoLinkTitlePath",
+           E.url,
+           E.ip,
+           E."userAgent",
+           E."createdAt"
+    FROM "Event" E
+           JOIN "UserPortal" UP
+                ON E."userId" = UP."userId" AND
+                   E."portalId" = UP."portalId" AND
+                   UP.role = 'Stakeholder'
+           JOIN "User" U on U.id = E."userId"
+           JOIN "Portal" P on E."portalId" = P.id
+           LEFT JOIN "Document" D ON E."documentId" = D.id
+           LEFT JOIN "ProductInfoSectionLink" P ON E."productInfoSectionLinkId" = P.id
+    WHERE E."portalId" IN (${Prisma.join(portalIds)})
+      ORDER BY E."createdAt" DESC
+      LIMIT 25
+    `
+}
 
 export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
@@ -47,34 +75,7 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
       ORDER BY "eventCount" DESC;
     `
 
-  const stakeholderActivityLogRaw = await db.$queryRaw<
-    Array<{
-      stakeholderName: string
-      customerName: string
-      type: EventType
-      documentTitle: string
-      documentPath: string
-      createdAt: string
-    }>
-  >`
-      SELECT U."firstName" || ' ' || U."lastName" AS "stakeholderName",
-             P."customerName",
-             E.type,
-             D.title                              AS "documentTitle",
-             D.path                               AS "documentPath",
-             E."createdAt"
-      FROM "Event" E
-             JOIN "UserPortal" UP
-                  ON E."userId" = UP."userId" AND
-                     E."portalId" = UP."portalId" AND
-                     UP.role = 'Stakeholder'
-             JOIN "User" U on U.id = E."userId"
-             JOIN "Portal" P on E."portalId" = P.id
-             LEFT JOIN "Document" D ON E."documentId" = D.id
-      WHERE E."portalId" IN (${Prisma.join(portalIds)})
-      ORDER BY E."createdAt" DESC
-      LIMIT 25
-    `
+  const stakeholderActivityLogRaw = await getStakeholderActivityLogRaw(portalIds)
   const stakeholderActivityLog = stakeholderActivityLogRaw.map((x) => ({
     stakeholderName: x.stakeholderName,
     customerName: x.customerName,
