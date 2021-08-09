@@ -20,6 +20,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
           tasks: true, //get the associated tasks for a stage
           ctaLink: true,
         },
+        orderBy: { id: "asc" },
       },
       nextStepsTasks: {
         include: {

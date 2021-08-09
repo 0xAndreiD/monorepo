@@ -36,6 +36,7 @@
     "chart.js": "^3.4.1",
     "chartjs-adapter-date-fns": "^2.0.0",
     "date-fns": "^2.22.1",
+    "date-fns-tz": "^1.1.6",
     "eslint": "7.32.0",
     "faker": "^5.5.3",
     "formidable": "^1.2.2",

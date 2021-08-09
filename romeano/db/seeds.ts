@@ -3,6 +3,7 @@ import { range } from "lodash"
 import { addHours, min, subDays } from "date-fns"
 import * as faker from "faker"
 import { SecurePassword } from "blitz"
+import { zonedTimeToUtc } from "date-fns-tz"
 
 /*
  * This seed function is executed when you run `blitz db seed`.
@@ -307,11 +308,11 @@ const seedCustomerPortal = async () => {
       links: [
         {
           body: "Mira Connect",
-          href: "#",
+          href: "https://www.google.com/webhp?client=firefox-b-d",
         },
         {
           body: "Mira Flow",
-          href: "#",
+          href: "https://www.google.com/webhp?client=firefox-b-d",
         },
       ],
     },
@@ -324,19 +325,19 @@ const seedCustomerPortal = async () => {
         },
         {
           body: "Orica Case Study - Remote Troubleshooting",
-          href: "#",
+          href: "https://www.google.com/webhp?client=firefox-b-d",
         },
       ],
     },
     {
       heading: "Misc",
-      links: [{ body: "Device Technical Spec Sheet", href: "#" }],
+      links: [{ body: "Device Technical Spec Sheet", href: "https://www.google.com/webhp?client=firefox-b-d" }],
     },
     {
       heading: "Website",
       links: [
-        { body: "Mira Home", href: "#" },
-        { body: "Mira FAQ", href: "#" },
+        { body: "Mira Home", href: "https://www.google.com/webhp?client=firefox-b-d" },
+        { body: "Mira FAQ", href: "https://www.google.com/webhp?client=firefox-b-d" },
       ],
     },
   ]
@@ -628,14 +629,14 @@ async function seedMira() {
   const stages = [
     {
       heading: "Intro Meeting",
-      date: new Date(2021, 7, 4),
+      date: zonedTimeToUtc(new Date(2021, 7, 4), "America/Los_Angeles"),
       tasks: {
         create: { task: "Go over Mira's platform." },
       },
       ctaLink: {
         create: {
-          body: "Mira's Slide Deck",
-          href: "https://www.google.com/webhp?client=firefox-b-d",
+          body: "Mira Product Video",
+          href: "https://vimeo.com/364410995",
         },
       },
       portal: { connect: { id: portal.id } },

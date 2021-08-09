@@ -33,7 +33,10 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
   const portal = await db.portal.findUnique({
     where: { id: portalId },
     include: {
-      roadmapStages: { include: { ctaLink: true } },
+      roadmapStages: {
+        include: { ctaLink: true },
+        orderBy: { id: "asc" },
+      },
       vendor: true,
       documents: { orderBy: { id: "asc" } },
       userPortals: {
