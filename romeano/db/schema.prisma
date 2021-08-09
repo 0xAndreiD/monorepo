@@ -147,20 +147,31 @@ model AccountExecutive {
   updatedAt    DateTime   @updatedAt
 }
 
-model ProductInfoSectionLink {
-  id                   Int                @id @default(autoincrement())
-  linkText             String
-  link                 String
-  productInfoSection   ProductInfoSection @relation(fields: [productInfoSectionId], references: [id])
-  productInfoSectionId Int
+model Link {
+  id                     Int                     @id @default(autoincrement())
+  body                   String
+  href                   String
+  events                 Event[]
+  ProductInfoSectionLink ProductInfoSectionLink?
+  RoadmapStage           RoadmapStage?
 }
 
 model ProductInfoSection {
-  id       Int                      @id @default(autoincrement())
-  portal   Portal                   @relation(fields: [portalId], references: [id])
-  portalId Int
-  heading  String
-  links    ProductInfoSectionLink[]
+  id                     Int                      @id @default(autoincrement())
+  portal                 Portal                   @relation(fields: [portalId], references: [id])
+  portalId               Int
+  heading                String
+  productInfoSectionLink ProductInfoSectionLink[]
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+}
+
+model ProductInfoSectionLink {
+  id                   Int                @id @default(autoincrement())
+  link                 Link               @relation(fields: [linkId], references: [id])
+  linkId               Int
+  productInfoSection   ProductInfoSection @relation(fields: [productInfoSectionId], references: [id])
+  productInfoSectionId Int
 }
 
 model PortalImage {
@@ -173,16 +184,16 @@ model PortalImage {
 }
 
 model RoadmapStage {
-  id          Int                @id @default(autoincrement())
-  portal      Portal             @relation(fields: [portalId], references: [id])
-  portalId    Int
-  heading     String
-  date        DateTime?
-  tasks       RoadmapStageTask[]
-  ctaLinkText String?
-  ctaLink     String?
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  id        Int                @id @default(autoincrement())
+  portal    Portal             @relation(fields: [portalId], references: [id])
+  portalId  Int
+  heading   String
+  date      DateTime?
+  tasks     RoadmapStageTask[]
+  ctaLink   Link?              @relation(fields: [ctaLinkId], references: [id])
+  ctaLinkId Int?
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
 }
 
 model RoadmapStageTask {
@@ -240,6 +251,8 @@ model Event {
   userAgent  String?
   document   Document? @relation(fields: [documentId], references: [id])
   documentId Int?
+  link       Link?     @relation(fields: [linkId], references: [id])
+  linkId     Int?
   portal     Portal    @relation(fields: [portalId], references: [id])
   portalId   Int
   user       User      @relation(fields: [userId], references: [id])

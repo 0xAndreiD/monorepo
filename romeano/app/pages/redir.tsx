@@ -5,34 +5,42 @@ import createEvent from "../event/mutations/createEvent"
 
 //localhost:3000/redir?portalId=1&eventType=DocumentOpen&url=https://www.google.com
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { portalId, documentId, eventType, url } = z.object({
-    portalId: z.string().transform(parseInt),
-    eventType: z.nativeEnum(EventType),
-    documentId: z.string().transform(parseInt).optional(),
-    url: z.string()
-  }).parse(context.query)
+  const { portalId, documentId, linkId, eventType, url } = z
+    .object({
+      portalId: z.string().transform(parseInt),
+      eventType: z.nativeEnum(EventType),
+      documentId: z.string().transform(parseInt).optional(),
+      linkId: z.string().transform(parseInt).optional(),
+      url: z.string(),
+    })
+    .parse(context.query)
   const session = await getSession(context.req, context.res)
   if (!session.userId) {
     return {
       redirect: {
         destination: Routes.LoginPage().pathname,
-        permanent: false
-      }
+        permanent: false,
+      },
     }
   }
 
-  await invokeWithMiddleware(createEvent,{
-    type: eventType,
-    url,
-    documentId,
-    portalId,
-  }, {req:context.req, res:context.res})
+  await invokeWithMiddleware(
+    createEvent,
+    {
+      type: eventType,
+      url,
+      documentId,
+      linkId,
+      portalId,
+    },
+    { req: context.req, res: context.res }
+  )
 
   return {
     redirect: {
       destination: url,
-      permanent: false
-    }
+      permanent: false,
+    },
   }
 }
 

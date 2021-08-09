@@ -122,11 +122,10 @@ CREATE TABLE "AccountExecutive" (
 );
 
 -- CreateTable
-CREATE TABLE "ProductInfoSectionLink" (
+CREATE TABLE "Link" (
     "id" SERIAL NOT NULL,
-    "linkText" TEXT NOT NULL,
-    "link" TEXT NOT NULL,
-    "productInfoSectionId" INTEGER NOT NULL,
+    "body" TEXT NOT NULL,
+    "href" TEXT NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -136,6 +135,17 @@ CREATE TABLE "ProductInfoSection" (
     "id" SERIAL NOT NULL,
     "portalId" INTEGER NOT NULL,
     "heading" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ProductInfoSectionLink" (
+    "id" SERIAL NOT NULL,
+    "linkId" INTEGER NOT NULL,
+    "productInfoSectionId" INTEGER NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -157,8 +167,7 @@ CREATE TABLE "RoadmapStage" (
     "portalId" INTEGER NOT NULL,
     "heading" TEXT NOT NULL,
     "date" TIMESTAMP(3),
-    "ctaLinkText" TEXT,
-    "ctaLink" TEXT,
+    "ctaLinkId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -223,6 +232,7 @@ CREATE TABLE "Event" (
     "ip" TEXT,
     "userAgent" TEXT,
     "documentId" INTEGER,
+    "linkId" INTEGER,
     "portalId" INTEGER NOT NULL,
     "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -263,6 +273,12 @@ CREATE UNIQUE INDEX "Stakeholder.userId_unique" ON "Stakeholder"("userId");
 -- CreateIndex
 CREATE UNIQUE INDEX "AccountExecutive.userId_unique" ON "AccountExecutive"("userId");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "ProductInfoSectionLink_linkId_unique" ON "ProductInfoSectionLink"("linkId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "RoadmapStage_ctaLinkId_unique" ON "RoadmapStage"("ctaLinkId");
+
 -- AddForeignKey
 ALTER TABLE "Portal" ADD FOREIGN KEY ("proposalDocumentId") REFERENCES "Document"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
@@ -294,16 +310,22 @@ ALTER TABLE "AccountExecutive" ADD FOREIGN KEY ("vendorTeamId") REFERENCES "Vend
 ALTER TABLE "AccountExecutive" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductInfoSectionLink" ADD FOREIGN KEY ("productInfoSectionId") REFERENCES "ProductInfoSection"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ProductInfoSection" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductInfoSection" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ProductInfoSectionLink" ADD FOREIGN KEY ("linkId") REFERENCES "Link"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProductInfoSectionLink" ADD FOREIGN KEY ("productInfoSectionId") REFERENCES "ProductInfoSection"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PortalImage" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "RoadmapStage" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "RoadmapStage" ADD FOREIGN KEY ("ctaLinkId") REFERENCES "Link"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "RoadmapStageTask" ADD FOREIGN KEY ("roadmapStageId") REFERENCES "RoadmapStage"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -328,6 +350,9 @@ ALTER TABLE "InternalNote" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON
 
 -- AddForeignKey
 ALTER TABLE "Event" ADD FOREIGN KEY ("documentId") REFERENCES "Document"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Event" ADD FOREIGN KEY ("linkId") REFERENCES "Link"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Event" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;

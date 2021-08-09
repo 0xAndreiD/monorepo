@@ -184,28 +184,40 @@ const seedCustomerPortal = async () => {
       heading: "Intro Meeting",
       date: new Date(2021, 9, 8),
       tasks: { create: { task: "Go over Mira's platform." } },
-      ctaLinkText: "Mira's Slide Deck",
-      ctaLink: "https://www.google.com/webhp?client=firefox-b-d",
+      ctaLink: {
+        create: {
+          body: "Mira's Slide Deck",
+          href: "https://www.google.com/webhp?client=firefox-b-d",
+        },
+      },
+      portal: { connect: { id: portal.id } },
     },
     {
       heading: "AR Headset Demo",
       date: new Date(2021, 10, 11),
       tasks: { create: { task: "Demonstrate a live Mira Connect call from headset." } },
-      ctaLinkText: "Join Zoom 📞",
-      ctaLink: "https://www.google.com/webhp?client=firefox-b-d",
+      ctaLink: {
+        create: {
+          body: "Join Zoom 📞",
+          href: "https://www.google.com/webhp?client=firefox-b-d",
+        },
+      },
+      portal: { connect: { id: portal.id } },
     },
     {
       heading: "Use-Case Planning Workshop",
       tasks: { create: { task: "Define problem and primary use-case Mira will be used for." } },
+      portal: { connect: { id: portal.id } },
     },
     {
       heading: "Pilot Package Purchase",
       tasks: { create: { task: "Quote attached below" } },
+      portal: { connect: { id: portal.id } },
     },
   ]
 
   for (const stage of stages) {
-    await db.roadmapStage.create({ data: { portalId: portal.id, ...stage } })
+    await db.roadmapStage.create({ data: stage })
   }
 
   await db.nextStepsTask.createMany({
@@ -330,15 +342,26 @@ const seedCustomerPortal = async () => {
   ]
 
   for (const section of productInfoSections) {
+    const links = await Promise.all(
+      section.links.map(
+        async (linkElem) =>
+          await db.link.create({
+            data: {
+              body: linkElem.body,
+              href: linkElem.href,
+            },
+          })
+      )
+    )
+
     await db.productInfoSection.create({
       data: {
         portalId: portal.id,
         heading: section.heading,
-        links: {
+        productInfoSectionLink: {
           createMany: {
-            data: section.links.map((linkElem) => ({
-              linkText: linkElem.body,
-              link: linkElem.href,
+            data: links.map((link) => ({
+              linkId: link.id,
             })),
           },
         },
@@ -606,15 +629,31 @@ async function seedMira() {
     {
       heading: "Intro Meeting",
       date: new Date(2021, 7, 4),
-      tasks: { create: { task: "Go over Mira's platform." } },
-      ctaLinkText: "Mira's Slide Deck",
-      ctaLink: "https://www.google.com/webhp?client=firefox-b-d",
+      tasks: {
+        create: { task: "Go over Mira's platform." },
+      },
+      ctaLink: {
+        create: {
+          body: "Mira's Slide Deck",
+          href: "https://www.google.com/webhp?client=firefox-b-d",
+        },
+      },
+      portal: { connect: { id: portal.id } },
     },
     {
       heading: "Live AR Headset Demo",
-      tasks: { create: { task: "Demonstrate a live Mira Connect call for your stakeholders." } },
-      ctaLinkText: "Join Zoom 📞",
-      ctaLink: "https://www.google.com/webhp?client=firefox-b-d",
+      tasks: {
+        create: {
+          task: "Demonstrate a live Mira Connect call for your stakeholders.",
+        },
+      },
+      ctaLink: {
+        create: {
+          body: "Join Zoom 📞",
+          href: "https://www.google.com/webhp?client=firefox-b-d",
+        },
+      },
+      portal: { connect: { id: portal.id } },
     },
     {
       heading: "Use-Case & Value Stream Workshop",
@@ -627,15 +666,19 @@ async function seedMira() {
           ],
         },
       },
+      portal: { connect: { id: portal.id } },
     },
     {
       heading: "Deployment Configuration",
-      tasks: { create: { task: "Quantify deployment size & scope" } },
+      tasks: {
+        create: { task: "Quantify deployment size & scope" },
+      },
+      portal: { connect: { id: portal.id } },
     },
   ]
 
   for (const stage of stages) {
-    await db.roadmapStage.create({ data: { portalId: portal.id, ...stage } })
+    await db.roadmapStage.create({ data: stage })
   }
 
   const productInfoSections = [
@@ -693,15 +736,28 @@ async function seedMira() {
   ]
 
   for (const section of productInfoSections) {
+    for (const link of section.links) {
+    }
+    const links = await Promise.all(
+      section.links.map(
+        async (linkElem) =>
+          await db.link.create({
+            data: {
+              body: linkElem.body,
+              href: linkElem.href,
+            },
+          })
+      )
+    )
+
     await db.productInfoSection.create({
       data: {
         portalId: portal.id,
         heading: section.heading,
-        links: {
+        productInfoSectionLink: {
           createMany: {
-            data: section.links.map((linkElem) => ({
-              linkText: linkElem.body,
-              link: linkElem.href,
+            data: links.map((link) => ({
+              linkId: link.id,
             })),
           },
         },

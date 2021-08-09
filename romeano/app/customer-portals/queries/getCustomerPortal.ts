@@ -16,7 +16,10 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
     include: {
       proposalDocument: true,
       roadmapStages: {
-        include: { tasks: true }, //get the associated tasks for a stage
+        include: {
+          tasks: true, //get the associated tasks for a stage
+          ctaLink: true,
+        },
       },
       nextStepsTasks: {
         include: {
@@ -29,7 +32,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
       vendor: true,
       documents: { orderBy: { id: "asc" } },
       images: { orderBy: { id: "asc" } },
-      productInfoSections: { include: { links: true } },
+      productInfoSections: { include: { productInfoSectionLink: { include: { link: true } } } },
       userPortals: {
         include: {
           user: {
@@ -59,7 +62,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
       heading: stage.heading,
       date: stage.date?.toISOString(),
       tasks: stage.tasks.map((task) => task.task),
-      ctaLink: stage.ctaLinkText && stage.ctaLink ? { body: stage.ctaLinkText, href: stage.ctaLink } : undefined,
+      ctaLink: stage.ctaLink,
     })),
   }
 
@@ -130,9 +133,10 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
     images: portal.images.map((x) => x.href),
     sections: portal.productInfoSections.map((section) => ({
       heading: section.heading,
-      links: section.links.map((link) => ({
-        body: link.linkText,
-        href: link.link,
+      links: section.productInfoSectionLink.map((x) => ({
+        id: x.link.id,
+        body: x.link.body,
+        href: x.link.href,
       })),
     })),
   }
