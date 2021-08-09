@@ -11,8 +11,9 @@ export async function getStakeholderActivityLogRaw(portalIds: number[]) {
            E.type,
            D.title                              AS "documentTitle",
            D.path                               AS "documentPath",
-           P."linkText"                         AS "productInfoLinkTitle",
-           P.link                               AS "productInfoLinkTitlePath",
+           L.id                                 AS "linkId",
+           L.body                               AS "linkBody",
+           L.href                               AS "linkHref",
            E.url,
            E.ip,
            E."userAgent",
@@ -25,11 +26,10 @@ export async function getStakeholderActivityLogRaw(portalIds: number[]) {
            JOIN "User" U on U.id = E."userId"
            JOIN "Portal" P on E."portalId" = P.id
            LEFT JOIN "Document" D ON E."documentId" = D.id
-           LEFT JOIN "ProductInfoSectionLink" P ON E."productInfoSectionLinkId" = P.id
+           LEFT JOIN "Link" L ON E."linkId" = L.id
     WHERE E."portalId" IN (${Prisma.join(portalIds)})
-      ORDER BY E."createdAt" DESC
-      LIMIT 25
-    `
+    ORDER BY E."createdAt" DESC LIMIT 25
+  `
 }
 
 export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) => {
@@ -64,18 +64,19 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
       eventCount: number
     }>
   >`
-      SELECT E."portalId",
-             (SELECT "customerName" FROM "Portal" WHERE id = E."portalId"),
-             count(*) AS "eventCount"
-      FROM "Event" E
-      JOIN "UserPortal" UP ON UP."userId" = E."userId" AND UP."portalId" = E."portalId"
-      WHERE E."portalId" IN (${Prisma.join(portalIds)})
+    SELECT E."portalId",
+           (SELECT "customerName" FROM "Portal" WHERE id = E."portalId"),
+           count(*) AS "eventCount"
+    FROM "Event" E
+           JOIN "UserPortal" UP ON UP."userId" = E."userId" AND UP."portalId" = E."portalId"
+    WHERE E."portalId" IN (${Prisma.join(portalIds)})
       AND UP.role = 'Stakeholder'
-      GROUP BY E."portalId"
-      ORDER BY "eventCount" DESC;
-    `
+    GROUP BY E."portalId"
+    ORDER BY "eventCount" DESC;
+  `
 
   const stakeholderActivityLogRaw = await getStakeholderActivityLogRaw(portalIds)
+  console.log(stakeholderActivityLogRaw)
   const stakeholderActivityLog = stakeholderActivityLogRaw.map((x) => ({
     stakeholderName: x.stakeholderName,
     customerName: x.customerName,
@@ -97,50 +98,50 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
       primaryContactEmail: string
     }>
   >`WITH "hasStakeholder" AS (SELECT P.id                               AS "portalId",
-                                         P."customerName"                   AS "customerName",
-                                         P."currentRoadmapStage"            AS "currentRoadmapStage",
-                                         (SELECT COUNT(*)
-                                          FROM "RoadmapStage"
-                                          WHERE "portalId" = UP."portalId") AS "customerNumberOfStages",
-                                         S."userId" IS NOT NULL             AS "hasPrimaryContact",
-                                         U."firstName"                      AS "primaryContactFirstName",
-                                         U."lastName"                       AS "primaryContactLastName",
-                                         S."jobTitle"                       AS "primaryContactJobTitle",
-                                         U.email                            AS "primaryContactEmail"
-                                  FROM "UserPortal" UP
-                                         INNER JOIN "Portal" P ON UP."portalId" = P.id
-                                         INNER JOIN "User" U ON UP."userId" = U.id
-                                         JOIN "Stakeholder" S ON U.id = S."userId"
-                                  WHERE UP."isPrimaryContact" = TRUE
-                                    AND UP.role = 'Stakeholder'
-                                    AND UP."portalId" IN (${Prisma.join(portalIds)})),
-             "noStakeholder" AS (SELECT P.id                               AS "portalId",
-                                        P."customerName"                   AS "customerName",
-                                        P."currentRoadmapStage"            AS "currentRoadmapStage",
-                                        (SELECT COUNT(*)
-                                         FROM "RoadmapStage"
-                                         WHERE "portalId" = UP."portalId") AS "customerNumberOfStages",
-                                        S."userId" IS NOT NULL             AS "hasPrimaryContact",
-                                        U."firstName"                      AS "primaryContactFirstName",
-                                        U."lastName"                       AS "primaryContactLastName",
-                                        S."jobTitle"                       AS "primaryContactJobTitle",
-                                        U.email                            AS "primaryContactEmail"
-                                 FROM "UserPortal" UP
-                                        INNER JOIN "Portal" P ON UP."portalId" = P.id
-                                        INNER JOIN "User" U ON UP."userId" = U.id
-                                        LEFT JOIN "Stakeholder" S ON U.id = S."userId"
-                                 WHERE UP."portalId" IN (${Prisma.join(portalIds)})
-                                   AND UP."portalId" NOT IN (SELECT "portalId" FROM "hasStakeholder")
-                                   AND UP."userId" = ${userId}),
-             combined AS (
-               SELECT *
-               FROM "hasStakeholder"
-               UNION ALL
-               SELECT *
-               FROM "noStakeholder")
-        SELECT *
-        FROM combined
-    `
+                                       P."customerName"                   AS "customerName",
+                                       P."currentRoadmapStage"            AS "currentRoadmapStage",
+                                       (SELECT COUNT(*)
+                                        FROM "RoadmapStage"
+                                        WHERE "portalId" = UP."portalId") AS "customerNumberOfStages",
+                                       S."userId" IS NOT NULL             AS "hasPrimaryContact",
+                                       U."firstName"                      AS "primaryContactFirstName",
+                                       U."lastName"                       AS "primaryContactLastName",
+                                       S."jobTitle"                       AS "primaryContactJobTitle",
+                                       U.email                            AS "primaryContactEmail"
+                                FROM "UserPortal" UP
+                                       INNER JOIN "Portal" P ON UP."portalId" = P.id
+                                       INNER JOIN "User" U ON UP."userId" = U.id
+                                       JOIN "Stakeholder" S ON U.id = S."userId"
+                                WHERE UP."isPrimaryContact" = TRUE
+                                  AND UP.role = 'Stakeholder'
+                                  AND UP."portalId" IN (${Prisma.join(portalIds)})),
+           "noStakeholder" AS (SELECT P.id                               AS "portalId",
+                                      P."customerName"                   AS "customerName",
+                                      P."currentRoadmapStage"            AS "currentRoadmapStage",
+                                      (SELECT COUNT(*)
+                                       FROM "RoadmapStage"
+                                       WHERE "portalId" = UP."portalId") AS "customerNumberOfStages",
+                                      S."userId" IS NOT NULL             AS "hasPrimaryContact",
+                                      U."firstName"                      AS "primaryContactFirstName",
+                                      U."lastName"                       AS "primaryContactLastName",
+                                      S."jobTitle"                       AS "primaryContactJobTitle",
+                                      U.email                            AS "primaryContactEmail"
+                               FROM "UserPortal" UP
+                                      INNER JOIN "Portal" P ON UP."portalId" = P.id
+                                      INNER JOIN "User" U ON UP."userId" = U.id
+                                      LEFT JOIN "Stakeholder" S ON U.id = S."userId"
+                               WHERE UP."portalId" IN (${Prisma.join(portalIds)})
+                                 AND UP."portalId" NOT IN (SELECT "portalId" FROM "hasStakeholder")
+                                 AND UP."userId" = ${userId}),
+           combined AS (
+             SELECT *
+             FROM "hasStakeholder"
+             UNION ALL
+             SELECT *
+             FROM "noStakeholder")
+      SELECT *
+      FROM combined
+  `
 
   const activePortalsStakeholders = await db.$queryRaw<
     Array<{
@@ -152,19 +153,19 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
       eventCount: number
     }>
   >`
-      SELECT E."portalId",
-             U."firstName",
-             U."lastName",
-             U.email,
-             "hasStakeholderApproved",
-             COUNT(*) AS "eventCount"
-      FROM "Event" E
-             JOIN "User" U ON U.id = E."userId"
-             JOIN "UserPortal" UP ON E."userId" = UP."userId"
-        AND E."portalId" = UP."portalId"
-        AND UP.role = 'Stakeholder'
-      WHERE E."portalId" IN (${Prisma.join(portalIds)})
-      GROUP BY E."portalId", E."userId", U."firstName", U."lastName", email, "hasStakeholderApproved"`
+    SELECT E."portalId",
+           U."firstName",
+           U."lastName",
+           U.email,
+           "hasStakeholderApproved",
+           COUNT(*) AS "eventCount"
+    FROM "Event" E
+           JOIN "User" U ON U.id = E."userId"
+           JOIN "UserPortal" UP ON E."userId" = UP."userId"
+      AND E."portalId" = UP."portalId"
+      AND UP.role = 'Stakeholder'
+    WHERE E."portalId" IN (${Prisma.join(portalIds)})
+    GROUP BY E."portalId", E."userId", U."firstName", U."lastName", email, "hasStakeholderApproved"`
   const stakeholderEvents = groupBy(activePortalsStakeholders, "portalId")
 
   console.log("main", activePortals)
@@ -177,18 +178,18 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
       eventCount: number
     }>
   >`
-      SELECT E."portalId" AS "portalId",
-             title,
-             path,
-             COUNT(*)     AS "eventCount"
-      FROM "Event" E
-             JOIN "Document" D ON D.id = E."documentId"
-             JOIN "UserPortal" UP ON E."userId" = UP."userId"
-        AND E."portalId" = UP."portalId"
-        AND UP.role = 'Stakeholder'
-      WHERE E."portalId" IN (${Prisma.join(portalIds)})
-      GROUP BY E."portalId", title, path
-    `
+    SELECT E."portalId" AS "portalId",
+           title,
+           path,
+           COUNT(*)     AS "eventCount"
+    FROM "Event" E
+           JOIN "Document" D ON D.id = E."documentId"
+           JOIN "UserPortal" UP ON E."userId" = UP."userId"
+      AND E."portalId" = UP."portalId"
+      AND UP.role = 'Stakeholder'
+    WHERE E."portalId" IN (${Prisma.join(portalIds)})
+    GROUP BY E."portalId", title, path
+  `
   const documentEvents = groupBy(
     activePortalsDocs.map((x) => ({
       portalId: x.portalId,

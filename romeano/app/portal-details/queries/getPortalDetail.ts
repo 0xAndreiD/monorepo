@@ -19,8 +19,9 @@ export type DenormalizedEvent = {
   type: EventType
   documentTitle: string
   documentPath: string
-  productInfoLinkTitle: string
-  productInfoLinkTitlePath: string
+  linkId: number
+  linkBody: string
+  linkHref: string
   url: string
   ip: string
   userAgent: string
@@ -32,7 +33,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
   const portal = await db.portal.findUnique({
     where: { id: portalId },
     include: {
-      roadmapStages: true,
+      roadmapStages: { include: { ctaLink: true } },
       vendor: true,
       documents: { orderBy: { id: "asc" } },
       userPortals: {
@@ -61,7 +62,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
     stages: portal.roadmapStages.map((stage) => ({
       heading: stage.heading,
       date: stage.date?.toISOString(),
-      ctaLink: stage.ctaLinkText && stage.ctaLink ? { body: stage.ctaLinkText, href: stage.ctaLink } : undefined,
+      ctaLink: stage.ctaLink,
     })),
   }
 
@@ -119,14 +120,15 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
         eventCount: number
       }>
     >`
-    SELECT DATE_TRUNC('day', E."createdAt") AS timestamp,
+      SELECT DATE_TRUNC('day', E."createdAt") AS timestamp,
            COUNT(*)                         AS "eventCount"
-    FROM "Event" E
-           JOIN "UserPortal" UP ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
-    WHERE E."portalId" = ${portalId}
-    GROUP BY TIMESTAMP
-    ORDER BY TIMESTAMP ASC;
-  `
+      FROM "Event" E
+        JOIN "UserPortal" UP
+      ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+      WHERE E."portalId" = ${portalId}
+      GROUP BY TIMESTAMP
+      ORDER BY TIMESTAMP ASC;
+    `
   ).map((x) => ({ x: new Date(x.timestamp), y: x.eventCount }))
 
   const stakeholderEngagement = await db.$queryRaw<
@@ -176,12 +178,12 @@ export function generateLinkFromEventType(event: {
   type: EventType
   documentTitle: string
   documentPath: string
-  productInfoLinkTitle: string
-  productInfoLinkTitlePath: string
+  linkBody: string
+  linkHref: string
 }): Link | null {
   switch (event.type) {
     case EventType.LaunchRoadmapLinkOpen:
-      return null //TODO: have actual link
+      return { body: event.linkBody, href: event.linkHref }
     case EventType.NextStepCreate:
       return null
     case EventType.NextStepMarkCompleted:
@@ -205,7 +207,7 @@ export function generateLinkFromEventType(event: {
     case EventType.CreateInternalMessage:
       return null
     case EventType.ProductInfoLinkOpen:
-      return { body: event.productInfoLinkTitle, href: event.productInfoLinkTitlePath }
+      return { body: event.linkBody, href: event.linkHref }
     case EventType.InviteStakeholder:
       return null
   }
