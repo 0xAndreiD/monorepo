@@ -82,6 +82,7 @@ export default function LaunchRoadmap(props: { portalId: number; currentRoadmapS
                     linkId={step.ctaLink.id}
                     href={step.ctaLink.href}
                     defaultStyle={true}
+                    anchorProps={{ target: "_blank" }}
                   >
                     {step.ctaLink.body}
                   </TrackedLink>
