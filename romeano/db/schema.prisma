@@ -27,6 +27,9 @@ model Portal {
   proposalSubheading  String
   proposalDocument    Document?            @relation(name: "proposalDocument", fields: [proposalDocumentId], references: [id])
   proposalDocumentId  Int?
+  proposalLink        Link?                @relation(fields: [proposalLinkId], references: [id])
+  proposalLinkId      Int?
+  proposalType        String
   userPortals         UserPortal[]
   internalNotes       InternalNote[]
   events              Event[]
@@ -152,6 +155,7 @@ model Link {
   body                   String
   href                   String
   events                 Event[]
+  proposalPortal         Portal[]
   ProductInfoSectionLink ProductInfoSectionLink?
   RoadmapStage           RoadmapStage?
 }

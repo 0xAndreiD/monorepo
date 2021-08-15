@@ -3,6 +3,7 @@ import db, { Role } from "db"
 import { orderBy } from "lodash"
 import { z } from "zod"
 import { getExternalUploadPath } from "../../core/util/upload"
+import { Stakeholder } from "../../core/components/customerPortals/ProposalCard"
 
 const GetCustomerPortal = z.object({
   // This accepts type of undefined, but is required at runtime
@@ -15,6 +16,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
     where: { id: portalId },
     include: {
       proposalDocument: true,
+      proposalLink: true,
       roadmapStages: {
         include: {
           tasks: true, //get the associated tasks for a stage
@@ -142,13 +144,33 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
     })),
   }
 
-  const proposal = {
+  const proposal: {
+    heading: string
+    subheading: string
+    quote:
+      | { proposalType: "document"; documentId: number; body: string; href: string }
+      | { proposalType: "link"; linkId: number; body: string; href: string }
+      | null
+    stakeholders: Stakeholder[]
+  } = {
     heading: portal.proposalHeading,
     subheading: portal.proposalSubheading,
-    quote: portal.proposalDocument && {
-      documentId: portal.proposalDocument.id,
-      href: getExternalUploadPath(portal.proposalDocument.path),
-    },
+    quote:
+      portal.proposalType === "document" && portal.proposalDocument
+        ? {
+            proposalType: "document",
+            documentId: portal.proposalDocument.id,
+            body: portal.proposalDocument.title,
+            href: getExternalUploadPath(portal.proposalDocument.path),
+          }
+        : portal.proposalType === "link" && portal.proposalLink
+        ? {
+            proposalType: "link",
+            linkId: portal.proposalLink.id,
+            body: portal.proposalLink.body,
+            href: portal.proposalLink.href,
+          }
+        : null,
     stakeholders: portal.userPortals
       .filter((userPortal) => userPortal.role === Role.Stakeholder)
       .map((userPortal) => ({

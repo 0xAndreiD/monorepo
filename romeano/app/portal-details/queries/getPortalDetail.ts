@@ -206,7 +206,10 @@ export function generateLinkFromEventType(event: {
     case EventType.ProposalDecline:
       return null
     case EventType.ProposalOpen:
-      return { body: "the proposal", href: getExternalUploadPath(event.documentPath) }
+      return {
+        body: "the proposal",
+        href: event.documentPath ? getExternalUploadPath(event.documentPath) : event.linkHref,
+      }
     case EventType.CreateInternalMessage:
       return null
     case EventType.ProductInfoLinkOpen:

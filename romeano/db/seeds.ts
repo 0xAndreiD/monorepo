@@ -97,6 +97,7 @@ const seedCustomerPortal = async () => {
         "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
       proposalSubheading: "2 Prism Headsets + 4 User Licenses",
       vendorId: vendorTeam.vendorId,
+      proposalType: "document",
     },
   })
 
@@ -276,7 +277,7 @@ const seedCustomerPortal = async () => {
       proposalDocument: {
         create: {
           portalId: portal.id,
-          title: "Mira Proposal",
+          title: "View Quote",
           path: "proposal.txt",
           isCompleted: false,
           userId: aeUser.id,
@@ -455,6 +456,7 @@ async function seedPortalDetails() {
         "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
       proposalSubheading: "2 Prism Headsets + 4 User Licenses",
       vendorId: 1,
+      proposalType: "document",
     },
   })
   const stakeholder = await db.user.create({
@@ -509,7 +511,7 @@ async function seedPortalDetails() {
       proposalDocument: {
         create: {
           portalId: portal.id,
-          title: "Mira Proposal",
+          title: "View Quote",
           path: "proposal2.txt",
           isCompleted: false,
           userId: aeUser.id,
@@ -623,6 +625,19 @@ async function seedMira() {
         "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
       proposalSubheading: "",
       vendorId: vendorTeam.vendorId,
+      proposalType: "link",
+    },
+  })
+
+  await db.portal.update({
+    where: { id: portal.id },
+    data: {
+      proposalLink: {
+        create: {
+          body: "Proposal",
+          href: "https://docs.google.com/presentation/d/1Kwh6nVp00qBtFVegGe-6iWCB4kstwJi4NjUbm5F4CI4/edit#slide=id.gd4d09b3e56_0_233",
+        },
+      },
     },
   })
 

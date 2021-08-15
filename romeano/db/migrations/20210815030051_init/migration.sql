@@ -16,6 +16,8 @@ CREATE TABLE "Portal" (
     "proposalHeading" TEXT NOT NULL,
     "proposalSubheading" TEXT NOT NULL,
     "proposalDocumentId" INTEGER,
+    "proposalLinkId" INTEGER,
+    "proposalType" TEXT NOT NULL,
     "vendorId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -281,6 +283,9 @@ CREATE UNIQUE INDEX "RoadmapStage_ctaLinkId_unique" ON "RoadmapStage"("ctaLinkId
 
 -- AddForeignKey
 ALTER TABLE "Portal" ADD FOREIGN KEY ("proposalDocumentId") REFERENCES "Document"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Portal" ADD FOREIGN KEY ("proposalLinkId") REFERENCES "Link"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Portal" ADD FOREIGN KEY ("vendorId") REFERENCES "Vendor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
