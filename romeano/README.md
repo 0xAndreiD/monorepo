@@ -17,15 +17,19 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 DB Setup
 
 ```shell
-yarn blitz prisma migrate dev --name init && yarn blitz prisma migrate reset --force && yarn blitz db seed
+psql -U postgres -h localhost -d romeano -c 'drop schema public cascade;'; yarn blitz prisma migrate dev --name init --skip-generate && yarn blitz prisma migrate reset --force --skip-generate && yarn blitz db seed
 ```
 
-Docker Seed
+### Prod
+
+#### Docker Seed
+
 ```
 docker exec -it --user root romeano_web_1 npx blitz db seed
 ```
 
-Docker Edit DB
+#### Docker Edit DB
+
 ```
 docker exec -it romeano_db_1 psql -U postgres
 ```

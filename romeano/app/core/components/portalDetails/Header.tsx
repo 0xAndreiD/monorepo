@@ -21,6 +21,15 @@ export function Header(props: { portalId: number; vendorLogo: string; customerNa
             View Portal
           </a>
         </Link>
+        <Link href={Routes.CustomerPortal({ portalId: props.portalId })}>
+          <a
+            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+             leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >
+            Edit Portal
+          </a>
+        </Link>
       </div>
     </div>
   )
