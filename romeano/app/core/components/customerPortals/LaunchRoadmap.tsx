@@ -4,6 +4,8 @@ import { format } from "date-fns"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
 import { LinkWithId } from "types"
+import { useMutation } from "blitz"
+import updateLaunchRoadmapStep from "../../../customer-portals/mutations/updateLaunchRoadmapStep"
 
 export enum CompletionStatus {
   Complete,
@@ -18,7 +20,58 @@ export type LaunchStep = {
   ctaLink: LinkWithId | null
 }
 
+function RoadmapCircle(props: {
+  portalId: number
+  currentRoadmapStage: number
+  stepIdx: number
+  step: LaunchStep
+  status: CompletionStatus.InProgress | CompletionStatus.Complete | CompletionStatus.Upcoming
+
+  stages: LaunchStep[]
+  onClick: (stepIdx: number) => void
+}) {
+  return (
+    <div key={stepIdx} onClick={() => props.onClick(stepIdx)}>
+      <div>
+        {/*<div key={step.name} className="flex justify-center w-full">*/}
+        {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
+        <LaunchStepCircle step={step} stepNum={stepIdx + 1} status={status} />
+        {/*<div className="absolute left-96 text-green-300">*/}
+        {/*    hi*/}
+        {/*</div>*/}
+      </div>
+
+      <div
+        className={"text-xs " + (status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")}
+      >
+        {step.date ? format(new Date(step.date), "MMM d") : "TBD"}
+      </div>
+      <div className="font-bold">{step.heading}</div>
+      <ul className="list-disc pl-7">
+        {step.tasks.map((item, idx) => (
+          <li key={idx}>{item}</li>
+        ))}
+      </ul>
+      <div className="text-center">
+        {step.ctaLink && (
+          <TrackedLink
+            eventType={EventType.LaunchRoadmapLinkOpen}
+            portalId={props.portalId}
+            linkId={step.ctaLink.id}
+            href={step.ctaLink.href}
+            defaultStyle={true}
+            anchorProps={{ target: "_blank" }}
+          >
+            {step.ctaLink.body}
+          </TrackedLink>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function LaunchRoadmap(props: { portalId: number; currentRoadmapStage: number; stages: LaunchStep[] }) {
+  const [updateLaunchRoadmapStep] = useMutation(updateLaunchRoadmapStep)
   return (
     <nav>
       <div className="flex justify-between">
@@ -50,46 +103,9 @@ export default function LaunchRoadmap(props: { portalId: number; currentRoadmapS
               : props.currentRoadmapStage - 1 < stepIdx
               ? CompletionStatus.Complete
               : CompletionStatus.Upcoming
-          return (
-            <React.Fragment key={stepIdx}>
-              <div>
-                {/*<div key={step.name} className="flex justify-center w-full">*/}
-                {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
-                <LaunchStepCircle step={step} stepNum={stepIdx + 1} status={status} />
-                {/*<div className="absolute left-96 text-green-300">*/}
-                {/*    hi*/}
-                {/*</div>*/}
-              </div>
-
-              <div
-                className={
-                  "text-xs " + (status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
-                }
-              >
-                {step.date ? format(new Date(step.date), "MMM d") : "TBD"}
-              </div>
-              <div className="font-bold">{step.heading}</div>
-              <ul className="list-disc pl-7">
-                {step.tasks.map((item, idx) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ul>
-              <div className="text-center">
-                {step.ctaLink && (
-                  <TrackedLink
-                    eventType={EventType.LaunchRoadmapLinkOpen}
-                    portalId={props.portalId}
-                    linkId={step.ctaLink.id}
-                    href={step.ctaLink.href}
-                    defaultStyle={true}
-                    anchorProps={{ target: "_blank" }}
-                  >
-                    {step.ctaLink.body}
-                  </TrackedLink>
-                )}
-              </div>
-            </React.Fragment>
-          )
+          return RoadmapCircle(stepIdx, step, status, props, (stepIdx) => {
+            updateLaunchRoadmapStep({ portalId, stepIdx: stepIdx + 1 })
+          })
         })}
       </ul>
     </nav>
