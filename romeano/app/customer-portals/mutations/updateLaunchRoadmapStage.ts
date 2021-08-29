@@ -2,13 +2,13 @@ import { AuthenticationError, resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
 
-export const UpdateLaunchRoadmapStep = z.object({
+export const UpdateLaunchRoadmapStage = z.object({
   portalId: z.number(),
   currentRoadmapStage: z.number(),
 })
 
 export default resolver.pipe(
-  resolver.zod(UpdateLaunchRoadmapStep),
+  resolver.zod(UpdateLaunchRoadmapStage),
   resolver.authorize(),
   async ({ portalId, currentRoadmapStage }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
