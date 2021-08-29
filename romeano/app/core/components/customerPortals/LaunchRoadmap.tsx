@@ -27,6 +27,7 @@ function RoadmapStage(props: {
   stage: LaunchStage
   stageIdx: number
   status: CompletionStatus.Complete | CompletionStatus.InProgress | CompletionStatus.Upcoming
+  editingEnabled: boolean
   onClick: (stageIdx: number) => void
 }) {
   return (
@@ -34,7 +35,7 @@ function RoadmapStage(props: {
       <div onClick={() => props.onClick(props.stageIdx)}>
         {/*<div key={stage.name} className="flex justify-center w-full">*/}
         {/*className={classNames(stageIdx !== stages.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
-        <RoadmapStageCircle stageNum={props.stageIdx + 1} status={props.status} />
+        <RoadmapStageCircle stageNum={props.stageIdx + 1} status={props.status} hover={props.editingEnabled} />
         {/*<div className="absolute left-96 text-green-300">*/}
         {/*    hi*/}
         {/*</div>*/}
@@ -83,9 +84,18 @@ export default function LaunchRoadmap(props: {
   portalId: number
   currentRoadmapStage: number
   stages: LaunchStage[]
+  editingEnabled: boolean
   refetchHandler: () => void
 }) {
   const [updateLaunchRoadmapStageMutation] = useMutation(updateLaunchRoadmapStage)
+
+  const clickHandler = props.editingEnabled
+    ? (stageIdx: number) =>
+        updateLaunchRoadmapStageMutation({
+          portalId: props.portalId,
+          currentRoadmapStage: stageIdx + 1, //1 indexed in db
+        }).then(props.refetchHandler)
+    : () => null
   return (
     <nav>
       <div className="flex justify-between">
@@ -110,24 +120,18 @@ export default function LaunchRoadmap(props: {
         // <ul style={{gridTemplateRows: "repeat(4, auto)", gridAutoColumns: "1fr"}}
         className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5"
       >
-        {props.stages.map((stage, stageIdx) => {
-          return (
-            <RoadmapStage
-              key={stageIdx}
-              stage={stage}
-              stageIdx={stageIdx}
-              portalId={props.portalId}
-              currentRoadmapStage={props.currentRoadmapStage}
-              status={getCompletionStatus(props.currentRoadmapStage, stageIdx)}
-              onClick={(stageIdx) =>
-                updateLaunchRoadmapStageMutation({
-                  portalId: props.portalId,
-                  currentRoadmapStage: stageIdx + 1, //1 indexed in db
-                }).then(props.refetchHandler)
-              }
-            />
-          )
-        })}
+        {props.stages.map((stage, stageIdx) => (
+          <RoadmapStage
+            key={stageIdx}
+            stage={stage}
+            stageIdx={stageIdx}
+            portalId={props.portalId}
+            currentRoadmapStage={props.currentRoadmapStage}
+            status={getCompletionStatus(props.currentRoadmapStage, stageIdx)}
+            editingEnabled={props.editingEnabled}
+            onClick={clickHandler}
+          />
+        ))}
       </ul>
     </nav>
   )
