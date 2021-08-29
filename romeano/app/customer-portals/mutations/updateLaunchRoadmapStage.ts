@@ -15,11 +15,9 @@ export default resolver.pipe(
     const userId = ctx.session.userId
     if (!userId) throw new AuthenticationError("no userId provided")
 
-    const note = await db.portal.update({
+    return await db.portal.update({
       data: { currentRoadmapStage },
       where: { id: portalId },
     })
-
-    return note
   }
 )

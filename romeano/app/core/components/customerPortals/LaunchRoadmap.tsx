@@ -31,7 +31,7 @@ function RoadmapStage(props: {
 }) {
   return (
     <React.Fragment>
-      <div>
+      <div onClick={() => props.onClick(props.stageIdx)}>
         {/*<div key={stage.name} className="flex justify-center w-full">*/}
         {/*className={classNames(stageIdx !== stages.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
         <RoadmapStageCircle stageNum={props.stageIdx + 1} status={props.status} />
@@ -79,7 +79,12 @@ export function getCompletionStatus(currentRoadmapStage: number, stageIdx: numbe
     : CompletionStatus.Upcoming
 }
 
-export default function LaunchRoadmap(props: { portalId: number; currentRoadmapStage: number; stages: LaunchStage[] }) {
+export default function LaunchRoadmap(props: {
+  portalId: number
+  currentRoadmapStage: number
+  stages: LaunchStage[]
+  refetchHandler: () => void
+}) {
   const [updateLaunchRoadmapStageMutation] = useMutation(updateLaunchRoadmapStage)
   return (
     <nav>
@@ -118,7 +123,7 @@ export default function LaunchRoadmap(props: { portalId: number; currentRoadmapS
                 updateLaunchRoadmapStageMutation({
                   portalId: props.portalId,
                   currentRoadmapStage: stageIdx + 1, //1 indexed in db
-                })
+                }).then(props.refetchHandler)
               }
             />
           )
