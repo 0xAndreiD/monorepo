@@ -2,7 +2,7 @@
 
 import React from "react"
 import { format } from "date-fns"
-import { CompletionStatus } from "../customerPortals/LaunchRoadmap"
+import { CompletionStatus, getCompletionStatus } from "../customerPortals/LaunchRoadmap"
 import { Link } from "types"
 
 export type LaunchStep = {
@@ -31,12 +31,7 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
         className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5"
       >
         {props.stages.map((step, stepIdx) => {
-          const status =
-            props.currentRoadmapStage - 1 === stepIdx
-              ? CompletionStatus.InProgress
-              : props.currentRoadmapStage - 1 < stepIdx
-              ? CompletionStatus.Complete
-              : CompletionStatus.Upcoming
+          const status = getCompletionStatus(props.currentRoadmapStage, stepIdx)
           return (
             <React.Fragment key={stepIdx}>
               <div>

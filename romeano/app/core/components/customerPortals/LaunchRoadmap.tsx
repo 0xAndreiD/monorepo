@@ -23,46 +23,47 @@ export type LaunchStep = {
 function RoadmapCircle(props: {
   portalId: number
   currentRoadmapStage: number
-  stepIdx: number
   step: LaunchStep
+  stepIdx: number
   status: CompletionStatus.InProgress | CompletionStatus.Complete | CompletionStatus.Upcoming
-
   stages: LaunchStep[]
   onClick: (stepIdx: number) => void
 }) {
   return (
-    <div key={stepIdx} onClick={() => props.onClick(stepIdx)}>
+    <div key={props.stepIdx} onClick={() => props.onClick(props.stepIdx)}>
       <div>
         {/*<div key={step.name} className="flex justify-center w-full">*/}
         {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
-        <LaunchStepCircle step={step} stepNum={stepIdx + 1} status={status} />
+        <LaunchStepCircle step={props.step} stepNum={props.stepIdx + 1} status={props.status} />
         {/*<div className="absolute left-96 text-green-300">*/}
         {/*    hi*/}
         {/*</div>*/}
       </div>
 
       <div
-        className={"text-xs " + (status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")}
+        className={
+          "text-xs " + (props.status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
+        }
       >
-        {step.date ? format(new Date(step.date), "MMM d") : "TBD"}
+        {props.step.date ? format(new Date(props.step.date), "MMM d") : "TBD"}
       </div>
-      <div className="font-bold">{step.heading}</div>
+      <div className="font-bold">{props.step.heading}</div>
       <ul className="list-disc pl-7">
-        {step.tasks.map((item, idx) => (
+        {props.step.tasks.map((item, idx) => (
           <li key={idx}>{item}</li>
         ))}
       </ul>
       <div className="text-center">
-        {step.ctaLink && (
+        {props.step.ctaLink && (
           <TrackedLink
             eventType={EventType.LaunchRoadmapLinkOpen}
             portalId={props.portalId}
-            linkId={step.ctaLink.id}
-            href={step.ctaLink.href}
+            linkId={props.step.ctaLink.id}
+            href={props.step.ctaLink.href}
             defaultStyle={true}
             anchorProps={{ target: "_blank" }}
           >
-            {step.ctaLink.body}
+            {props.step.ctaLink.body}
           </TrackedLink>
         )}
       </div>
@@ -70,8 +71,16 @@ function RoadmapCircle(props: {
   )
 }
 
+export function getCompletionStatus(currentRoadmapStage: number, stepIdx: number) {
+  return currentRoadmapStage - 1 === stepIdx
+    ? CompletionStatus.InProgress
+    : currentRoadmapStage - 1 < stepIdx
+    ? CompletionStatus.Complete
+    : CompletionStatus.Upcoming
+}
+
 export default function LaunchRoadmap(props: { portalId: number; currentRoadmapStage: number; stages: LaunchStep[] }) {
-  const [updateLaunchRoadmapStep] = useMutation(updateLaunchRoadmapStep)
+  const [updateLaunchRoadmapStepMutation] = useMutation(updateLaunchRoadmapStep)
   return (
     <nav>
       <div className="flex justify-between">
@@ -97,15 +106,24 @@ export default function LaunchRoadmap(props: { portalId: number; currentRoadmapS
         className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5"
       >
         {props.stages.map((step, stepIdx) => {
-          const status =
-            props.currentRoadmapStage - 1 === stepIdx
-              ? CompletionStatus.InProgress
-              : props.currentRoadmapStage - 1 < stepIdx
-              ? CompletionStatus.Complete
-              : CompletionStatus.Upcoming
-          return RoadmapCircle(stepIdx, step, status, props, (stepIdx) => {
-            updateLaunchRoadmapStep({ portalId, stepIdx: stepIdx + 1 })
-          })
+          const status = getCompletionStatus(props.currentRoadmapStage, stepIdx)
+          return (
+            <RoadmapCircle
+              key={stepIdx}
+              step={step}
+              stepIdx={stepIdx}
+              portalId={props.portalId}
+              currentRoadmapStage={props.currentRoadmapStage}
+              stages={props.stages}
+              status={status}
+              onClick={(stepIdx) =>
+                updateLaunchRoadmapStepMutation({
+                  portalId: props.portalId,
+                  currentRoadmapStage: stepIdx + 1, //1 indexed in db
+                })
+              }
+            />
+          )
         })}
       </ul>
     </nav>
