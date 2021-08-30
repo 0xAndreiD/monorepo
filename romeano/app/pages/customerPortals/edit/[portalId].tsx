@@ -8,9 +8,9 @@ import { ContactsCard } from "app/core/components/ContactsCard"
 import { Footer } from "app/core/components/Footer"
 import { Header } from "app/core/components/customerPortals/Header"
 import { CardDivider } from "app/core/components/generic/Card"
-import { NotFoundError, useParam, useQuery, useSession } from "blitz"
-import StakeholderLoginForm from "../../../auth/components/StakeholderLoginForm"
+import { useParam, useQuery, useSession } from "blitz"
 import getCustomerPortal from "../../../customer-portals/queries/getCustomerPortal"
+import StakeholderLoginForm from "../../../auth/components/StakeholderLoginForm"
 
 function EditCustomerPortal() {
   const portalId = useParam("portalId", "number")
@@ -43,11 +43,10 @@ function EditCustomerPortal() {
           data={data.proposal.stakeholders}
           refetchHandler={refetch}
         />
-        Edit
         <div className="py-3">
           <CardDivider />
         </div>
-        <LaunchRoadmap portalId={portalId} {...data.launchRoadmap} />
+        <LaunchRoadmap portalId={portalId} refetchHandler={refetch} editingEnabled={true} {...data.launchRoadmap} />
       </div>
 
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 bg-gray-100">

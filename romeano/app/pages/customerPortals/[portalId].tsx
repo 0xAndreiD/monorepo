@@ -8,7 +8,7 @@ import { ContactsCard } from "app/core/components/ContactsCard"
 import { Footer } from "app/core/components/Footer"
 import { Header } from "app/core/components/customerPortals/Header"
 import { CardDivider } from "app/core/components/generic/Card"
-import { NotFoundError, useParam, useQuery, useSession } from "blitz"
+import { useParam, useQuery, useSession } from "blitz"
 import getCustomerPortal from "../../customer-portals/queries/getCustomerPortal"
 import StakeholderLoginForm from "../../auth/components/StakeholderLoginForm"
 
