@@ -12,24 +12,26 @@ export function Header(props: { portalId: number; vendorLogo: string; customerNa
       <span className="text-gray-500 font-bold justify-self-center">{props.customerName} Portal Details</span>
 
       <div className="justify-self-end">
-        <Link href={Routes.CustomerPortal({ portalId: props.portalId })}>
-          <a
-            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+        <div className="grid gap-2 grid-cols-2 place-items-center">
+          <Link href={Routes.CustomerPortal({ portalId: props.portalId })}>
+            <a
+              className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-          >
-            View Portal
-          </a>
-        </Link>
-        <Link href={Routes.CustomerPortal({ portalId: props.portalId })}>
-          <a
-            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+            >
+              View Portal
+            </a>
+          </Link>
+          <Link href={Routes.EditCustomerPortal({ portalId: props.portalId })}>
+            <a
+              className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-          >
-            Edit Portal
-          </a>
-        </Link>
+            >
+              Edit Portal
+            </a>
+          </Link>
+        </div>
       </div>
     </div>
   )
