@@ -26,14 +26,14 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
         // <ul style={{gridTemplateRows: "repeat(4, auto)", gridAutoColumns: "1fr"}}
         className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5"
       >
-        {props.stages.map((step, stepIdx) => {
-          const status = getCompletionStatus(props.currentRoadmapStage, stepIdx)
+        {props.stages.map((stage, stageIdx) => {
+          const status = getCompletionStatus(props.currentRoadmapStage, stageIdx)
           return (
-            <React.Fragment key={stepIdx}>
+            <React.Fragment key={stageIdx}>
               <div>
                 {/*<div key={step.name} className="flex justify-center w-full">*/}
                 {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
-                <RoadmapStageCircle stageNum={stepIdx + 1} status={status} />
+                <RoadmapStageCircle hover={false} stageNum={stageIdx + 1} status={status} />
                 {/*<div className="absolute left-96 text-green-300">*/}
                 {/*    hi*/}
                 {/*</div>*/}
@@ -44,7 +44,7 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
                   "text-xs " + (status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
                 }
               >
-                {step.date ? format(new Date(step.date), "MMM d") : "TBD"}
+                {stage.date ? format(new Date(stage.date), "MMM d") : "TBD"}
               </div>
             </React.Fragment>
           )

@@ -65,6 +65,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
     stages: portal.roadmapStages.map((stage) => ({
       heading: stage.heading,
       date: stage.date?.toISOString(),
+      tasks: null,
       ctaLink: stage.ctaLink,
     })),
   }
