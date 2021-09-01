@@ -9,10 +9,10 @@ import { Footer } from "app/core/components/Footer"
 import { Header } from "app/core/components/customerPortals/Header"
 import { CardDivider } from "app/core/components/generic/Card"
 import { useParam, useQuery, useSession } from "blitz"
-import getCustomerPortal from "../../customer-portals/queries/getCustomerPortal"
-import StakeholderLoginForm from "../../auth/components/StakeholderLoginForm"
+import getCustomerPortal from "../../../customer-portals/queries/getCustomerPortal"
+import StakeholderLoginForm from "../../../auth/components/StakeholderLoginForm"
 
-function CustomerPortal() {
+function EditCustomerPortal() {
   const portalId = useParam("portalId", "number")
   const session = useSession()
   const [data, { refetch }] = useQuery(
@@ -46,7 +46,7 @@ function CustomerPortal() {
         <div className="py-3">
           <CardDivider />
         </div>
-        <LaunchRoadmap portalId={portalId} refetchHandler={refetch} editingEnabled={false} {...data.launchRoadmap} />
+        <LaunchRoadmap portalId={portalId} refetchHandler={refetch} editingEnabled={true} {...data.launchRoadmap} />
       </div>
 
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 bg-gray-100">
@@ -71,4 +71,4 @@ function CustomerPortal() {
 }
 
 // CustomerPortal.authenticate = true
-export default CustomerPortal
+export default EditCustomerPortal

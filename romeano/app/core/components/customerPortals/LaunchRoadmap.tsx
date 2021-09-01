@@ -4,6 +4,9 @@ import { format } from "date-fns"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
 import { LinkWithId } from "types"
+import { useMutation } from "blitz"
+import updateLaunchRoadmapStage from "../../../customer-portals/mutations/updateLaunchRoadmapStage"
+import { RoadmapStageCircle } from "../generic/RoadmapStageCircle"
 
 export enum CompletionStatus {
   Complete,
@@ -11,14 +14,88 @@ export enum CompletionStatus {
   Upcoming,
 }
 
-export type LaunchStep = {
+export type LaunchStage = {
   heading: string
   date?: string
-  tasks: string[]
+  tasks: string[] | null
   ctaLink: LinkWithId | null
 }
 
-export default function LaunchRoadmap(props: { portalId: number; currentRoadmapStage: number; stages: LaunchStep[] }) {
+function RoadmapStage(props: {
+  portalId: number
+  currentRoadmapStage: number
+  stage: LaunchStage
+  stageIdx: number
+  status: CompletionStatus.Complete | CompletionStatus.InProgress | CompletionStatus.Upcoming
+  editingEnabled: boolean
+  onClick: (stageIdx: number) => void
+}) {
+  return (
+    <React.Fragment>
+      <div onClick={() => props.onClick(props.stageIdx)}>
+        {/*<div key={stage.name} className="flex justify-center w-full">*/}
+        {/*className={classNames(stageIdx !== stages.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
+        <RoadmapStageCircle stageNum={props.stageIdx + 1} status={props.status} hover={props.editingEnabled} />
+        {/*<div className="absolute left-96 text-green-300">*/}
+        {/*    hi*/}
+        {/*</div>*/}
+      </div>
+
+      <div
+        className={
+          "text-xs " + (props.status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
+        }
+      >
+        {props.stage.date ? format(new Date(props.stage.date), "MMM d") : "TBD"}
+      </div>
+      <div className="font-bold">{props.stage.heading}</div>
+      <ul className="list-disc pl-7">
+        {props.stage.tasks?.map((item, idx) => (
+          <li key={idx}>{item}</li>
+        ))}
+      </ul>
+      <div className="text-center">
+        {props.stage.ctaLink && (
+          <TrackedLink
+            eventType={EventType.LaunchRoadmapLinkOpen}
+            portalId={props.portalId}
+            linkId={props.stage.ctaLink.id}
+            href={props.stage.ctaLink.href}
+            defaultStyle={true}
+            anchorProps={{ target: "_blank" }}
+          >
+            {props.stage.ctaLink.body}
+          </TrackedLink>
+        )}
+      </div>
+    </React.Fragment>
+  )
+}
+
+export function getCompletionStatus(currentRoadmapStage: number, stageIdx: number) {
+  return stageIdx + 1 < currentRoadmapStage
+    ? CompletionStatus.Complete
+    : stageIdx + 1 === currentRoadmapStage
+    ? CompletionStatus.InProgress
+    : CompletionStatus.Upcoming
+}
+
+export default function LaunchRoadmap(props: {
+  portalId: number
+  currentRoadmapStage: number
+  stages: LaunchStage[]
+  editingEnabled: boolean
+  refetchHandler: () => void
+}) {
+  const [updateLaunchRoadmapStageMutation] = useMutation(updateLaunchRoadmapStage)
+
+  const clickHandler = props.editingEnabled
+    ? (stageIdx: number) =>
+        updateLaunchRoadmapStageMutation({
+          portalId: props.portalId,
+          currentRoadmapStage: stageIdx + 1, //1 indexed in db
+        }).then(props.refetchHandler)
+    : () => null
   return (
     <nav>
       <div className="flex justify-between">
@@ -30,10 +107,10 @@ export default function LaunchRoadmap(props: { portalId: number; currentRoadmapS
       </div>
       {/*<ol className="flex justify-around gap-x-5 px-11 items-center">*/}
       {/*    {*/}
-      {/*        steps.map((step, stepIdx) =>*/}
-      {/*            <div key={step.name}*/}
-      {/*                 className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-40' : '', 'relative')}>*/}
-      {/*                <ProgressStepperElement step={step} stepNum={stepIdx + 1}/>*/}
+      {/*        stages.map((stage, stageIdx) =>*/}
+      {/*            <div key={stage.name}*/}
+      {/*                 className={classNames(stageIdx !== stages.length - 1 ? 'pr-8 sm:pr-40' : '', 'relative')}>*/}
+      {/*                <ProgressStepperElement stage={stage} stageNum={stageIdx + 1}/>*/}
       {/*            </div>*/}
       {/*        )*/}
       {/*    }*/}
@@ -43,96 +120,19 @@ export default function LaunchRoadmap(props: { portalId: number; currentRoadmapS
         // <ul style={{gridTemplateRows: "repeat(4, auto)", gridAutoColumns: "1fr"}}
         className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5"
       >
-        {props.stages.map((step, stepIdx) => {
-          const status =
-            props.currentRoadmapStage - 1 === stepIdx
-              ? CompletionStatus.InProgress
-              : props.currentRoadmapStage - 1 < stepIdx
-              ? CompletionStatus.Complete
-              : CompletionStatus.Upcoming
-          return (
-            <React.Fragment key={stepIdx}>
-              <div>
-                {/*<div key={step.name} className="flex justify-center w-full">*/}
-                {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
-                <LaunchStepCircle step={step} stepNum={stepIdx + 1} status={status} />
-                {/*<div className="absolute left-96 text-green-300">*/}
-                {/*    hi*/}
-                {/*</div>*/}
-              </div>
-
-              <div
-                className={
-                  "text-xs " + (status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
-                }
-              >
-                {step.date ? format(new Date(step.date), "MMM d") : "TBD"}
-              </div>
-              <div className="font-bold">{step.heading}</div>
-              <ul className="list-disc pl-7">
-                {step.tasks.map((item, idx) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ul>
-              <div className="text-center">
-                {step.ctaLink && (
-                  <TrackedLink
-                    eventType={EventType.LaunchRoadmapLinkOpen}
-                    portalId={props.portalId}
-                    linkId={step.ctaLink.id}
-                    href={step.ctaLink.href}
-                    defaultStyle={true}
-                    anchorProps={{ target: "_blank" }}
-                  >
-                    {step.ctaLink.body}
-                  </TrackedLink>
-                )}
-              </div>
-            </React.Fragment>
-          )
-        })}
+        {props.stages.map((stage, stageIdx) => (
+          <RoadmapStage
+            key={stageIdx}
+            stage={stage}
+            stageIdx={stageIdx}
+            portalId={props.portalId}
+            currentRoadmapStage={props.currentRoadmapStage}
+            status={getCompletionStatus(props.currentRoadmapStage, stageIdx)}
+            editingEnabled={props.editingEnabled}
+            onClick={clickHandler}
+          />
+        ))}
       </ul>
     </nav>
   )
-}
-
-function LaunchStepCircle({ step, stepNum, status }: { step: LaunchStep; stepNum: number; status: CompletionStatus }) {
-  switch (status) {
-    case CompletionStatus.Complete:
-      return (
-        <div>
-          {/*<div className="absolute inset-0 flex items-center" aria-hidden="true">*/}
-          {/*    <div className="h-0.5 w-full bg-green-600"/>*/}
-          {/*</div>*/}
-
-          <div className="relative w-16 h-16 flex items-center justify-center bg-white border-2 border-green-600 rounded-full">
-            <span className="text-green-600 text-2xl">{stepNum}</span>
-          </div>
-        </div>
-      )
-
-    case CompletionStatus.InProgress:
-      return (
-        <>
-          {/*<div className="absolute inset-0 flex items-center" aria-hidden="true">*/}
-          {/*    <div className="h-0.5 w-full bg-gray-200"/>*/}
-          {/*</div>*/}
-          <div className="relative w-16 h-16 flex items-center justify-center bg-green-600 rounded-full hover:bg-green-900">
-            <span className="text-white text-2xl">{stepNum}</span>
-          </div>
-        </>
-      )
-
-    case CompletionStatus.Upcoming:
-      return (
-        <>
-          {/*<div className="absolute inset-0 flex items-center" aria-hidden="true">*/}
-          {/*    <div className="h-0.5 w-full bg-gray-200"/>*/}
-          {/*</div>*/}
-          <div className="group relative w-16 h-16 flex items-center justify-center bg-white border-2 border-gray-300 rounded-full hover:border-gray-400">
-            <span className="bg-transparent rounded-full text-2xl group-hover:bg-gray-300">{stepNum}</span>
-          </div>
-        </>
-      )
-  }
 }

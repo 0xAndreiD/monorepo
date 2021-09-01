@@ -2,15 +2,11 @@
 
 import React from "react"
 import { format } from "date-fns"
-import { CompletionStatus } from "../customerPortals/LaunchRoadmap"
+import { CompletionStatus, getCompletionStatus, LaunchStage } from "../customerPortals/LaunchRoadmap"
 import { Link } from "types"
+import { RoadmapStageCircle } from "../generic/RoadmapStageCircle"
 
-export type LaunchStep = {
-  heading: string
-  date?: string
-  ctaLink: Link | null
-}
-export default function OpportunityOverview(props: { currentRoadmapStage: number; stages: LaunchStep[] }) {
+export default function OpportunityOverview(props: { currentRoadmapStage: number; stages: LaunchStage[] }) {
   return (
     <nav>
       <h1 className="text-lg font-bold">Opportunity Overview</h1>
@@ -30,19 +26,14 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
         // <ul style={{gridTemplateRows: "repeat(4, auto)", gridAutoColumns: "1fr"}}
         className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5"
       >
-        {props.stages.map((step, stepIdx) => {
-          const status =
-            props.currentRoadmapStage - 1 === stepIdx
-              ? CompletionStatus.InProgress
-              : props.currentRoadmapStage - 1 < stepIdx
-              ? CompletionStatus.Complete
-              : CompletionStatus.Upcoming
+        {props.stages.map((stage, stageIdx) => {
+          const status = getCompletionStatus(props.currentRoadmapStage, stageIdx)
           return (
-            <React.Fragment key={stepIdx}>
+            <React.Fragment key={stageIdx}>
               <div>
                 {/*<div key={step.name} className="flex justify-center w-full">*/}
                 {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
-                <LaunchStepCircle step={step} stepNum={stepIdx + 1} status={status} />
+                <RoadmapStageCircle hover={false} stageNum={stageIdx + 1} status={status} />
                 {/*<div className="absolute left-96 text-green-300">*/}
                 {/*    hi*/}
                 {/*</div>*/}
@@ -53,7 +44,7 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
                   "text-xs " + (status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
                 }
               >
-                {step.date ? format(new Date(step.date), "MMM d") : "TBD"}
+                {stage.date ? format(new Date(stage.date), "MMM d") : "TBD"}
               </div>
             </React.Fragment>
           )
@@ -80,45 +71,4 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
       {/*</div>*/}
     </nav>
   )
-}
-
-function LaunchStepCircle({ step, stepNum, status }: { step: LaunchStep; stepNum: number; status: CompletionStatus }) {
-  switch (status) {
-    case CompletionStatus.Complete:
-      return (
-        <div>
-          {/*<div className="absolute inset-0 flex items-center" aria-hidden="true">*/}
-          {/*    <div className="h-0.5 w-full bg-green-600"/>*/}
-          {/*</div>*/}
-
-          <div className="relative w-16 h-16 flex items-center justify-center bg-white border-2 border-green-600 rounded-full">
-            <span className="text-green-600 text-2xl">{stepNum}</span>
-          </div>
-        </div>
-      )
-
-    case CompletionStatus.InProgress:
-      return (
-        <>
-          {/*<div className="absolute inset-0 flex items-center" aria-hidden="true">*/}
-          {/*    <div className="h-0.5 w-full bg-gray-200"/>*/}
-          {/*</div>*/}
-          <div className="relative w-16 h-16 flex items-center justify-center bg-green-600 rounded-full hover:bg-green-900">
-            <span className="text-white text-2xl">{stepNum}</span>
-          </div>
-        </>
-      )
-
-    case CompletionStatus.Upcoming:
-      return (
-        <>
-          {/*<div className="absolute inset-0 flex items-center" aria-hidden="true">*/}
-          {/*    <div className="h-0.5 w-full bg-gray-200"/>*/}
-          {/*</div>*/}
-          <div className="group relative w-16 h-16 flex items-center justify-center bg-white border-2 border-gray-300 rounded-full hover:border-gray-400">
-            <span className="bg-transparent rounded-full text-2xl group-hover:bg-gray-300">{stepNum}</span>
-          </div>
-        </>
-      )
-  }
 }
