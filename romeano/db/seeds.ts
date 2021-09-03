@@ -1,4 +1,4 @@
-import db, { EventType, Role } from "./index"
+import db, { EventType, LinkType, Role } from "./index"
 import { range } from "lodash"
 import { addHours, min, subDays } from "date-fns"
 import * as faker from "faker"
@@ -97,7 +97,6 @@ const seedCustomerPortal = async () => {
         "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
       proposalSubheading: "2 Prism Headsets + 4 User Licenses",
       vendorId: vendorTeam.vendorId,
-      proposalType: "document",
     },
   })
 
@@ -190,6 +189,8 @@ const seedCustomerPortal = async () => {
         create: {
           body: "Mira's Slide Deck",
           href: "https://www.google.com/webhp?client=firefox-b-d",
+          type: LinkType.WebLink,
+          creator: { connect: { id: aeUser.id } },
         },
       },
       portal: { connect: { id: portal.id } },
@@ -202,6 +203,8 @@ const seedCustomerPortal = async () => {
         create: {
           body: "Join Zoom 📞",
           href: "https://www.google.com/webhp?client=firefox-b-d",
+          type: LinkType.WebLink,
+          creator: { connect: { id: aeUser.id } },
         },
       },
       portal: { connect: { id: portal.id } },
@@ -245,42 +248,55 @@ const seedCustomerPortal = async () => {
     ],
   })
 
-  const documents = await db.document.createMany({
-    data: [
-      {
-        portalId: portal.id,
-        title: "Security Questionnaire",
-        path: "security-questionnaire.txt",
-        isCompleted: false,
-        userId: aeUser.id,
+  const documentsRaw = [
+    {
+      portal: { connect: { id: portal.id } },
+      link: {
+        create: {
+          body: "Security Questionnaire",
+          href: "security-questionnaire.txt",
+          type: LinkType.Document,
+          creator: { connect: { id: aeUser.id } },
+        },
       },
-      {
-        portalId: portal.id,
-        title: "Vendor Setup",
-        path: "vendor-setup.txt",
-        isCompleted: false,
-        userId: aeUser.id,
+    },
+    {
+      portal: { connect: { id: portal.id } },
+      link: {
+        create: {
+          body: "Vendor Setup",
+          href: "vendor-setup.txt",
+          type: LinkType.Document,
+          creator: { connect: { id: aeUser.id } },
+        },
       },
-      {
-        portalId: portal.id,
-        title: "W-9 Form",
-        path: "w9.txt",
-        isCompleted: true,
-        userId: stakeholders[0].id,
+    },
+    {
+      portal: { connect: { id: portal.id } },
+      link: {
+        create: {
+          body: "W-9 Form",
+          href: "w9.txt",
+          type: LinkType.Document,
+          creator: { connect: { id: stakeholders[0].id } },
+        },
       },
-    ],
-  })
+    },
+  ]
+
+  for (const document of documentsRaw) {
+    await db.portalDocument.create({ data: document })
+  }
 
   await db.portal.update({
     where: { id: portal.id },
     data: {
-      proposalDocument: {
+      proposalLink: {
         create: {
-          portalId: portal.id,
-          title: "View Quote",
-          path: "proposal.txt",
-          isCompleted: false,
-          userId: aeUser.id,
+          body: "View Quote",
+          href: "proposal.txt",
+          type: LinkType.Document,
+          creator: { connect: { id: aeUser.id } },
         },
       },
     },
@@ -351,6 +367,8 @@ const seedCustomerPortal = async () => {
             data: {
               body: linkElem.body,
               href: linkElem.href,
+              type: LinkType.WebLink,
+              creator: { connect: { id: aeUser.id } },
             },
           })
       )
@@ -386,30 +404,6 @@ const seedCustomerPortal = async () => {
     ],
   })
 
-  // await db.magicLink.createMany({
-  //   data: [
-  //     {
-  //       id: "ae1Login",
-  //       userId: 1, //Greg
-  //       portalId: portal.id
-  //     },
-  //     {
-  //       id: "ae2Login",
-  //       userId: 2, //Alexis
-  //       portalId: portal.id
-  //     },
-  //     {
-  //       id: "stakeholder1Login",
-  //       userId: 4,//Kristin Sanders
-  //       portalId: portal.id
-  //     },
-  //     {
-  //       id: "stakeholder2Login",
-  //       userId: 5,//Wally Iris
-  //       portalId: portal.id
-  //     }
-  //   ]
-  // })
   console.log(`Seeding finished.`)
 }
 
@@ -456,7 +450,6 @@ async function seedPortalDetails() {
         "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
       proposalSubheading: "2 Prism Headsets + 4 User Licenses",
       vendorId: 1,
-      proposalType: "document",
     },
   })
   const stakeholder = await db.user.create({
@@ -478,43 +471,29 @@ async function seedPortalDetails() {
     },
   })
 
-  // await db.magicLink.createMany({
-  //   data: [
-  //     {
-  //       id: "ae3Login",
-  //       userId: aeUser.id, //Julia
-  //       portalId: portal.id
-  //     },
-  //     {
-  //       id: "stakeholder3Login",
-  //       userId: stakeholder.id, //Ali
-  //       portalId: portal.id
-  //     }
-  //   ]
-  // })
-
-  await db.document.createMany({
-    data: [
-      {
-        portalId: portal.id,
-        title: "portal2doc",
-        path: "portal2doc.txt",
-        isCompleted: false,
-        userId: aeUser.id,
+  await db.portalDocument.create({
+    data: {
+      portal: { connect: { id: portal.id } },
+      link: {
+        create: {
+          body: "portal2doc",
+          href: "portal2doc.txt",
+          type: LinkType.Document,
+          creator: { connect: { id: aeUser.id } },
+        },
       },
-    ],
+    },
   })
 
   await db.portal.update({
     where: { id: portal.id },
     data: {
-      proposalDocument: {
+      proposalLink: {
         create: {
-          portalId: portal.id,
-          title: "View Quote",
-          path: "proposal2.txt",
-          isCompleted: false,
-          userId: aeUser.id,
+          body: "View Quote",
+          href: "proposal2.txt",
+          type: LinkType.Document,
+          creator: { connect: { id: aeUser.id } },
         },
       },
     },
@@ -526,12 +505,22 @@ async function seedEvents() {
   const now = new Date()
   const start = subDays(now, days)
 
+  const documents = (
+    await db.portalDocument.findMany({
+      include: { link: true },
+      where: {
+        portalId: 1,
+        link: { type: LinkType.Document },
+      },
+    })
+  ).map((x) => x.id)
+
   const events = range(days * 24).map((i) => ({
     type: EventType.DocumentOpen,
     url: faker.internet.url(),
     ip: faker.internet.ip(),
     userAgent: faker.internet.userAgent(),
-    documentId: faker.datatype.number({ min: 1, max: 3 }),
+    linkId: faker.random.arrayElement(documents),
     portalId: 1,
     userId: 4,
     createdAt: min([addHours(start, i + faker.datatype.number({ min: -10, max: 10 })), now]),
@@ -625,7 +614,6 @@ async function seedMira() {
         "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
       proposalSubheading: "",
       vendorId: vendorTeam.vendorId,
-      proposalType: "link",
     },
   })
 
@@ -636,6 +624,8 @@ async function seedMira() {
         create: {
           body: "Proposal",
           href: "https://docs.google.com/presentation/d/1Kwh6nVp00qBtFVegGe-6iWCB4kstwJi4NjUbm5F4CI4/edit#slide=id.gd4d09b3e56_0_233",
+          type: LinkType.WebLink,
+          creator: { connect: { id: aeUser.id } },
         },
       },
     },
@@ -652,6 +642,8 @@ async function seedMira() {
         create: {
           body: "Mira Product Video",
           href: "https://vimeo.com/364410995",
+          type: LinkType.WebLink,
+          creator: { connect: { id: aeUser.id } },
         },
       },
       portal: { connect: { id: portal.id } },
@@ -667,6 +659,8 @@ async function seedMira() {
         create: {
           body: "Join Zoom 📞",
           href: "https://www.google.com/webhp?client=firefox-b-d",
+          type: LinkType.WebLink,
+          creator: { connect: { id: aeUser.id } },
         },
       },
       portal: { connect: { id: portal.id } },
@@ -752,8 +746,6 @@ async function seedMira() {
   ]
 
   for (const section of productInfoSections) {
-    for (const link of section.links) {
-    }
     const links = await Promise.all(
       section.links.map(
         async (linkElem) =>
@@ -761,6 +753,8 @@ async function seedMira() {
             data: {
               body: linkElem.body,
               href: linkElem.href,
+              type: LinkType.WebLink,
+              creator: { connect: { id: aeUser.id } },
             },
           })
       )

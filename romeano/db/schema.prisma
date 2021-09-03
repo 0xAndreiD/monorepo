@@ -20,16 +20,13 @@ model Portal {
   currentRoadmapStage Int //1 indexed
   roadmapStages       RoadmapStage[]
   nextStepsTasks      NextStepsTask[]
-  documents           Document[]           @relation(name: "uploadedDocument")
   images              PortalImage[]
   productInfoSections ProductInfoSection[]
   proposalHeading     String
   proposalSubheading  String
-  proposalDocument    Document?            @relation(name: "proposalDocument", fields: [proposalDocumentId], references: [id])
-  proposalDocumentId  Int?
   proposalLink        Link?                @relation(fields: [proposalLinkId], references: [id])
   proposalLinkId      Int?
-  proposalType        String
+  portalDocument      PortalDocument[]
   userPortals         UserPortal[]
   internalNotes       InternalNote[]
   events              Event[]
@@ -62,7 +59,7 @@ model User {
   photoUrl         String?
   accountExecutive AccountExecutive?
   stakeholder      Stakeholder?
-  documents        Document[]
+  links            Link[]
   userPortals      UserPortal[]
   messagesSent     InternalNote[]
   events           Event[]
@@ -150,14 +147,23 @@ model AccountExecutive {
   updatedAt    DateTime   @updatedAt
 }
 
+enum LinkType {
+  Document
+  WebLink
+}
+
 model Link {
   id                     Int                     @id @default(autoincrement())
   body                   String
   href                   String
+  type                   LinkType
+  creator                User                    @relation(fields: [userId], references: [id])
+  userId                 Int
   events                 Event[]
-  proposalPortal         Portal[]
-  ProductInfoSectionLink ProductInfoSectionLink?
-  RoadmapStage           RoadmapStage?
+  portalProposal         Portal?
+  portalDocument         PortalDocument[]
+  productInfoSectionLink ProductInfoSectionLink?
+  roadmapStage           RoadmapStage?
 }
 
 model ProductInfoSection {
@@ -221,19 +227,14 @@ model NextStepsTask {
   updatedAt   DateTime @updatedAt
 }
 
-model Document {
-  id          Int      @id @default(autoincrement())
-  portalId    Int
-  portal      Portal   @relation(name: "uploadedDocument", fields: [portalId], references: [id])
-  proposal    Portal?  @relation("proposalDocument")
-  title       String
-  path        String
-  isCompleted Boolean  @default(false)
-  uploader    User     @relation(fields: [userId], references: [id])
-  userId      Int
-  events      Event[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model PortalDocument {
+  id        Int      @id @default(autoincrement())
+  portal    Portal   @relation(fields: [portalId], references: [id])
+  portalId  Int
+  link      Link     @relation(fields: [linkId], references: [id])
+  linkId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model InternalNote {
@@ -248,20 +249,18 @@ model InternalNote {
 }
 
 model Event {
-  id         Int       @id @default(autoincrement())
-  type       EventType
-  url        String?
-  ip         String?
-  userAgent  String?
-  document   Document? @relation(fields: [documentId], references: [id])
-  documentId Int?
-  link       Link?     @relation(fields: [linkId], references: [id])
-  linkId     Int?
-  portal     Portal    @relation(fields: [portalId], references: [id])
-  portalId   Int
-  user       User      @relation(fields: [userId], references: [id])
-  userId     Int
-  createdAt  DateTime  @default(now())
+  id        Int       @id @default(autoincrement())
+  type      EventType
+  url       String?
+  ip        String?
+  userAgent String?
+  link      Link?     @relation(fields: [linkId], references: [id])
+  linkId    Int?
+  portal    Portal    @relation(fields: [portalId], references: [id])
+  portalId  Int
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime  @default(now())
 }
 
 model MagicLink {
