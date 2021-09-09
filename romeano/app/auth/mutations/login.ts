@@ -1,6 +1,7 @@
-import { AuthenticationError, resolver, SecurePassword } from "blitz"
-import db, { Role } from "db"
+import { resolver, SecurePassword, AuthenticationError } from "blitz"
+import db from "db"
 import { Login } from "../validations"
+import { Role } from "db"
 
 export const authenticateUser = async (rawEmail: string, rawPassword: string) => {
   const email = rawEmail.toLowerCase().trim()
@@ -8,12 +9,6 @@ export const authenticateUser = async (rawEmail: string, rawPassword: string) =>
   const user = await db.user.findFirst({ where: { email } })
   if (!user) throw new AuthenticationError()
 
-  //FIXME: dev mode skips auth!
-  // if (process.env.NODE_ENV !== "production") {
-  //   console.log("SKIPPING AUTH")
-  //   const { hashedPassword, ...rest } = user
-  //   return rest
-  // }
   const result = await SecurePassword.verify(user.hashedPassword, password)
 
   if (result === SecurePassword.VALID_NEEDS_REHASH) {

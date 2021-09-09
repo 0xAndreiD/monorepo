@@ -1,5 +1,5 @@
 import { AuthorizationError, getSession, invokeWithMiddleware, NotFoundError } from "blitz"
-import db, { EventType } from "../../db"
+import db, { EventType, LinkType } from "../../db"
 import { NextApiRequest, NextApiResponse } from "next"
 import { z } from "zod"
 import nc from "next-connect"
@@ -10,17 +10,17 @@ import createEvent from "../event/mutations/createEvent"
 
 export const config = {
   api: {
-    bodyParser: false
-  }
+    bodyParser: false,
+  },
 }
 
-const uploadDocument = nc<NextApiRequest & { fields: Fields, files: Files }, NextApiResponse>()
+const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, NextApiResponse>()
   .use((req, res, next) => {
     const form = formidable({
       multiples: true,
       uploadDir: INTERNAL_UPLOAD_FS_PATH,
       maxFileSize: UPLOAD_SIZE_LIMIT,
-      keepExtensions: true
+      keepExtensions: true,
       // //@ts-ignore
       // filename: (name,ext, part, form) => {
       //   console.log("in filename")
@@ -51,23 +51,35 @@ const uploadDocument = nc<NextApiRequest & { fields: Fields, files: Files }, Nex
 
     console.log("fileUpload(): file uploaded with portalId:", portalId)
 
-    const documentInserts = flatten(Object.values(req.files))
-      .map(file =>
-        db.document.create({
+    const documentInserts = flatten(Object.values(req.files)).map((file) =>
+      db.portalDocument
+        .create({
           data: {
-            portalId: portalId,
-            title: file.name ?? "Untitled File",
-            //file.path looks like $INTERNAL_UPLOAD_FS_PATH/upload.jpg
-            path: file.path.substring(INTERNAL_UPLOAD_FS_PATH.length + 1),//+1 to omit the slash
-            isCompleted: false,
-            userId
-          }
-        }).then(document => invokeWithMiddleware(createEvent, {
-          portalId,
-          type: EventType.DocumentUpload,
-          documentId: document.id
-        }, { req, res }))
-      )
+            portal: { connect: { id: portalId } },
+            link: {
+              create: {
+                body: file.name ?? "Untitled File",
+                //file.path looks like $INTERNAL_UPLOAD_FS_PATH/upload.jpg
+                href: file.path.substring(INTERNAL_UPLOAD_FS_PATH.length + 1), //+1 to omit the slash
+                type: LinkType.Document,
+                creator: { connect: { id: userId } },
+              },
+            },
+          },
+          include: { link: true },
+        })
+        .then((portalDocument) =>
+          invokeWithMiddleware(
+            createEvent,
+            {
+              portalId,
+              type: EventType.DocumentUpload,
+              linkId: portalDocument.link.id,
+            },
+            { req, res }
+          )
+        )
+    )
     await Promise.all(documentInserts)
 
     res.status(200).end()

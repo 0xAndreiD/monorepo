@@ -8,7 +8,6 @@ const CreateEvent = z.object({
   url: z.string().optional(),
   // ip: z.string(),
   // userAgent: z.string().optional(),
-  documentId: z.number().optional(),
   linkId: z.number().optional(),
   // userId: z.number()
 })
@@ -37,7 +36,6 @@ export default resolver.pipe(resolver.zod(CreateEvent), resolver.authorize(), as
       url: params.url,
       ip: context.ip,
       userAgent: context.headers?.["user-agent"],
-      documentId: params.documentId,
       linkId: params.linkId,
       portalId: params.portalId,
       userId: context.session.userId!,

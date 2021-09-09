@@ -4,9 +4,7 @@ import { Form, FORM_ERROR } from "app/core/components/Form"
 import login from "app/auth/mutations/login"
 import { Login } from "app/auth/validations"
 
-export const LoginForm = (props: {
-  onSuccess?: () => void,
-}) => {
+export const LoginForm = (props: { onSuccess?: () => void }) => {
   const router = useRouter()
   const [loginMutation] = useMutation(login)
 
@@ -27,8 +25,7 @@ export const LoginForm = (props: {
               return { [FORM_ERROR]: "Sorry, those credentials are invalid" }
             } else {
               return {
-                [FORM_ERROR]:
-                "Sorry, we had an unexpected error. Please try again. - " + error.toString()
+                [FORM_ERROR]: "Sorry, we had an unexpected error. Please try again. - " + String(error),
               }
             }
           }
