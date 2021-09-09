@@ -57,7 +57,7 @@ function RoadmapStage(props: {
       <div className="text-center">
         {props.stage.ctaLink && (
           <TrackedLink
-            eventType={EventType.LaunchRoadmapLinkOpen}
+            type={EventType.LaunchRoadmapLinkOpen}
             portalId={props.portalId}
             linkId={props.stage.ctaLink.id}
             href={props.stage.ctaLink.href}

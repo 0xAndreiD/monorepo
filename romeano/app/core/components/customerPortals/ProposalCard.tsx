@@ -45,7 +45,7 @@ export function ProposalCard(props: { portalId: number; data: Proposal; refetchH
             portalId={props.portalId}
             linkId={props.data.quote.linkId}
             href={props.data.quote.href}
-            eventType={EventType.ProposalOpen}
+            type={EventType.ProposalOpen}
             anchorProps={{ target: "_blank" }}
           >
             <button

@@ -26,7 +26,7 @@ export function getDocuments(
         .includes(x.link.userId)
     )
     .map((x) => ({
-      id: x.id,
+      id: x.link.id,
       body: x.link.body,
       href: getExternalUploadPath(x.link.href),
       isCompleted: role === Role.Stakeholder, //FIXME: should make this actually check

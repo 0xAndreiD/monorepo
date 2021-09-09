@@ -2,7 +2,8 @@ import { Ctx, Middleware, resolver } from "blitz"
 import db, { EventType } from "db"
 import { z } from "zod"
 
-const CreateEvent = z.object({
+//TODO: keep this in sync with redir.tsx
+export const CreateEvent = z.object({
   portalId: z.number().nonnegative(),
   type: z.nativeEnum(EventType),
   url: z.string().optional(),

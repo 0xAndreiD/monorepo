@@ -1,17 +1,16 @@
 import { GetServerSideProps, getSession, invokeWithMiddleware, Routes } from "blitz"
 import db, { EventType } from "db"
 import { z } from "zod"
-import createEvent from "../event/mutations/createEvent"
+import createEvent, { CreateEvent } from "../event/mutations/createEvent"
 
 //localhost:3000/redir?portalId=1&eventType=DocumentOpen&url=https://www.google.com
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { portalId, documentId, linkId, eventType, url } = z
+  const { portalId, linkId, type, url } = z
     .object({
       portalId: z.string().transform(parseInt),
-      eventType: z.nativeEnum(EventType),
-      documentId: z.string().transform(parseInt).optional(),
-      linkId: z.string().transform(parseInt).optional(),
+      type: z.nativeEnum(EventType),
       url: z.string(),
+      linkId: z.string().transform(parseInt).optional(),
     })
     .parse(context.query)
   const session = await getSession(context.req, context.res)
@@ -27,9 +26,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   await invokeWithMiddleware(
     createEvent,
     {
-      type: eventType,
+      type,
       url,
-      documentId,
       linkId,
       portalId,
     },

@@ -120,8 +120,8 @@ function DocumentList(props: { portalId: number; companyName: string; documents:
           <div key={idx}>
             <TrackedLink
               portalId={props.portalId}
-              documentId={document.id}
-              eventType={EventType.DocumentOpen}
+              linkId={document.id}
+              type={EventType.DocumentOpen}
               href={document.href}
               anchorProps={{ target: "_blank" }}
             >
