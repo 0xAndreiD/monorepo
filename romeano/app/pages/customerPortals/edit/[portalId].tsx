@@ -8,13 +8,17 @@ import { ContactsCard } from "app/core/components/ContactsCard"
 import { Footer } from "app/core/components/Footer"
 import { Header } from "app/core/components/customerPortals/Header"
 import { CardDivider } from "app/core/components/generic/Card"
-import { useParam, useQuery, useSession } from "blitz"
+import { useMutation, useParam, useQuery, useSession } from "blitz"
 import getCustomerPortal from "../../../customer-portals/queries/getCustomerPortal"
 import StakeholderLoginForm from "../../../auth/components/StakeholderLoginForm"
+import React from "react"
+import { UploadModal } from "./uploadModal"
+import createProductInfoSectionLink from "../../../customer-portals/mutations/createProductInfoSectionLink"
 
 function EditCustomerPortal() {
   const portalId = useParam("portalId", "number")
   const session = useSession()
+
   const [data, { refetch }] = useQuery(
     getCustomerPortal,
     { portalId },
@@ -23,6 +27,7 @@ function EditCustomerPortal() {
       enabled: !!portalId && !session.isLoading && !!session.userId,
     }
   )
+  const [createProductInfoSectionLinkMutation] = useMutation(createProductInfoSectionLink)
 
   if (!session.isLoading && !session.userId) {
     return <StakeholderLoginForm />
@@ -31,6 +36,17 @@ function EditCustomerPortal() {
   if (!portalId || !data) {
     return <>Loading!</>
   }
+  return (
+    <UploadModal
+      portalId={portalId}
+      title={"Upload"}
+      onSubmit={(data) =>
+        createProductInfoSectionLinkMutation({ ...data, productInfoSectionId: 1 }).then(() => refetch())
+      }
+      refetchHandler={refetch}
+    />
+  )
+
   //container: https://tailwindui.com/components/application-ui/layout/containers
   return (
     <>
