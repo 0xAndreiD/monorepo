@@ -5,25 +5,33 @@ import { LinkType } from "../../../../db"
 import Modal from "../../../core/components/generic/Modal"
 import { Dialog } from "@headlessui/react"
 import { CloudUploadIcon, LinkIcon } from "@heroicons/react/outline"
-import { Link } from "../../../../types"
 import { UploadComponent } from "app/core/components/customerPortals/UploadComponent"
+import { z } from "zod"
+import { Link } from "types"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export function UploadModal(props: {
   portalId: number
   title: string
-  onSubmit: (link: Link) => void
+  onSubmit: (link: Link) => Promise<void>
   refetchHandler: () => void
 }) {
   const [isOpen, setIsOpen] = useState(true)
-
-  const { register, handleSubmit, reset, setFocus, formState } = useForm<Link>({
-    // resolver: zodResolver(CreateStakeholder.omit({portalId:true}))
+  const schema = z.object({
+    body: z.string().nonempty(),
+    href: z.string().nonempty(),
+  })
+  const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
   })
   const onSubmit = handleSubmit(async (data) => {
-    reset()
-    props.onSubmit(data)
-    setIsOpen(false)
+    if (formState.isSubmitSuccessful) {
+      reset()
+      await props.onSubmit(data)
+      setIsOpen(false)
+    }
   })
+  console.log(formState.errors)
   const [uploadType, setUploadType] = useState<LinkType | null>(null)
   return (
     <div>
@@ -36,22 +44,30 @@ export function UploadModal(props: {
           {uploadType === LinkType.WebLink ? (
             <div>
               <form className="mt-8 grid grid-rows-2 gap-y-4" onSubmit={onSubmit}>
-                <div className="border-2 border-b-0">
-                  <input
-                    type="text"
-                    className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
-                    placeholder="Link title"
-                    {...register("body")}
-                    autoFocus
-                  />
+                <div>
+                  <div className="border-2 border-b-0">
+                    <input
+                      type="text"
+                      className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
+                      placeholder="Link title"
+                      {...register("body")}
+                      autoFocus
+                      required
+                    />
+                  </div>
+                  {formState.errors.body && <span className="text-sm">Link title is required</span>}
                 </div>
-                <div className="border-2 border-b-0">
-                  <input
-                    type="url"
-                    className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
-                    placeholder="URL"
-                    {...register("href")}
-                  />
+                <div>
+                  <div className="border-2 border-b-0">
+                    <input
+                      type="url"
+                      className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
+                      placeholder="URL"
+                      {...register("href")}
+                      required
+                    />
+                  </div>
+                  {formState.errors.href && <span className="text-sm">URL is required</span>}
                 </div>
               </form>
               <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
