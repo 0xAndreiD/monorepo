@@ -7,6 +7,7 @@ import { INTERNAL_UPLOAD_FS_PATH, UPLOAD_SIZE_LIMIT } from "../core/config"
 import formidable, { Fields, Files } from "formidable"
 import { flatten, isNil } from "lodash"
 import createEvent from "../event/mutations/createEvent"
+import { Link, LinkWithId } from "../../types"
 
 export const config = {
   api: {
@@ -14,7 +15,7 @@ export const config = {
   },
 }
 
-const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, NextApiResponse>()
+const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, NextApiResponse<Link[]>>()
   .use((req, res, next) => {
     const form = formidable({
       multiples: true,
@@ -51,37 +52,37 @@ const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, Nex
 
     console.log("fileUpload(): file uploaded with portalId:", portalId)
 
-    const documentInserts = flatten(Object.values(req.files)).map((file) =>
-      db.portalDocument
-        .create({
-          data: {
-            portal: { connect: { id: portalId } },
-            link: {
-              create: {
-                body: file.name ?? "Untitled File",
-                //file.path looks like $INTERNAL_UPLOAD_FS_PATH/upload.jpg
-                href: file.path.substring(INTERNAL_UPLOAD_FS_PATH.length + 1), //+1 to omit the slash
-                type: LinkType.Document,
-                creator: { connect: { id: userId } },
-              },
+    const rawFiles = flatten(Object.values(req.files))
+    const docs = rawFiles.map(async (file): Promise<LinkWithId> => {
+      const doc = await db.portalDocument.create({
+        data: {
+          portal: { connect: { id: portalId } },
+          link: {
+            create: {
+              body: file.name ?? "Untitled File",
+              //file.path looks like $INTERNAL_UPLOAD_FS_PATH/upload.jpg
+              href: file.path.substring(INTERNAL_UPLOAD_FS_PATH.length + 1), //+1 to omit the slash
+              type: LinkType.Document,
+              creator: { connect: { id: userId } },
             },
           },
-          include: { link: true },
-        })
-        .then((portalDocument) =>
-          invokeWithMiddleware(
-            createEvent,
-            {
-              portalId,
-              type: EventType.DocumentUpload,
-              linkId: portalDocument.link.id,
-            },
-            { req, res }
-          )
-        )
-    )
-    await Promise.all(documentInserts)
+        },
+        include: { link: true },
+      })
+      await invokeWithMiddleware(
+        createEvent,
+        {
+          portalId,
+          type: EventType.DocumentUpload,
+          linkId: doc.link.id,
+        },
+        { req, res }
+      )
+      return { id: doc.link.id, body: doc.link.body, href: doc.link.href }
+    })
 
+    const allDocs: Link[] = await Promise.all(docs)
+    res.send(allDocs)
     res.status(200).end()
   })
 

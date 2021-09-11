@@ -2,11 +2,12 @@ import { PropsWithChildren, useCallback } from "react"
 import { getAntiCSRFToken } from "blitz"
 import axios from "axios"
 import { useDropzone } from "react-dropzone"
+import { Link, LinkWithId } from "../../../../types"
 
 export function UploadComponent(
   props: PropsWithChildren<{
     portalId: number
-    onUploadComplete: () => void
+    onUploadComplete: (link: LinkWithId) => Promise<void>
   }>
 ) {
   const antiCSRFToken = getAntiCSRFToken()
@@ -16,15 +17,17 @@ export function UploadComponent(
       formData.append("portalId", props.portalId.toString())
       acceptedFiles.forEach((file, idx) => formData.append(`file_${idx}`, file))
       axios
-        .post("/api/uploadDocument", formData, {
+        .post<LinkWithId[]>("/api/uploadDocument", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             "anti-csrf": antiCSRFToken,
           },
         })
-        .then(props.onUploadComplete)
+        .then((res) => {
+          return props.onUploadComplete(res.data[0])
+        })
     },
-    [antiCSRFToken, props.portalId, props.onUploadComplete]
+    [antiCSRFToken, props]
   )
 
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({

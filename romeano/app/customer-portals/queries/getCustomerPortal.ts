@@ -5,6 +5,7 @@ import { z } from "zod"
 import { Stakeholder } from "../../core/components/customerPortals/ProposalCard"
 import { getDocuments } from "../../portal-details/queries/getPortalDetail"
 import { getExternalUploadPath } from "../../core/util/upload"
+import { LinkWithId } from "../../../types"
 
 const GetCustomerPortal = z.object({
   // This accepts type of undefined, but is required at runtime
@@ -109,13 +110,14 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   }
 
   const productInfo = {
-    images: portal.images.map((x) => x.href),
+    images: portal.images.map((img) => img.href),
     sections: portal.productInfoSections.map((section) => ({
+      id: section.id,
       heading: section.heading,
-      links: section.productInfoSectionLink.map((x) => ({
-        id: x.link.id,
-        body: x.link.body,
-        href: x.link.href,
+      links: section.productInfoSectionLink.map((sectionLink) => ({
+        id: sectionLink.link.id,
+        body: sectionLink.link.body,
+        href: sectionLink.link.href,
       })),
     })),
   }
@@ -123,14 +125,14 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   const proposal: {
     heading: string
     subheading: string
-    quote: { linkId: number; body: string; href: string } | null
+    quote: LinkWithId | null
     stakeholders: Stakeholder[]
   } = {
     heading: portal.proposalHeading,
     subheading: portal.proposalSubheading,
     quote: portal.proposalLink
       ? {
-          linkId: portal.proposalLink.id,
+          id: portal.proposalLink.id,
           body: portal.proposalLink.body,
           href:
             portal.proposalLink.type === LinkType.Document
