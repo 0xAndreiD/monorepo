@@ -15,7 +15,7 @@ export const config = {
   },
 }
 
-const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, NextApiResponse<Link[]>>()
+const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, NextApiResponse<LinkWithId[]>>()
   .use((req, res, next) => {
     const form = formidable({
       multiples: true,
@@ -81,7 +81,7 @@ const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, Nex
       return { id: doc.link.id, body: doc.link.body, href: doc.link.href }
     })
 
-    const allDocs: Link[] = await Promise.all(docs)
+    const allDocs: LinkWithId[] = await Promise.all(docs)
     res.send(allDocs)
     res.status(200).end()
   })

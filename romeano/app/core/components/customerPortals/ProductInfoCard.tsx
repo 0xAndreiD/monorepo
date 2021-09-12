@@ -87,7 +87,7 @@ export function ProductInfoCard(props: {
               style={{ listStyleType: '"+  "' }}
               onClick={() => setIsModalOpen([true, section.id])}
             >
-              Add Link
+              <a className="cursor-pointer">Add Link</a>
             </li>
           </ul>
         </div>
@@ -104,11 +104,14 @@ export function ProductInfoCard(props: {
             props.refetchHandler()
             setIsModalOpen([false, null])
           }}
-          onUploadComplete={async (data) => {
-            await createProductInfoSectionLinkMutation({
-              ...data,
+          onUploadComplete={async ({ id, body, href }) => {
+            const payload = {
               productInfoSectionId: isModalOpen[1]!, //always non-null id when modal is selected
-            })
+              linkId: id,
+              body,
+              href,
+            }
+            await createProductInfoSectionLinkMutation(payload)
             props.refetchHandler()
             setIsModalOpen([false, null])
           }}

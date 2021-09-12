@@ -1,10 +1,10 @@
 import { NotFoundError, resolver } from "blitz"
-import db, { LinkType, Role } from "db"
+import db, { Role } from "db"
 import { orderBy } from "lodash"
 import { z } from "zod"
 import { Stakeholder } from "../../core/components/customerPortals/ProposalCard"
 import { getDocuments } from "../../portal-details/queries/getPortalDetail"
-import { getExternalUploadPath } from "../../core/util/upload"
+import { formatLink } from "../../core/util/upload"
 import { LinkWithId } from "../../../types"
 
 const GetCustomerPortal = z.object({
@@ -117,7 +117,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
       links: section.productInfoSectionLink.map((sectionLink) => ({
         id: sectionLink.link.id,
         body: sectionLink.link.body,
-        href: sectionLink.link.href,
+        href: formatLink(sectionLink.link),
       })),
     })),
   }
@@ -134,10 +134,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
       ? {
           id: portal.proposalLink.id,
           body: portal.proposalLink.body,
-          href:
-            portal.proposalLink.type === LinkType.Document
-              ? getExternalUploadPath(portal.proposalLink.href)
-              : portal.proposalLink.href,
+          href: formatLink(portal.proposalLink),
         }
       : null,
     stakeholders: portal.userPortals
