@@ -88,13 +88,15 @@ export function ProductInfoCard(props: {
                 </TrackedLink>
               </li>
             ))}
-            <li
-              className="text-gray-600"
-              style={{ listStyleType: '"+  "' }}
-              onClick={() => setProductInfoUploadModal({ isOpen: true, productInfoSectionId: section.id })}
-            >
-              <a className="cursor-pointer">Add Link</a>
-            </li>
+            {props.editingEnabled && (
+              <li
+                className="text-gray-600"
+                style={{ listStyleType: '"+  "' }}
+                onClick={() => setProductInfoUploadModal({ isOpen: true, productInfoSectionId: section.id })}
+              >
+                <a className="cursor-pointer">Add Link</a>
+              </li>
+            )}
           </ul>
         </div>
       ))}
