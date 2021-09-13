@@ -2,11 +2,12 @@ import { PropsWithChildren, useCallback } from "react"
 import { getAntiCSRFToken } from "blitz"
 import axios from "axios"
 import { useDropzone } from "react-dropzone"
-import { Link, LinkWithId } from "../../../../types"
+import { LinkWithId } from "../../../../types"
+import { UploadParams } from "../../../api/uploadDocument"
 
 export function UploadComponent(
   props: PropsWithChildren<{
-    portalId: number
+    uploadParams: UploadParams
     onUploadComplete: (link: LinkWithId) => Promise<void>
   }>
 ) {
@@ -14,7 +15,8 @@ export function UploadComponent(
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const formData = new FormData()
-      formData.append("portalId", props.portalId.toString())
+      formData.append("portalId", props.uploadParams.portalId.toString())
+      Object.entries(props.uploadParams).forEach(([k, v]) => formData.append(k, v.toString()))
       acceptedFiles.forEach((file, idx) => formData.append(`file_${idx}`, file))
       axios
         .post<LinkWithId[]>("/api/uploadDocument", formData, {

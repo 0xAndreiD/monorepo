@@ -3,6 +3,7 @@ import { Card, CardDivider, CardHeader } from "../generic/Card"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
 import { UploadComponent } from "./UploadComponent"
+import { UploadType } from "../../../../types"
 
 export type PortalDocument = {
   id: number
@@ -45,7 +46,10 @@ export default function DocumentsCard(props: {
       />
 
       <div style={{ width: "min-content" }}>
-        <UploadComponent portalId={props.portalId} onUploadComplete={async () => props.refetchHandler()}>
+        <UploadComponent
+          uploadParams={{ portalId: props.portalId, uploadType: UploadType.Document }}
+          onUploadComplete={async () => props.refetchHandler()}
+        >
           <button
             type="button"
             className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm

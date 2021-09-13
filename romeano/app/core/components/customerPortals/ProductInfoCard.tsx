@@ -5,7 +5,7 @@ import { CSSProperties, useState } from "react"
 import { Card, CardHeader } from "../generic/Card"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
-import { LinkWithId } from "types"
+import { LinkWithId, UploadType } from "types"
 import Modal from "../generic/Modal"
 import { UploadModal } from "../../../pages/customerPortals/edit/uploadModal"
 import createProductInfoSectionLink from "../../../customer-portals/mutations/createProductInfoSectionLink"
@@ -36,7 +36,13 @@ export function ProductInfoCard(props: {
     height: 30,
     cursor: "pointer",
   }
-  const [isModalOpen, setIsModalOpen] = useState<[false, null] | [true, number]>([false, null]) //tuple of show modal, section id
+
+  type ModalState = { isOpen: false; productInfoSectionId: undefined } | { isOpen: true; productInfoSectionId: number }
+
+  const [productInfoUploadModal, setProductInfoUploadModal] = useState<ModalState>({
+    isOpen: false,
+    productInfoSectionId: undefined,
+  }) //tuple of show modal, section id
   const [createProductInfoSectionLinkMutation] = useMutation(createProductInfoSectionLink)
   return (
     <Card>
@@ -85,35 +91,35 @@ export function ProductInfoCard(props: {
             <li
               className="text-gray-600"
               style={{ listStyleType: '"+  "' }}
-              onClick={() => setIsModalOpen([true, section.id])}
+              onClick={() => setProductInfoUploadModal({ isOpen: true, productInfoSectionId: section.id })}
             >
               <a className="cursor-pointer">Add Link</a>
             </li>
           </ul>
         </div>
       ))}
-      <Modal isOpen={isModalOpen[0]} onClose={() => setIsModalOpen([false, null])}>
+      <Modal
+        isOpen={productInfoUploadModal.isOpen}
+        onClose={() => setProductInfoUploadModal({ isOpen: false, productInfoSectionId: undefined })}
+      >
         <UploadModal
-          portalId={props.portalId}
+          uploadParams={{
+            portalId: props.portalId,
+            productInfoSectionId: productInfoUploadModal.productInfoSectionId,
+            uploadType: UploadType.ProductInfo,
+          }}
           title={"Upload"}
           onLinkSubmit={async (data) => {
             await createProductInfoSectionLinkMutation({
               ...data,
-              productInfoSectionId: isModalOpen[1]!, //always non-null id when modal is selected
+              productInfoSectionId: productInfoUploadModal.productInfoSectionId!, //always non-null id when modal is selected
             })
             props.refetchHandler()
-            setIsModalOpen([false, null])
+            setProductInfoUploadModal({ isOpen: false, productInfoSectionId: undefined })
           }}
           onUploadComplete={async ({ id, body, href }) => {
-            const payload = {
-              productInfoSectionId: isModalOpen[1]!, //always non-null id when modal is selected
-              linkId: id,
-              body,
-              href,
-            }
-            await createProductInfoSectionLinkMutation(payload)
             props.refetchHandler()
-            setIsModalOpen([false, null])
+            setProductInfoUploadModal({ isOpen: false, productInfoSectionId: undefined })
           }}
         />
       </Modal>

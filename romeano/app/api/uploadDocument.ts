@@ -1,5 +1,5 @@
 import { AuthorizationError, getSession, invokeWithMiddleware, NotFoundError } from "blitz"
-import db, { EventType, LinkType } from "../../db"
+import db, { EventType, Link, LinkType } from "../../db"
 import { NextApiRequest, NextApiResponse } from "next"
 import { z } from "zod"
 import nc from "next-connect"
@@ -7,12 +7,63 @@ import { INTERNAL_UPLOAD_FS_PATH, UPLOAD_SIZE_LIMIT } from "../core/config"
 import formidable, { Fields, Files } from "formidable"
 import { flatten, isNil } from "lodash"
 import createEvent from "../event/mutations/createEvent"
-import { Link, LinkWithId } from "../../types"
+import { LinkWithId, UploadType } from "../../types"
 
 export const config = {
   api: {
-    bodyParser: false,
+    bodyParser: false, //cannot parse fields if bodyparser is enabled
   },
+}
+
+const UploadParams = z.object({
+  portalId: z.preprocess(Number, z.number()),
+  productInfoSectionId: z.preprocess(Number, z.number()).optional(),
+  uploadType: z.preprocess(Number, z.nativeEnum(UploadType)),
+})
+export type UploadParams = z.infer<typeof UploadParams>
+
+async function insert(fields: UploadParams, userId: number, fileName: string, filePath: string): Promise<Link> {
+  const linkInsertQuery = {
+    create: {
+      body: fileName,
+      //file.path looks like $INTERNAL_UPLOAD_FS_PATH/upload.jpg
+      href: filePath.substring(INTERNAL_UPLOAD_FS_PATH.length + 1), //+1 to omit the slash
+      type: LinkType.Document,
+      creator: { connect: { id: userId } },
+    },
+  }
+  switch (fields.uploadType) {
+    case UploadType.Document:
+      return (
+        await db.portalDocument.create({
+          data: {
+            portal: { connect: { id: fields.portalId } },
+            link: linkInsertQuery,
+          },
+          include: { link: true },
+        })
+      ).link
+    case UploadType.ProductInfo:
+      return (
+        await db.productInfoSectionLink.create({
+          data: {
+            productInfoSection: { connect: { id: fields.productInfoSectionId } },
+            link: linkInsertQuery,
+          },
+          include: { link: true },
+        })
+      ).link
+    case UploadType.Proposal:
+      return (
+        await db.portal.update({
+          where: { id: fields.portalId },
+          data: {
+            proposalLink: linkInsertQuery,
+          },
+          include: { proposalLink: true },
+        })
+      ).proposalLink! //non-null because we just updated it
+  }
 }
 
 const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, NextApiResponse<LinkWithId[]>>()
@@ -44,41 +95,27 @@ const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, Nex
     const session = await getSession(req, res)
     const userId = session.userId
     if (isNil(userId)) throw new AuthorizationError("invalid user id")
-    const fields = z.object({ portalId: z.string().nonempty().transform(parseInt) }).parse(req.fields)
-    const portalId = fields.portalId
+    const fields = UploadParams.parse(req.fields)
+    const { portalId } = fields
 
     const portal = await db.portal.findUnique({ where: { id: portalId } })
     if (!portal) throw new NotFoundError("customer portal not found")
 
-    console.log("fileUpload(): file uploaded with portalId:", portalId)
+    console.log("fileUpload(): file uploaded with fields:", fields)
 
     const rawFiles = flatten(Object.values(req.files))
     const docs = rawFiles.map(async (file): Promise<LinkWithId> => {
-      const doc = await db.portalDocument.create({
-        data: {
-          portal: { connect: { id: portalId } },
-          link: {
-            create: {
-              body: file.name ?? "Untitled File",
-              //file.path looks like $INTERNAL_UPLOAD_FS_PATH/upload.jpg
-              href: file.path.substring(INTERNAL_UPLOAD_FS_PATH.length + 1), //+1 to omit the slash
-              type: LinkType.Document,
-              creator: { connect: { id: userId } },
-            },
-          },
-        },
-        include: { link: true },
-      })
+      const link = await insert(fields, userId, file.name ?? "Untitled File", file.path)
       await invokeWithMiddleware(
         createEvent,
         {
           portalId,
           type: EventType.DocumentUpload,
-          linkId: doc.link.id,
+          linkId: link.id,
         },
         { req, res }
       )
-      return { id: doc.link.id, body: doc.link.body, href: doc.link.href }
+      return { id: link.id, body: link.body, href: link.href }
     })
 
     const allDocs: LinkWithId[] = await Promise.all(docs)

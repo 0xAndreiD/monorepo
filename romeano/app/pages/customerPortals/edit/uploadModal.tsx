@@ -8,10 +8,11 @@ import { UploadComponent } from "app/core/components/customerPortals/UploadCompo
 import { z } from "zod"
 import { Link, LinkWithId } from "types"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { UploadParams } from "../../../api/uploadDocument"
 
 export function UploadModal(props: {
-  portalId: number
   title: string
+  uploadParams: UploadParams
   onLinkSubmit: (link: Link) => Promise<void>
   onUploadComplete: (link: LinkWithId) => Promise<void>
 }) {
@@ -85,7 +86,7 @@ export function UploadModal(props: {
             <LinkIcon className="text-gray-700 w-16 h-16" />
             <span className="font-bold">Link</span>
           </div>
-          <UploadComponent portalId={props.portalId} onUploadComplete={props.onUploadComplete}>
+          <UploadComponent uploadParams={props.uploadParams} onUploadComplete={props.onUploadComplete}>
             <div className="flex flex-col gap-2 justify-center items-center cursor-pointer">
               <CloudUploadIcon className="text-gray-700 w-16 h-16" />
               <span className="font-bold">Upload document</span>
