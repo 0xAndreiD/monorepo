@@ -1,13 +1,9 @@
-/* This example requires Tailwind CSS v2.0+ */
-
 import { CheckIcon, CloudUploadIcon } from "@heroicons/react/solid"
 import { Card, CardDivider, CardHeader } from "../generic/Card"
-import { useCallback } from "react"
-import { useDropzone } from "react-dropzone"
-import axios from "axios"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
-import { getAntiCSRFToken } from "blitz"
+import { UploadComponent } from "./UploadComponent"
+import { UploadType } from "../../../../types"
 
 export type PortalDocument = {
   id: number
@@ -25,27 +21,6 @@ export type PortalDocumentsCard = {
   customer: PortalDocumentList
   vendor: PortalDocumentList
 }
-//
-// export function DocumentsCardDemo() {
-//     const data = {
-//         customer:
-//             {
-//                 name: "Koch",
-//                 documents: [
-//                     {title: "Security Questionnaire", href: "", isCompleted: false},
-//                     {title: "Vendor Setup", href: "", isCompleted: false},
-//                 ]
-//             },
-//         vendor:
-//             {
-//                 name: "Mira",
-//                 documents: [
-//                     {title: "W-9 Form", href: "", isCompleted: true},
-//                 ]
-//             }
-//     };
-//     return <DocumentsCard {...data}/>;
-// }
 
 export default function DocumentsCard(props: {
   portalId: number
@@ -53,33 +28,10 @@ export default function DocumentsCard(props: {
   refetchHandler: () => void
 }) {
   //reference: https://tailwindui.com/components/application-ui/data-display/title-lists#component-e1b5917b21bbe76a73a96c5ca876225f
-  const antiCSRFToken = getAntiCSRFToken()
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const formData = new FormData()
-      formData.append("portalId", props.portalId.toString())
-      acceptedFiles.forEach((file, idx) => formData.append(`file_${idx}`, file))
-      axios
-        .post("/api/uploadDocument", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            "anti-csrf": antiCSRFToken,
-          },
-        })
-        .then(props.refetchHandler)
-    },
-    [antiCSRFToken, props.portalId, props.refetchHandler]
-  )
-
-  const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
-    onDrop,
-    noClick: true,
-    noKeyboard: true,
-  })
 
   return (
     <Card>
-      <CardHeader>Documents </CardHeader>
+      <CardHeader>Documents</CardHeader>
 
       <DocumentList
         portalId={props.portalId}
@@ -92,18 +44,22 @@ export default function DocumentsCard(props: {
         companyName={props.data.vendor.name}
         documents={props.data.vendor.documents}
       />
-      <div {...getRootProps({ className: "dropzone" })}>
-        <input {...getInputProps()} />
-        <button
-          onClick={open}
-          type="button"
-          className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+
+      <div style={{ width: "min-content" }}>
+        <UploadComponent
+          uploadParams={{ portalId: props.portalId, uploadType: UploadType.Document }}
+          onUploadComplete={async () => props.refetchHandler()}
+        >
+          <button
+            type="button"
+            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-        >
-          <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" />
-          Upload
-        </button>
+          >
+            <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" />
+            Upload
+          </button>
+        </UploadComponent>
       </div>
     </Card>
   )
@@ -115,7 +71,7 @@ function DocumentList(props: { portalId: number; companyName: string; documents:
       <p className="max-w-2xl pt-4 text-sm">
         for <span className="font-bold">{props.companyName}</span>
       </p>
-      <div className="py-4 flex justify-self-start gap-1.5">
+      <div className="py-4 flex flex-wrap justify-self-start gap-1.5">
         {props.documents.map((document, idx) => (
           <div key={idx}>
             <TrackedLink

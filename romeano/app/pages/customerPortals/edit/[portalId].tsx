@@ -11,10 +11,12 @@ import { CardDivider } from "app/core/components/generic/Card"
 import { useParam, useQuery, useSession } from "blitz"
 import getCustomerPortal from "../../../customer-portals/queries/getCustomerPortal"
 import StakeholderLoginForm from "../../../auth/components/StakeholderLoginForm"
+import React from "react"
 
 function EditCustomerPortal() {
   const portalId = useParam("portalId", "number")
   const session = useSession()
+
   const [data, { refetch }] = useQuery(
     getCustomerPortal,
     { portalId },
@@ -31,6 +33,7 @@ function EditCustomerPortal() {
   if (!portalId || !data) {
     return <>Loading!</>
   }
+
   //container: https://tailwindui.com/components/application-ui/layout/containers
   return (
     <>
@@ -54,7 +57,12 @@ function EditCustomerPortal() {
           <div className="flex flex-col gap-4">
             <NextStepsCard {...data.nextSteps} portalId={portalId} refetchHandler={refetch} />
             <DocumentsCard portalId={portalId} data={data.documents} refetchHandler={refetch} />
-            <ProductInfoCard portalId={portalId} data={data.productInfo} />
+            <ProductInfoCard
+              portalId={portalId}
+              data={data.productInfo}
+              refetchHandler={refetch}
+              editingEnabled={true}
+            />
           </div>
           <div className="flex flex-col gap-4">
             <ProposalCard portalId={portalId} data={data.proposal} refetchHandler={refetch} />

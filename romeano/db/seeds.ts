@@ -505,22 +505,21 @@ async function seedEvents() {
   const now = new Date()
   const start = subDays(now, days)
 
-  const documents = (
-    await db.portalDocument.findMany({
-      include: { link: true },
-      where: {
-        portalId: 1,
-        link: { type: LinkType.Document },
-      },
-    })
-  ).map((x) => x.id)
+  const documents = await db.portalDocument.findMany({
+    include: { link: true },
+    where: {
+      portalId: 1,
+      link: { type: LinkType.Document },
+    },
+  })
+  console.log(documents)
 
   const events = range(days * 24).map((i) => ({
     type: EventType.DocumentOpen,
     url: faker.internet.url(),
     ip: faker.internet.ip(),
     userAgent: faker.internet.userAgent(),
-    linkId: faker.random.arrayElement(documents),
+    linkId: faker.random.arrayElement(documents.map((x) => x.link.id)),
     portalId: 1,
     userId: 4,
     createdAt: min([addHours(start, i + faker.datatype.number({ min: -10, max: 10 })), now]),

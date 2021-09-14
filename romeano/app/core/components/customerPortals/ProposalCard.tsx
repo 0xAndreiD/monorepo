@@ -12,6 +12,7 @@ import updateProposalApproval from "../../../customer-portals/mutations/updatePr
 import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
 import createEvent from "../../../event/mutations/createEvent"
 import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircles"
+import { LinkWithId } from "../../../../types"
 
 export type Stakeholder = {
   firstName: string
@@ -24,7 +25,7 @@ export type Stakeholder = {
 type Proposal = {
   heading: string
   subheading: string
-  quote: { linkId: number; body: string; href: string } | null
+  quote: LinkWithId | null
   stakeholders: Array<Stakeholder>
 }
 
@@ -43,7 +44,7 @@ export function ProposalCard(props: { portalId: number; data: Proposal; refetchH
         {props.data.quote && (
           <TrackedLink
             portalId={props.portalId}
-            linkId={props.data.quote.linkId}
+            linkId={props.data.quote.id}
             href={props.data.quote.href}
             type={EventType.ProposalOpen}
             anchorProps={{ target: "_blank" }}

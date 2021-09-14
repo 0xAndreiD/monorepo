@@ -54,7 +54,12 @@ function CustomerPortal() {
           <div className="flex flex-col gap-4">
             <NextStepsCard {...data.nextSteps} portalId={portalId} refetchHandler={refetch} />
             <DocumentsCard portalId={portalId} data={data.documents} refetchHandler={refetch} />
-            <ProductInfoCard portalId={portalId} data={data.productInfo} />
+            <ProductInfoCard
+              portalId={portalId}
+              data={data.productInfo}
+              editingEnabled={false}
+              refetchHandler={refetch}
+            />
           </div>
           <div className="flex flex-col gap-4">
             <ProposalCard portalId={portalId} data={data.proposal} refetchHandler={refetch} />

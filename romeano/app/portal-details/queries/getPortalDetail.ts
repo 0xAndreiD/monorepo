@@ -1,8 +1,8 @@
 import { NotFoundError, resolver } from "blitz"
-import db, { PortalDocument, EventType, UserPortal, LinkType, Link, Role } from "db"
+import db, { EventType, Link, LinkType, PortalDocument, Role, UserPortal } from "db"
 import { z } from "zod"
 import { Device, Link as FELink } from "../../../types"
-import { getExternalUploadPath } from "../../core/util/upload"
+import { formatLink, getExternalUploadPath } from "../../core/util/upload"
 import UAParser from "ua-parser-js"
 import { getLocation } from "../../core/util/location"
 import { StakeholderActivityEvent } from "app/core/components/portalDetails/StakeholderActivityLogCard"
@@ -109,15 +109,15 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
         eventCount: number
       }>
     >`
-            SELECT DATE_TRUNC('day', E."createdAt") AS timestamp,
-                   COUNT(*)                         AS "eventCount"
-            FROM "Event" E
-                     JOIN "UserPortal" UP
-                          ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
-            WHERE E."portalId" = ${portalId}
-            GROUP BY TIMESTAMP
-            ORDER BY TIMESTAMP ASC;
-        `
+      SELECT DATE_TRUNC('day', E."createdAt") AS timestamp,
+             COUNT(*)                         AS "eventCount"
+      FROM "Event" E
+             JOIN "UserPortal" UP
+                  ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+      WHERE E."portalId" = ${portalId}
+      GROUP BY TIMESTAMP
+      ORDER BY TIMESTAMP ASC;
+    `
   ).map((x) => ({ x: new Date(x.timestamp), y: x.eventCount }))
 
   const stakeholderEngagement = await db.$queryRaw<
@@ -129,18 +129,18 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
       lastActive: string
     }>
   >`
-        SELECT E."userId",
-               (SELECT "firstName" || ' ' || "lastName" FROM "User" WHERE id = E."userId") AS "stakeholderName",
-               (SELECT "jobTitle" FROM "Stakeholder" WHERE "userId" = E."userId")          AS "stakeholderJobTitle",
-               COUNT(*)                                                                    AS "eventCount",
-               (SELECT MAX("createdAt") FROM "Event" WHERE "userId" = E."userId")          AS "lastActive"
-        FROM "Event" E
-                 JOIN "UserPortal" UP
-                      ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
-        WHERE E."portalId" = ${portalId}
-        GROUP BY E."userId"
-        ORDER BY "eventCount" DESC;
-    `
+    SELECT E."userId",
+           (SELECT "firstName" || ' ' || "lastName" FROM "User" WHERE id = E."userId") AS "stakeholderName",
+           (SELECT "jobTitle" FROM "Stakeholder" WHERE "userId" = E."userId")          AS "stakeholderJobTitle",
+           COUNT(*)                                                                    AS "eventCount",
+           (SELECT MAX("createdAt") FROM "Event" WHERE "userId" = E."userId")          AS "lastActive"
+    FROM "Event" E
+           JOIN "UserPortal" UP
+                ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+    WHERE E."portalId" = ${portalId}
+    GROUP BY E."userId"
+    ORDER BY "eventCount" DESC;
+  `
 
   const stakeholderActivityLogRaw = await getStakeholderActivityLogRaw([portalId])
   const stakeholderActivityLog: StakeholderActivityEvent[] = stakeholderActivityLogRaw.map((x) => ({
@@ -192,18 +192,12 @@ export function generateLinkFromEventType(event: {
     case EventType.ProposalDecline:
       return null
     case EventType.ProposalOpen:
-      switch (event.linkType) {
-        case LinkType.WebLink:
-          return { body: "the proposal", href: event.linkHref }
-        case LinkType.Document:
-          return { body: "the proposal", href: getExternalUploadPath(event.linkHref) }
-        default:
-          return null
-      }
+      return { body: "the proposal", href: formatLink({ type: event.linkType, href: event.linkHref }) }
     case EventType.CreateInternalMessage:
       return null
     case EventType.ProductInfoLinkOpen:
-      return { body: event.linkBody, href: event.linkHref }
+      console.log("PILO", event)
+      return { body: event.linkBody, href: formatLink({ type: event.linkType, href: event.linkHref }) }
     case EventType.InviteStakeholder:
       return null
   }
