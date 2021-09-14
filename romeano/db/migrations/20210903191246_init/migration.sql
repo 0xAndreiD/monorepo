@@ -5,6 +5,9 @@ CREATE TYPE "TokenType" AS ENUM ('RESET_PASSWORD');
 CREATE TYPE "Role" AS ENUM ('AccountExecutive', 'Stakeholder');
 
 -- CreateEnum
+CREATE TYPE "LinkType" AS ENUM ('Document', 'WebLink');
+
+-- CreateEnum
 CREATE TYPE "EventType" AS ENUM ('LaunchRoadmapLinkOpen', 'NextStepCreate', 'NextStepMarkCompleted', 'NextStepMarkNotCompleted', 'NextStepDelete', 'DocumentApprove', 'DocumentOpen', 'DocumentUpload', 'ProposalApprove', 'ProposalDecline', 'ProposalOpen', 'CreateInternalMessage', 'ProductInfoLinkOpen', 'InviteStakeholder');
 
 -- CreateTable
@@ -15,9 +18,7 @@ CREATE TABLE "Portal" (
     "currentRoadmapStage" INTEGER NOT NULL,
     "proposalHeading" TEXT NOT NULL,
     "proposalSubheading" TEXT NOT NULL,
-    "proposalDocumentId" INTEGER,
     "proposalLinkId" INTEGER,
-    "proposalType" TEXT NOT NULL,
     "vendorId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -128,6 +129,8 @@ CREATE TABLE "Link" (
     "id" SERIAL NOT NULL,
     "body" TEXT NOT NULL,
     "href" TEXT NOT NULL,
+    "type" "LinkType" NOT NULL,
+    "userId" INTEGER NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -201,13 +204,10 @@ CREATE TABLE "NextStepsTask" (
 );
 
 -- CreateTable
-CREATE TABLE "Document" (
+CREATE TABLE "PortalDocument" (
     "id" SERIAL NOT NULL,
     "portalId" INTEGER NOT NULL,
-    "title" TEXT NOT NULL,
-    "path" TEXT NOT NULL,
-    "isCompleted" BOOLEAN NOT NULL DEFAULT false,
-    "userId" INTEGER NOT NULL,
+    "linkId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -233,7 +233,6 @@ CREATE TABLE "Event" (
     "url" TEXT,
     "ip" TEXT,
     "userAgent" TEXT,
-    "documentId" INTEGER,
     "linkId" INTEGER,
     "portalId" INTEGER NOT NULL,
     "userId" INTEGER NOT NULL,
@@ -255,7 +254,7 @@ CREATE TABLE "MagicLink" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Portal_proposalDocumentId_unique" ON "Portal"("proposalDocumentId");
+CREATE UNIQUE INDEX "Portal_proposalLinkId_unique" ON "Portal"("proposalLinkId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User.email_unique" ON "User"("email");
@@ -280,9 +279,6 @@ CREATE UNIQUE INDEX "ProductInfoSectionLink_linkId_unique" ON "ProductInfoSectio
 
 -- CreateIndex
 CREATE UNIQUE INDEX "RoadmapStage_ctaLinkId_unique" ON "RoadmapStage"("ctaLinkId");
-
--- AddForeignKey
-ALTER TABLE "Portal" ADD FOREIGN KEY ("proposalDocumentId") REFERENCES "Document"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Portal" ADD FOREIGN KEY ("proposalLinkId") REFERENCES "Link"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -315,6 +311,9 @@ ALTER TABLE "AccountExecutive" ADD FOREIGN KEY ("vendorTeamId") REFERENCES "Vend
 ALTER TABLE "AccountExecutive" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Link" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "ProductInfoSection" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -342,19 +341,16 @@ ALTER TABLE "NextStepsTask" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id
 ALTER TABLE "NextStepsTask" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Document" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "PortalDocument" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Document" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "PortalDocument" ADD FOREIGN KEY ("linkId") REFERENCES "Link"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "InternalNote" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "InternalNote" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Event" ADD FOREIGN KEY ("documentId") REFERENCES "Document"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Event" ADD FOREIGN KEY ("linkId") REFERENCES "Link"("id") ON DELETE SET NULL ON UPDATE CASCADE;

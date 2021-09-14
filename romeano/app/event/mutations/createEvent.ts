@@ -2,13 +2,13 @@ import { Ctx, Middleware, resolver } from "blitz"
 import db, { EventType } from "db"
 import { z } from "zod"
 
-const CreateEvent = z.object({
+//TODO: keep this in sync with redir.tsx
+export const CreateEvent = z.object({
   portalId: z.number().nonnegative(),
   type: z.nativeEnum(EventType),
   url: z.string().optional(),
   // ip: z.string(),
   // userAgent: z.string().optional(),
-  documentId: z.number().optional(),
   linkId: z.number().optional(),
   // userId: z.number()
 })
@@ -37,7 +37,6 @@ export default resolver.pipe(resolver.zod(CreateEvent), resolver.authorize(), as
       url: params.url,
       ip: context.ip,
       userAgent: context.headers?.["user-agent"],
-      documentId: params.documentId,
       linkId: params.linkId,
       portalId: params.portalId,
       userId: context.session.userId!,

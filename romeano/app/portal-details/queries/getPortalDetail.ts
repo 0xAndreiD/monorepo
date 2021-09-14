@@ -1,7 +1,7 @@
 import { NotFoundError, resolver } from "blitz"
-import db, { EventType, Role } from "db"
+import db, { PortalDocument, EventType, UserPortal, LinkType, Link, Role } from "db"
 import { z } from "zod"
-import { Device, Link } from "../../../types"
+import { Device, Link as FELink } from "../../../types"
 import { getExternalUploadPath } from "../../core/util/upload"
 import UAParser from "ua-parser-js"
 import { getLocation } from "../../core/util/location"
@@ -13,19 +13,24 @@ const GetPortalDetail = z.object({
   portalId: z.number().optional().refine(Boolean, "Required"),
 })
 
-export type DenormalizedEvent = {
-  stakeholderName: string
-  customerName: string
-  type: EventType
-  documentTitle: string
-  documentPath: string
-  linkId: number
-  linkBody: string
-  linkHref: string
-  url: string
-  ip: string
-  userAgent: string
-  createdAt: string
+export function getDocuments(
+  portalDocuments: (PortalDocument & { link: Link })[],
+  userPortals: UserPortal[],
+  role: Role
+) {
+  return portalDocuments
+    .filter((x) =>
+      userPortals
+        .filter((up) => up.role === role)
+        .map((up) => up.userId)
+        .includes(x.link.userId)
+    )
+    .map((x) => ({
+      id: x.link.id,
+      body: x.link.body,
+      href: getExternalUploadPath(x.link.href),
+      isCompleted: role === Role.Stakeholder, //FIXME: should make this actually check
+    }))
 }
 
 export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize(), async ({ portalId }) => {
@@ -38,7 +43,10 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
         orderBy: { id: "asc" },
       },
       vendor: true,
-      documents: { orderBy: { id: "asc" } },
+      portalDocuments: {
+        include: { link: true },
+        orderBy: { id: "asc" },
+      },
       userPortals: {
         include: {
           user: {
@@ -69,6 +77,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
       ctaLink: stage.ctaLink,
     })),
   }
+  const foo = portal.userPortals
 
   const contacts = {
     contacts: portal.userPortals
@@ -85,35 +94,11 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
   const documents = {
     customer: {
       name: portal.customerName,
-      documents: portal.documents
-        .filter((x) =>
-          portal.userPortals
-            .filter((up) => up.role === Role.AccountExecutive)
-            .map((up) => up.userId)
-            .includes(x.userId)
-        )
-        .map((x) => ({
-          id: x.id,
-          title: x.title,
-          href: getExternalUploadPath(x.path),
-          isCompleted: x.isCompleted,
-        })),
+      documents: getDocuments(portal.portalDocuments, portal.userPortals, Role.AccountExecutive),
     },
     vendor: {
       name: portal.vendor.name,
-      documents: portal.documents
-        .filter((x) =>
-          portal.userPortals
-            .filter((up) => up.role === Role.Stakeholder)
-            .map((up) => up.userId)
-            .includes(x.userId)
-        )
-        .map((x) => ({
-          id: x.id,
-          title: x.title,
-          href: getExternalUploadPath(x.path),
-          isCompleted: x.isCompleted,
-        })),
+      documents: getDocuments(portal.portalDocuments, portal.userPortals, Role.Stakeholder),
     },
   }
 
@@ -124,15 +109,15 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
         eventCount: number
       }>
     >`
-      SELECT DATE_TRUNC('day', E."createdAt") AS timestamp,
-           COUNT(*)                         AS "eventCount"
-      FROM "Event" E
-        JOIN "UserPortal" UP
-      ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
-      WHERE E."portalId" = ${portalId}
-      GROUP BY TIMESTAMP
-      ORDER BY TIMESTAMP ASC;
-    `
+            SELECT DATE_TRUNC('day', E."createdAt") AS timestamp,
+                   COUNT(*)                         AS "eventCount"
+            FROM "Event" E
+                     JOIN "UserPortal" UP
+                          ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+            WHERE E."portalId" = ${portalId}
+            GROUP BY TIMESTAMP
+            ORDER BY TIMESTAMP ASC;
+        `
   ).map((x) => ({ x: new Date(x.timestamp), y: x.eventCount }))
 
   const stakeholderEngagement = await db.$queryRaw<
@@ -144,17 +129,18 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
       lastActive: string
     }>
   >`
-    SELECT E."userId",
-           (SELECT "firstName" || ' ' || "lastName" FROM "User" WHERE id = E."userId") AS "stakeholderName",
-           (SELECT "jobTitle" FROM "Stakeholder" WHERE "userId" = E."userId")          AS "stakeholderJobTitle",
-           COUNT(*)                                                                    AS "eventCount",
-           (SELECT MAX("createdAt") FROM "Event" WHERE "userId" = E."userId")          AS "lastActive"
-    FROM "Event" E
-           JOIN "UserPortal" UP ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
-    WHERE E."portalId" = ${portalId}
-    GROUP BY E."userId"
-    ORDER BY "eventCount" DESC;
-  `
+        SELECT E."userId",
+               (SELECT "firstName" || ' ' || "lastName" FROM "User" WHERE id = E."userId") AS "stakeholderName",
+               (SELECT "jobTitle" FROM "Stakeholder" WHERE "userId" = E."userId")          AS "stakeholderJobTitle",
+               COUNT(*)                                                                    AS "eventCount",
+               (SELECT MAX("createdAt") FROM "Event" WHERE "userId" = E."userId")          AS "lastActive"
+        FROM "Event" E
+                 JOIN "UserPortal" UP
+                      ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
+        WHERE E."portalId" = ${portalId}
+        GROUP BY E."userId"
+        ORDER BY "eventCount" DESC;
+    `
 
   const stakeholderActivityLogRaw = await getStakeholderActivityLogRaw([portalId])
   const stakeholderActivityLog: StakeholderActivityEvent[] = stakeholderActivityLogRaw.map((x) => ({
@@ -180,11 +166,10 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
 
 export function generateLinkFromEventType(event: {
   type: EventType
-  documentTitle: string
-  documentPath: string
+  linkType: LinkType
   linkBody: string
   linkHref: string
-}): Link | null {
+}): FELink | null {
   switch (event.type) {
     case EventType.LaunchRoadmapLinkOpen:
       return { body: event.linkBody, href: event.linkHref }
@@ -199,17 +184,21 @@ export function generateLinkFromEventType(event: {
     case EventType.DocumentApprove:
       return null
     case EventType.DocumentOpen:
-      return { body: event.documentTitle, href: getExternalUploadPath(event.documentPath) }
+      return { body: event.linkBody, href: getExternalUploadPath(event.linkHref) }
     case EventType.DocumentUpload:
-      return { body: event.documentTitle, href: getExternalUploadPath(event.documentPath) }
+      return { body: event.linkBody, href: getExternalUploadPath(event.linkHref) }
     case EventType.ProposalApprove:
       return null
     case EventType.ProposalDecline:
       return null
     case EventType.ProposalOpen:
-      return {
-        body: "the proposal",
-        href: event.documentPath ? getExternalUploadPath(event.documentPath) : event.linkHref,
+      switch (event.linkType) {
+        case LinkType.WebLink:
+          return { body: "the proposal", href: event.linkHref }
+        case LinkType.Document:
+          return { body: "the proposal", href: getExternalUploadPath(event.linkHref) }
+        default:
+          return null
       }
     case EventType.CreateInternalMessage:
       return null

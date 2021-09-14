@@ -1,34 +1,54 @@
 import { AuthenticationError, AuthorizationError, Ctx, resolver } from "blitz"
-import db, { Prisma } from "db"
+import db, { EventType, LinkType, Prisma } from "db"
 import { groupBy } from "lodash"
 import { getExternalUploadPath } from "../../core/util/upload"
-import { DenormalizedEvent, generateLinkFromEventType } from "../../portal-details/queries/getPortalDetail"
+import { generateLinkFromEventType } from "../../portal-details/queries/getPortalDetail"
 
+export type DenormalizedEvent = {
+  stakeholderName: string
+  customerName: string
+  type: EventType
+  linkId: number
+  linkType: LinkType
+  linkBody: string
+  linkHref: string
+  url: string
+  ip: string
+  userAgent: string
+  createdAt: string
+}
+// L.id                                 AS "linkId",
+//   L.body                               AS "linkBody",
+//   L.href                               AS "linkHref",
 export async function getStakeholderActivityLogRaw(portalIds: number[]) {
   return await db.$queryRaw<DenormalizedEvent[]>`
-    SELECT U."firstName" || ' ' || U."lastName" AS "stakeholderName",
-           P."customerName",
-           E.type,
-           D.title                              AS "documentTitle",
-           D.path                               AS "documentPath",
-           L.id                                 AS "linkId",
-           L.body                               AS "linkBody",
-           L.href                               AS "linkHref",
-           E.url,
-           E.ip,
-           E."userAgent",
-           E."createdAt"
-    FROM "Event" E
-           JOIN "UserPortal" UP
-                ON E."userId" = UP."userId" AND
-                   E."portalId" = UP."portalId" AND
-                   UP.role = 'Stakeholder'
-           JOIN "User" U on U.id = E."userId"
-           JOIN "Portal" P on E."portalId" = P.id
-           LEFT JOIN "Document" D ON E."documentId" = D.id
-           LEFT JOIN "Link" L ON E."linkId" = L.id
-    WHERE E."portalId" IN (${Prisma.join(portalIds)})
-    ORDER BY E."createdAt" DESC LIMIT 25
+    WITH base_events AS (
+      SELECT U."firstName" || ' ' || U."lastName" AS "stakeholderName",
+             P."customerName",
+             E.type,
+             E."linkId",
+             L.type                               AS "linkType",
+             L.body                               AS "linkBody",
+             L.href                               AS "linkHref",
+             E.url,
+             E.ip,
+             E."userAgent",
+             E."createdAt"
+      FROM "Event" E
+             JOIN "UserPortal" UP
+                  ON E."userId" = UP."userId" AND
+                     E."portalId" = UP."portalId" AND
+                     UP.role = 'Stakeholder'
+             JOIN "User" U ON U.id = E."userId"
+             JOIN "Portal" P ON E."portalId" = P.id
+             LEFT JOIN "Link" L ON E."linkId" = L.id
+
+      WHERE E."portalId" IN (${Prisma.join(portalIds)})
+      ORDER BY E."createdAt" DESC
+    )
+    SELECT *
+    FROM base_events BE
+    LIMIT 25
   `
 }
 
@@ -66,7 +86,7 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
   >`
     SELECT E."portalId",
            (SELECT "customerName" FROM "Portal" WHERE id = E."portalId"),
-           count(*) AS "eventCount"
+           COUNT(*) AS "eventCount"
     FROM "Event" E
            JOIN "UserPortal" UP ON UP."userId" = E."userId" AND UP."portalId" = E."portalId"
     WHERE E."portalId" IN (${Prisma.join(portalIds)})
@@ -179,11 +199,12 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
     }>
   >`
     SELECT E."portalId" AS "portalId",
-           title,
-           path,
+           L.body       AS title,
+           L.href       AS path,
            COUNT(*)     AS "eventCount"
     FROM "Event" E
-           JOIN "Document" D ON D.id = E."documentId"
+           JOIN "PortalDocument" PD ON PD.id = E."linkId"
+           JOIN "Link" L ON PD."linkId" = L.id
            JOIN "UserPortal" UP ON E."userId" = UP."userId"
       AND E."portalId" = UP."portalId"
       AND UP.role = 'Stakeholder'

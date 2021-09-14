@@ -41,7 +41,7 @@ export const StakeholderLoginForm = (props: { onSuccess?: () => void }) => {
               return { [FORM_ERROR]: "You currently don't have access, please contact your admin if this is a mistake" }
             } else {
               return {
-                [FORM_ERROR]: "Sorry, we had an unexpected error. Please try again. - " + error.toString(),
+                [FORM_ERROR]: "Sorry, we had an unexpected error. Please try again. - " + String(error),
               }
             }
           }

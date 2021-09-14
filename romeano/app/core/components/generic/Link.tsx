@@ -1,8 +1,9 @@
 import NextLink, { LinkProps } from "next/link"
 import { ComponentProps, PropsWithChildren } from "react"
-import { EventType } from "db"
 import { Routes } from "blitz"
 import { ParsedUrlQueryInput } from "querystring"
+import { z } from "zod"
+import { CreateEvent } from "../../../event/mutations/createEvent"
 
 //no tracking on this!
 export function StyledLink(props: PropsWithChildren<LinkProps & { className?: string }>) {
@@ -15,24 +16,18 @@ export function StyledLink(props: PropsWithChildren<LinkProps & { className?: st
 
 export function TrackedLink(
   props: PropsWithChildren<
-    LinkProps & {
-      portalId: number
-      documentId?: number
-      linkId?: number
-      eventType: EventType
-      defaultStyle?: boolean
-      className?: string
-      anchorProps?: ComponentProps<"a">
-    }
+    LinkProps &
+      z.infer<typeof CreateEvent> & {
+        defaultStyle?: boolean
+        className?: string
+        anchorProps?: ComponentProps<"a">
+      }
   >
 ) {
   const params: ParsedUrlQueryInput = {
     portalId: props.portalId,
-    eventType: props.eventType,
+    type: props.type,
     url: props.href.toString(),
-  }
-  if (props.documentId) {
-    params["documentId"] = props.documentId
   }
   if (props.linkId) {
     params["linkId"] = props.linkId

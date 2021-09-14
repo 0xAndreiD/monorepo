@@ -62,7 +62,7 @@ export function ProductInfoCard(props: { portalId: number; data: ProductInfo }) 
                   defaultStyle={true}
                   portalId={props.portalId}
                   linkId={link.id}
-                  eventType={EventType.ProductInfoLinkOpen}
+                  type={EventType.ProductInfoLinkOpen}
                   anchorProps={{ target: "_blank" }}
                 >
                   {link.body}

@@ -24,10 +24,7 @@ export type Stakeholder = {
 type Proposal = {
   heading: string
   subheading: string
-  quote: //type is link or document
-  | { proposalType: "document"; documentId: number; body: string; href: string }
-    | { proposalType: "link"; linkId: number; body: string; href: string }
-    | null
+  quote: { linkId: number; body: string; href: string } | null
   stakeholders: Array<Stakeholder>
 }
 
@@ -43,29 +40,12 @@ export function ProposalCard(props: { portalId: number; data: Proposal; refetchH
         <h5 className="text-center">{props.data.heading}</h5>
         <h5 className="py-2 font-bold text-center">{props.data.subheading}</h5>
         <div className="sm:divide-y sm:divide-gray-200" />
-
-        {props.data.quote && props.data.quote.proposalType === "document" && (
-          <TrackedLink
-            portalId={props.portalId}
-            documentId={props.data.quote.documentId}
-            href={props.data.quote.href}
-            eventType={EventType.ProposalOpen}
-            anchorProps={{ target: "_blank" }}
-          >
-            <button
-              type="button"
-              className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
-              {props.data.quote.body}
-            </button>
-          </TrackedLink>
-        )}
-        {props.data.quote && props.data.quote.proposalType === "link" && (
+        {props.data.quote && (
           <TrackedLink
             portalId={props.portalId}
             linkId={props.data.quote.linkId}
             href={props.data.quote.href}
-            eventType={EventType.ProposalOpen}
+            type={EventType.ProposalOpen}
             anchorProps={{ target: "_blank" }}
           >
             <button

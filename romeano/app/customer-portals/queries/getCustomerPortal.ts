@@ -1,9 +1,10 @@
 import { NotFoundError, resolver } from "blitz"
-import db, { Role } from "db"
+import db, { LinkType, Role } from "db"
 import { orderBy } from "lodash"
 import { z } from "zod"
-import { getExternalUploadPath } from "../../core/util/upload"
 import { Stakeholder } from "../../core/components/customerPortals/ProposalCard"
+import { getDocuments } from "../../portal-details/queries/getPortalDetail"
+import { getExternalUploadPath } from "../../core/util/upload"
 
 const GetCustomerPortal = z.object({
   // This accepts type of undefined, but is required at runtime
@@ -15,7 +16,6 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   const portal = await db.portal.findFirst({
     where: { id: portalId },
     include: {
-      proposalDocument: true,
       proposalLink: true,
       roadmapStages: {
         include: {
@@ -33,7 +33,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
         orderBy: { id: "asc" },
       },
       vendor: true,
-      documents: { orderBy: { id: "asc" } },
+      portalDocuments: { include: { link: true }, orderBy: { id: "asc" } },
       images: { orderBy: { id: "asc" } },
       productInfoSections: { include: { productInfoSectionLink: { include: { link: true } } } },
       userPortals: {
@@ -100,35 +100,11 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   const documents = {
     customer: {
       name: portal.customerName,
-      documents: portal.documents
-        .filter((x) =>
-          portal.userPortals
-            .filter((up) => up.role === Role.AccountExecutive)
-            .map((up) => up.userId)
-            .includes(x.userId)
-        )
-        .map((x) => ({
-          id: x.id,
-          title: x.title,
-          href: getExternalUploadPath(x.path),
-          isCompleted: x.isCompleted,
-        })),
+      documents: getDocuments(portal.portalDocuments, portal.userPortals, Role.AccountExecutive),
     },
     vendor: {
       name: portal.vendor.name,
-      documents: portal.documents
-        .filter((x) =>
-          portal.userPortals
-            .filter((up) => up.role === Role.Stakeholder)
-            .map((up) => up.userId)
-            .includes(x.userId)
-        )
-        .map((x) => ({
-          id: x.id,
-          title: x.title,
-          href: getExternalUploadPath(x.path),
-          isCompleted: x.isCompleted,
-        })),
+      documents: getDocuments(portal.portalDocuments, portal.userPortals, Role.Stakeholder),
     },
   }
 
@@ -147,30 +123,21 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   const proposal: {
     heading: string
     subheading: string
-    quote:
-      | { proposalType: "document"; documentId: number; body: string; href: string }
-      | { proposalType: "link"; linkId: number; body: string; href: string }
-      | null
+    quote: { linkId: number; body: string; href: string } | null
     stakeholders: Stakeholder[]
   } = {
     heading: portal.proposalHeading,
     subheading: portal.proposalSubheading,
-    quote:
-      portal.proposalType === "document" && portal.proposalDocument
-        ? {
-            proposalType: "document",
-            documentId: portal.proposalDocument.id,
-            body: portal.proposalDocument.title,
-            href: getExternalUploadPath(portal.proposalDocument.path),
-          }
-        : portal.proposalType === "link" && portal.proposalLink
-        ? {
-            proposalType: "link",
-            linkId: portal.proposalLink.id,
-            body: portal.proposalLink.body,
-            href: portal.proposalLink.href,
-          }
-        : null,
+    quote: portal.proposalLink
+      ? {
+          linkId: portal.proposalLink.id,
+          body: portal.proposalLink.body,
+          href:
+            portal.proposalLink.type === LinkType.Document
+              ? getExternalUploadPath(portal.proposalLink.href)
+              : portal.proposalLink.href,
+        }
+      : null,
     stakeholders: portal.userPortals
       .filter((userPortal) => userPortal.role === Role.Stakeholder)
       .map((userPortal) => ({
