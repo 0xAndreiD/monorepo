@@ -7,7 +7,7 @@ import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
 import { LinkWithId, UploadType } from "types"
 import Modal from "../generic/Modal"
-import { UploadModal } from "../../../pages/customerPortals/edit/uploadModal"
+import { UploadModal } from "./edit/uploadModal"
 import createProductInfoSectionLink from "../../../customer-portals/mutations/createProductInfoSectionLink"
 import { useMutation } from "blitz"
 
