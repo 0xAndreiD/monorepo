@@ -146,6 +146,15 @@ const seedCustomerPortal = async () => {
       photoUrl:
         "https://images.unsplash.com/photo-1627531937355-be59a1935885?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80",
     },
+    {
+      firstName: "Will",
+      lastName: "Hayes",
+      jobTitle: "Buyer",
+      email: "will@romeano.com",
+      hasStakeholderApproved: null,
+      photoUrl:
+        "https://images.unsplash.com/photo-1627531937355-be59a1935885?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80",
+    },
   ]
 
   const stakeholders = []
