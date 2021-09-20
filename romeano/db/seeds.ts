@@ -302,7 +302,7 @@ const seedCustomerPortal = async () => {
     data: {
       proposalLink: {
         create: {
-          body: "View Quote",
+          body: "Proposal Doc",
           href: "proposal.txt",
           type: LinkType.Document,
           creator: { connect: { id: aeUser.id } },
@@ -499,7 +499,7 @@ async function seedPortalDetails() {
     data: {
       proposalLink: {
         create: {
-          body: "View Quote",
+          body: "Proposal Doc",
           href: "proposal2.txt",
           type: LinkType.Document,
           creator: { connect: { id: aeUser.id } },

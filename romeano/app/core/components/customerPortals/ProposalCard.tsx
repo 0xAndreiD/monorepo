@@ -2,17 +2,24 @@ import { CheckIcon, PlusIcon, XIcon } from "@heroicons/react/solid"
 import { Card, CardDivider, CardHeader } from "../generic/Card"
 
 import { TrackedLink } from "../generic/Link"
-import { useState } from "react"
+import React, { useState } from "react"
 import RevealSection from "../generic/RevealSection"
 import Modal from "../generic/Modal"
 import { getName } from "../../util/text"
-import { EventType } from "db"
+import { EventType, LinkType } from "db"
 import { invoke, useMutation } from "blitz"
 import updateProposalApproval from "../../../customer-portals/mutations/updateProposalApproval"
 import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
 import createEvent from "../../../event/mutations/createEvent"
 import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircles"
-import { LinkWithId } from "../../../../types"
+import { LinkWithId, UploadType } from "../../../../types"
+import { z } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Dialog } from "@headlessui/react"
+import { CloudUploadIcon, LinkIcon } from "@heroicons/react/outline"
+import { UploadComponent } from "./UploadComponent"
+import { UploadModal } from "./edit/uploadModal"
 
 export type Stakeholder = {
   firstName: string
@@ -29,7 +36,117 @@ type Proposal = {
   stakeholders: Array<Stakeholder>
 }
 
-export function ProposalCard(props: { portalId: number; data: Proposal; refetchHandler: () => void }) {
+export function ProposalCard(props: {
+  portalId: number
+  data: Proposal
+  refetchHandler: () => void
+  editingEnabled: boolean
+}) {
+  return props.editingEnabled ? (
+    <EditProposalCard portalId={props.portalId} data={props.data} refetchHandler={props.refetchHandler} />
+  ) : (
+    <ViewProposalCard portalId={props.portalId} data={props.data} refetchHandler={props.refetchHandler} />
+  )
+}
+
+function EditProposalCard(props: { portalId: number; data: Proposal; refetchHandler: () => void }) {
+  const schema = z.object({
+    description: z.string().nonempty(),
+    items: z.string().nonempty(),
+  })
+  const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+  })
+  const formOnSubmit = handleSubmit(async (data) => {
+    reset()
+    // await props.onLinkSubmit(data)
+  })
+
+  const [uploadModal, setUploadModal] = useState<boolean>(false)
+  return (
+    <Card>
+      <CardHeader>Proposal</CardHeader>
+
+      <div className="mt-3 text-center sm:mt-0 sm:text-left">
+        <div>
+          <form onSubmit={formOnSubmit}>
+            <div className="mt-8 grid grid-rows-2 gap-y-4">
+              <div>
+                Description
+                <div className="border-2 border-b-0">
+                  <input
+                    type="text"
+                    className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
+                    defaultValue={props.data.heading}
+                    placeholder="Cool description for clients"
+                    {...register("description")}
+                    autoFocus
+                    required
+                  />
+                </div>
+                {formState.errors.description && <span className="text-sm">Description is required</span>}
+              </div>
+              <div>
+                Highlight Items
+                <div className="border-2 border-b-0">
+                  <input
+                    type="url"
+                    className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
+                    defaultValue={props.data.subheading}
+                    placeholder="Cool items"
+                    {...register("items")}
+                    required
+                  />
+                </div>
+                {formState.errors.items && <span className="text-sm">Items are required</span>}
+              </div>
+            </div>
+
+            <div className="mt-4">
+              Proposal Document
+              <input type="text" defaultValue={props.data.quote?.body} disabled />
+            </div>
+
+            <Modal isOpen={uploadModal} onClose={() => setUploadModal(false)}>
+              <UploadModal
+                uploadParams={{
+                  portalId: props.portalId,
+                  uploadType: UploadType.ProductInfo,
+                }}
+                title={"Upload"}
+                onLinkSubmit={async (data) => {
+                  // await createProductInfoSectionLinkMutation({
+                  //   ...data,
+                  // })
+                  props.refetchHandler()
+                  setUploadModal(false)
+                }}
+                onUploadComplete={async ({ id, body, href }) => {
+                  props.refetchHandler()
+                  setUploadModal(false)
+                }}
+              />
+            </Modal>
+            <div className="mt-4">
+              <button
+                onClick={() => setUploadModal(true)}
+                type="button"
+                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+             leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" />
+                Upload
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </Card>
+  )
+}
+
+function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHandler: () => void }) {
   const [isDetailsVisible, setDetailsVisible] = useState(true)
   const [isInviteStakeholdersModalOpen, setIsInviteStakeholdersModalOpen] = useState(false)
   const [updateProposalApprovalMutation] = useMutation(updateProposalApproval)
@@ -53,7 +170,7 @@ export function ProposalCard(props: { portalId: number; data: Proposal; refetchH
               type="button"
               className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
-              {props.data.quote.body}
+              Proposal
             </button>
           </TrackedLink>
         )}
