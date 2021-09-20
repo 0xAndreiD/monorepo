@@ -4,14 +4,14 @@ import { z } from "zod"
 
 const UpdateProposalText = z.object({
   portalId: z.number(),
-  description: z.string().nonempty(),
-  highlightItems: z.string().nonempty(),
+  proposalHeading: z.string().nonempty(),
+  proposalSubheading: z.string().nonempty(),
 })
 
 export default resolver.pipe(
   resolver.zod(UpdateProposalText),
   resolver.authorize(),
-  async ({ portalId, description, highlightItems }, ctx: Ctx) => {
+  async ({ portalId, proposalHeading, proposalSubheading }, ctx: Ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const userId = ctx.session.userId
     if (!userId) throw new AuthenticationError("no userId provided")
@@ -21,8 +21,8 @@ export default resolver.pipe(
       data: {
         portal: {
           update: {
-            proposalHeading: description,
-            proposalSubheading: highlightItems,
+            proposalHeading,
+            proposalSubheading,
           },
         },
       },

@@ -51,8 +51,8 @@ export function ProposalCard(props: {
 
 function EditProposalCard(props: { portalId: number; data: Proposal; refetchHandler: () => void }) {
   const schema = z.object({
-    description: z.string().nonempty(),
-    highlightItems: z.string().nonempty(),
+    proposalHeading: z.string().nonempty(),
+    proposalSubheading: z.string().nonempty(),
   })
   const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -80,12 +80,12 @@ function EditProposalCard(props: { portalId: number; data: Proposal; refetchHand
                   className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
                   defaultValue={props.data.heading}
                   placeholder="Cool description for clients"
-                  {...register("description")}
+                  {...register("proposalHeading")}
                   autoFocus
                   required
                 />
               </div>
-              {formState.errors.description && <span className="text-sm">Description is required</span>}
+              {formState.errors.proposalHeading && <span className="text-sm">Description is required</span>}
             </div>
             <div>
               Highlight Items
@@ -95,11 +95,11 @@ function EditProposalCard(props: { portalId: number; data: Proposal; refetchHand
                   className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
                   defaultValue={props.data.subheading}
                   placeholder="Cool items"
-                  {...register("highlightItems")}
+                  {...register("proposalSubheading")}
                   required
                 />
               </div>
-              {formState.errors.highlightItems && <span className="text-sm">Items are required</span>}
+              {formState.errors.proposalSubheading && <span className="text-sm">Items are required</span>}
             </div>
           </div>
         </form>
