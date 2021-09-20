@@ -6,7 +6,7 @@ import React, { useState } from "react"
 import RevealSection from "../generic/RevealSection"
 import Modal from "../generic/Modal"
 import { getName } from "../../util/text"
-import { EventType, LinkType } from "db"
+import { EventType } from "db"
 import { invoke, useMutation } from "blitz"
 import updateProposalApproval from "../../../customer-portals/mutations/updateProposalApproval"
 import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
@@ -16,10 +16,10 @@ import { LinkWithId, UploadType } from "../../../../types"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Dialog } from "@headlessui/react"
-import { CloudUploadIcon, LinkIcon } from "@heroicons/react/outline"
-import { UploadComponent } from "./UploadComponent"
+import { CloudUploadIcon } from "@heroicons/react/outline"
 import { UploadModal } from "./edit/uploadModal"
+import updateProposalText from "../../../customer-portals/mutations/updateProposalText"
+import createProposalLink from "../../../customer-portals/mutations/createProposalLink"
 
 export type Stakeholder = {
   firstName: string
@@ -52,14 +52,16 @@ export function ProposalCard(props: {
 function EditProposalCard(props: { portalId: number; data: Proposal; refetchHandler: () => void }) {
   const schema = z.object({
     description: z.string().nonempty(),
-    items: z.string().nonempty(),
+    highlightItems: z.string().nonempty(),
   })
   const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   })
+  const [updateProposalTextMutation] = useMutation(updateProposalText)
+  const [createProposalLinkMutation] = useMutation(createProposalLink)
   const formOnSubmit = handleSubmit(async (data) => {
-    reset()
-    // await props.onLinkSubmit(data)
+    await updateProposalTextMutation({ ...data, portalId: props.portalId })
+    props.refetchHandler()
   })
 
   const [uploadModal, setUploadModal] = useState<boolean>(false)
@@ -68,78 +70,89 @@ function EditProposalCard(props: { portalId: number; data: Proposal; refetchHand
       <CardHeader>Proposal</CardHeader>
 
       <div className="mt-3 text-center sm:mt-0 sm:text-left">
-        <div>
-          <form onSubmit={formOnSubmit}>
-            <div className="mt-8 grid grid-rows-2 gap-y-4">
-              <div>
-                Description
-                <div className="border-2 border-b-0">
-                  <input
-                    type="text"
-                    className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
-                    defaultValue={props.data.heading}
-                    placeholder="Cool description for clients"
-                    {...register("description")}
-                    autoFocus
-                    required
-                  />
-                </div>
-                {formState.errors.description && <span className="text-sm">Description is required</span>}
+        <form onSubmit={formOnSubmit}>
+          <div className="mt-8 grid grid-rows-2 gap-y-4">
+            <div>
+              Description
+              <div className="border-2 border-b-0">
+                <input
+                  type="text"
+                  className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
+                  defaultValue={props.data.heading}
+                  placeholder="Cool description for clients"
+                  {...register("description")}
+                  autoFocus
+                  required
+                />
               </div>
-              <div>
-                Highlight Items
-                <div className="border-2 border-b-0">
-                  <input
-                    type="url"
-                    className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
-                    defaultValue={props.data.subheading}
-                    placeholder="Cool items"
-                    {...register("items")}
-                    required
-                  />
-                </div>
-                {formState.errors.items && <span className="text-sm">Items are required</span>}
+              {formState.errors.description && <span className="text-sm">Description is required</span>}
+            </div>
+            <div>
+              Highlight Items
+              <div className="border-2 border-b-0">
+                <input
+                  type="url"
+                  className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
+                  defaultValue={props.data.subheading}
+                  placeholder="Cool items"
+                  {...register("highlightItems")}
+                  required
+                />
               </div>
+              {formState.errors.highlightItems && <span className="text-sm">Items are required</span>}
             </div>
+          </div>
+        </form>
 
-            <div className="mt-4">
-              Proposal Document
-              <input type="text" defaultValue={props.data.quote?.body} disabled />
-            </div>
+        <div className="mt-4">
+          Proposal Document
+          <br />
+          <p>{props.data.quote?.body}</p>
+        </div>
 
-            <Modal isOpen={uploadModal} onClose={() => setUploadModal(false)}>
-              <UploadModal
-                uploadParams={{
-                  portalId: props.portalId,
-                  uploadType: UploadType.ProductInfo,
-                }}
-                title={"Upload"}
-                onLinkSubmit={async (data) => {
-                  // await createProductInfoSectionLinkMutation({
-                  //   ...data,
-                  // })
-                  props.refetchHandler()
-                  setUploadModal(false)
-                }}
-                onUploadComplete={async ({ id, body, href }) => {
-                  props.refetchHandler()
-                  setUploadModal(false)
-                }}
-              />
-            </Modal>
-            <div className="mt-4">
-              <button
-                onClick={() => setUploadModal(true)}
-                type="button"
-                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+        <Modal isOpen={uploadModal} onClose={() => setUploadModal(false)}>
+          <UploadModal
+            uploadParams={{
+              portalId: props.portalId,
+              uploadType: UploadType.Proposal,
+            }}
+            title={"Upload"}
+            onLinkSubmit={async (data) => {
+              await createProposalLinkMutation({
+                ...data,
+                portalId: props.portalId,
+              })
+              props.refetchHandler()
+              setUploadModal(false)
+            }}
+            onUploadComplete={async ({ id, body, href }) => {
+              props.refetchHandler()
+              setUploadModal(false)
+            }}
+          />
+        </Modal>
+
+        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+          <button
+            disabled={formState.isSubmitting}
+            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-500 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
+            onClick={formOnSubmit}
+          >
+            Submit
+          </button>
+        </div>
+
+        <div className="mt-4">
+          <button
+            onClick={() => setUploadModal(true)}
+            type="button"
+            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-              >
-                <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" />
-                Upload
-              </button>
-            </div>
-          </form>
+          >
+            <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" />
+            Upload
+          </button>
         </div>
       </div>
     </Card>

@@ -521,7 +521,6 @@ async function seedEvents() {
       link: { type: LinkType.Document },
     },
   })
-  console.log(documents)
 
   const events = range(days * 24).map((i) => ({
     type: EventType.DocumentOpen,
