@@ -2,7 +2,7 @@ import { CheckIcon, PlusIcon, XIcon } from "@heroicons/react/solid"
 import { Card, CardDivider, CardHeader } from "../generic/Card"
 
 import { TrackedLink } from "../generic/Link"
-import { useState } from "react"
+import React, { useState } from "react"
 import RevealSection from "../generic/RevealSection"
 import Modal from "../generic/Modal"
 import { getName } from "../../util/text"
@@ -12,7 +12,14 @@ import updateProposalApproval from "../../../customer-portals/mutations/updatePr
 import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
 import createEvent from "../../../event/mutations/createEvent"
 import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircles"
-import { LinkWithId } from "../../../../types"
+import { LinkWithId, UploadType } from "../../../../types"
+import { z } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { CloudUploadIcon } from "@heroicons/react/outline"
+import { UploadModal } from "./edit/uploadModal"
+import updateProposalText from "../../../customer-portals/mutations/updateProposalText"
+import createProposalLink from "../../../customer-portals/mutations/createProposalLink"
 
 export type Stakeholder = {
   firstName: string
@@ -29,7 +36,130 @@ type Proposal = {
   stakeholders: Array<Stakeholder>
 }
 
-export function ProposalCard(props: { portalId: number; data: Proposal; refetchHandler: () => void }) {
+export function ProposalCard(props: {
+  portalId: number
+  data: Proposal
+  refetchHandler: () => void
+  editingEnabled: boolean
+}) {
+  return props.editingEnabled ? (
+    <EditProposalCard portalId={props.portalId} data={props.data} refetchHandler={props.refetchHandler} />
+  ) : (
+    <ViewProposalCard portalId={props.portalId} data={props.data} refetchHandler={props.refetchHandler} />
+  )
+}
+
+function EditProposalCard(props: { portalId: number; data: Proposal; refetchHandler: () => void }) {
+  const schema = z.object({
+    proposalHeading: z.string().nonempty(),
+    proposalSubheading: z.string().nonempty(),
+  })
+  const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+  })
+  const [updateProposalTextMutation] = useMutation(updateProposalText)
+  const [createProposalLinkMutation] = useMutation(createProposalLink)
+  const formOnSubmit = handleSubmit(async (data) => {
+    await updateProposalTextMutation({ ...data, portalId: props.portalId })
+    props.refetchHandler()
+  })
+
+  const [uploadModal, setUploadModal] = useState<boolean>(false)
+  return (
+    <Card>
+      <CardHeader>Proposal</CardHeader>
+
+      <div className="mt-3 text-center sm:mt-0 sm:text-left">
+        <form onSubmit={formOnSubmit}>
+          <div className="mt-8 grid grid-rows-2 gap-y-4">
+            <div>
+              Description
+              <div className="border-2 border-b-0">
+                <input
+                  type="text"
+                  className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
+                  defaultValue={props.data.heading}
+                  placeholder="Cool description for clients"
+                  {...register("proposalHeading")}
+                  autoFocus
+                  required
+                />
+              </div>
+              {formState.errors.proposalHeading && <span className="text-sm">Description is required</span>}
+            </div>
+            <div>
+              Highlight Items
+              <div className="border-2 border-b-0">
+                <input
+                  type="url"
+                  className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
+                  defaultValue={props.data.subheading}
+                  placeholder="Cool items"
+                  {...register("proposalSubheading")}
+                  required
+                />
+              </div>
+              {formState.errors.proposalSubheading && <span className="text-sm">Items are required</span>}
+            </div>
+          </div>
+        </form>
+
+        <div className="mt-4">
+          Proposal Document
+          <br />
+          <p>{props.data.quote?.body}</p>
+        </div>
+
+        <Modal isOpen={uploadModal} onClose={() => setUploadModal(false)}>
+          <UploadModal
+            uploadParams={{
+              portalId: props.portalId,
+              uploadType: UploadType.Proposal,
+            }}
+            title={"Upload"}
+            onLinkSubmit={async (data) => {
+              await createProposalLinkMutation({
+                ...data,
+                portalId: props.portalId,
+              })
+              props.refetchHandler()
+              setUploadModal(false)
+            }}
+            onUploadComplete={async ({ id, body, href }) => {
+              props.refetchHandler()
+              setUploadModal(false)
+            }}
+          />
+        </Modal>
+
+        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+          <button
+            disabled={formState.isSubmitting}
+            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-500 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
+            onClick={formOnSubmit}
+          >
+            Submit
+          </button>
+        </div>
+
+        <div className="mt-4">
+          <button
+            onClick={() => setUploadModal(true)}
+            type="button"
+            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+             leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >
+            <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" />
+            Upload
+          </button>
+        </div>
+      </div>
+    </Card>
+  )
+}
+
+function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHandler: () => void }) {
   const [isDetailsVisible, setDetailsVisible] = useState(true)
   const [isInviteStakeholdersModalOpen, setIsInviteStakeholdersModalOpen] = useState(false)
   const [updateProposalApprovalMutation] = useMutation(updateProposalApproval)
@@ -53,7 +183,7 @@ export function ProposalCard(props: { portalId: number; data: Proposal; refetchH
               type="button"
               className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
-              {props.data.quote.body}
+              Proposal
             </button>
           </TrackedLink>
         )}

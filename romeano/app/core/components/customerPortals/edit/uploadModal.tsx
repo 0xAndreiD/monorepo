@@ -18,7 +18,7 @@ export function UploadModal(props: {
 }) {
   const schema = z.object({
     body: z.string().nonempty(),
-    href: z.string().nonempty(),
+    href: z.string().url().nonempty(),
   })
   const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),

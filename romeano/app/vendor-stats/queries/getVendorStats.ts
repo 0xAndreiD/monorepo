@@ -96,7 +96,6 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
   `
 
   const stakeholderActivityLogRaw = await getStakeholderActivityLogRaw(portalIds)
-  console.log(stakeholderActivityLogRaw)
   const stakeholderActivityLog = stakeholderActivityLogRaw.map((x) => ({
     stakeholderName: x.stakeholderName,
     customerName: x.customerName,

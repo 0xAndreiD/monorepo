@@ -196,7 +196,6 @@ export function generateLinkFromEventType(event: {
     case EventType.CreateInternalMessage:
       return null
     case EventType.ProductInfoLinkOpen:
-      console.log("PILO", event)
       return { body: event.linkBody, href: formatLink({ type: event.linkType, href: event.linkHref }) }
     case EventType.InviteStakeholder:
       return null

@@ -1,8 +1,9 @@
 version: "3.3"
 services:
   web:
-    build: .
     image: ghcr.io/romeano-inc/core-app:latest
+    depends_on:
+      - db
     restart: unless-stopped
     ports:
       - "80:3000"

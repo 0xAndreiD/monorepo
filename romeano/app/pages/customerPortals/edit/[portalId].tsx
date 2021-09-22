@@ -65,7 +65,7 @@ function EditCustomerPortal() {
             />
           </div>
           <div className="flex flex-col gap-4">
-            <ProposalCard portalId={portalId} data={data.proposal} refetchHandler={refetch} />
+            <ProposalCard portalId={portalId} data={data.proposal} refetchHandler={refetch} editingEnabled={true} />
             <ContactsCard data={data.contacts} />
             {/*<InternalNotesCard portalId={portalId} data={data.internalNotes} refetchHandler={refetch} />*/}
           </div>
