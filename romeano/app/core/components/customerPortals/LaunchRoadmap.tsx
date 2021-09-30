@@ -5,7 +5,7 @@ import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
 import { LinkWithId } from "types"
 import { useMutation } from "blitz"
-import updateLaunchRoadmapStage from "../../../customer-portals/mutations/updateLaunchRoadmapStage"
+import updateLaunchRoadmapStage from "../../../customer-portals/mutations/updateCurrentLaunchRoadmapStage"
 import { RoadmapStageCircle } from "../generic/RoadmapStageCircle"
 
 export enum CompletionStatus {
