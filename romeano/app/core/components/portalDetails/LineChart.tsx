@@ -1,32 +1,16 @@
 import React from "react"
 import { Line } from "react-chartjs-2"
-import "chartjs-adapter-date-fns"
 import { Card, CardHeader } from "../generic/Card"
 
-const options = {
-  animation: false,
-  responsive: true,
-  scales: {
-    x: {
-      type: "time",
-      position: "bottom",
-      ticks: {
-        maxRotation: 0,
-      },
-    },
-    y: {
-      display: true,
-    },
-  },
-}
-
+//see https://www.chartjs.org/docs/latest/samples/line/line.html
 export default function LineChart(props: { data: Array<{ x: Date; y: number }> }) {
   const chartData = {
+    labels: props.data.map((pt) => pt.x),
     datasets: [
       {
         label: "Clicks",
         fill: false,
-        data: props.data,
+        data: props.data.map((pt) => pt.y),
         borderColor: "#34D399",
         backgroundColor: "#34D399",
       },
@@ -36,7 +20,25 @@ export default function LineChart(props: { data: Array<{ x: Date; y: number }> }
   return (
     <Card borderless>
       <CardHeader>Overall Engagement</CardHeader>
-      <Line data={chartData} options={options} />
+      <Line
+        data={chartData}
+        options={{
+          animation: false,
+          responsive: true,
+          scales: {
+            x: {
+              type: "time",
+              position: "bottom",
+              ticks: {
+                maxRotation: 0,
+              },
+            },
+            y: {
+              display: true,
+            },
+          },
+        }}
+      />
     </Card>
   )
 }

@@ -17,7 +17,7 @@ export default resolver.pipe(
     if (!userId) throw new AuthenticationError("no userId provided")
 
     return await db.roadmapStage.create({
-      data: { date, heading },
+      data: { portalId, heading, date },
     })
   }
 )
