@@ -4,8 +4,8 @@ import { ChevronLeftIcon, ChevronRightIcon, PencilIcon } from "@heroicons/react/
 import { CSSProperties, useState } from "react"
 import { Card, CardHeader } from "../generic/Card"
 import { TrackedLink } from "../generic/Link"
-import { EventType } from "db"
-import { LinkWithType, UploadType } from "types"
+import { EventType, LinkType } from "db"
+import { LinkWithType } from "types"
 import Modal from "../generic/Modal"
 import { UploadModal } from "./edit/uploadModal"
 import createProductInfoSectionLink from "app/customer-portals/mutations/createProductInfoSectionLink"
@@ -131,8 +131,6 @@ export function ProductInfoCard(props: {
         <UploadModal
           uploadParams={{
             portalId: props.portalId,
-            productInfoSectionId: createNewModalProps.productInfoSectionId,
-            uploadType: UploadType.ProductInfo,
           }}
           title={"Upload"}
           onLinkSubmit={async (data) => {
@@ -159,19 +157,28 @@ export function ProductInfoCard(props: {
           existingData={editLinkModalProps.link}
           uploadParams={{
             portalId: props.portalId,
-            // productInfoSectionId: createNewModalProps.productInfoSectionId,
-            uploadType: UploadType.ProductInfo,
           }}
           title={"Edit"}
           onLinkSubmit={async (data) => {
             await updateProductInfoSectionLinkMutation({
-              ...data,
+              link: {
+                ...data,
+                type: LinkType.WebLink,
+              },
               productInfoSectionLinkId: editLinkModalProps.link!.productInfoSectionLinkId, //always non-null id when modal is selected
             })
             props.refetchHandler()
             setEditLinkModalProps({ isOpen: false, link: undefined })
           }}
           onUploadComplete={async ({ id, body, href }) => {
+            await updateProductInfoSectionLinkMutation({
+              link: {
+                body,
+                href,
+                type: LinkType.Document,
+              },
+              productInfoSectionLinkId: editLinkModalProps.link!.productInfoSectionLinkId, //always non-null id when modal is selected
+            })
             props.refetchHandler()
             setEditLinkModalProps({ isOpen: false, link: undefined })
           }}

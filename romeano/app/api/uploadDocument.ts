@@ -17,14 +17,12 @@ export const config = {
 
 const UploadParams = z.object({
   portalId: z.preprocess(Number, z.number()),
-  productInfoSectionId: z.preprocess(Number, z.number()).optional(),
-  uploadType: z.preprocess(Number, z.nativeEnum(UploadType)),
 })
 export type UploadParams = z.infer<typeof UploadParams>
 
-async function insert(fields: UploadParams, userId: number, fileName: string, filePath: string): Promise<Link> {
+async function insert(userId: number, fileName: string, filePath: string): Promise<Link> {
   const linkInsertQuery = {
-    create: {
+    data: {
       body: fileName,
       //file.path looks like $INTERNAL_UPLOAD_FS_PATH/upload.jpg
       href: filePath.substring(INTERNAL_UPLOAD_FS_PATH.length + 1), //+1 to omit the slash
@@ -32,38 +30,40 @@ async function insert(fields: UploadParams, userId: number, fileName: string, fi
       creator: { connect: { id: userId } },
     },
   }
-  switch (fields.uploadType) {
-    case UploadType.Document:
-      return (
-        await db.portalDocument.create({
-          data: {
-            portal: { connect: { id: fields.portalId } },
-            link: linkInsertQuery,
-          },
-          include: { link: true },
-        })
-      ).link
-    case UploadType.ProductInfo:
-      return (
-        await db.productInfoSectionLink.create({
-          data: {
-            productInfoSection: { connect: { id: fields.productInfoSectionId } },
-            link: linkInsertQuery,
-          },
-          include: { link: true },
-        })
-      ).link
-    case UploadType.Proposal:
-      return (
-        await db.portal.update({
-          where: { id: fields.portalId },
-          data: {
-            proposalLink: linkInsertQuery,
-          },
-          include: { proposalLink: true },
-        })
-      ).proposalLink! //non-null because we just updated it
-  }
+
+  return db.link.create(linkInsertQuery)
+  // switch (fields.uploadType) {
+  //   case UploadType.Document:
+  //     return (
+  //       await db.portalDocument.create({
+  //         data: {
+  //           portal: { connect: { id: fields.portalId } },
+  //           link: linkInsertQuery,
+  //         },
+  //         include: { link: true },
+  //       })
+  //     ).link
+  //   case UploadType.ProductInfo:
+  //     return (
+  //       await db.productInfoSectionLink.create({
+  //         data: {
+  //           productInfoSection: { connect: { id: fields.productInfoSectionId } },
+  //           link: linkInsertQuery,
+  //         },
+  //         include: { link: true },
+  //       })
+  //     ).link
+  //   case UploadType.Proposal:
+  //     return (
+  //       await db.portal.update({
+  //         where: { id: fields.portalId },
+  //         data: {
+  //           proposalLink: linkInsertQuery,
+  //         },
+  //         include: { proposalLink: true },
+  //       })
+  //     ).proposalLink! //non-null because we just updated it
+  // }
 }
 
 const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, NextApiResponse<LinkWithId[]>>()
@@ -95,17 +95,16 @@ const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, Nex
     const session = await getSession(req, res)
     const userId = session.userId
     if (isNil(userId)) throw new AuthorizationError("invalid user id")
-    const fields = UploadParams.parse(req.fields)
-    const { portalId } = fields
+    const { portalId } = UploadParams.parse(req.fields)
 
     const portal = await db.portal.findUnique({ where: { id: portalId } })
     if (!portal) throw new NotFoundError("customer portal not found")
 
-    console.log("fileUpload(): file uploaded with fields:", fields)
+    console.log("fileUpload(): file uploaded")
 
     const rawFiles = flatten(Object.values(req.files))
     const docs = rawFiles.map(async (file): Promise<LinkWithId> => {
-      const link = await insert(fields, userId, file.name ?? "Untitled File", file.path)
+      const link = await insert(userId, file.name ?? "Untitled File", file.path)
       await invokeWithMiddleware(
         createEvent,
         {

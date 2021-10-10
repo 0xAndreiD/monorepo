@@ -36,7 +36,15 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
       vendor: true,
       portalDocuments: { include: { link: true }, orderBy: { id: "asc" } },
       images: { orderBy: { id: "asc" } },
-      productInfoSections: { include: { productInfoSectionLink: { include: { link: true } } } },
+      productInfoSections: {
+        include: {
+          productInfoSectionLink: {
+            include: { link: true },
+            orderBy: { id: "asc" },
+          },
+        },
+        orderBy: { id: "asc" },
+      },
       userPortals: {
         include: {
           user: {
