@@ -6,12 +6,13 @@ import { Dialog } from "@headlessui/react"
 import { CloudUploadIcon, LinkIcon } from "@heroicons/react/outline"
 import { UploadComponent } from "app/core/components/customerPortals/UploadComponent"
 import { z } from "zod"
-import { Link, LinkWithId } from "types"
+import { Link, LinkWithId, LinkWithType } from "types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { UploadParams } from "../../../../api/uploadDocument"
 
 export function UploadModal(props: {
   title: string
+  existingData?: LinkWithType
   uploadParams: UploadParams
   onLinkSubmit: (link: Link) => Promise<void>
   onUploadComplete: (link: LinkWithId) => Promise<void>
@@ -22,6 +23,7 @@ export function UploadModal(props: {
   })
   const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
+    defaultValues: props.existingData?.type === LinkType.WebLink ? props.existingData : {},
   })
   const formOnSubmit = handleSubmit(async (data) => {
     reset()

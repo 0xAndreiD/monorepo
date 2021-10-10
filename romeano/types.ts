@@ -1,5 +1,5 @@
 import { DefaultCtx, SessionContext, SimpleRolesIsAuthorized } from "blitz"
-import { Role, User } from "db"
+import { LinkType, Role, User } from "db"
 import { IncomingHttpHeaders } from "http"
 
 declare module "blitz" {
@@ -41,7 +41,7 @@ export type Link = {
 }
 
 export type LinkWithId = Link & { id: number }
-
+export type LinkWithType = LinkWithId & { type: LinkType }
 export enum UploadType {
   Document,
   ProductInfo,

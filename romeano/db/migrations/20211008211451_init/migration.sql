@@ -23,7 +23,7 @@ CREATE TABLE "Portal" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "Portal_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -37,7 +37,7 @@ CREATE TABLE "UserPortal" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("userId","portalId")
+    CONSTRAINT "UserPortal_pkey" PRIMARY KEY ("userId","portalId")
 );
 
 -- CreateTable
@@ -52,7 +52,7 @@ CREATE TABLE "User" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -68,7 +68,7 @@ CREATE TABLE "Session" (
     "privateData" TEXT,
     "userId" INTEGER,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -82,7 +82,7 @@ CREATE TABLE "Token" (
     "sentTo" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "Token_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -93,7 +93,7 @@ CREATE TABLE "Vendor" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "Vendor_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -103,7 +103,7 @@ CREATE TABLE "VendorTeam" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "VendorTeam_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -121,7 +121,7 @@ CREATE TABLE "AccountExecutive" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "AccountExecutive_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -132,7 +132,7 @@ CREATE TABLE "Link" (
     "type" "LinkType" NOT NULL,
     "userId" INTEGER NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "Link_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -143,16 +143,17 @@ CREATE TABLE "ProductInfoSection" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "ProductInfoSection_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "ProductInfoSectionLink" (
     "id" SERIAL NOT NULL,
     "linkId" INTEGER NOT NULL,
+    "isReplaced" BOOLEAN NOT NULL DEFAULT false,
     "productInfoSectionId" INTEGER NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "ProductInfoSectionLink_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -163,7 +164,7 @@ CREATE TABLE "PortalImage" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "PortalImage_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -176,7 +177,7 @@ CREATE TABLE "RoadmapStage" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "RoadmapStage_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -187,7 +188,7 @@ CREATE TABLE "RoadmapStageTask" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "RoadmapStageTask_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -200,7 +201,7 @@ CREATE TABLE "NextStepsTask" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "NextStepsTask_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -211,7 +212,7 @@ CREATE TABLE "PortalDocument" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "PortalDocument_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -223,7 +224,7 @@ CREATE TABLE "InternalNote" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "InternalNote_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -238,7 +239,7 @@ CREATE TABLE "Event" (
     "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "Event_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -250,113 +251,113 @@ CREATE TABLE "MagicLink" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    PRIMARY KEY ("id")
+    CONSTRAINT "MagicLink_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Portal_proposalLinkId_unique" ON "Portal"("proposalLinkId");
+CREATE UNIQUE INDEX "Portal_proposalLinkId_key" ON "Portal"("proposalLinkId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User.email_unique" ON "User"("email");
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Session.handle_unique" ON "Session"("handle");
+CREATE UNIQUE INDEX "Session_handle_key" ON "Session"("handle");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Token.hashedToken_type_unique" ON "Token"("hashedToken", "type");
+CREATE UNIQUE INDEX "Token_hashedToken_type_key" ON "Token"("hashedToken", "type");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Vendor.name_unique" ON "Vendor"("name");
+CREATE UNIQUE INDEX "Vendor_name_key" ON "Vendor"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Stakeholder.userId_unique" ON "Stakeholder"("userId");
+CREATE UNIQUE INDEX "Stakeholder_userId_key" ON "Stakeholder"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "AccountExecutive.userId_unique" ON "AccountExecutive"("userId");
+CREATE UNIQUE INDEX "AccountExecutive_userId_key" ON "AccountExecutive"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ProductInfoSectionLink_linkId_unique" ON "ProductInfoSectionLink"("linkId");
+CREATE UNIQUE INDEX "ProductInfoSectionLink_linkId_key" ON "ProductInfoSectionLink"("linkId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "RoadmapStage_ctaLinkId_unique" ON "RoadmapStage"("ctaLinkId");
+CREATE UNIQUE INDEX "RoadmapStage_ctaLinkId_key" ON "RoadmapStage"("ctaLinkId");
 
 -- AddForeignKey
-ALTER TABLE "Portal" ADD FOREIGN KEY ("proposalLinkId") REFERENCES "Link"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Portal" ADD CONSTRAINT "Portal_proposalLinkId_fkey" FOREIGN KEY ("proposalLinkId") REFERENCES "Link"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Portal" ADD FOREIGN KEY ("vendorId") REFERENCES "Vendor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Portal" ADD CONSTRAINT "Portal_vendorId_fkey" FOREIGN KEY ("vendorId") REFERENCES "Vendor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserPortal" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "UserPortal" ADD CONSTRAINT "UserPortal_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserPortal" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "UserPortal" ADD CONSTRAINT "UserPortal_portalId_fkey" FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Session" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Token" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "VendorTeam" ADD FOREIGN KEY ("vendorId") REFERENCES "Vendor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "VendorTeam" ADD CONSTRAINT "VendorTeam_vendorId_fkey" FOREIGN KEY ("vendorId") REFERENCES "Vendor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Stakeholder" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Stakeholder" ADD CONSTRAINT "Stakeholder_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AccountExecutive" ADD FOREIGN KEY ("vendorTeamId") REFERENCES "VendorTeam"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "AccountExecutive" ADD CONSTRAINT "AccountExecutive_vendorTeamId_fkey" FOREIGN KEY ("vendorTeamId") REFERENCES "VendorTeam"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AccountExecutive" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "AccountExecutive" ADD CONSTRAINT "AccountExecutive_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Link" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Link" ADD CONSTRAINT "Link_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductInfoSection" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ProductInfoSection" ADD CONSTRAINT "ProductInfoSection_portalId_fkey" FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductInfoSectionLink" ADD FOREIGN KEY ("linkId") REFERENCES "Link"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ProductInfoSectionLink" ADD CONSTRAINT "ProductInfoSectionLink_linkId_fkey" FOREIGN KEY ("linkId") REFERENCES "Link"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductInfoSectionLink" ADD FOREIGN KEY ("productInfoSectionId") REFERENCES "ProductInfoSection"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ProductInfoSectionLink" ADD CONSTRAINT "ProductInfoSectionLink_productInfoSectionId_fkey" FOREIGN KEY ("productInfoSectionId") REFERENCES "ProductInfoSection"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PortalImage" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "PortalImage" ADD CONSTRAINT "PortalImage_portalId_fkey" FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RoadmapStage" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "RoadmapStage" ADD CONSTRAINT "RoadmapStage_portalId_fkey" FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RoadmapStage" ADD FOREIGN KEY ("ctaLinkId") REFERENCES "Link"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "RoadmapStage" ADD CONSTRAINT "RoadmapStage_ctaLinkId_fkey" FOREIGN KEY ("ctaLinkId") REFERENCES "Link"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RoadmapStageTask" ADD FOREIGN KEY ("roadmapStageId") REFERENCES "RoadmapStage"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "RoadmapStageTask" ADD CONSTRAINT "RoadmapStageTask_roadmapStageId_fkey" FOREIGN KEY ("roadmapStageId") REFERENCES "RoadmapStage"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "NextStepsTask" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "NextStepsTask" ADD CONSTRAINT "NextStepsTask_portalId_fkey" FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "NextStepsTask" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "NextStepsTask" ADD CONSTRAINT "NextStepsTask_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PortalDocument" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "PortalDocument" ADD CONSTRAINT "PortalDocument_portalId_fkey" FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PortalDocument" ADD FOREIGN KEY ("linkId") REFERENCES "Link"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "PortalDocument" ADD CONSTRAINT "PortalDocument_linkId_fkey" FOREIGN KEY ("linkId") REFERENCES "Link"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "InternalNote" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "InternalNote" ADD CONSTRAINT "InternalNote_portalId_fkey" FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "InternalNote" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "InternalNote" ADD CONSTRAINT "InternalNote_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Event" ADD FOREIGN KEY ("linkId") REFERENCES "Link"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Event" ADD CONSTRAINT "Event_linkId_fkey" FOREIGN KEY ("linkId") REFERENCES "Link"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Event" ADD FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Event" ADD CONSTRAINT "Event_portalId_fkey" FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Event" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Event" ADD CONSTRAINT "Event_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -1,6 +1,6 @@
 import { PropsWithChildren, useCallback } from "react"
 import { getAntiCSRFToken } from "blitz"
-import axios from "axios"
+import axios, { AxiosResponse } from "axios"
 import { useDropzone } from "react-dropzone"
 import { LinkWithId } from "../../../../types"
 import { UploadParams } from "../../../api/uploadDocument"

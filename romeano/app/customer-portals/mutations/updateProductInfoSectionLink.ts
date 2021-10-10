@@ -3,24 +3,23 @@ import db, { LinkType } from "db"
 import { z } from "zod"
 
 export const CreateProductInfoSectionLink = z.object({
-  productInfoSectionId: z.number().nonnegative(),
+  productInfoSectionLinkId: z.number().nonnegative(),
   body: z.string().nonempty(),
   href: z.string().nonempty(),
-  type: z.nativeEnum(LinkType),
 })
 
 export default resolver.pipe(
   resolver.zod(CreateProductInfoSectionLink),
   resolver.authorize(),
-  async ({ productInfoSectionId, body, href, type }, ctx) => {
+  async ({ productInfoSectionLinkId, body, href }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const userId = ctx.session.userId
     if (!userId) throw new AuthenticationError("no userId provided")
 
     //create new link instead of updating to preserve old history
-    return await db.productInfoSectionLink.create({
+    return await db.productInfoSectionLink.update({
+      where: { id: productInfoSectionLinkId },
       data: {
-        productInfoSection: { connect: { id: productInfoSectionId } },
         link: {
           create: {
             body,

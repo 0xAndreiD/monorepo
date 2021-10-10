@@ -5,17 +5,19 @@ import { CSSProperties, useState } from "react"
 import { Card, CardHeader } from "../generic/Card"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
-import { LinkWithId, UploadType } from "types"
+import { LinkWithType, UploadType } from "types"
 import Modal from "../generic/Modal"
 import { UploadModal } from "./edit/uploadModal"
 import createProductInfoSectionLink from "app/customer-portals/mutations/createProductInfoSectionLink"
 import updateProductInfoSectionLink from "app/customer-portals/mutations/updateProductInfoSectionLink"
 import { useMutation } from "blitz"
 
+type ProductSectionLink = LinkWithType & { productInfoSectionLinkId: number }
+
 type Section = {
   id: number
   heading: string
-  links: LinkWithId[]
+  links: ProductSectionLink[]
 }
 
 type ProductInfo = {
@@ -38,12 +40,19 @@ export function ProductInfoCard(props: {
     cursor: "pointer",
   }
 
-  type ModalState = { isOpen: false; productInfoSectionId: undefined } | { isOpen: true; productInfoSectionId: number }
-
-  const [createNewModalProps, setCreateNewModalProps] = useState<ModalState>({
+  const [createNewModalProps, setCreateNewModalProps] = useState<
+    { isOpen: false; productInfoSectionId: undefined } | { isOpen: true; productInfoSectionId: number }
+  >({
     isOpen: false,
     productInfoSectionId: undefined,
-  }) //tuple of show modal, section id
+  })
+
+  const [editLinkModalProps, setEditLinkModalProps] = useState<
+    { isOpen: false; link: undefined } | { isOpen: true; link: ProductSectionLink }
+  >({
+    isOpen: false,
+    link: undefined,
+  })
   const [createProductInfoSectionLinkMutation] = useMutation(createProductInfoSectionLink)
   const [updateProductInfoSectionLinkMutation] = useMutation(updateProductInfoSectionLink)
   return (
@@ -90,11 +99,12 @@ export function ProductInfoCard(props: {
                     {link.body}
                   </TrackedLink>
                   <PencilIcon
+                    style={{ cursor: "pointer" }}
                     className="w-4 h-4 text-gray-400"
                     onClick={() =>
-                      setCreateNewModalProps({
+                      setEditLinkModalProps({
                         isOpen: true,
-                        productInfoSectionId: section.id,
+                        link: link,
                       })
                     }
                   />
@@ -136,6 +146,34 @@ export function ProductInfoCard(props: {
           onUploadComplete={async ({ id, body, href }) => {
             props.refetchHandler()
             setCreateNewModalProps({ isOpen: false, productInfoSectionId: undefined })
+          }}
+        />
+      </Modal>
+
+      {/*edit modal*/}
+      <Modal
+        isOpen={editLinkModalProps.isOpen}
+        onClose={() => setEditLinkModalProps({ isOpen: false, link: undefined })}
+      >
+        <UploadModal
+          existingData={editLinkModalProps.link}
+          uploadParams={{
+            portalId: props.portalId,
+            // productInfoSectionId: createNewModalProps.productInfoSectionId,
+            uploadType: UploadType.ProductInfo,
+          }}
+          title={"Edit"}
+          onLinkSubmit={async (data) => {
+            await updateProductInfoSectionLinkMutation({
+              ...data,
+              productInfoSectionLinkId: editLinkModalProps.link!.productInfoSectionLinkId, //always non-null id when modal is selected
+            })
+            props.refetchHandler()
+            setEditLinkModalProps({ isOpen: false, link: undefined })
+          }}
+          onUploadComplete={async ({ id, body, href }) => {
+            props.refetchHandler()
+            setEditLinkModalProps({ isOpen: false, link: undefined })
           }}
         />
       </Modal>
