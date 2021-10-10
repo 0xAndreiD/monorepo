@@ -44,6 +44,7 @@ function EditCustomerPortal() {
           customerName={data.header.customerName}
           customerLogo={data.header.customerLogo}
           data={data.proposal.stakeholders}
+          editingEnabled={true}
           refetchHandler={refetch}
         />
         <div className="py-3">

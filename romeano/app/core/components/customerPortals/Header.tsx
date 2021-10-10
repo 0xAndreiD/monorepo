@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { Link, Routes } from "blitz"
 import { UserAddIcon } from "@heroicons/react/solid"
 import Modal from "../generic/Modal"
 import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
@@ -10,6 +11,7 @@ export function Header(props: {
   customerName: string
   customerLogo: string
   data: Stakeholder[]
+  editingEnabled: boolean
   refetchHandler: () => void
 }) {
   const [isInviteStakeholdersModalOpen, setIsInviteStakeholdersModalOpen] = useState(false)
@@ -24,15 +26,28 @@ export function Header(props: {
       <span className="text-gray-500 font-bold justify-self-center">{props.customerName} Customer Portal</span>
 
       <div className="justify-self-end">
-        <button
-          onClick={() => setIsInviteStakeholdersModalOpen(true)}
-          className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
-             leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-        >
-          <UserAddIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-          Share Portal
-        </button>
+        <div className={props.editingEnabled ? "grid gap-2 grid-cols-2 place-items-center" : ""}>
+          {props.editingEnabled && (
+            <Link href={Routes.CustomerPortal({ portalId: props.portalId })}>
+              <a
+                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+                leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                Preview Portal
+              </a>
+            </Link>
+          )}
+          <button
+            onClick={() => setIsInviteStakeholdersModalOpen(true)}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >
+            <UserAddIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+            Share Portal
+          </button>
+        </div>
       </div>
 
       {/*Show stakeholder invitation*/}
