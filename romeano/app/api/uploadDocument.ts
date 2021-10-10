@@ -7,7 +7,7 @@ import { INTERNAL_UPLOAD_FS_PATH, UPLOAD_SIZE_LIMIT } from "../core/config"
 import formidable, { Fields, Files } from "formidable"
 import { flatten, isNil } from "lodash"
 import createEvent from "../event/mutations/createEvent"
-import { LinkWithId, UploadType } from "../../types"
+import { LinkWithId } from "../../types"
 
 export const config = {
   api: {
@@ -19,52 +19,6 @@ const UploadParams = z.object({
   portalId: z.preprocess(Number, z.number()),
 })
 export type UploadParams = z.infer<typeof UploadParams>
-
-async function insert(userId: number, fileName: string, filePath: string): Promise<Link> {
-  const linkInsertQuery = {
-    data: {
-      body: fileName,
-      //file.path looks like $INTERNAL_UPLOAD_FS_PATH/upload.jpg
-      href: filePath.substring(INTERNAL_UPLOAD_FS_PATH.length + 1), //+1 to omit the slash
-      type: LinkType.Document,
-      creator: { connect: { id: userId } },
-    },
-  }
-
-  return db.link.create(linkInsertQuery)
-  // switch (fields.uploadType) {
-  //   case UploadType.Document:
-  //     return (
-  //       await db.portalDocument.create({
-  //         data: {
-  //           portal: { connect: { id: fields.portalId } },
-  //           link: linkInsertQuery,
-  //         },
-  //         include: { link: true },
-  //       })
-  //     ).link
-  //   case UploadType.ProductInfo:
-  //     return (
-  //       await db.productInfoSectionLink.create({
-  //         data: {
-  //           productInfoSection: { connect: { id: fields.productInfoSectionId } },
-  //           link: linkInsertQuery,
-  //         },
-  //         include: { link: true },
-  //       })
-  //     ).link
-  //   case UploadType.Proposal:
-  //     return (
-  //       await db.portal.update({
-  //         where: { id: fields.portalId },
-  //         data: {
-  //           proposalLink: linkInsertQuery,
-  //         },
-  //         include: { proposalLink: true },
-  //       })
-  //     ).proposalLink! //non-null because we just updated it
-  // }
-}
 
 const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, NextApiResponse<LinkWithId[]>>()
   .use((req, res, next) => {
@@ -104,7 +58,15 @@ const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, Nex
 
     const rawFiles = flatten(Object.values(req.files))
     const docs = rawFiles.map(async (file): Promise<LinkWithId> => {
-      const link = await insert(userId, file.name ?? "Untitled File", file.path)
+      const link = await db.link.create({
+        data: {
+          body: file.name ?? "Untitled File",
+          //file.path looks like $INTERNAL_UPLOAD_FS_PATH/upload.jpg
+          href: file.path.substring(INTERNAL_UPLOAD_FS_PATH.length + 1), //+1 to omit the slash
+          type: LinkType.Document,
+          creator: { connect: { id: userId } },
+        },
+      })
       await invokeWithMiddleware(
         createEvent,
         {

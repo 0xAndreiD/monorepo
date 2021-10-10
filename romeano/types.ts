@@ -42,8 +42,3 @@ export type Link = {
 
 export type LinkWithId = Link & { id: number }
 export type LinkWithType = LinkWithId & { type: LinkType }
-export enum UploadType {
-  Document,
-  ProductInfo,
-  Proposal,
-}

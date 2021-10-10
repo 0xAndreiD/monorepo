@@ -3,7 +3,8 @@ import { Card, CardDivider, CardHeader } from "../generic/Card"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
 import { UploadComponent } from "./UploadComponent"
-import { UploadType } from "../../../../types"
+import { useMutation } from "blitz"
+import createDocument from "../../../customer-portals/mutations/createDocument"
 
 export type PortalDocument = {
   id: number
@@ -29,6 +30,7 @@ export default function DocumentsCard(props: {
 }) {
   //reference: https://tailwindui.com/components/application-ui/data-display/title-lists#component-e1b5917b21bbe76a73a96c5ca876225f
 
+  const [createDocumentMutation] = useMutation(createDocument)
   return (
     <Card>
       <CardHeader>Documents</CardHeader>
@@ -47,8 +49,14 @@ export default function DocumentsCard(props: {
 
       <div style={{ width: "min-content" }}>
         <UploadComponent
-          uploadParams={{ portalId: props.portalId, uploadType: UploadType.Document }}
-          onUploadComplete={async () => props.refetchHandler()}
+          uploadParams={{ portalId: props.portalId }}
+          onUploadComplete={async ({ id, body, href }) => {
+            await createDocumentMutation({
+              portalId: props.portalId,
+              linkId: id,
+            })
+            props.refetchHandler()
+          }}
         >
           <button
             type="button"
