@@ -6,20 +6,20 @@ import React, { useState } from "react"
 import RevealSection from "../generic/RevealSection"
 import Modal from "../generic/Modal"
 import { getName } from "../../util/text"
-import { EventType } from "db"
+import { EventType, LinkType } from "db"
 import { invoke, useMutation } from "blitz"
 import updateProposalApproval from "../../../customer-portals/mutations/updateProposalApproval"
 import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
 import createEvent from "../../../event/mutations/createEvent"
 import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircles"
-import { LinkWithId, UploadType } from "../../../../types"
+import { LinkWithId } from "../../../../types"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CloudUploadIcon } from "@heroicons/react/outline"
 import { UploadModal } from "./edit/uploadModal"
 import updateProposalText from "../../../customer-portals/mutations/updateProposalText"
-import createProposalLink from "../../../customer-portals/mutations/createProposalLink"
+import createProposalLink from "../../../customer-portals/mutations/updateProposalLink"
 
 export type Stakeholder = {
   firstName: string
@@ -114,18 +114,21 @@ function EditProposalCard(props: { portalId: number; data: Proposal; refetchHand
           <UploadModal
             uploadParams={{
               portalId: props.portalId,
-              uploadType: UploadType.Proposal,
             }}
             title={"Upload"}
-            onLinkSubmit={async (data) => {
+            onLinkSubmit={async (link) => {
               await createProposalLinkMutation({
-                ...data,
                 portalId: props.portalId,
+                link: { ...link, type: LinkType.WebLink },
               })
               props.refetchHandler()
               setUploadModal(false)
             }}
-            onUploadComplete={async ({ id, body, href }) => {
+            onUploadComplete={async (link) => {
+              await createProposalLinkMutation({
+                portalId: props.portalId,
+                link: { ...link, type: LinkType.Document },
+              })
               props.refetchHandler()
               setUploadModal(false)
             }}

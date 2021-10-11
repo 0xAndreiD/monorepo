@@ -56,3 +56,5 @@ lib-cov
 .idea/
 db/geoip/
 prod_data/
+
+public/
