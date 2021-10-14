@@ -50,6 +50,11 @@ model UserPortal {
   @@id([userId, portalId])
 }
 
+enum SiteRole {
+  SiteAdmin
+  SiteUser
+}
+
 model User {
   id               Int               @id @default(autoincrement())
   firstName        String
@@ -66,7 +71,7 @@ model User {
   tokens           Token[]
   sessions         Session[]
   hashedPassword   String?
-  role             Role              @default(Stakeholder)
+  role             SiteRole          @default(SiteUser)
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 }

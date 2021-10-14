@@ -78,16 +78,16 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
     })),
   }
 
-  const accountExecutives = new Set(
+  const accountExecutiveIds = new Set(
     portal.userPortals.filter((x) => x.role === Role.AccountExecutive).map((x) => x.userId)
   )
-  const stakeholders = new Set(portal.userPortals.filter((x) => x.role === Role.Stakeholder).map((x) => x.userId))
+  const stakeholderIds = new Set(portal.userPortals.filter((x) => x.role === Role.Stakeholder).map((x) => x.userId))
 
   const nextSteps = {
     customer: {
       name: portal.customerName,
       tasks: portal.nextStepsTasks
-        .filter((x) => accountExecutives.has(x.userId))
+        .filter((x) => accountExecutiveIds.has(x.userId))
         .map((x) => ({
           id: x.id,
           description: x.description,
@@ -97,7 +97,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
     vendor: {
       name: portal.vendor.name,
       tasks: portal.nextStepsTasks
-        .filter((x) => stakeholders.has(x.userId))
+        .filter((x) => stakeholderIds.has(x.userId))
         .map((x) => ({
           id: x.id,
           description: x.description,

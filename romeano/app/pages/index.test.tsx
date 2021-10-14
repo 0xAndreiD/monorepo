@@ -2,7 +2,7 @@ import { render } from "test/utils"
 
 import Home from "./index"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import { Role } from "db"
+import { Role, SiteRole } from "db"
 
 jest.mock("app/core/hooks/useCurrentUser")
 const mockUseCurrentUser = useCurrentUser as jest.MockedFunction<typeof useCurrentUser>
@@ -18,7 +18,7 @@ test.skip("renders blitz documentation link", () => {
     firstName: "User",
     lastName: "User",
     email: "user@email.com",
-    role: Role.Stakeholder,
+    role: SiteRole.SiteUser,
     userPortals: [],
   })
 

@@ -10,7 +10,6 @@ export default resolver.pipe(resolver.zod(Signup), async ({ email, password }, c
       lastName: "User",
       email: email.toLowerCase().trim(),
       hashedPassword,
-      role: Role.AccountExecutive,
     },
     select: { id: true, firstName: true, email: true, role: true },
   })

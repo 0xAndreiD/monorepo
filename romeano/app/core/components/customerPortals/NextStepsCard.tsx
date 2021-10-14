@@ -12,33 +12,31 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import createEvent from "../../../event/mutations/createEvent"
 import { EventType } from "../../../../db"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 type NextSteps = {
   customer: {
-    name: string,
+    name: string
     tasks: NextStepsTask[]
-  },
+  }
   vendor: {
-    name: string,
+    name: string
     tasks: NextStepsTask[]
   }
 }
 
-export default function NextStepsCard(props: NextSteps & { portalId: number, refetchHandler: () => void }) {
+export default function NextStepsCard(props: NextSteps & { portalId: number; refetchHandler: () => void }) {
   //reference: https://tailwindui.com/components/application-ui/data-display/description-lists#component-e1b5917b21bbe76a73a96c5ca876225f
   const [isAdding, setIsAdding] = useState(false)
   const [createNextStep] = useMutation(createNextStepsTask)
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setFocus,
-    formState
-  } = useForm<z.infer<typeof CreateNextStepsTask>>({
-    // resolver: zodResolver(CreateNextStepsTask.omit({ portalId: true }))
+  const user = useCurrentUser()
+  const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof CreateNextStepsTask>>({
+    resolver: zodResolver(z.object({ description: z.string().nonempty() })),
   })
-  const onSubmit = handleSubmit(async data => {
+
+  const onSubmit = handleSubmit(async (data) => {
     await createNextStep({ portalId: props.portalId, description: data.description })
     invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepCreate })
     setIsAdding(false)
@@ -50,89 +48,109 @@ export default function NextStepsCard(props: NextSteps & { portalId: number, ref
     if (isAdding) setFocus("description")
   }, [isAdding, setFocus])
 
-  return <Card>
+  const NextStepsAddButton = (props: { className?: string }) => {
+    return (
+      <div {...props}>
+        {isAdding && (
+          <form className="mb-2 flex gap-2 items-center justify-center" onSubmit={onSubmit}>
+            <input
+              type="text"
+              placeholder="New task item..."
+              className="block w-full shadow-sm border py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+              {...register("description", { required: true, maxLength: 80 })}
+            />
+            <button
+              disabled={formState.isSubmitting}
+              className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full "
+            >
+              <PaperAirplaneIcon fill="#00ddb9" className="ml-1 mb-1 transform rotate-45 h-6 w-6 text-green-400" />
+            </button>
+          </form>
+        )}
+        <AddButton onClick={() => setIsAdding(!isAdding)} />
+      </div>
+    )
+  }
 
-    <CardHeader>Next Steps</CardHeader>
-
-    <NextStepsTaskList portalId={props.portalId}
-                       isElementDeletable={false}
-                       name={props.customer.name}
-                       tasks={props.customer.tasks}
-                       refetchHandler={props.refetchHandler} />
-
-    <CardDivider />
-
-    <NextStepsTaskList portalId={props.portalId}
-                       isElementDeletable={true}
-                       name={props.vendor.name}
-                       tasks={props.vendor.tasks}
-                       refetchHandler={props.refetchHandler} />
-
-    {
-      isAdding && <form className="mb-2 flex gap-2 items-center justify-center"
-                        onSubmit={onSubmit}>
-        <input type="text"
-               placeholder="New task item..."
-               className="block w-full shadow-sm border py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-               {...register("description", { required: true, maxLength: 80 })}
-        />
-
-        <button disabled={formState.isSubmitting}
-                className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
-          <PaperAirplaneIcon
-            fill="#00ddb9"
-            className="ml-1 mb-1 transform rotate-45 h-6 w-6 text-green-400" />
-        </button>
-      </form>
-    }
-
-    <AddButton onClick={() => setIsAdding(!isAdding)} />
-
-  </Card>
+  return (
+    <Card>
+      <CardHeader>Next Steps</CardHeader>
+      <NextStepsTaskList
+        portalId={props.portalId}
+        isElementDeletable={!!user?.accountExecutive}
+        name={props.customer.name}
+        tasks={props.customer.tasks}
+        refetchHandler={props.refetchHandler}
+      />
+      {user?.accountExecutive && <NextStepsAddButton className="mb-5" />}
+      <CardDivider />
+      <NextStepsTaskList
+        portalId={props.portalId}
+        isElementDeletable={!user?.accountExecutive}
+        name={props.vendor.name}
+        tasks={props.vendor.tasks}
+        refetchHandler={props.refetchHandler}
+      />
+      {!user?.accountExecutive && <NextStepsAddButton />}
+    </Card>
+  )
 }
 
 type NextStepsTask = {
-  id: number,
-  description: string,
-  isCompleted: boolean,
+  id: number
+  description: string
+  isCompleted: boolean
 }
 
-function NextStepsTaskList(props: { portalId: number, isElementDeletable: boolean, name: string, tasks: NextStepsTask[], refetchHandler: () => void }) {
+function NextStepsTaskList(props: {
+  portalId: number
+  isElementDeletable: boolean
+  name: string
+  tasks: NextStepsTask[]
+  refetchHandler: () => void
+}) {
   const [updateIsCompleted] = useMutation(updateNextStepsTask)
   const [deleteNextStep] = useMutation(deleteNextStepsTask)
 
-  return <>
-    <p className="max-w-2xl pt-4 text-sm">for <span className="font-bold">{props.name}</span></p>
+  return (
+    <>
+      <p className="max-w-2xl pt-4 text-sm">
+        for <span className="font-bold">{props.name}</span>
+      </p>
 
-    <div className="sm:divide-y sm:divide-gray-200">
-      <ul className="py-3 sm:py-3">
-        {
-          props.tasks.map(task =>
+      <div className="sm:divide-y sm:divide-gray-200">
+        <ul className="py-3 sm:py-3">
+          {props.tasks.map((task) => (
             <li key={task.id} className="flex items-center">
-              <input type="checkbox" checked={task.isCompleted} onChange={async () => {
-                const newCompletionStatus = !task.isCompleted
-                const updatedTask = await updateIsCompleted({ id: task.id, isCompleted: newCompletionStatus })
-                newCompletionStatus ?
-                  invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepMarkCompleted }) :
-                  invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepMarkNotCompleted })
-                props.refetchHandler()
-              }} />
+              <input
+                type="checkbox"
+                checked={task.isCompleted}
+                onChange={async () => {
+                  const newCompletionStatus = !task.isCompleted
+                  const updatedTask = await updateIsCompleted({ id: task.id, isCompleted: newCompletionStatus })
+                  newCompletionStatus
+                    ? invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepMarkCompleted })
+                    : invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepMarkNotCompleted })
+                  props.refetchHandler()
+                }}
+              />
               <span className="px-2">{task.description}</span>
-              {
-                props.isElementDeletable &&
-                <button style={{ marginLeft: "auto" }}
-                        onClick={async () => {
-                          await deleteNextStep({ id: task.id })
-                          invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepDelete })
-                          props.refetchHandler()
-                        }}>
+              {props.isElementDeletable && (
+                <button
+                  style={{ marginLeft: "auto" }}
+                  onClick={async () => {
+                    await deleteNextStep({ id: task.id })
+                    invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepDelete })
+                    props.refetchHandler()
+                  }}
+                >
                   <TrashIcon className="w-4 h-4 text-gray-400" />
                 </button>
-              }
-            </li>)
-        }
-      </ul>
-
-    </div>
-  </>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
+  )
 }

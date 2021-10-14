@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "SiteRole" AS ENUM ('SiteAdmin', 'SiteUser');
+
+-- CreateEnum
 CREATE TYPE "TokenType" AS ENUM ('RESET_PASSWORD');
 
 -- CreateEnum
@@ -48,7 +51,7 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "photoUrl" TEXT,
     "hashedPassword" TEXT,
-    "role" "Role" NOT NULL DEFAULT E'Stakeholder',
+    "role" "SiteRole" NOT NULL DEFAULT E'SiteUser',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -150,7 +153,6 @@ CREATE TABLE "ProductInfoSection" (
 CREATE TABLE "ProductInfoSectionLink" (
     "id" SERIAL NOT NULL,
     "linkId" INTEGER NOT NULL,
-    "isReplaced" BOOLEAN NOT NULL DEFAULT false,
     "productInfoSectionId" INTEGER NOT NULL,
 
     CONSTRAINT "ProductInfoSectionLink_pkey" PRIMARY KEY ("id")

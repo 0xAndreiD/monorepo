@@ -17,7 +17,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 DB Setup
 
 ```shell
-psql -U postgres -h localhost -d romeano -c 'drop schema public cascade;'; yarn blitz prisma migrate dev --name init --skip-generate && yarn blitz prisma migrate reset --force --skip-generate && yarn blitz db seed
+psql -U postgres -h localhost -d romeano -c 'drop schema public cascade;'; yarn blitz prisma migrate dev --name init --skip-generate && yarn blitz prisma migrate reset --force --skip-generate
 ```
 
 ### Prod

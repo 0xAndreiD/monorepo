@@ -14,7 +14,7 @@
   },
   "prisma": {
     "schema": "db/schema.prisma",
-    "seed": "ts-node db/seeds.ts"
+    "seed": "blitz db seed"
   },
   "prettier": {
     "semi": false,

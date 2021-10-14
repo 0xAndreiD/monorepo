@@ -1,6 +1,7 @@
 import React from "react"
 import { Line } from "react-chartjs-2"
 import { Card, CardHeader } from "../generic/Card"
+import "chartjs-adapter-date-fns"
 
 //see https://www.chartjs.org/docs/latest/samples/line/line.html
 export default function LineChart(props: { data: Array<{ x: Date; y: number }> }) {

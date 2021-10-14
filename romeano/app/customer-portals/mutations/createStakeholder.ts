@@ -1,5 +1,5 @@
 import { AuthenticationError, generateToken, resolver, Routes } from "blitz"
-import db, { Role } from "db"
+import db, { Role, SiteRole } from "db"
 import { z } from "zod"
 import { splitName } from "../../core/util/text"
 import { sendInvite } from "../../core/util/email"
@@ -46,7 +46,7 @@ export default resolver.pipe(
           firstName,
           lastName,
           email,
-          role: Role.Stakeholder,
+          role: SiteRole.SiteUser,
         },
       }))
 
