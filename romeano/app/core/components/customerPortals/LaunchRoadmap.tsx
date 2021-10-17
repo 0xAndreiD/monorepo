@@ -29,6 +29,7 @@ function RoadmapStage(props: {
   status: CompletionStatus.Complete | CompletionStatus.InProgress | CompletionStatus.Upcoming
   editingEnabled: boolean
   onClick: (stageIdx: number) => void
+  onEdit: () => void
 }) {
   return (
     <React.Fragment>
@@ -68,6 +69,16 @@ function RoadmapStage(props: {
           </TrackedLink>
         )}
       </div>
+      {props.editingEnabled && (
+        <button
+          className="inline-flex items-center px-5 py-2 border border-gray-300 shadow-sm text-sm
+                  leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          onClick={props.onEdit}
+        >
+          Edit
+        </button>
+      )}
     </React.Fragment>
   )
 }
@@ -85,6 +96,7 @@ export default function LaunchRoadmap(props: {
   currentRoadmapStage: number
   stages: LaunchStage[]
   editingEnabled: boolean
+  onEditRoadmapStage?: (stageIdx: number) => void
   refetchHandler: () => void
 }) {
   const [updateLaunchRoadmapStageMutation] = useMutation(updateLaunchRoadmapStage)
@@ -116,7 +128,7 @@ export default function LaunchRoadmap(props: {
       {/*    }*/}
       {/*</ol>*/}
       <ul
-        style={{ gridTemplateRows: `repeat(5, auto)`, gridAutoColumns: "1fr" }}
+        style={{ gridTemplateRows: `repeat(${props.editingEnabled ? 6 : 5}, auto)`, gridAutoColumns: "1fr" }}
         // <ul style={{gridTemplateRows: "repeat(4, auto)", gridAutoColumns: "1fr"}}
         className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5"
       >
@@ -130,6 +142,7 @@ export default function LaunchRoadmap(props: {
             status={getCompletionStatus(props.currentRoadmapStage, stageIdx)}
             editingEnabled={props.editingEnabled}
             onClick={clickHandler}
+            onEdit={() => props.onEditRoadmapStage?.(stageIdx)}
           />
         ))}
       </ul>

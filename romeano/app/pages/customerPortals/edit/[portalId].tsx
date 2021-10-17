@@ -9,9 +9,10 @@ import { Footer } from "app/core/components/Footer"
 import { Header } from "app/core/components/customerPortals/Header"
 import { CardDivider } from "app/core/components/generic/Card"
 import { useParam, useQuery, useSession } from "blitz"
+import RoadmapModal from "app/core/components/customerPortals/edit/RoadmapModal"
 import getCustomerPortal from "../../../customer-portals/queries/getCustomerPortal"
 import StakeholderLoginForm from "../../../auth/components/StakeholderLoginForm"
-import React from "react"
+import React, { useState } from "react"
 
 function EditCustomerPortal() {
   const portalId = useParam("portalId", "number")
@@ -25,6 +26,13 @@ function EditCustomerPortal() {
       enabled: !!portalId && !session.isLoading && !!session.userId,
     }
   )
+
+  const [editRoadmapModalState, setEditRoadmapModalState] = useState<
+    { stageIdx: null; isEditing: false } | { stageIdx: number; isEditing: true }
+  >({
+    stageIdx: null,
+    isEditing: false,
+  })
 
   if (!session.isLoading && !session.userId) {
     return <StakeholderLoginForm />
@@ -50,7 +58,20 @@ function EditCustomerPortal() {
         <div className="py-3">
           <CardDivider />
         </div>
-        <LaunchRoadmap portalId={portalId} refetchHandler={refetch} editingEnabled={true} {...data.launchRoadmap} />
+        <LaunchRoadmap
+          portalId={portalId}
+          refetchHandler={refetch}
+          editingEnabled={true}
+          onEditRoadmapStage={(stageIdx: number) => {
+            setEditRoadmapModalState({ stageIdx, isEditing: true })
+          }}
+          {...data.launchRoadmap}
+        />
+        <RoadmapModal
+          portalId={portalId}
+          stageIdx={editRoadmapModalState.stageIdx!} //stageIdx cannot be null
+          showing={editRoadmapModalState.isEditing}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 bg-gray-100">

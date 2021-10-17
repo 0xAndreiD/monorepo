@@ -1,14 +1,14 @@
 import { useForm } from "react-hook-form"
 
 import React, { useState } from "react"
-import { LinkType } from "../../../../../db"
+import { LinkType } from "db"
 import { Dialog } from "@headlessui/react"
 import { CloudUploadIcon, LinkIcon } from "@heroicons/react/outline"
 import { UploadComponent } from "app/core/components/customerPortals/UploadComponent"
 import { z } from "zod"
 import { Link, LinkWithId, LinkWithType } from "types"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { UploadParams } from "../../../../api/uploadDocument"
+import { UploadParams } from "app/api/uploadDocument"
 
 export function UploadModal(props: {
   title: string
