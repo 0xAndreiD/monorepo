@@ -1,18 +1,22 @@
-import { Ctx } from "blitz"
+import { Ctx, resolver } from "blitz"
 import db from "db"
+import { z } from "zod"
 
-export default async function getCurrentUser(_ = null, { session }: Ctx) {
+export const GetCurrentUser = z.object({
+  portalId: z.number().nonnegative().optional(),
+})
+
+export default resolver.pipe(resolver.zod(GetCurrentUser), async ({ portalId }, { session }: Ctx) => {
   if (!session.userId) return null
 
   const user = await db.user.findFirst({
     include: {
       accountExecutive: true,
       stakeholder: true,
-      userPortals: true
+      userPortals: { where: { portalId } },
     },
-    where: { id: session.userId }
+    where: { id: session.userId },
   })
 
-
-  return { ...user, userPortals: user?.userPortals.map((x) => x.portalId) }
-}
+  return { ...user, role: user?.userPortals[0]?.role }
+})
