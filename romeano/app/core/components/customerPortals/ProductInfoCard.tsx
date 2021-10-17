@@ -133,15 +133,26 @@ export function ProductInfoCard(props: {
             portalId: props.portalId,
           }}
           title={"Upload"}
-          onLinkSubmit={async (data) => {
+          onLinkSubmit={async (link) => {
             await createProductInfoSectionLinkMutation({
-              ...data,
+              link: {
+                ...link,
+                type: LinkType.WebLink,
+              },
               productInfoSectionId: createNewModalProps.productInfoSectionId!, //always non-null id when modal is selected
             })
             props.refetchHandler()
             setCreateNewModalProps({ isOpen: false, productInfoSectionId: undefined })
           }}
           onUploadComplete={async ({ id, body, href }) => {
+            await createProductInfoSectionLinkMutation({
+              link: {
+                body,
+                href,
+                type: LinkType.Document,
+              },
+              productInfoSectionId: createNewModalProps.productInfoSectionId!, //always non-null id when modal is selected
+            })
             props.refetchHandler()
             setCreateNewModalProps({ isOpen: false, productInfoSectionId: undefined })
           }}
@@ -159,10 +170,10 @@ export function ProductInfoCard(props: {
             portalId: props.portalId,
           }}
           title={"Edit"}
-          onLinkSubmit={async (data) => {
+          onLinkSubmit={async (link) => {
             await updateProductInfoSectionLinkMutation({
               link: {
-                ...data,
+                ...link,
                 type: LinkType.WebLink,
               },
               productInfoSectionLinkId: editLinkModalProps.link!.productInfoSectionLinkId, //always non-null id when modal is selected

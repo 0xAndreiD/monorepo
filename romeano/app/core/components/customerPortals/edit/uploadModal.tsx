@@ -25,9 +25,9 @@ export function UploadModal(props: {
     resolver: zodResolver(schema),
     defaultValues: props.existingData?.type === LinkType.WebLink ? props.existingData : {},
   })
-  const formOnSubmit = handleSubmit(async (data) => {
+  const formOnSubmit = handleSubmit(async (link) => {
     reset()
-    await props.onLinkSubmit(data)
+    await props.onLinkSubmit(link)
   })
 
   const [uploadType, setUploadType] = useState<LinkType | null>(null)
