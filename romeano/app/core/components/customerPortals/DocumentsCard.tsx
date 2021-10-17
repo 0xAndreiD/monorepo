@@ -1,10 +1,11 @@
 import { CheckIcon, CloudUploadIcon } from "@heroicons/react/solid"
 import { Card, CardDivider, CardHeader } from "../generic/Card"
 import { TrackedLink } from "../generic/Link"
-import { EventType } from "db"
+import { EventType, Role } from "db"
 import { UploadComponent } from "./UploadComponent"
 import { useMutation } from "blitz"
 import createDocument from "../../../customer-portals/mutations/createDocument"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
 export type PortalDocument = {
   id: number
@@ -29,25 +30,11 @@ export default function DocumentsCard(props: {
   refetchHandler: () => void
 }) {
   //reference: https://tailwindui.com/components/application-ui/data-display/title-lists#component-e1b5917b21bbe76a73a96c5ca876225f
+  const user = useCurrentUser(props.portalId)
 
-  const [createDocumentMutation] = useMutation(createDocument)
-  return (
-    <Card>
-      <CardHeader>Documents</CardHeader>
-
-      <DocumentList
-        portalId={props.portalId}
-        companyName={props.data.customer.name}
-        documents={props.data.customer.documents}
-      />
-      <CardDivider />
-      <DocumentList
-        portalId={props.portalId}
-        companyName={props.data.vendor.name}
-        documents={props.data.vendor.documents}
-      />
-
-      <div style={{ width: "min-content" }}>
+  const DocumentUploadButton = ({ className }: { className?: string }) => {
+    return (
+      <div className={className} style={{ width: "min-content" }}>
         <UploadComponent
           uploadParams={{ portalId: props.portalId }}
           onUploadComplete={async ({ id, body, href }) => {
@@ -69,6 +56,26 @@ export default function DocumentsCard(props: {
           </button>
         </UploadComponent>
       </div>
+    )
+  }
+
+  const [createDocumentMutation] = useMutation(createDocument)
+  return (
+    <Card>
+      <CardHeader>Documents</CardHeader>
+      <DocumentList
+        portalId={props.portalId}
+        companyName={props.data.customer.name}
+        documents={props.data.customer.documents}
+      />
+      {user?.role === Role.AccountExecutive && <DocumentUploadButton className="mb-5" />}
+      <CardDivider />
+      <DocumentList
+        portalId={props.portalId}
+        companyName={props.data.vendor.name}
+        documents={props.data.vendor.documents}
+      />
+      {user?.role === Role.Stakeholder && <DocumentUploadButton />}
     </Card>
   )
 }

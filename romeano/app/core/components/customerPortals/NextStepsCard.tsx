@@ -10,8 +10,8 @@ import { invoke, useMutation } from "blitz"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import createEvent from "../../../event/mutations/createEvent"
-import { EventType } from "../../../../db"
+import createEvent from "app/event/mutations/createEvent"
+import { EventType, Role } from "db"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { zodResolver } from "@hookform/resolvers/zod"
 
@@ -31,7 +31,7 @@ export default function NextStepsCard(props: NextSteps & { portalId: number; ref
   const [isAdding, setIsAdding] = useState(false)
   const [createNextStep] = useMutation(createNextStepsTask)
 
-  const user = useCurrentUser()
+  const user = useCurrentUser(props.portalId)
   const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof CreateNextStepsTask>>({
     resolver: zodResolver(z.object({ description: z.string().nonempty() })),
   })
@@ -77,21 +77,21 @@ export default function NextStepsCard(props: NextSteps & { portalId: number; ref
       <CardHeader>Next Steps</CardHeader>
       <NextStepsTaskList
         portalId={props.portalId}
-        isElementDeletable={!!user?.accountExecutive}
+        isElementDeletable={user?.role === Role.AccountExecutive}
         name={props.customer.name}
         tasks={props.customer.tasks}
         refetchHandler={props.refetchHandler}
       />
-      {user?.accountExecutive && <NextStepsAddButton className="mb-5" />}
+      {user?.role === Role.AccountExecutive && <NextStepsAddButton className="mb-5" />}
       <CardDivider />
       <NextStepsTaskList
         portalId={props.portalId}
-        isElementDeletable={!user?.accountExecutive}
+        isElementDeletable={user?.role === Role.Stakeholder}
         name={props.vendor.name}
         tasks={props.vendor.tasks}
         refetchHandler={props.refetchHandler}
       />
-      {!user?.accountExecutive && <NextStepsAddButton />}
+      {user?.role === Role.Stakeholder && <NextStepsAddButton />}
     </Card>
   )
 }

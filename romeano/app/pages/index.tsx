@@ -118,7 +118,7 @@ const Home: BlitzPage = () => {
   if (user.accountExecutive) {
     return <VendorStats />
   } else if (user.stakeholder && user.userPortals?.length === 1) {
-    router.push(Routes.CustomerPortal({ portalId: user.userPortals[0] }))
+    router.push(Routes.CustomerPortal({ portalId: user.userPortals[0].portalId }))
     return <>Loading Portal!</>
   } else if (user.stakeholder) {
     return <PortalsList />
