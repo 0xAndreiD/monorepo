@@ -56,15 +56,12 @@ const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, Nex
 
     console.log("fileUpload(): file uploaded")
 
-    // @ts-ignore
-    const rawFiles: Array<{ originalFilename: string; newFilename: string; filepath: string }> = flatten(
-      Object.values(req.files)
-    ) //FIXME: types haven't been updated upstream yet
+    const rawFiles = flatten(Object.values(req.files))
     const docs = rawFiles.map(async (file): Promise<LinkWithId> => {
       const link = await db.link.create({
         data: {
           body: file.originalFilename ?? "Untitled File",
-          href: file.newFilename,
+          href: file.newFilename!,
           type: LinkType.Document,
           creator: { connect: { id: userId } },
         },

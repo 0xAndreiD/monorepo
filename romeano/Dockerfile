@@ -1,6 +1,6 @@
 # source https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
 # Install dependencies only when needed
-FROM node:alpine AS deps
+FROM node:16-alpine AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat \
                        libtool autoconf automake build-base python3 #stuff for sodium-native
@@ -9,7 +9,7 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 # Rebuild the source code only when needed
-FROM node:alpine AS builder
+FROM node:16-alpine AS builder
 WORKDIR /app
 COPY . .
 # geoip is added during yarn postinstall, which would not be in node_modules by default
@@ -18,7 +18,7 @@ COPY --from=deps /app/node_modules ./node_modules
 RUN yarn prisma generate && yarn build && yarn install --production --ignore-scripts --prefer-offline
 
 # Production image, copy all the files and run next
-FROM node:alpine AS runner
+FROM node:16-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
