@@ -1,4 +1,3 @@
-import * as React from "react"
 import { useEffect } from "react"
 import "tailwindcss/tailwind.css"
 import Modal from "app/core/components/generic/Modal"
@@ -114,28 +113,16 @@ export default function RoadmapModal(props: {
           {/*<FlexibleList label="Tasks" list={tasks} dispatch={setTasks} />*/}
           <div className="flex flex-col">
             {fields.map((field, index) => (
-              <div key={index} className="flex justify-between mb-2">
-                <div className="flex items-center">
-                  <span className="text-xl text-gray-500 inline-block cursor-pointer">⠿</span>
-                  {/*<input*/}
-                  {/*  type="hidden"*/}
-                  {/*  key={`${index}.id`}*/}
-                  {/*  {...register(`tasks.${index}.id`, {*/}
-                  {/*    setValueAs: (v) => {*/}
-                  {/*      console.log("MAGIC", v, parseInt(v) ?? undefined)*/}
-                  {/*      return parseInt(v) ?? undefined*/}
-                  {/*    },*/}
-                  {/*  })}*/}
-                  {/*/>*/}
-                  <input
-                    type="text"
-                    placeholder="Task description"
-                    className="border rounded-md ml-1 p-2 w-max"
-                    key={`${index}.task`}
-                    {...register(`tasks.${index}.task`, { required: true })}
-                  />
-                  {errors.tasks?.[index] && <p>{errors.tasks[index].task?.message}</p>}
-                </div>
+              <div key={field.id} className="flex items-center gap-2 mb-2">
+                <span className="text-xl text-gray-500 inline-block cursor-pointer">⠿</span>
+                <input
+                  type="text"
+                  placeholder="Task description"
+                  className="border rounded-md p-2 w-full"
+                  {...register(`tasks.${index}.task`, { required: true })}
+                />
+                {errors.tasks?.[index] && <p>{errors.tasks[index].task?.message}</p>}
+
                 <button type="button" onClick={() => remove(index)}>
                   <TrashIcon className="w-4 h-4 text-gray-400" />
                 </button>

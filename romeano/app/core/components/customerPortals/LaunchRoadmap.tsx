@@ -147,8 +147,8 @@ export function useModalReducer() {
       case ModalActionChange.HANDLE_EDIT:
         return {
           ...state,
-          displayState: ModalDisplayState.ROADMAP_MODAL,
           ...action.payload,
+          displayState: ModalDisplayState.ROADMAP_MODAL,
         }
       case ModalActionChange.HANDLE_UPLOAD:
         return {
