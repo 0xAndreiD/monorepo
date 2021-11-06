@@ -8,6 +8,7 @@ export const UpdateLaunchRoadmapStage = z.object({
   date: z.date().optional(),
   heading: z.string().nonempty(),
   tasks: z.string().array(),
+  linkId: z.number().nonnegative().optional(),
 })
 
 export default resolver.pipe(resolver.zod(UpdateLaunchRoadmapStage), resolver.authorize(), async (data, ctx) => {
@@ -16,7 +17,12 @@ export default resolver.pipe(resolver.zod(UpdateLaunchRoadmapStage), resolver.au
   if (!userId) throw new AuthenticationError("no userId provided")
 
   return await db.roadmapStage.update({
-    data: { date: data.date ?? null, heading: data.heading, tasks: data.tasks },
+    data: {
+      date: data.date ?? null,
+      heading: data.heading,
+      tasks: data.tasks,
+      ctaLinkId: data.linkId ?? null,
+    },
     where: { id: data.roadmapStageId },
   })
 })

@@ -73,7 +73,7 @@ const seedCustomerPortal = async () => {
     data: {
       customerName: "Koch",
       customerLogoUrl:
-        "https://gray-kwch-prod.cdn.arcpublishing.com/resizer/gLAX07TEGwQfEgBOQ3quD5JAugM=/1200x400/smart/cloudfront-us-east-1.images.arcpublishing.com/gray/IKLFKUHCCJCO3GQSYNXHJOAOSU.JPG",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Logo_Koch_Industries.svg/1280px-Logo_Koch_Industries.svg.png",
       currentRoadmapStage: 2,
       userPortals: {
         createMany: {

@@ -10,7 +10,7 @@ services:
     volumes:
       - type: bind
         source: ${PWD}/prod_data/uploads
-        target: /app/.blitz/build/public/uploads
+        target: /app/public/uploads
 
   db:
     image: postgres:alpine
