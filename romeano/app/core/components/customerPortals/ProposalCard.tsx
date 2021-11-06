@@ -6,7 +6,7 @@ import React, { useState } from "react"
 import RevealSection from "../generic/RevealSection"
 import Modal from "../generic/Modal"
 import { getName } from "../../util/text"
-import { EventType, LinkType } from "db"
+import { EventType } from "db"
 import { invoke, useMutation } from "blitz"
 import updateProposalApproval from "../../../customer-portals/mutations/updateProposalApproval"
 import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
@@ -81,7 +81,6 @@ function EditProposalCard(props: { portalId: number; data: Proposal; refetchHand
                   defaultValue={props.data.heading}
                   placeholder="Cool description for clients"
                   {...register("proposalHeading")}
-                  autoFocus
                   required
                 />
               </div>
@@ -116,10 +115,10 @@ function EditProposalCard(props: { portalId: number; data: Proposal; refetchHand
               portalId: props.portalId,
             }}
             title={"Upload"}
-            onLinkSubmit={async (link) => {
+            onLinkComplete={async (link) => {
               await createProposalLinkMutation({
                 portalId: props.portalId,
-                link: { ...link, type: LinkType.WebLink },
+                linkId: link.id,
               })
               props.refetchHandler()
               setUploadModal(false)
@@ -127,7 +126,7 @@ function EditProposalCard(props: { portalId: number; data: Proposal; refetchHand
             onUploadComplete={async (link) => {
               await createProposalLinkMutation({
                 portalId: props.portalId,
-                link: { ...link, type: LinkType.Document },
+                linkId: link.id,
               })
               props.refetchHandler()
               setUploadModal(false)

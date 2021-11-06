@@ -187,8 +187,6 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
     GROUP BY E."portalId", E."userId", U."firstName", U."lastName", email, "hasStakeholderApproved"`
   const stakeholderEvents = groupBy(activePortalsStakeholders, "portalId")
 
-  console.log("main", activePortals)
-  console.log("join", activePortalsStakeholders)
   const activePortalsDocs = await db.$queryRaw<
     Array<{
       portalId: number
@@ -236,7 +234,6 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
     stakeholderEvents: stakeholderEvents[p.portalId] ?? [],
     documentEvents: documentEvents[p.portalId] ?? [],
   }))
-  console.log("final", all)
 
   return {
     header,

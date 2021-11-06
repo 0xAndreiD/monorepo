@@ -193,7 +193,7 @@ const seedCustomerPortal = async () => {
     {
       heading: "Intro Meeting",
       date: new Date(2021, 9, 8),
-      tasks: { create: { task: "Go over Mira's platform." } },
+      tasks: ["Go over Mira's platform."],
       ctaLink: {
         create: {
           body: "Mira's Slide Deck",
@@ -207,7 +207,7 @@ const seedCustomerPortal = async () => {
     {
       heading: "AR Headset Demo",
       date: new Date(2021, 10, 11),
-      tasks: { create: { task: "Demonstrate a live Mira Connect call from headset." } },
+      tasks: ["Demonstrate a live Mira Connect call from headset."],
       ctaLink: {
         create: {
           body: "Join Zoom 📞",
@@ -220,12 +220,12 @@ const seedCustomerPortal = async () => {
     },
     {
       heading: "Use-Case Planning Workshop",
-      tasks: { create: { task: "Define problem and primary use-case Mira will be used for." } },
+      tasks: ["Define problem and primary use-case Mira will be used for."],
       portal: { connect: { id: portal.id } },
     },
     {
       heading: "Pilot Package Purchase",
-      tasks: { create: { task: "Quote attached below" } },
+      tasks: ["Quote attached below"],
       portal: { connect: { id: portal.id } },
     },
   ]
@@ -642,9 +642,7 @@ async function seedMira() {
     {
       heading: "Intro Meeting",
       date: zonedTimeToUtc(new Date(2021, 7, 4), "America/Los_Angeles"),
-      tasks: {
-        create: { task: "Go over Mira's platform." },
-      },
+      tasks: ["Go over Mira's platform."],
       ctaLink: {
         create: {
           body: "Mira Product Video",
@@ -657,11 +655,7 @@ async function seedMira() {
     },
     {
       heading: "Live AR Headset Demo",
-      tasks: {
-        create: {
-          task: "Demonstrate a live Mira Connect call for your stakeholders.",
-        },
-      },
+      tasks: ["Demonstrate a live Mira Connect call for your stakeholders."],
       ctaLink: {
         create: {
           body: "Join Zoom 📞",
@@ -674,22 +668,12 @@ async function seedMira() {
     },
     {
       heading: "Use-Case & Value Stream Workshop",
-      tasks: {
-        createMany: {
-          data: [
-            { task: "Define primary use-case where Mira will be used" },
-            { task: "Build interaction web" },
-            { task: "Value map/ROI calculations" },
-          ],
-        },
-      },
+      tasks: ["Define primary use-case where Mira will be used", "Build interaction web", "Value map/ROI calculations"],
       portal: { connect: { id: portal.id } },
     },
     {
       heading: "Deployment Configuration",
-      tasks: {
-        create: { task: "Quantify deployment size & scope" },
-      },
+      tasks: ["Quantify deployment size & scope"],
       portal: { connect: { id: portal.id } },
     },
   ]

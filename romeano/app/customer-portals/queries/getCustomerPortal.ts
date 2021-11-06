@@ -20,10 +20,9 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
       proposalLink: true,
       roadmapStages: {
         include: {
-          tasks: true, //get the associated tasks for a stage
           ctaLink: true,
         },
-        orderBy: { id: "asc" },
+        orderBy: [{ portalId: "asc" }, { id: "asc" }],
       },
       nextStepsTasks: {
         include: {
@@ -71,10 +70,11 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   const launchRoadmap = {
     currentRoadmapStage: portal.currentRoadmapStage,
     stages: portal.roadmapStages.map((stage) => ({
+      id: stage.id,
       heading: stage.heading,
       date: stage.date?.toISOString(),
-      tasks: stage.tasks.map((task) => task.task),
-      ctaLink: stage.ctaLink,
+      tasks: stage.tasks,
+      ctaLink: stage.ctaLink ? { ...stage.ctaLink, href: formatLink(stage.ctaLink) } : undefined,
     })),
   }
 

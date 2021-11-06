@@ -4,7 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon, PencilIcon } from "@heroicons/react/
 import { CSSProperties, useState } from "react"
 import { Card, CardHeader } from "../generic/Card"
 import { TrackedLink } from "../generic/Link"
-import { EventType, LinkType } from "db"
+import { EventType } from "db"
 import { LinkWithType } from "types"
 import Modal from "../generic/Modal"
 import { UploadModal } from "./edit/uploadModal"
@@ -133,24 +133,17 @@ export function ProductInfoCard(props: {
             portalId: props.portalId,
           }}
           title={"Upload"}
-          onLinkSubmit={async (link) => {
+          onLinkComplete={async (link) => {
             await createProductInfoSectionLinkMutation({
-              link: {
-                ...link,
-                type: LinkType.WebLink,
-              },
+              linkId: link.id,
               productInfoSectionId: createNewModalProps.productInfoSectionId!, //always non-null id when modal is selected
             })
             props.refetchHandler()
             setCreateNewModalProps({ isOpen: false, productInfoSectionId: undefined })
           }}
-          onUploadComplete={async ({ id, body, href }) => {
+          onUploadComplete={async (link) => {
             await createProductInfoSectionLinkMutation({
-              link: {
-                body,
-                href,
-                type: LinkType.Document,
-              },
+              linkId: link.id,
               productInfoSectionId: createNewModalProps.productInfoSectionId!, //always non-null id when modal is selected
             })
             props.refetchHandler()
@@ -170,24 +163,17 @@ export function ProductInfoCard(props: {
             portalId: props.portalId,
           }}
           title={"Edit"}
-          onLinkSubmit={async (link) => {
+          onLinkComplete={async (link) => {
             await updateProductInfoSectionLinkMutation({
-              link: {
-                ...link,
-                type: LinkType.WebLink,
-              },
+              linkId: link.id,
               productInfoSectionLinkId: editLinkModalProps.link!.productInfoSectionLinkId, //always non-null id when modal is selected
             })
             props.refetchHandler()
             setEditLinkModalProps({ isOpen: false, link: undefined })
           }}
-          onUploadComplete={async ({ id, body, href }) => {
+          onUploadComplete={async (link) => {
             await updateProductInfoSectionLinkMutation({
-              link: {
-                body,
-                href,
-                type: LinkType.Document,
-              },
+              linkId: link.id,
               productInfoSectionLinkId: editLinkModalProps.link!.productInfoSectionLinkId, //always non-null id when modal is selected
             })
             props.refetchHandler()

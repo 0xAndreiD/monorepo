@@ -40,7 +40,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
     include: {
       roadmapStages: {
         include: { ctaLink: true },
-        orderBy: { id: "asc" },
+        orderBy: [{ portalId: "asc" }, { id: "asc" }],
       },
       vendor: true,
       portalDocuments: {
@@ -71,10 +71,11 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
   const opportunityOverview = {
     currentRoadmapStage: portal.currentRoadmapStage,
     stages: portal.roadmapStages.map((stage) => ({
+      id: stage.id,
       heading: stage.heading,
       date: stage.date?.toISOString(),
-      tasks: null,
-      ctaLink: stage.ctaLink,
+      tasks: [],
+      ctaLink: stage.ctaLink ?? undefined,
     })),
   }
   const foo = portal.userPortals

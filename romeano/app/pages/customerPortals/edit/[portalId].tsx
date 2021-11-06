@@ -9,10 +9,9 @@ import { Footer } from "app/core/components/Footer"
 import { Header } from "app/core/components/customerPortals/Header"
 import { CardDivider } from "app/core/components/generic/Card"
 import { useParam, useQuery, useSession } from "blitz"
-import RoadmapModal from "app/core/components/customerPortals/edit/RoadmapModal"
-import getCustomerPortal from "../../../customer-portals/queries/getCustomerPortal"
-import StakeholderLoginForm from "../../../auth/components/StakeholderLoginForm"
-import React, { useState } from "react"
+import getCustomerPortal from "app/customer-portals/queries/getCustomerPortal"
+import StakeholderLoginForm from "app/auth/components/StakeholderLoginForm"
+import React from "react"
 
 function EditCustomerPortal() {
   const portalId = useParam("portalId", "number")
@@ -26,13 +25,6 @@ function EditCustomerPortal() {
       enabled: !!portalId && !session.isLoading && !!session.userId,
     }
   )
-
-  const [editRoadmapModalState, setEditRoadmapModalState] = useState<
-    { stageIdx: null; isEditing: false } | { stageIdx: number; isEditing: true }
-  >({
-    stageIdx: null,
-    isEditing: false,
-  })
 
   if (!session.isLoading && !session.userId) {
     return <StakeholderLoginForm />
@@ -62,15 +54,8 @@ function EditCustomerPortal() {
           portalId={portalId}
           refetchHandler={refetch}
           editingEnabled={true}
-          onEditRoadmapStage={(stageIdx: number) => {
-            setEditRoadmapModalState({ stageIdx, isEditing: true })
-          }}
-          {...data.launchRoadmap}
-        />
-        <RoadmapModal
-          portalId={portalId}
-          stageIdx={editRoadmapModalState.stageIdx!} //stageIdx cannot be null
-          showing={editRoadmapModalState.isEditing}
+          stageData={data.launchRoadmap.stages}
+          currentRoadmapStage={data.launchRoadmap.currentRoadmapStage}
         />
       </div>
 

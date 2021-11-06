@@ -6,15 +6,17 @@ import { Dialog } from "@headlessui/react"
 import { CloudUploadIcon, LinkIcon } from "@heroicons/react/outline"
 import { UploadComponent } from "app/core/components/customerPortals/UploadComponent"
 import { z } from "zod"
-import { Link, LinkWithId, LinkWithType } from "types"
+import { LinkWithId, LinkWithType } from "types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { UploadParams } from "app/api/uploadDocument"
+import { useMutation } from "blitz"
+import CreateLink from "app/customer-portals/mutations/createLink"
 
 export function UploadModal(props: {
   title: string
   existingData?: LinkWithType
   uploadParams: UploadParams
-  onLinkSubmit: (link: Link) => Promise<void>
+  onLinkComplete: (link: LinkWithId) => Promise<void>
   onUploadComplete: (link: LinkWithId) => Promise<void>
 }) {
   const schema = z.object({
@@ -25,9 +27,15 @@ export function UploadModal(props: {
     resolver: zodResolver(schema),
     defaultValues: props.existingData?.type === LinkType.WebLink ? props.existingData : {},
   })
+
+  const [createLinkMutation] = useMutation(CreateLink)
   const formOnSubmit = handleSubmit(async (link) => {
     reset()
-    await props.onLinkSubmit(link)
+    const dbLink = await createLinkMutation({
+      portalId: props.uploadParams.portalId,
+      link: { href: link.href, body: link.body, type: LinkType.WebLink },
+    })
+    await props.onLinkComplete(dbLink)
   })
 
   const [uploadType, setUploadType] = useState<LinkType | null>(null)

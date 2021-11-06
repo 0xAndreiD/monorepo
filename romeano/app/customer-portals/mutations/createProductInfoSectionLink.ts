@@ -1,21 +1,16 @@
 import { AuthenticationError, resolver } from "blitz"
-import db, { LinkType } from "db"
-import { object, z } from "zod"
+import db from "db"
+import { z } from "zod"
 
 export const CreateProductInfoSectionLink = z.object({
   productInfoSectionId: z.number().nonnegative(),
-  link: z.object({
-    //make new link
-    body: z.string().nonempty(),
-    href: z.string().nonempty(),
-    type: z.nativeEnum(LinkType),
-  }),
+  linkId: z.number().nonnegative(),
 })
 
 export default resolver.pipe(
   resolver.zod(CreateProductInfoSectionLink),
   resolver.authorize(),
-  async ({ productInfoSectionId, link }, ctx) => {
+  async ({ productInfoSectionId, linkId }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const userId = ctx.session.userId
     if (!userId) throw new AuthenticationError("no userId provided")
@@ -24,9 +19,8 @@ export default resolver.pipe(
       data: {
         productInfoSection: { connect: { id: productInfoSectionId } },
         link: {
-          create: {
-            ...link,
-            creator: { connect: { id: userId } },
+          connect: {
+            id: linkId,
           },
         },
       },

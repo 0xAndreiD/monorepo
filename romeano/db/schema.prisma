@@ -24,7 +24,7 @@ model Portal {
   proposalHeading     String
   proposalSubheading  String
   proposalLink        Link?                @relation(fields: [proposalLinkId], references: [id])
-  proposalLinkId      Int?
+  proposalLinkId      Int?                 @unique
   portalDocuments     PortalDocument[]
   userPortals         UserPortal[]
   internalNotes       InternalNote[]
@@ -183,7 +183,7 @@ model ProductInfoSection {
 model ProductInfoSectionLink {
   id                   Int                @id @default(autoincrement())
   link                 Link               @relation(fields: [linkId], references: [id])
-  linkId               Int
+  linkId               Int                @unique
   productInfoSection   ProductInfoSection @relation(fields: [productInfoSectionId], references: [id])
   productInfoSectionId Int
 }
@@ -198,25 +198,16 @@ model PortalImage {
 }
 
 model RoadmapStage {
-  id        Int                @id @default(autoincrement())
-  portal    Portal             @relation(fields: [portalId], references: [id])
+  id        Int       @id @default(autoincrement())
+  portal    Portal    @relation(fields: [portalId], references: [id])
   portalId  Int
   heading   String
   date      DateTime?
-  tasks     RoadmapStageTask[]
-  ctaLink   Link?              @relation(fields: [ctaLinkId], references: [id])
-  ctaLinkId Int?
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
-}
-
-model RoadmapStageTask {
-  id             Int          @id @default(autoincrement())
-  roadmapStage   RoadmapStage @relation(fields: [roadmapStageId], references: [id])
-  roadmapStageId Int
-  task           String
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  tasks     String[]
+  ctaLink   Link?     @relation(fields: [ctaLinkId], references: [id])
+  ctaLinkId Int?      @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model NextStepsTask {

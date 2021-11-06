@@ -47,7 +47,13 @@ function CustomerPortal() {
         <div className="py-3">
           <CardDivider />
         </div>
-        <LaunchRoadmap portalId={portalId} refetchHandler={refetch} editingEnabled={false} {...data.launchRoadmap} />
+        <LaunchRoadmap
+          portalId={portalId}
+          refetchHandler={refetch}
+          editingEnabled={false}
+          stageData={data.launchRoadmap.stages}
+          currentRoadmapStage={data.launchRoadmap.currentRoadmapStage}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 bg-gray-100">

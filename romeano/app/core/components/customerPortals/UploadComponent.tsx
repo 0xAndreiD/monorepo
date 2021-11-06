@@ -15,9 +15,9 @@ export function UploadComponent(
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const formData = new FormData()
-      formData.append("portalId", props.uploadParams.portalId.toString())
       Object.entries(props.uploadParams).forEach(([k, v]) => formData.append(k, v.toString()))
       acceptedFiles.forEach((file, idx) => formData.append(`file_${idx}`, file))
+      // console.log("form data:", JSON.stringify(Object.fromEntries(formData)))
       axios
         .post<LinkWithId[]>("/api/uploadDocument", formData, {
           headers: {

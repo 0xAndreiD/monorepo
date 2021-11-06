@@ -175,22 +175,12 @@ CREATE TABLE "RoadmapStage" (
     "portalId" INTEGER NOT NULL,
     "heading" TEXT NOT NULL,
     "date" TIMESTAMP(3),
+    "tasks" TEXT[],
     "ctaLinkId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "RoadmapStage_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "RoadmapStageTask" (
-    "id" SERIAL NOT NULL,
-    "roadmapStageId" INTEGER NOT NULL,
-    "task" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "RoadmapStageTask_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -333,9 +323,6 @@ ALTER TABLE "RoadmapStage" ADD CONSTRAINT "RoadmapStage_portalId_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "RoadmapStage" ADD CONSTRAINT "RoadmapStage_ctaLinkId_fkey" FOREIGN KEY ("ctaLinkId") REFERENCES "Link"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "RoadmapStageTask" ADD CONSTRAINT "RoadmapStageTask_roadmapStageId_fkey" FOREIGN KEY ("roadmapStageId") REFERENCES "RoadmapStage"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "NextStepsTask" ADD CONSTRAINT "NextStepsTask_portalId_fkey" FOREIGN KEY ("portalId") REFERENCES "Portal"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

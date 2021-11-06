@@ -3,8 +3,8 @@
 import React from "react"
 import { format } from "date-fns"
 import { CompletionStatus, getCompletionStatus, LaunchStage } from "../customerPortals/LaunchRoadmap"
-import { Link } from "types"
 import { RoadmapStageCircle } from "../generic/RoadmapStageCircle"
+import { utcToZonedTime } from "date-fns-tz"
 
 export default function OpportunityOverview(props: { currentRoadmapStage: number; stages: LaunchStage[] }) {
   return (
@@ -44,7 +44,7 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
                   "text-xs " + (status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
                 }
               >
-                {stage.date ? format(new Date(stage.date), "MMM d") : "TBD"}
+                {stage.date ? format(utcToZonedTime(new Date(stage.date), "UTC"), "MMM d") : "TBD"}
               </div>
             </React.Fragment>
           )
