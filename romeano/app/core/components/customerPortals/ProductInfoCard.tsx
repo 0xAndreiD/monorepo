@@ -98,16 +98,18 @@ export function ProductInfoCard(props: {
                   >
                     {link.body}
                   </TrackedLink>
-                  <PencilIcon
-                    style={{ cursor: "pointer" }}
-                    className="w-4 h-4 text-gray-400"
-                    onClick={() =>
-                      setEditLinkModalProps({
-                        isOpen: true,
-                        link: link,
-                      })
-                    }
-                  />
+                  {props.editingEnabled && (
+                    <PencilIcon
+                      style={{ cursor: "pointer" }}
+                      className="w-4 h-4 text-gray-400"
+                      onClick={() =>
+                        setEditLinkModalProps({
+                          isOpen: true,
+                          link: link,
+                        })
+                      }
+                    />
+                  )}
                 </div>
               </li>
             ))}
