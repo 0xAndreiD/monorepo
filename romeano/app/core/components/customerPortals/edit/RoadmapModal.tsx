@@ -43,10 +43,12 @@ export default function RoadmapModal(props: {
     handleSubmit,
     reset,
     control,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
   })
+  const watchAllFields = watch() //save state between modals
 
   const onSubmit = handleSubmit(async (data) => {
     await updateLaunchRoadmapStageMutation({
@@ -149,9 +151,16 @@ export default function RoadmapModal(props: {
               className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
               leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-              onClick={() => {
-                props.actionDispatcher({ type: ModalActionChange.HANDLE_UPLOAD, payload: {} })
-              }}
+              onClick={() =>
+                props.actionDispatcher({
+                  type: ModalActionChange.HANDLE_UPLOAD,
+                  payload: {
+                    heading: watchAllFields.heading,
+                    date: (watchAllFields.date && new Date(watchAllFields.date)) || undefined,
+                    tasks: watchAllFields.tasks.map((task) => task.task),
+                  },
+                })
+              }
             >
               <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" />
               Upload

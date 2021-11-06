@@ -122,13 +122,20 @@ export type ModalAction =
       type: ModalActionChange.HANDLE_EDIT
       payload: {
         roadmapStageId: number
-        heading: string | undefined
+        heading: string
         date: Date | undefined
         tasks: string[]
         link: LinkWithId | undefined
       }
     }
-  | { type: ModalActionChange.HANDLE_UPLOAD; payload: {} }
+  | {
+      type: ModalActionChange.HANDLE_UPLOAD //persist form values before switching
+      payload: {
+        heading: string
+        date: Date | undefined
+        tasks: string[]
+      }
+    }
   | { type: ModalActionChange.LINK_SUBMITTED; payload: { link: LinkWithId } }
   | { type: ModalActionChange.MODAL_SUBMITTED; payload: {} }
   | { type: ModalActionChange.MODAL_CLOSE; payload: {} }
@@ -153,6 +160,7 @@ export function useModalReducer() {
       case ModalActionChange.HANDLE_UPLOAD:
         return {
           ...state,
+          ...action.payload,
           displayState: ModalDisplayState.UPLOAD_MODAL,
         }
       case ModalActionChange.LINK_SUBMITTED:
