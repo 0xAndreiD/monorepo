@@ -6,7 +6,7 @@ import nc from "next-connect"
 import { INTERNAL_UPLOAD_FS_PATH, UPLOAD_SIZE_LIMIT } from "../core/config"
 import formidable, { Fields, Files } from "formidable"
 import { flatten, isNil } from "lodash"
-import createEvent from "../event/mutations/createEvent"
+import changeVendorLogo from "../users/queries/editLogo"
 import { LinkWithId } from "../../types"
 
 export const config = {
@@ -20,11 +20,9 @@ const UploadParams = z.object({
 })
 export type UploadParams = z.infer<typeof UploadParams>
 
-//on uploadDocument, get the fields and the files from the nextRequest, and Respond w LinkWId
-const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, NextApiResponse<LinkWithId[]>>()
+const uploadLogo = nc<NextApiRequest & { fields: Fields; files: Files }, NextApiResponse<LinkWithId[]>>()
   .use((req, res, next) => {
     const form = formidable({
-      multiples: true,
       uploadDir: INTERNAL_UPLOAD_FS_PATH,
       maxFileSize: UPLOAD_SIZE_LIMIT,
       keepExtensions: true,
@@ -41,6 +39,7 @@ const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, Nex
         console.error("Error parsing upload: ", err)
         return next(err)
       }
+      console.log("fields")
       req.fields = fields
       req.files = files
       next()
@@ -50,15 +49,17 @@ const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, Nex
     const session = await getSession(req, res)
     const userId = session.userId
     if (isNil(userId)) throw new AuthorizationError("invalid user id")
+    //if the user is logged in, get the portal ID to figure out where this was
     const { portalId } = UploadParams.parse(req.fields)
-
     const portal = await db.portal.findUnique({ where: { id: portalId } })
     if (!portal) throw new NotFoundError("customer portal not found")
 
-    console.log("fileUpload(): file uploaded")
+    console.log("fileUpload(): file uploaded ggg")
 
-    //create the link, add to DB and create the event for document upload
     const rawFiles = flatten(Object.values(req.files))
+
+    console.log(rawFiles)
+
     const docs = rawFiles.map(async (file): Promise<LinkWithId> => {
       const link = await db.link.create({
         data: {
@@ -69,11 +70,11 @@ const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, Nex
         },
       })
       await invokeWithMiddleware(
-        createEvent,
+        changeVendorLogo,
         {
-          portalId,
-          type: EventType.DocumentUpload,
+          url: "/api/viewDocument/" + link.href,
           linkId: link.id,
+          portalId: portalId,
         },
         { req, res }
       )
@@ -85,4 +86,4 @@ const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, Nex
     res.status(200).end()
   })
 
-export default uploadDocument
+export default uploadLogo

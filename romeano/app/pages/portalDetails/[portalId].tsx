@@ -13,7 +13,11 @@ import { Header } from "app/core/components/portalDetails/Header"
 
 function PortalDetails() {
   const portalId = useParam("portalId", "number")
-  const [portal] = useQuery(getPortalDetail, { portalId }, { refetchOnWindowFocus: false, enabled: !!portalId })
+  const [portal, { refetch }] = useQuery(
+    getPortalDetail,
+    { portalId },
+    { refetchOnWindowFocus: false, enabled: !!portalId }
+  )
 
   //container: https://tailwindui.com/components/application-ui/layout/containers
   if (!portalId || !portal) return <>Loading!</>
@@ -25,6 +29,7 @@ function PortalDetails() {
           vendorLogo={portal.header.vendorLogo}
           customerName={portal.header.customerName}
           customerLogo={portal.header.customerLogo}
+          refetchHandler={refetch}
         />
         <div className="py-3">
           <CardDivider />
