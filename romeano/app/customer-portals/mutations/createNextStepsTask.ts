@@ -10,6 +10,7 @@ export const CreateNextStepsTask = z.object({
 export default resolver.pipe(
   resolver.zod(CreateNextStepsTask),
   resolver.authorize(),
+  // async ({ portalId, description }, ctx) => {
   async ({ portalId, description }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const userId = ctx.session.userId

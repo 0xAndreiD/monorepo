@@ -7,8 +7,12 @@ import { LinkWithId } from "types"
 import { useMutation } from "blitz"
 import updateCurrentLaunchRoadmapStage from "app/customer-portals/mutations/updateCurrentLaunchRoadmapStage"
 import { RoadmapStageCircle } from "../generic/RoadmapStageCircle"
+import { PlusIcon } from "@heroicons/react/solid"
 import { utcToZonedTime } from "date-fns-tz"
 import RoadmapModal from "./edit/RoadmapModal"
+import { AddButton } from "../generic/AddButton"
+import createRoadMapLaunchStage from "../../../customer-portals/mutations/createLaunchRoadmapStage"
+import { invoke } from "blitz"
 
 export enum CompletionStatus {
   Complete,
@@ -210,6 +214,25 @@ export default function LaunchRoadmap(props: {
             <span className="text-gray-400">&nbsp;/&nbsp;{props.stageData.length}</span>
           </div>
         </div>
+        {props.editingEnabled && (
+          <AddButton
+            onClick={() =>
+              invoke(createRoadMapLaunchStage, {
+                portalId: props.portalId,
+                date: new Date(2023, 11, 24, 10, 33, 30, 0),
+                heading: "New Roadmap Stage",
+              })
+            }
+            refetchHandler={props.refetchHandler()}
+          />
+        )}
+
+        {/* <button>
+          <div className="flex justify-left text-gray-600">
+            <PlusIcon className="-ml-0.5 h-6.5 w-4"></PlusIcon>
+            <span className="ml-0.5">Add</span>
+          </div>
+        </button> */}
         {/*<ol className="flex justify-around gap-x-5 px-11 items-center">*/}
         {/*    {*/}
         {/*        stages.map((stage, stageIdx) =>*/}
