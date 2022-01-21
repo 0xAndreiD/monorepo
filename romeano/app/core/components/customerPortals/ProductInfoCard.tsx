@@ -58,6 +58,7 @@ export function ProductInfoCard(props: {
   })
   const [createProductInfoSectionLinkMutation] = useMutation(createProductInfoSectionLink)
   const [updateProductInfoSectionLinkMutation] = useMutation(updateProductInfoSectionLink)
+  const [deleteProductInfoImageMutation] = useMutation(deleteProductInfoImage)
   return (
     <Card>
       <CardHeader>Product Info</CardHeader>
@@ -79,7 +80,13 @@ export function ProductInfoCard(props: {
           )}
           statusFormatter={(current, total) => (
             <button
-              onClick={() => deleteProductInfoImage({ current: current, portalId: props.portalId })}
+              //use the mutation to push the context
+              onClick={async (link) => {
+                await deleteProductInfoImageMutation({
+                  current: current,
+                  portalId: props.portalId,
+                })
+              }}
               style={{ ...style, right: 15 }}
             >
               <TrashIcon className="text-gray-400" />
