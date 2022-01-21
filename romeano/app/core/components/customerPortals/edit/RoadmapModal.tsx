@@ -144,7 +144,12 @@ export default function RoadmapModal(props: {
             <div className="mt-3">
               {watchAllFields.linkId && (
                 <div className="flex justify-between items-center">
-                  <span>Name: {props.modalState.link?.body}</span>
+                  <span>
+                    Name:{" "}
+                    <a href={props.modalState.link?.href} className="text-blue-600 underline">
+                      {props.modalState.link?.body}
+                    </a>
+                  </span>
                   <button type="button" onClick={() => setValue("linkId", undefined)}>
                     <TrashIcon className="w-4 h-4 text-gray-400" />
                   </button>

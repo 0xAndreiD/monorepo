@@ -8,16 +8,16 @@ export const CreateLaunchRoadmapStage = z.object({
   heading: z.string().nonempty(),
 })
 
-export default resolver.pipe(
-  resolver.zod(CreateLaunchRoadmapStage),
-  resolver.authorize(),
-  async ({ portalId, date, heading }, ctx) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const userId = ctx.session.userId
-    if (!userId) throw new AuthenticationError("no userId provided")
+export default resolver.pipe(resolver.zod(CreateLaunchRoadmapStage), resolver.authorize(), async (data, ctx) => {
+  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  const userId = ctx.session.userId
+  if (!userId) throw new AuthenticationError("no userId provided")
 
-    return await db.roadmapStage.create({
-      data: { portalId, heading, date },
-    })
-  }
-)
+  return await db.roadmapStage.create({
+    data: {
+      portalId: data.portalId,
+      heading: data.heading,
+      date: data.date,
+    },
+  })
+})

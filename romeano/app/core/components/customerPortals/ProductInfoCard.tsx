@@ -1,6 +1,6 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css" // requires a loader
 import { Carousel } from "react-responsive-carousel"
-import { ChevronLeftIcon, ChevronRightIcon, PencilIcon } from "@heroicons/react/outline"
+import { ChevronLeftIcon, ChevronRightIcon, PencilIcon, TrashIcon, CloudUploadIcon } from "@heroicons/react/outline"
 import { CSSProperties, useState } from "react"
 import { Card, CardHeader } from "../generic/Card"
 import { TrackedLink } from "../generic/Link"
@@ -10,7 +10,10 @@ import Modal from "../generic/Modal"
 import { UploadModal } from "./edit/uploadModal"
 import createProductInfoSectionLink from "app/customer-portals/mutations/createProductInfoSectionLink"
 import updateProductInfoSectionLink from "app/customer-portals/mutations/updateProductInfoSectionLink"
+import deleteProductInfoImage from "app/customer-portals/mutations/deleteProductInfoImage"
+import addProductInfoImage from "app/customer-portals/mutations/addProductInfoImage"
 import { useMutation } from "blitz"
+import { UploadProductImageComponent } from "./UploadComponent"
 
 type ProductSectionLink = LinkWithType & { productInfoSectionLinkId: number }
 
@@ -55,6 +58,7 @@ export function ProductInfoCard(props: {
   })
   const [createProductInfoSectionLinkMutation] = useMutation(createProductInfoSectionLink)
   const [updateProductInfoSectionLinkMutation] = useMutation(updateProductInfoSectionLink)
+  const [deleteProductInfoImageMutation] = useMutation(deleteProductInfoImage)
   return (
     <Card>
       <CardHeader>Product Info</CardHeader>
@@ -62,7 +66,7 @@ export function ProductInfoCard(props: {
         <Carousel
           infiniteLoop={true}
           showThumbs={false}
-          showStatus={false}
+          showStatus={props.editingEnabled}
           showIndicators={false}
           renderArrowPrev={(onClickHandler, hasPrev, label) => (
             <button onClick={onClickHandler} style={{ ...style, left: 15 }}>
@@ -74,13 +78,42 @@ export function ProductInfoCard(props: {
               <ChevronRightIcon className="text-gray-400" />
             </button>
           )}
+          statusFormatter={(current, total) => (
+            <button
+              //use the mutation to push the context
+              onClick={async (link) => {
+                await deleteProductInfoImageMutation({
+                  current: current,
+                  portalId: props.portalId,
+                })
+              }}
+              style={{ ...style, right: 15 }}
+            >
+              <TrashIcon className="text-gray-400" />
+            </button>
+          )}
         >
           {props.data.images.map((image, idx) => (
             <img src={image} key={idx} alt="" />
           ))}
         </Carousel>
       )}
-
+      <UploadProductImageComponent
+        uploadParams={{ portalId: props.portalId }}
+        onUploadComplete={async () => {
+          props.refetchHandler()
+        }}
+      >
+        <button
+          type="button"
+          className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+           leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
+            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+        >
+          <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" />
+          Upload
+        </button>
+      </UploadProductImageComponent>
       {props.data.sections.map((section, idx) => (
         <div key={idx}>
           <h4 className="pt-2 font-bold">{section.heading}</h4>
