@@ -285,7 +285,7 @@ export default function LaunchRoadmap(props: {
               return (
                 <div
                   key={idx}
-                  style={{ gridTemplateRows: `repeat(6, auto)`, gridAutoColumns: "1fr" }}
+                  style={{ gridTemplateRows: `repeat(${props.editingEnabled ? 6 : 5}, auto)`, gridAutoColumns: "1fr" }}
                   className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5"
                 >
                   <RoadmapStage
