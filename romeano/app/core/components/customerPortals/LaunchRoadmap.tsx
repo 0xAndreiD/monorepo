@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import React, { useReducer } from "react"
+import React, { useReducer, useState } from "react"
 import { format } from "date-fns"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
@@ -13,6 +13,8 @@ import RoadmapModal from "./edit/RoadmapModal"
 import { AddButton } from "../generic/AddButton"
 import createRoadMapLaunchStage from "../../../customer-portals/mutations/createLaunchRoadmapStage"
 import { invoke } from "blitz"
+import Carousel from "react-multi-carousel"
+import "react-multi-carousel/lib/styles.css"
 
 export enum CompletionStatus {
   Complete,
@@ -113,6 +115,24 @@ export enum ModalDisplayState {
   UPLOAD_MODAL,
 }
 
+const responsive = {
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 4,
+    slidesToSlide: 1, // optional, default to 1.
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+    slidesToSlide: 2, // optional, default to 1.
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+    slidesToSlide: 1, // optional, default to 1.
+  },
+}
+
 export type ModalState = {
   displayState: ModalDisplayState
   roadmapStageId: number | undefined
@@ -196,6 +216,9 @@ export default function LaunchRoadmap(props: {
   const [updateCurrentLaunchRoadmapStageMutation] = useMutation(updateCurrentLaunchRoadmapStage)
   const [modalState, modalDispatch] = useModalReducer()
 
+  //used to set if the arrows are visible or not
+  const [isShown, setIsShown] = useState(false)
+
   return (
     <>
       <RoadmapModal
@@ -243,48 +266,64 @@ export default function LaunchRoadmap(props: {
         {/*        )*/}
         {/*    }*/}
         {/*</ol>*/}
-        <ul
-          style={{ gridTemplateRows: `repeat(${props.editingEnabled ? 6 : 5}, auto)`, gridAutoColumns: "1fr" }}
-          // <ul style={{gridTemplateRows: "repeat(4, auto)", gridAutoColumns: "1fr"}}
-          className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5"
-        >
-          {props.stageData.map((stage, idx) => {
-            const stageNum = idx + 1
-            return (
-              <RoadmapStage
-                key={idx}
-                stage={stage}
-                stageId={stage.id}
-                stageNum={stageNum}
-                portalId={props.portalId}
-                currentRoadmapStage={props.currentRoadmapStage}
-                status={getCompletionStatus(props.currentRoadmapStage, idx)}
-                editingEnabled={props.editingEnabled}
-                onClickCircle={
-                  props.editingEnabled
-                    ? () =>
-                        updateCurrentLaunchRoadmapStageMutation({
-                          portalId: props.portalId,
-                          currentRoadmapStage: stageNum,
-                        }).then(props.refetchHandler)
-                    : () => null
-                }
-                onClickEdit={() => {
-                  modalDispatch({
-                    type: ModalActionChange.HANDLE_EDIT,
-                    payload: {
-                      roadmapStageId: stage.id,
-                      heading: stage.heading,
-                      date: (stage.date && new Date(stage.date)) || undefined,
-                      tasks: stage.tasks,
-                      link: stage.ctaLink,
-                    },
-                  })
-                }}
-              />
-            )
-          })}
-        </ul>
+
+        {/* Track if mouse enters or leaves, and show/hide the arrows accordingly */}
+        <div onMouseEnter={() => setIsShown(true)} onMouseLeave={() => setIsShown(false)}>
+          <Carousel
+            swipeable={false}
+            draggable={false}
+            responsive={responsive}
+            ssr={true} // means to render carousel on server-side.
+            containerClass={"grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5"}
+            showDots={false}
+            infinite={false}
+            // use the status from show hide
+            arrows={isShown}
+          >
+            {props.stageData.map((stage, idx) => {
+              const stageNum = idx + 1
+              return (
+                <div
+                  key={idx}
+                  style={{ gridTemplateRows: `repeat(6, auto)`, gridAutoColumns: "1fr" }}
+                  className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5"
+                >
+                  <RoadmapStage
+                    key={idx}
+                    stage={stage}
+                    stageId={stage.id}
+                    stageNum={stageNum}
+                    portalId={props.portalId}
+                    currentRoadmapStage={props.currentRoadmapStage}
+                    status={getCompletionStatus(props.currentRoadmapStage, idx)}
+                    editingEnabled={props.editingEnabled}
+                    onClickCircle={
+                      props.editingEnabled
+                        ? () =>
+                            updateCurrentLaunchRoadmapStageMutation({
+                              portalId: props.portalId,
+                              currentRoadmapStage: stageNum,
+                            }).then(props.refetchHandler)
+                        : () => null
+                    }
+                    onClickEdit={() => {
+                      modalDispatch({
+                        type: ModalActionChange.HANDLE_EDIT,
+                        payload: {
+                          roadmapStageId: stage.id,
+                          heading: stage.heading,
+                          date: (stage.date && new Date(stage.date)) || undefined,
+                          tasks: stage.tasks,
+                          link: stage.ctaLink,
+                        },
+                      })
+                    }}
+                  />
+                </div>
+              )
+            })}
+          </Carousel>
+        </div>
       </nav>
     </>
   )
