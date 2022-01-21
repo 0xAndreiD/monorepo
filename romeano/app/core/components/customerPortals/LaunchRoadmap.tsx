@@ -238,15 +238,15 @@ export default function LaunchRoadmap(props: {
           </div>
         </div>
         {props.editingEnabled && (
+          //TODO fix refetchHandler
           <AddButton
-            onClick={() =>
+            onClick={() => {
               invoke(createRoadMapLaunchStage, {
                 portalId: props.portalId,
                 date: new Date(2023, 11, 24, 10, 33, 30, 0),
                 heading: "New Roadmap Stage",
-              })
-            }
-            refetchHandler={props.refetchHandler()}
+              }).then(props.refetchHandler)
+            }}
           />
         )}
 
