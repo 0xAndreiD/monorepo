@@ -81,9 +81,9 @@ function RoadmapStage(props: {
       </div>
       {props.editingEnabled && (
         <button
-          className="inline-flex items-center px-5 py-2 border border-gray-300 shadow-sm text-sm
+          className="inline-flex items-center px-5 py-2 border border-gray-300  text-sm
                   leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
-                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
           onClick={props.onClickEdit}
         >
           Edit
@@ -238,7 +238,6 @@ export default function LaunchRoadmap(props: {
           </div>
         </div>
         {props.editingEnabled && (
-          //TODO fix refetchHandler
           <AddButton
             onClick={() => {
               invoke(createRoadMapLaunchStage, {

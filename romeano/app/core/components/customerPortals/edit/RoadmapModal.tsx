@@ -10,6 +10,7 @@ import { Dialog } from "@headlessui/react"
 import { useMutation } from "blitz"
 import updateLaunchRoadmapStage from "app/customer-portals/mutations/updateLaunchRoadmapStage"
 import createLaunchRoadmapStageLink from "app/customer-portals/mutations/createLaunchRoadmapStageLink"
+import deleteRoadmapStep from "app/customer-portals/mutations/deleteRoadmapStep"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LinkType } from "db"
 import { ModalAction, ModalActionChange, ModalDisplayState, ModalState } from "../LaunchRoadmap"
@@ -26,6 +27,7 @@ export default function RoadmapModal(props: {
 }) {
   const [updateLaunchRoadmapStageMutation] = useMutation(updateLaunchRoadmapStage)
   const [createLaunchRoadmapStageLinkMutation] = useMutation(createLaunchRoadmapStageLink)
+  const [deleteRoadmapStageMutation] = useMutation(deleteRoadmapStep)
 
   const schema = z.object({
     heading: z.string().nonempty(),
@@ -59,6 +61,14 @@ export default function RoadmapModal(props: {
       date: (data.date && new Date(data.date)) || undefined,
       tasks: data.tasks.map((task) => task.task),
       linkId: data.linkId,
+    })
+    props.actionDispatcher({ type: ModalActionChange.MODAL_SUBMITTED, payload: {} })
+    props.refetchHandler()
+  })
+
+  const onDelete = handleSubmit(async (data) => {
+    await deleteRoadmapStageMutation({
+      roadmapStageId: props.roadmapStageId,
     })
     props.actionDispatcher({ type: ModalActionChange.MODAL_SUBMITTED, payload: {} })
     props.refetchHandler()
@@ -158,9 +168,9 @@ export default function RoadmapModal(props: {
               )}
               <button
                 type="button"
-                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+                className="inline-flex items-center px-3 py-2 border border-gray-300  text-sm
               leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
-                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
                 onClick={() =>
                   props.actionDispatcher({
                     type: ModalActionChange.HANDLE_UPLOAD,
@@ -176,12 +186,19 @@ export default function RoadmapModal(props: {
                 Upload
               </button>
             </div>
+
             <div className="mt-5 flex justify-between flex-row-reverse">
               <button
-                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-500 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-auto text-sm"
+                className="w-full inline-flex justify-center rounded-md border border-transparent  px-4 py-2 bg-green-300 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300 w-auto text-sm"
                 onClick={onSubmit}
               >
                 Save
+              </button>
+              <button
+                className="w-full inline-flex justify-center rounded-md border border-transparent  px-4 py-2 bg-red-500 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300 w-auto text-sm"
+                onClick={onDelete}
+              >
+                Delete
               </button>
             </div>
           </form>

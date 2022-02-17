@@ -26,7 +26,6 @@ export function UploadComponent(
           },
         })
         .then((res) => {
-          console.log("wtf")
           return props.onUploadComplete(res.data[0])
         })
     },

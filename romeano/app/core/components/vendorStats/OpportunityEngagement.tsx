@@ -15,7 +15,7 @@ export function OpportunityEngagement(props: { data: Array<{ customerName: strin
             <span className="text-sm">{company.customerName}</span>
             <div className="flex items-center gap-1">
               <div
-                className="h-8 w-full rounded ring-1 ring-inset ring-black ring-opacity-0 bg-green-500"
+                className="h-8 w-full rounded ring-1 ring-inset ring-black ring-opacity-0 bg-green-300"
                 style={{ width: `${Math.ceil((100 * company.eventCount) / maxClickCount)}%` }}
               />
               <span className="font-bold text-sm">{company.eventCount}</span>

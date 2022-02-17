@@ -63,40 +63,42 @@ export function ProductInfoCard(props: {
     <Card>
       <CardHeader>Product Info</CardHeader>
       {props.data.images.length && (
-        <Carousel
-          infiniteLoop={true}
-          showThumbs={false}
-          showStatus={props.editingEnabled}
-          showIndicators={false}
-          renderArrowPrev={(onClickHandler, hasPrev, label) => (
-            <button onClick={onClickHandler} style={{ ...style, left: 15 }}>
-              <ChevronLeftIcon className="text-gray-400" />
-            </button>
-          )}
-          renderArrowNext={(onClickHandler, hasPrev, label) => (
-            <button onClick={onClickHandler} style={{ ...style, right: 15 }}>
-              <ChevronRightIcon className="text-gray-400" />
-            </button>
-          )}
-          statusFormatter={(current, total) => (
-            <button
-              //use the mutation to push the context
-              onClick={async (link) => {
-                await deleteProductInfoImageMutation({
-                  current: current,
-                  portalId: props.portalId,
-                })
-              }}
-              style={{ ...style, right: 15 }}
-            >
-              <TrashIcon className="text-gray-400" />
-            </button>
-          )}
-        >
-          {props.data.images.map((image, idx) => (
-            <img src={image} key={idx} alt="" />
-          ))}
-        </Carousel>
+        <div className="border-2 border-grey-600 px-12 mt-2 py-1 rounded-md margin">
+          <Carousel
+            infiniteLoop={true}
+            showThumbs={false}
+            showStatus={props.editingEnabled}
+            showIndicators={false}
+            renderArrowPrev={(onClickHandler, hasPrev, label) => (
+              <button onClick={onClickHandler} style={{ ...style, left: 15 }}>
+                <ChevronLeftIcon className="text-gray-400" />
+              </button>
+            )}
+            renderArrowNext={(onClickHandler, hasPrev, label) => (
+              <button onClick={onClickHandler} style={{ ...style, right: 15 }}>
+                <ChevronRightIcon className="text-gray-400" />
+              </button>
+            )}
+            statusFormatter={(current, total) => (
+              <button
+                //use the mutation to push the context
+                onClick={async (link) => {
+                  await deleteProductInfoImageMutation({
+                    current: current,
+                    portalId: props.portalId,
+                  })
+                }}
+                style={{ ...style, right: 15 }}
+              >
+                <TrashIcon className="text-gray-400" />
+              </button>
+            )}
+          >
+            {props.data.images.map((image, idx) => (
+              <img src={image} key={idx} alt="" className="height-10 wi" />
+            ))}
+          </Carousel>
+        </div>
       )}
       <UploadProductImageComponent
         uploadParams={{ portalId: props.portalId }}
@@ -106,9 +108,9 @@ export function ProductInfoCard(props: {
       >
         <button
           type="button"
-          className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
-           leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
-            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          className="inline-flex items-center px-3 py-2 border border-gray-300  text-sm
+           leading-4 font-medium rounded-full mt-2 text-gray-700 bg-white hover:bg-gray-50
+            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
         >
           <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" />
           Upload
