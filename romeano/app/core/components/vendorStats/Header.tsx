@@ -11,7 +11,7 @@ export function Header(props: {
   vendorLogo?: string
   refetchHandler: () => void
   portalId: number
-  templates: Template[]
+  templates?: Template[]
 }) {
   const data = {
     manageTemplatesLink: "http://google.com",

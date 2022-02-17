@@ -56,7 +56,7 @@ export default function NextStepsCard(props: NextSteps & { portalId: number; ref
             <input
               type="text"
               placeholder="New task item..."
-              className="block w-full  border py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+              className="block w-full shadow-sm border py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
               {...register("description", { required: true, maxLength: 80 })}
             />
             <button

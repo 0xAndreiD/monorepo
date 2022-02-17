@@ -12,13 +12,17 @@ import { useCurrentUser } from "../core/hooks/useCurrentUser"
 import VendorStats from "./vendorStats"
 import { StyledLink } from "app/core/components/generic/Link"
 import Layout from "../core/layouts/Layout"
+import getVendorStats from "app/vendor-stats/queries/getVendorStats"
+import getTemplates from "app/vendor-stats/queries/getTemplates"
 
 function PortalsList() {
   const [portalsList] = useQuery(getPortalList, null)
+  const [vendorStats] = useQuery(getVendorStats, {}, { refetchOnWindowFocus: false })
+  const [templates] = useQuery(getTemplates, {}, { refetchOnWindowFocus: false })
   return (
     <>
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
-        <Header />
+        <Header vendorLogo={vendorStats.header.vendorLogo} templates={templates.templates} />
         <div className="py-3">
           <CardDivider />
         </div>
