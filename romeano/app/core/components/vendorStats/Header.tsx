@@ -9,8 +9,8 @@ import { Template } from "db"
 
 export function Header(props: {
   vendorLogo?: string
-  refetchHandler: () => void
-  portalId: number
+  //   refetchHandler: () => void
+  //   portalId: number
   templates: Template[]
 }) {
   const data = {
