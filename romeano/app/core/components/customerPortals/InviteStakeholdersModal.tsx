@@ -12,20 +12,14 @@ import { EventType } from "db"
 import { useEffect } from "react"
 
 export function InviteStakeholdersModal(props: {
-  stakeholders: Array<Stakeholder>,
-  portalId: number,
-  onClose: () => void,
+  stakeholders: Array<Stakeholder>
+  portalId: number
+  onClose: () => void
   refetchHandler: () => void
 }) {
   const [inviteStakeholderMutation] = useMutation(createStakeholder)
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setFocus,
-    formState
-  } = useForm<z.infer<typeof CreateStakeholder>>({
+  const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof CreateStakeholder>>({
     // resolver: zodResolver(CreateStakeholder.omit({portalId:true}))
   })
   const onSubmit = handleSubmit(async (data) => {
@@ -33,7 +27,7 @@ export function InviteStakeholdersModal(props: {
       portalId: props.portalId,
       email: data.email,
       fullName: data.fullName,
-      jobTitle: data.jobTitle
+      jobTitle: data.jobTitle,
     })
     reset()
     props.refetchHandler()
@@ -43,51 +37,53 @@ export function InviteStakeholdersModal(props: {
     setFocus("email")
   }, [setFocus])
 
-  return <>
-    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-      <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-        Invite Stakeholders
-      </Dialog.Title>
-      <form className="mt-6" onSubmit={onSubmit}>
-        <div className="border-2 border-b-0">
-          <input type="email"
-                 className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
-                 placeholder="Email"
-                 {...register("email")}
-                 autoFocus
-          />
-        </div>
-
-        <div className="pt-2 flex gap-4">
+  return (
+    <>
+      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+        <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
+          Invite Stakeholders
+        </Dialog.Title>
+        <form className="mt-6" onSubmit={onSubmit}>
           <div className="border-2 border-b-0">
-            <input type="text"
-                   className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
-                   placeholder="Full Name"
-                   {...register("fullName")}
+            <input
+              type="email"
+              className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
+              placeholder="Email"
+              {...register("email")}
+              autoFocus
             />
           </div>
 
-          <div className="border-2 border-b-0">
-            <input type="text"
-                   className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
-                   placeholder="Job Title"
-                   {...register("jobTitle")}
-            />
+          <div className="pt-2 flex gap-4">
+            <div className="border-2 border-b-0">
+              <input
+                type="text"
+                className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
+                placeholder="Full Name"
+                {...register("fullName")}
+              />
+            </div>
+
+            <div className="border-2 border-b-0">
+              <input
+                type="text"
+                className="mt-0 block w-full p-3 border-b-2 border-gray-200 focus:ring-0 focus:border-green-400"
+                placeholder="Job Title"
+                {...register("jobTitle")}
+              />
+            </div>
           </div>
-        </div>
 
-        <span className="flex py-4 justify-end">
-          <AddButton disabled={formState.isSubmitting}
-                     onClick={() =>
-                       invoke(createEvent, { portalId: props.portalId, type: EventType.InviteStakeholder })
-                     }
-          />
-        </span>
-      </form>
+          <span className="flex py-4 justify-end">
+            <AddButton
+              disabled={formState.isSubmitting}
+              onClick={() => invoke(createEvent, { portalId: props.portalId, type: EventType.InviteStakeholder })}
+            />
+          </span>
+        </form>
 
-      <div className="pt-4 flex flex-col gap-3">
-        {
-          props.stakeholders.map((person, idx) =>
+        <div className="pt-4 flex flex-col gap-3">
+          {props.stakeholders.map((person, idx) => (
             <div key={idx}>
               <h4 className="text-sm text-gray-900 text-left">{getName(person.firstName, person.lastName)}</h4>
               <div className="flex justify-between">
@@ -95,18 +91,18 @@ export function InviteStakeholdersModal(props: {
                 <span className="text-sm text-gray-500 text-right">{person.jobTitle}</span>
               </div>
             </div>
-          )
-        }
+          ))}
+        </div>
       </div>
-    </div>
-    <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-      <button
-        disabled={formState.isSubmitting}
-        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-500 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
-        onClick={props.onClose}
-      >
-        Done
-      </button>
-    </div>
-  </>
+      <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+        <button
+          disabled={formState.isSubmitting}
+          className="w-full inline-flex justify-center rounded-md border border-transparent  px-4 py-2 bg-green-300 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300 sm:ml-3 sm:w-auto sm:text-sm"
+          onClick={props.onClose}
+        >
+          Done
+        </button>
+      </div>
+    </>
+  )
 }

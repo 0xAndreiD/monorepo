@@ -1,0 +1,72 @@
+2021-12-16 20:10:39.281 PST [85571] LOG:  starting PostgreSQL 14.1 on x86_64-apple-darwin20.6.0, compiled by Apple clang version 13.0.0 (clang-1300.0.29.3), 64-bit
+2021-12-16 20:10:39.282 PST [85571] LOG:  listening on IPv6 address "::1", port 5432
+2021-12-16 20:10:39.282 PST [85571] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2021-12-16 20:10:39.284 PST [85571] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2021-12-16 20:10:39.292 PST [85572] LOG:  database system was shut down at 2021-12-16 19:32:50 PST
+2021-12-16 20:10:39.297 PST [85571] LOG:  database system is ready to accept connections
+2021-12-16 20:14:04.518 PST [85789] FATAL:  role "postgres" does not exist
+2021-12-16 20:17:30.112 PST [86009] ERROR:  relation "db" does not exist
+2021-12-16 20:17:30.112 PST [86009] STATEMENT:  GRANT ALL ON db TO postgres;
+2021-12-16 20:17:39.359 PST [86017] FATAL:  database "psql" does not exist
+2021-12-16 20:18:07.022 PST [86038] FATAL:  role "postgres" does not exist
+2021-12-16 20:21:41.985 PST [86252] ERROR:  syntax error at or near ";" at character 20
+2021-12-16 20:21:41.985 PST [86252] STATEMENT:  CREATE TABLE public;
+2021-12-16 20:32:34.424 PST [85571] LOG:  received fast shutdown request
+2021-12-16 20:32:34.425 PST [85571] LOG:  aborting any active transactions
+2021-12-16 20:32:34.425 PST [86464] FATAL:  terminating connection due to administrator command
+2021-12-16 20:32:34.425 PST [86462] FATAL:  terminating connection due to administrator command
+2021-12-16 20:32:34.425 PST [86461] FATAL:  terminating connection due to administrator command
+2021-12-16 20:32:34.427 PST [85571] LOG:  background worker "logical replication launcher" (PID 85578) exited with exit code 1
+2021-12-16 20:32:34.428 PST [85573] LOG:  shutting down
+2021-12-16 20:32:34.439 PST [85571] LOG:  database system is shut down
+2021-12-16 20:32:34.569 PST [87491] LOG:  starting PostgreSQL 14.1 on x86_64-apple-darwin20.6.0, compiled by Apple clang version 13.0.0 (clang-1300.0.29.3), 64-bit
+2021-12-16 20:32:34.572 PST [87491] LOG:  listening on IPv6 address "::", port 5432
+2021-12-16 20:32:34.572 PST [87491] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2021-12-16 20:32:34.573 PST [87491] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2021-12-16 20:32:34.583 PST [87492] LOG:  database system was shut down at 2021-12-16 20:32:34 PST
+2021-12-16 20:32:34.589 PST [87491] LOG:  database system is ready to accept connections
+2021-12-16 21:45:56.050 PST [92986] ERROR:  must be owner of schema public
+2021-12-16 21:45:56.050 PST [92986] STATEMENT:  drop schema public cascade;
+2021-12-19 17:41:44.920 PST [965] ERROR:  relation "public.User" does not exist at character 260
+2021-12-19 17:41:44.920 PST [965] STATEMENT:  SELECT "public"."User"."id", "public"."User"."firstName", "public"."User"."lastName", "public"."User"."email", "public"."User"."photoUrl", "public"."User"."hashedPassword", "public"."User"."role", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE "public"."User"."email" = $1 LIMIT $2 OFFSET $3
+2021-12-20 18:23:53.276 PST [83949] ERROR:  must be owner of schema public
+2021-12-20 18:23:53.276 PST [83949] STATEMENT:  drop schema public cascade;
+2021-12-20 18:23:57.671 PST [84385] FATAL:  database "michaelbaldwin" does not exist
+2021-12-20 18:26:13.618 PST [94249] ERROR:  syntax error at or near "CREATE" at character 22
+2021-12-20 18:26:13.618 PST [94249] STATEMENT:  SELECT * FROM tables
+	CREATE TABLE public;
+2021-12-20 18:27:58.031 PST [94249] ERROR:  syntax error at or near "CREATE" at character 21
+2021-12-20 18:27:58.031 PST [94249] STATEMENT:  CREATE TABLE public
+	CREATE SCHEMA public;
+2021-12-20 18:28:08.549 PST [94249] ERROR:  schema "public" already exists
+2021-12-20 18:28:08.549 PST [94249] STATEMENT:  CREATE SCHEMA public
+	;
+2021-12-20 18:28:25.179 PST [10512] ERROR:  must be owner of schema public
+2021-12-20 18:28:25.179 PST [10512] STATEMENT:  drop schema public cascade;
+2021-12-20 18:28:29.189 PST [10524] ERROR:  relation "_prisma_migrations" does not exist at character 126
+2021-12-20 18:28:29.189 PST [10524] STATEMENT:  SELECT "id", "checksum", "finished_at", "migration_name", "logs", "rolled_back_at", "started_at", "applied_steps_count" FROM "_prisma_migrations" ORDER BY "started_at" ASC
+2021-12-20 18:28:29.190 PST [10524] ERROR:  permission denied to create database
+2021-12-20 18:28:29.190 PST [10524] STATEMENT:  CREATE DATABASE "prisma_migrate_shadow_db_22c50b89-8609-40a7-a398-d7bb2d492ad0"
+2021-12-20 18:30:18.985 PST [20828] ERROR:  must be owner of schema public
+2021-12-20 18:30:18.985 PST [20828] STATEMENT:  drop schema public cascade;
+2021-12-20 18:30:20.887 PST [20839] LOG:  could not receive data from client: Connection reset by peer
+2021-12-20 18:30:20.916 PST [20841] ERROR:  relation "_prisma_migrations" does not exist at character 126
+2021-12-20 18:30:20.916 PST [20841] STATEMENT:  SELECT "id", "checksum", "finished_at", "migration_name", "logs", "rolled_back_at", "started_at", "applied_steps_count" FROM "_prisma_migrations" ORDER BY "started_at" ASC
+2021-12-20 18:30:20.916 PST [20841] ERROR:  permission denied to create database
+2021-12-20 18:30:20.916 PST [20841] STATEMENT:  CREATE DATABASE "prisma_migrate_shadow_db_78e352b1-4697-4fb5-9017-4f9932f957be"
+2021-12-20 18:31:16.516 PST [20958] ERROR:  must be owner of schema public
+2021-12-20 18:31:16.516 PST [20958] STATEMENT:  drop schema public cascade;
+2021-12-20 18:31:18.787 PST [20981] ERROR:  relation "_prisma_migrations" does not exist at character 126
+2021-12-20 18:31:18.787 PST [20981] STATEMENT:  SELECT "id", "checksum", "finished_at", "migration_name", "logs", "rolled_back_at", "started_at", "applied_steps_count" FROM "_prisma_migrations" ORDER BY "started_at" ASC
+2021-12-20 18:31:18.789 PST [20981] ERROR:  permission denied to create database
+2021-12-20 18:31:18.789 PST [20981] STATEMENT:  CREATE DATABASE "prisma_migrate_shadow_db_2f8c5fd5-64f3-413f-8d11-96ac2a9ab61f"
+2021-12-20 18:31:54.386 PST [27448] FATAL:  database "michaelbaldwin" does not exist
+2021-12-20 18:32:30.821 PST [27809] ERROR:  role "romeano" does not exist
+2021-12-20 18:32:30.821 PST [27809] STATEMENT:  ALTER USER romeano WITH CREATEDB;
+2021-12-20 18:32:37.243 PST [33161] ERROR:  must be owner of schema public
+2021-12-20 18:32:37.243 PST [33161] STATEMENT:  drop schema public cascade;
+2021-12-20 18:32:39.213 PST [33171] ERROR:  relation "_prisma_migrations" does not exist at character 126
+2021-12-20 18:32:39.213 PST [33171] STATEMENT:  SELECT "id", "checksum", "finished_at", "migration_name", "logs", "rolled_back_at", "started_at", "applied_steps_count" FROM "_prisma_migrations" ORDER BY "started_at" ASC
+2021-12-20 18:32:42.720 PST [33186] LOG:  could not receive data from client: Connection reset by peer
+2021-12-20 18:32:42.749 PST [33188] ERROR:  must be owner of schema public
+2021-12-20 18:32:42.749 PST [33188] STATEMENT:  DROP SCHEMA "public" CASCADE

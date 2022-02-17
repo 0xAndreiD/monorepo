@@ -41,52 +41,57 @@ function getPrecedence(idx: number): string | undefined {
 //     return <ContactsCard {...data}/>;
 // }
 
-function Circle(props: { firstName: string, lastName: string }) {
+function Circle(props: { firstName: string; lastName: string }) {
   const colour = getColourFromString(getInitialsOfName(props.firstName, props.lastName))
 
-  return <div className={`relative w-10 h-10 text-sm flex items-center justify-center
-                                ${colour} rounded-full`}>
-    <span className="text-white">{(props.firstName[0] ?? "") + (props.lastName[0] ?? "")}</span>
-  </div>
+  return (
+    <div
+      className={`relative w-10 h-10 text-sm flex items-center justify-center
+                                ${colour} rounded-full`}
+    >
+      <span className="text-white">{(props.firstName[0] ?? "") + (props.lastName[0] ?? "")}</span>
+    </div>
+  )
 }
 
 export function ContactsCard(props: {
-  data: ContactCard,
-  numContactsToDisplay?: number,
-  showProfilePictures?: boolean,
+  data: ContactCard
+  numContactsToDisplay?: number
+  showProfilePictures?: boolean
   narrowLayout?: boolean
 }) {
-  return <Card>
-    <CardHeader>Contacts</CardHeader>
-    <div className="divide-y divide-gray-300">
-      {
-        props.data.contacts.slice(0, props.numContactsToDisplay).map((contact, idx) => {
-            const name = getName(contact.firstName, contact.lastName)
+  return (
+    <Card>
+      <CardHeader>Contacts</CardHeader>
+      <div className="divide-y divide-gray-300">
+        {props.data.contacts.slice(0, props.numContactsToDisplay).map((contact, idx) => {
+          const name = getName(contact.firstName, contact.lastName)
 
-            return <div className="py-3" key={idx}>
+          return (
+            <div className="py-3" key={idx}>
               <div className="text-sm text-gray-600 pb-2">{titleCase(getPrecedence(idx) ?? "")}:</div>
               <div className="relative flex items-center space-x-3">
                 <div className="flex-shrink-0">
-                  {
-                    props.showProfilePictures && contact.photoUrl ? <img className="h-10 w-10 rounded-full" src={contact.photoUrl} alt={name} /> :
-                      <Circle firstName={contact.firstName} lastName={contact.lastName} />
-                  }
+                  {props.showProfilePictures && contact.photoUrl ? (
+                    <img className="h-10 w-10 rounded-full" src={contact.photoUrl} alt={name} />
+                  ) : (
+                    <Circle firstName={contact.firstName} lastName={contact.lastName} />
+                  )}
                 </div>
                 <div className={props.narrowLayout ? "" : "flex-1"}>
                   <p className="font-medium text-gray-900">{name}</p>
                   <p className="text-sm truncate">{contact.jobTitle}</p>
                 </div>
-                <div
-                  className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full ">
+                <div className="w-10 h-10 border flex items-center justify-center border-black-600 rounded-full ">
                   <a href={`mailto:${contact.email}`}>
-                    <MailIcon className="h-4 w-4 text-gray-400" />
+                    <MailIcon className="h-4 w-4 text-gray-800" />
                   </a>
                 </div>
               </div>
             </div>
-          }
-        )
-      }
-    </div>
-  </Card>
+          )
+        })}
+      </div>
+    </Card>
+  )
 }

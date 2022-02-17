@@ -86,9 +86,9 @@ function PortalsList() {
                           <td className="px-6 py-4 whitespace-nowrap">
                             <Link href={Routes.CustomerPortal({ portalId: portal.portalId })}>
                               <a
-                                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+                                className="inline-flex items-center px-3 py-2 border border-gray-300  text-sm
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
                               >
                                 View Portal
                               </a>

@@ -137,7 +137,7 @@ function EditProposalCard(props: { portalId: number; data: Proposal; refetchHand
         <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
           <button
             disabled={formState.isSubmitting}
-            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-500 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
+            className="w-full inline-flex justify-center rounded-md border border-transparent  px-4 py-2 bg-green-300 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300 sm:ml-3 sm:w-auto sm:text-sm"
             onClick={formOnSubmit}
           >
             Submit
@@ -148,9 +148,9 @@ function EditProposalCard(props: { portalId: number; data: Proposal; refetchHand
           <button
             onClick={() => setUploadModal(true)}
             type="button"
-            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+            className="inline-flex items-center px-3 py-2 border border-gray-300  text-sm
              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
           >
             <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" />
             Upload
@@ -183,7 +183,7 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
           >
             <button
               type="button"
-              className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md  text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
             >
               Proposal
             </button>
@@ -198,10 +198,10 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
         <div style={{ marginLeft: "auto" }}>
           <button
             type="button"
-            className="w-10 h-10 border-2 flex items-center justify-center border-grey-300 rounded-full "
+            className="w-10 h-10 border flex items-center justify-center border-grey-300 rounded-full "
             onClick={() => setIsInviteStakeholdersModalOpen(true)}
           >
-            <PlusIcon className="h-4 w-4 text-gray-600" aria-hidden="true" />
+            <PlusIcon className="h-4 w-4 text-gray-700" aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -221,9 +221,9 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
 
         <div className="flex gap-2">
           <button
-            className="w-full text-center inline flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+            className="w-full text-center inline flex items-center px-3 py-2 border border-gray-300 text-sm
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
             onClick={async () => {
               await updateProposalApprovalMutation({
                 portalId: props.portalId,
@@ -238,7 +238,7 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
           </button>
 
           <button
-            className="w-full text-center inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm
+            className="w-full text-center inline-flex items-center px-3 py-2 border border-gray-300 text-sm
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             onClick={async () => {

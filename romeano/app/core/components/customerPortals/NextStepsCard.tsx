@@ -56,7 +56,7 @@ export default function NextStepsCard(props: NextSteps & { portalId: number; ref
             <input
               type="text"
               placeholder="New task item..."
-              className="block w-full shadow-sm border py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+              className="block w-full  border py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
               {...register("description", { required: true, maxLength: 80 })}
             />
             <button
@@ -72,9 +72,10 @@ export default function NextStepsCard(props: NextSteps & { portalId: number; ref
     )
   }
 
+  // <div style={{borderColor:'red',borderTopWidth:2,borderRadius:5}}></div>
   return (
-    <Card>
-      <CardHeader>Next Steps</CardHeader>
+    <Card className="px-4 py-5 sm:p-6 border-t-8 border-green-300 rounded-md">
+      <CardHeader classNameOverride="text-lg leading-5 font-bold text-gray-900">Next Steps</CardHeader>
       <NextStepsTaskList
         portalId={props.portalId}
         isElementDeletable={user?.role === Role.AccountExecutive}
