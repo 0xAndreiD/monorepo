@@ -8516,7 +8516,7 @@ react-refresh@0.8.3:
 
 "react-responsive-carousel@https://github.com/romeano-inc/react-responsive-carousel":
   version "3.2.22"
-  resolved "https://github.com/romeano-inc/react-responsive-carousel#1132852c17cbeeb9489e8bf08f9e26d8260b5eb9"
+  resolved "https://github.com/romeano-inc/react-responsive-carousel#660719d893a09e92c922aba2fe355ae203379f55"
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.5.8"
