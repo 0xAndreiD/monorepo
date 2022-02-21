@@ -17,6 +17,7 @@ type TemplateList = {
   proposalSubheading: string
   createdAt: any
   updatedAt: any
+  portalId: number
 }
 
 export function TemplateList(props: { data: TemplateList[] }) {
@@ -68,15 +69,17 @@ export function TemplateList(props: { data: TemplateList[] }) {
                       <td className="px-6 py-4 whitespace-nowrap">0</td>
                       <td className="px-6 py-4 items-center whitespace-nowrap">
                         <div className="flex justify-center gap-3">
-                          <button
-                            type="button"
-                            className="items-center px-3 py-2 border border-gray-300 text-sm 
+                          <BlitzLink href={Routes.EditCustomerPortal({ portalId: template.portalId })}>
+                            <button
+                              type="button"
+                              className="items-center px-3 py-2 border border-gray-300 text-sm 
                              font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
                             focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
-                            // onClick={() => setAddTemplateProps({ isOpen: true, templateId: 1 })}
-                          >
-                            Edit
-                          </button>
+                              // onClick={() => setAddTemplateProps({ isOpen: true, templateId: 1 })}
+                            >
+                              Edit
+                            </button>
+                          </BlitzLink>
                         </div>
                       </td>
 

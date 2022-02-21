@@ -36,7 +36,6 @@ export function Header(props: {
       </div>
 
       <span className="text-gray-500 justify-self-center">{props.customerName} Customer Portal</span>
-
       <div className="justify-self-end">
         <div className={props.editingEnabled ? "grid gap-2 grid-cols-2 place-items-center" : ""}>
           {props.editingEnabled && (
