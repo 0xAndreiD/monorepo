@@ -1,5 +1,5 @@
-import "react-responsive-carousel/lib/styles/carousel.min.css" // requires a loader
-import { Carousel } from "react-responsive-carousel"
+// import "react-responsive-carousel/lib/styles/carousel.min.css" // requires a loader
+import { Carousel } from "@mikemmb73/react-responsive-carousel2"
 import { ChevronLeftIcon, ChevronRightIcon, PencilIcon, TrashIcon, CloudUploadIcon } from "@heroicons/react/outline"
 import { CSSProperties, useState } from "react"
 import { Card, CardHeader } from "../generic/Card"
