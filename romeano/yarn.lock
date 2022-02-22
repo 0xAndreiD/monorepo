@@ -1831,10 +1831,10 @@
     lodash.set "^4.3.2"
     maxmind "^4.2.0"
 
-"@mikemmb73/react-responsive-carousel2@3.2.22":
-  version "3.2.22"
-  resolved "https://registry.yarnpkg.com/@mikemmb73/react-responsive-carousel2/-/react-responsive-carousel2-3.2.22.tgz#04f0ac118f8aab4cc3937656474fdd5554ac9ad3"
-  integrity sha512-GR/8bSLbPi9PFB4gYTXHguhwBc0X43ZLchKpC/HEceFW1aS54FkUkWJ4rxygdHEJH1ur0y3XO8nI0bTeJ0JHUQ==
+"@mikemmb73/react-responsive-carousel2@^3.2.24":
+  version "3.2.24"
+  resolved "https://registry.yarnpkg.com/@mikemmb73/react-responsive-carousel2/-/react-responsive-carousel2-3.2.24.tgz#38dc1d4f7da988ea62a74b20bc83e98d66ccbde9"
+  integrity sha512-/FkP7Eaay9MDM7JxCaW46hgBxrHyU7NlFAAC8zyirE0JAthNJhwsKgoZ9ewgH5fOBq+9UhD4m0XbPBvLQfCscg==
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.5.8"

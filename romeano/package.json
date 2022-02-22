@@ -36,7 +36,7 @@
     "@heroicons/react": "^1.0.5",
     "@hookform/resolvers": "2.8.3",
     "@maxmind/geoip2-node": "^3.2.0",
-    "@mikemmb73/react-responsive-carousel2": "3.2.22",
+    "@mikemmb73/react-responsive-carousel2": "^3.2.24",
     "@prisma/client": "3.4.1",
     "@trendyol-js/react-carousel": "2.0.1",
     "analytics": "^0.7.18",
