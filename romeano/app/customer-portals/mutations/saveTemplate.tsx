@@ -34,66 +34,107 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
   // const vendorTeam = await db.vendorTeam.findUnique({ where: {id: accountExec.vendorTeamId}})
   // if(!vendorTeam) throw new AuthenticationError("No vendor team associated w AE when creating portal")
 
+  const templatePortal = await db.portal.create({
+    data: {
+      customerName: portal?.customerName ?? "",
+      customerLogoUrl: "",
+      currentRoadmapStage: portal?.currentRoadmapStage ?? 0,
+      proposalHeading: portal?.proposalHeading ?? "",
+      proposalSubheading: portal?.proposalSubheading ?? "",
+      userPortals: {
+        createMany: {
+          data: [
+            {
+              userId: userId,
+              role: Role.AccountExecutive,
+              isPrimaryContact: true,
+              isSecondaryContact: false,
+            },
+          ],
+        },
+      },
+      vendorId: portal?.vendorId ?? 0,
+      isTemplate: true,
+    },
+  })
+
   const template = await db.template.create({
     data: {
       name: data.templateName,
       proposalHeading: portal?.proposalHeading ?? "",
       proposalSubheading: portal?.proposalSubheading ?? "",
+      portalId: templatePortal.id,
     },
   })
 
-  //attach template id across the DB
+  //attach to new portalTeamplate
   portal?.roadmapStages.map(
     async (roadmapStage) =>
-      await db.roadmapStage.upsert({
-        where: { id: roadmapStage.id },
-        update: { templateId: template.id },
-        create: roadmapStage,
+      await db.roadmapStage.create({
+        data: {
+          portalId: templatePortal.id,
+          heading: roadmapStage.heading,
+          date: roadmapStage.date,
+          templateId: template.id,
+        },
       })
   )
 
   portal?.images.map(
     async (image) =>
-      await db.portalImage.upsert({
-        where: { id: image.id },
-        update: { templateId: template.id },
-        create: image,
+      await db.portalImage.create({
+        data: {
+          href: image.href,
+          portalId: templatePortal.id,
+          templateId: template.id,
+        },
       })
   )
 
   portal?.nextStepsTasks.map(
     async (nextStepsTask) =>
-      await db.nextStepsTask.upsert({
-        where: { id: nextStepsTask.id },
-        update: { templateId: template.id },
-        create: nextStepsTask,
+      await db.nextStepsTask.create({
+        data: {
+          portalId: templatePortal.id,
+          description: nextStepsTask.description,
+          isCompleted: nextStepsTask.isCompleted,
+          userId: userId,
+          templateId: template.id,
+        },
       })
   )
 
   portal?.productInfoSections.map(
     async (productInfoSection) =>
-      await db.productInfoSection.upsert({
-        where: { id: productInfoSection.id },
-        update: { templateId: template.id },
-        create: productInfoSection,
+      await db.productInfoSection.create({
+        data: {
+          heading: productInfoSection.heading,
+          portalId: templatePortal.id,
+          templateId: template.id,
+        },
       })
   )
 
   portal?.portalDocuments.map(
     async (portalDocument) =>
-      await db.portalDocument.upsert({
-        where: { id: portalDocument.id },
-        update: { templateId: template.id },
-        create: portalDocument,
+      await db.portalDocument.create({
+        data: {
+          linkId: portalDocument.linkId,
+          portalId: templatePortal.id,
+          templateId: template.id,
+        },
       })
   )
 
   portal?.internalNotes.map(
     async (internalNote) =>
-      await db.internalNote.upsert({
-        where: { id: internalNote.id },
-        update: { templateId: template.id },
-        create: internalNote,
+      await db.internalNote.create({
+        data: {
+          message: internalNote.message,
+          userId: userId,
+          portalId: templatePortal.id,
+          templateId: template.id,
+        },
       })
   )
 
