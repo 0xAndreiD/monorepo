@@ -25,6 +25,7 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   // This throws an error if credentials are invalid
   const user = await authenticateUser(email, password)
   console.log(ctx.session)
+  ctx.session.$authorize()
 
   if (ctx.session == undefined) {
     console.log("CTX")
