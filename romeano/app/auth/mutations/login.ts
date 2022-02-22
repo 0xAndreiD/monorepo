@@ -1,4 +1,4 @@
-import { resolver, SecurePassword, AuthenticationError, Ctx } from "blitz"
+import { resolver, SecurePassword, AuthenticationError, Ctx, getSession } from "blitz"
 import db from "db"
 import { Login } from "../validations"
 import { Role } from "db"
@@ -25,6 +25,11 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   // This throws an error if credentials are invalid
   const user = await authenticateUser(email, password)
   console.log(ctx.session)
+
+  if (ctx.session == undefined) {
+    console.log("CTX")
+    console.log(ctx)
+  }
 
   await ctx.session.$create({ userId: user.id, role: user.role as Role })
 
