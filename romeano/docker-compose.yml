@@ -17,7 +17,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: password
-    # volumes:
-    #   - type: bind
-    #     source: ${PWD}/prod_data/pgdata
-    #     target: /var/lib/postgresql/data
+    volumes:
+      - type: bind
+        source: ${PWD}/prod_data/pgdata
+        target: /var/lib/postgresql/data
