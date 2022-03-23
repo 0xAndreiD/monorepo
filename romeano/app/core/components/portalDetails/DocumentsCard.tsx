@@ -49,11 +49,11 @@ function DocumentList(props: { companyName: string; documents: PortalDocument[] 
                   className={
                     "inline-flex items-center px-3 py-2 border  text-sm\
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300 " +
-                    (task.isCompleted ? "border-green-300" : "border-gray-300")
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 " +
+                    (task.isCompleted ? "border-green-500" : "border-gray-300")
                   }
                 >
-                  {task.isCompleted && <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-green-300" />}
+                  {task.isCompleted && <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-green-500" />}
                   {task.body}
                 </div>
               </a>

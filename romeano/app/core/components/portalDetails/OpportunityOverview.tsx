@@ -74,7 +74,7 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
                     {/*<div key={step.name} className="flex justify-center w-full">*/}
                     {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
                     <RoadmapStageCircle hover={false} stageNum={stageIdx + 1} status={status} />
-                    {/*<div className="absolute left-96 text-green-300">*/}
+                    {/*<div className="absolute left-96 text-green-500">*/}
                     {/*    hi*/}
                     {/*</div>*/}
                   </div>

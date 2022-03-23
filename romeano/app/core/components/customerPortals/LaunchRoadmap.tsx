@@ -47,7 +47,7 @@ function RoadmapStage(props: {
         {/*<div key={stage.name} className="flex justify-center w-full">*/}
         {/*className={classNames(stageIdx !== stages.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
         <RoadmapStageCircle stageNum={props.stageNum} status={props.status} hover={props.editingEnabled} />
-        {/*<div className="absolute left-96 text-green-300">*/}
+        {/*<div className="absolute left-96 text-green-500">*/}
         {/*    hi*/}
         {/*</div>*/}
       </div>
@@ -83,7 +83,7 @@ function RoadmapStage(props: {
         <button
           className="inline-flex items-center px-5 py-2 border border-gray-300  text-sm
                   leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
-                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
           onClick={props.onClickEdit}
         >
           Edit

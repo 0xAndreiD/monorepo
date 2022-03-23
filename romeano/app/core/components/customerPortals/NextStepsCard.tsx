@@ -3,6 +3,7 @@
 import { Card, CardDivider, CardHeader } from "../generic/Card"
 import { AddButton } from "../generic/AddButton"
 import { PaperAirplaneIcon, TrashIcon } from "@heroicons/react/outline"
+import CustomTrashIcon from "../../assets/trashIcon"
 import createNextStepsTask, { CreateNextStepsTask } from "../../../customer-portals/mutations/createNextStepsTask"
 import updateNextStepsTask from "../../../customer-portals/mutations/updateNextStepsTask"
 import deleteNextStepsTask from "../../../customer-portals/mutations/deleteNextStepsTask"
@@ -74,7 +75,7 @@ export default function NextStepsCard(props: NextSteps & { portalId: number; ref
 
   // <div style={{borderColor:'red',borderTopWidth:2,borderRadius:5}}></div>
   return (
-    <Card className="px-4 py-5 sm:p-6 border-t-8 border-green-300 rounded-md">
+    <Card className="px-4 py-5 sm:p-6 border-t-8 border-green-500 rounded-md">
       <CardHeader classNameOverride="text-lg leading-5 font-bold text-gray-900">Next Steps</CardHeader>
       <NextStepsTaskList
         portalId={props.portalId}
@@ -145,7 +146,7 @@ function NextStepsTaskList(props: {
                     props.refetchHandler()
                   }}
                 >
-                  <TrashIcon className="w-4 h-4 text-gray-400" />
+                  <CustomTrashIcon className="w-4 h-4 text-gray-400" />
                 </button>
               )}
             </li>

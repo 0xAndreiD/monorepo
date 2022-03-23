@@ -74,7 +74,7 @@ function PortalsList() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             {portal.hasStakeholderApproved === true ? (
-                              <span className="flex items-center justify-center h-5 w-5 text-green-800 font-medium bg-green-100 rounded-full">
+                              <span className="flex items-center justify-center h-5 w-5 text-green-700 font-medium bg-green-100 rounded-full">
                                 <CheckIcon className="h-4 w-4" />
                               </span>
                             ) : portal.hasStakeholderApproved === false ? (
@@ -92,7 +92,7 @@ function PortalsList() {
                               <a
                                 className="inline-flex items-center px-3 py-2 border border-gray-300  text-sm
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                               >
                                 View Portal
                               </a>

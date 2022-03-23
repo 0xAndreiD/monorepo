@@ -26,13 +26,13 @@ function ProgressBullets(props: { current: number; total: number }) {
         {range(props.total).map((idx) => (
           <li key={idx}>
             {idx + 1 < props.current ? (
-              <div className="block w-2.5 h-2.5 bg-white rounded-full border-green-300 border-2" />
+              <div className="block w-2.5 h-2.5 bg-white rounded-full border-green-500 border-2" />
             ) : idx + 1 === props.current ? (
               <div className="relative flex items-center justify-center" aria-current="step">
                 {/* <span className="absolute w-5 h-5 p-px flex" aria-hidden="true">
                                     <span className="w-full h-full rounded-full bg-green-200" />
                                 </span> */}
-                <span className="relative block w-2.5 h-2.5 bg-green-300 rounded-full" aria-hidden="true" />
+                <span className="relative block w-2.5 h-2.5 bg-green-500 rounded-full" aria-hidden="true" />
               </div>
             ) : (
               <div className="block w-2.5 h-2.5 bg-gray-200 rounded-full hover:bg-gray-400" />
@@ -133,7 +133,7 @@ export function ActivePortals(props: { data: ActivePortal[] }) {
                             <a
                               className="inline-flex items-center px-5 my-3 border text-sm\
              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300 border-gray-300"
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300"
                             >
                               View
                             </a>

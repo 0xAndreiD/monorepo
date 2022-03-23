@@ -53,7 +53,7 @@ export default function SaveTemplateModal(props: { portalId: number; onLinkCompl
           <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
             <button
               disabled={formState.isSubmitting}
-              className="w-full inline-flex justify-center rounded-md border border-transparent  px-4 py-2 bg-black text-base font-medium text-white hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300 sm:ml-3 sm:w-auto sm:text-sm"
+              className="w-full inline-flex justify-center rounded-md border border-transparent  px-4 py-2 bg-black text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
               onClick={formOnSubmit}
             >
               Save

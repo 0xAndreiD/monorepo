@@ -19,7 +19,7 @@ export function StakeholderApprovalCircles(props: { data: Array<Stakeholder & { 
               <span className="text-white static">{initials}</span>
 
               {stakeholder.hasStakeholderApproved === true ? (
-                <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-green-300">
+                <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-green-500">
                   <CheckIcon className="text-white" />
                 </div>
               ) : stakeholder.hasStakeholderApproved === false ? (

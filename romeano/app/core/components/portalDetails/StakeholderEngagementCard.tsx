@@ -32,7 +32,7 @@ export function StakeholderEngagementCard(props: { data: StakeholderStats[] }) {
             </div>
             <div className="flex flex-1 items-center gap-2">
               <div
-                className="h-8 w-full rounded ring-1 ring-inset ring-black ring-opacity-0 bg-green-300"
+                className="h-8 w-full rounded ring-1 ring-inset ring-black ring-opacity-0 bg-green-500"
                 style={{ width: `${Math.ceil((100 * stakeholder.eventCount) / maxClickCount)}%` }}
               />
               <span className="font-bold text-sm">{stakeholder.eventCount}</span>

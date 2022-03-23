@@ -43,7 +43,7 @@ export function Header(props: {
               <a
                 className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm
                 leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
-                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
                 Preview Portal
               </a>
@@ -54,7 +54,7 @@ export function Header(props: {
               <a
                 className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm
                 leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
-                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 onClick={() => setAddTemplateProps({ isOpen: true, templateId: props.portalId })}
               >
                 Save as Template
@@ -66,7 +66,7 @@ export function Header(props: {
               onClick={() => setIsInviteStakeholdersModalOpen(true)}
               className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm
               leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
-                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
               <UserAddIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
               Share Portal
