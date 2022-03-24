@@ -3,11 +3,17 @@ import "tailwindcss/tailwind.css"
 import { MailIcon } from "@heroicons/react/outline"
 import { getName } from "../../util/text"
 import { StyledLink } from "../generic/Link"
+import { CogIcon, PlusIcon } from "@heroicons/react/solid"
 import { Card, CardHeader } from "../generic/Card"
 import { Contact, EventCounted, Link, Stakeholder } from "../../../../types"
 import { range } from "lodash"
-import { Link as BlitzLink, Routes } from "blitz"
+import AddPortalModal from "./edit/addPortalModal"
+import { useState } from "react"
+import { Link as BlitzLink, Routes, useMutation } from "blitz"
 import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircles"
+import Modal from "app/core/components/generic/Modal"
+import createPortal from "app/vendor-stats/mutations/createPortal"
+import { Template } from "db"
 
 type ActivePortal = {
   portalId: number
@@ -44,39 +50,56 @@ function ProgressBullets(props: { current: number; total: number }) {
   )
 }
 
-export function ActivePortals(props: { data: ActivePortal[] }) {
+export function ActivePortals(props: { data: ActivePortal[]; templates: Template[] }) {
+  const [addTemplateProps, setAddTemplateProps] = useState<
+    { isOpen: false; templateId: undefined } | { isOpen: true; templateId: number }
+  >({
+    isOpen: false,
+    templateId: undefined,
+  })
+
+  const [createPortalMutation] = useMutation(createPortal)
+
   return (
-    <Card>
-      <CardHeader>Active Portals</CardHeader>
-      <div className="flex flex-col pt-4">
+    <Card className="bg-gray overflow-hidden" borderless={true}>
+      <CardHeader
+        classNameOverride="text-3xl leading-10 font-bold text-gray-800 pb-8 pt-10"
+        style={{ backgroundColor: "#F7F7F9" }}
+      >
+        <div className="grid grid-cols-2 grid-rows-1">
+          <div className="flex justify-self-front">Active Portals</div>
+
+          <div className="flex justify-self-end gap-x-4 mr-0.5">
+            <button
+              type="button"
+              className="inline-flex items-center px-3 py-2 border border-gray-300  text-sm
+                leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              onClick={() => setAddTemplateProps({ isOpen: true, templateId: 1 })}
+            >
+              <PlusIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+              Add Portal
+            </button>
+          </div>
+        </div>
+      </CardHeader>
+      <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+            <div className="">
+              <table className="border-seperate min-w-full divide-y rounded-lg">
+                <thead style={{ backgroundColor: "#F7F7F9" }}>
                   <tr>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th scope="col" className="py-3 text-left text-s font-light text-gray-500 tracking-wider">
                       Opportunity
                     </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th scope="col" className="py-3 text-left text-s font-light text-gray-500 tracking-wider">
                       Primary Contact
                     </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th scope="col" className="py-3 text-left text-s font-light text-gray-500 tracking-wider">
                       Stakeholder Clicks
                     </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th scope="col" className="py-3 text-left text-s font-light text-gray-500 tracking-wider">
                       Document Opens
                     </th>
                   </tr>
@@ -84,7 +107,7 @@ export function ActivePortals(props: { data: ActivePortal[] }) {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {props.data.map((portal, idx) => (
                     <tr key={idx} className="divide-x">
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-12 whitespace-nowrap sm:rounded-lg">
                         <div className="flex items-center">
                           <div className="flex flex-col gap-y-1">
                             <div className="text-lg font-medium text-gray-900">{portal.customerName}</div>
@@ -132,8 +155,8 @@ export function ActivePortals(props: { data: ActivePortal[] }) {
                           <BlitzLink href={Routes.PortalDetails({ portalId: portal.portalId })}>
                             <a
                               className="inline-flex items-center px-5 my-3 border text-sm\
-             leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300"
+              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300"
                             >
                               View
                             </a>
@@ -148,6 +171,28 @@ export function ActivePortals(props: { data: ActivePortal[] }) {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={addTemplateProps.isOpen}
+        onClose={() => setAddTemplateProps({ isOpen: false, templateId: undefined })}
+      >
+        <AddPortalModal
+          //issue is coming from line 26 in addPortalModal
+          //schema is different here
+          onLinkComplete={async (portalData) => {
+            await createPortalMutation({
+              oppName: portalData.oppName,
+              customerFName: portalData.firstName,
+              customerLName: portalData.lastName,
+              customerEmail: portalData.email,
+              roleName: portalData.roleName,
+              templateId: portalData.templateId,
+            })
+            // props.refetchHandler()
+            // setEditLinkModalProps({ isOpen: false, link: undefined })
+          }}
+          templates={props.templates}
+        />
+      </Modal>
     </Card>
   )
 }

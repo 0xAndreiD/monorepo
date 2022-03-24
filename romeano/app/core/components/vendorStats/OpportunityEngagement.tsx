@@ -6,7 +6,7 @@ export function OpportunityEngagement(props: { data: Array<{ customerName: strin
   return (
     <Card borderless>
       <div className="flex items-end gap-x-2">
-        <CardHeader>Opportunity Engagement</CardHeader>
+        <CardHeader classNameAddition="text-2xl">Opportunity Engagement</CardHeader>
         <div className="text-sm text-gray-700">(clicks)</div>
       </div>
       <div className="py-3">

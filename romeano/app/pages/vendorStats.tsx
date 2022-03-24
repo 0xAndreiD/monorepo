@@ -28,7 +28,13 @@ function VendorStats() {
           <OpportunityEngagement data={vendorStats.opportunityEngagement} />
           <StakeholderActivity data={vendorStats.stakeholderActivityLog} />
         </div>
-        <ActivePortals data={vendorStats.activePortals} />
+      </div>
+      <div style={{ backgroundColor: "#F7F7F9" }}>
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
+          <div style={{ backgroundColor: "#F7F7F9" }}>
+            <ActivePortals data={vendorStats.activePortals} templates={templates.templates} />
+          </div>
+        </div>
       </div>
       <Footer />
     </>
