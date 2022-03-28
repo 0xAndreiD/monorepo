@@ -59,7 +59,7 @@ function PortalDetails() {
           </div>
         </div>
       </div>
-      <Footer gray={true} />
+      <Footer />
     </div>
   )
 }
