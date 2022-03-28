@@ -24,7 +24,7 @@ export type PortalDocumentsCard = {
 export default function DocumentsCard(props: { portalId: number; data: PortalDocumentsCard }) {
   //reference: https://tailwindui.com/components/application-ui/data-display/title-lists#component-e1b5917b21bbe76a73a96c5ca876225f
   return (
-    <Card>
+    <Card borderless={true}>
       <CardHeader>Documents</CardHeader>
       <div className="grid sm:grid-cols-2 ">
         <DocumentList companyName={props.data.customer.name} documents={props.data.customer.documents} />

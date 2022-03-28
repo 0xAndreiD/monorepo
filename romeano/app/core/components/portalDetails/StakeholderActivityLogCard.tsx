@@ -51,46 +51,45 @@ export function getActionText(eventType: EventType): string {
 
 export function StakeholderActivityLogCard(props: { data: StakeholderActivityEvent[] }) {
   return (
-    <Card borderless>
-      <CardHeader>Stakeholder Activity Log</CardHeader>
+    <Card className="bg-[#F7F7F9] overflow-hidden" borderless={true}>
+      <div className="mt-2"></div>
+      <CardHeader style={{ backgroundColor: "#F7F7F9" }}>Stakeholder Activity Log</CardHeader>
 
-      <div className="flex flex-col pt-4">
-        <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div className="bg-[#F7F7F9] flex flex-col pt-4">
+        <div className="bg-[#F7F7F9] -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-            <div
-              className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-y-auto"
-              style={{ height: "32rem" }}
-            >
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+            <div className="overflow-hidden overflow-y-auto" style={{ height: "32rem" }}>
+              <table className="relative w-full boarder-color-gray  min-w-full divide-y">
+                <thead className="bg-[#F7F7F9]">
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="sticky top-0 bg-[#F7F7F9] py-3 text-left text-s font-light text-gray-500 tracking-wider"
                     >
                       Activity
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="sticky top-0 bg-[#F7F7F9] py-3 px-4 text-left text-s font-light text-gray-500 tracking-wider"
                     >
                       Location
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="sticky top-0 bg-[#F7F7F9] py-3 text-left text-s font-light text-gray-500 tracking-wider"
                     >
                       Device
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="sticky top-0 bg-[#F7F7F9] py-3 text-left text-s font-light text-gray-500 tracking-wider"
                     >
-                      Event&nbsp;time
+                      Time
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200 text-sm">
+                {/* <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8"> */}
+                <tbody className="bg-white border rounded-br-lg divide-y divide-x divide-gray-200 text-sm">
                   {props.data.map((event, idx) => (
                     <tr key={idx}>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -108,10 +107,12 @@ export function StakeholderActivityLogCard(props: { data: StakeholderActivityEve
                     </tr>
                   ))}
                 </tbody>
+                {/* </div> */}
               </table>
             </div>
           </div>
         </div>
+        <div className="mb-6" />
       </div>
     </Card>
   )

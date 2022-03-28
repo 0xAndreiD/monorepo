@@ -19,8 +19,8 @@ export default function LineChart(props: { data: Array<{ x: Date; y: number }> }
   }
 
   return (
-    <Card borderless>
-      <CardHeader>Overall Engagement</CardHeader>
+    <Card borderless={true} className="px-4 py-3 sm:p-6">
+      <CardHeader classNameAddition="text-xl pb-2"></CardHeader>
       <Line
         data={chartData}
         options={{
