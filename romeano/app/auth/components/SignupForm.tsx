@@ -3,6 +3,7 @@ import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
 import signup from "app/auth/mutations/signup"
 import { Signup } from "app/auth/validations"
+import PoweredByRomeano from "app/core/assets/poweredRomeano"
 
 type SignupFormProps = {
   onSuccess?: () => void
@@ -12,7 +13,8 @@ export const SignupForm = (props: SignupFormProps) => {
   const [signupMutation] = useMutation(signup)
 
   return (
-    <div>
+    <div className="grid place-items-center mt-12">
+      <PoweredByRomeano alt="Romeano Logo" className="" />
       <h1>Create an Account</h1>
 
       <Form
@@ -35,6 +37,13 @@ export const SignupForm = (props: SignupFormProps) => {
       >
         <LabeledTextField name="email" label="Email" placeholder="Email" />
         <LabeledTextField name="password" label="Password" placeholder="Password" type="password" />
+
+        <button
+          type="submit"
+          className="inline-flex items-center px-12 py-2 border border-transparent text-sm font-medium rounded-md text-black bg-gray-200 hover:bg-gray-300 hover:text-white focus:outline focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+        >
+          Sign Up
+        </button>
       </Form>
     </div>
   )

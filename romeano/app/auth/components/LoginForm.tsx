@@ -39,7 +39,7 @@ export const LoginForm = (props: { onSuccess?: () => void }) => {
         <div className="grid-cols-2 gap-2 grid-rows-1 flex">
           <Link href={Routes.SignupPage()}>
             <button
-              type="submit"
+              type="button"
               className="inline-flex items-center px-12 py-2 border border-transparent text-sm font-medium rounded-md text-black bg-gray-200 hover:bg-gray-300 hover:text-white focus:outline focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
               Sign Up
