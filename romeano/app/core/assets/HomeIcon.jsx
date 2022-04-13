@@ -1,5 +1,5 @@
 import React from "react"
-s
+
 const HomeIcon = ({ className, alt }) => {
   return (
     <svg
