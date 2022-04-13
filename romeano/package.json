@@ -39,6 +39,7 @@
     "@mikemmb73/react-responsive-carousel2": "^3.2.24",
     "@prisma/client": "3.4.1",
     "@trendyol-js/react-carousel": "2.0.1",
+    "@types/react-html-email": "^3.0.1",
     "analytics": "^0.7.18",
     "axios": "^0.24.0",
     "babel": "^6.23.0",

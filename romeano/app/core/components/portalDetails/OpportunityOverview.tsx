@@ -94,9 +94,9 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
         </Carousel>
       </div>
 
-      <div className="rounded-lg p-5 bg-gray-100">
+      <div className="rounded-lg p-5 bg-white">
         <div className="ml-6">
-          <table className="table-fixed">
+          {/* <table className="table-fixed">
             <thead className="text-gray-500 text-left">
               <tr>
                 <th className="w-1/3">Open Date</th>
@@ -111,7 +111,7 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
                 <td>Greg Miller</td>
               </tr>
             </tbody>
-          </table>
+          </table> */}
         </div>
       </div>
     </nav>

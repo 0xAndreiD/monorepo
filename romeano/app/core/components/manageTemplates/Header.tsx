@@ -1,5 +1,6 @@
 import { Link, Routes } from "blitz"
-import { HomeIcon } from "@heroicons/react/outline"
+// import { HomeIcon } from "@heroicons/react/outline"
+import HomeIcon from "../../assets/HomeIcon"
 
 export function Header(props: { vendorLogo?: string }) {
   return (
@@ -10,11 +11,11 @@ export function Header(props: { vendorLogo?: string }) {
         <button>
           <Link href={Routes.Home()}>
             <div
-              className="inline-flex items-center px-3 py-2 border border-gray-300  text-sm
-                    leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
+              className="inline-flex items-center px-3 py-2  text-sm
+                    leading-4 font-medium rounded-md text-gray-700 bg-white
                     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
-              <HomeIcon className="h-4 w-4" />
+              <HomeIcon alt="Romeano Logo" className="w-8 h-8" />
             </div>
           </Link>
         </button>
