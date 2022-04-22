@@ -14,6 +14,7 @@ import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircle
 import Modal from "app/core/components/generic/Modal"
 import createPortal from "app/vendor-stats/mutations/createPortal"
 import { Template } from "db"
+import deletePortal from "../../../vendor-stats/mutations/deletePortal"
 
 type ActivePortal = {
   portalId: number
@@ -59,6 +60,7 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
   })
 
   const [createPortalMutation] = useMutation(createPortal)
+  const [deletePortalMutation] = useMutation(deletePortal)
 
   return (
     <Card className="bg-gray overflow-hidden" borderless={true}>
@@ -152,15 +154,31 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                               </div>
                             ))}
                           </div>
-                          <BlitzLink href={Routes.PortalDetails({ portalId: portal.portalId })}>
-                            <a
+                          <div className="grid grid-rows-2">
+                            <BlitzLink href={Routes.PortalDetails({ portalId: portal.portalId })}>
+                              <a
+                                className="inline-flex items-center px-5 my-3 border text-sm\
+                leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300"
+                              >
+                                View
+                              </a>
+                            </BlitzLink>
+                            {/* TODO: Make this a blitz link */}
+                            {/* <BlitzLink> */}
+                            <button
+                              type="button"
                               className="inline-flex items-center px-5 my-3 border text-sm\
-              leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
-                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300"
+                leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300"
+                              onClick={async () => {
+                                await deletePortalMutation({ thisPortalId: portal.portalId })
+                              }}
                             >
-                              View
-                            </a>
-                          </BlitzLink>
+                              Delete
+                            </button>
+                            {/* </BlitzLink> */}
+                          </div>
                         </div>
                       </td>
                     </tr>
