@@ -6,6 +6,7 @@ import { useState } from "react"
 import createPortal from "app/vendor-stats/mutations/createPortal"
 import { Link as BlitzLink, useMutation, Routes } from "blitz"
 import { Template } from "db"
+import logout from "../../../auth/mutations/logout"
 
 export function Header(props: {
   vendorLogo?: string
@@ -25,6 +26,7 @@ export function Header(props: {
 
   //this breaks everything
   const [createPortalMutation] = useMutation(createPortal)
+  const [logoutMutation] = useMutation(logout)
 
   return (
     <div className="grid grid-cols-2 grid-rows-1 items-center">
@@ -54,11 +56,20 @@ export function Header(props: {
           </button>
         </BlitzLink>
         {/*FIXME change link*/}
-        <Link href={data.manageTemplatesLink}>
-          <div className="flex items-center">
-            <CogIcon className="h-7 w-7 text-gray-400" />
-          </div>
-        </Link>
+        {/* <Link href={data.manageTemplatesLink}> */}
+        <div className="flex items-center">
+          <button
+            type="button"
+            className="px-3 py-2 border border-gray-300  text-sm
+             leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            onClick={() => logoutMutation()}
+          >
+            {/* <CogIcon className="h-7 w-7 text-gray-400" /> */}
+            Logout
+          </button>
+        </div>
+        {/* </Link> */}
       </div>
       <Modal
         isOpen={addTemplateProps.isOpen}
