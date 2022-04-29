@@ -1,6 +1,6 @@
 import { resolver } from "blitz"
 import db from "db"
-import { configStyleValidator } from "react-html-email"
+// import { configStyleValidator } from "react-html-email"
 import { z } from "zod"
 
 const DeletePortal = z.object({
