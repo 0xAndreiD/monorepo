@@ -51,7 +51,7 @@ function ProgressBullets(props: { current: number; total: number }) {
   )
 }
 
-export function ActivePortals(props: { data: ActivePortal[]; templates: Template[] }) {
+export function ActivePortals(props: { data: ActivePortal[]; templates: Template[]; refetchHandler: () => void }) {
   const [addTemplateProps, setAddTemplateProps] = useState<
     { isOpen: false; templateId: undefined } | { isOpen: true; templateId: number }
   >({
@@ -209,6 +209,7 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
             // setEditLinkModalProps({ isOpen: false, link: undefined })
           }}
           templates={props.templates}
+          refetchHandler={props.refetchHandler}
         />
       </Modal>
     </Card>
