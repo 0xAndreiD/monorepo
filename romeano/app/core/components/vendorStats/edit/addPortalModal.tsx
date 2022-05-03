@@ -19,7 +19,7 @@ import Router from "next/router"
 export default function AddPortalModal(props: {
   onLinkComplete: (portal: any) => Promise<void>
   templates: Template[]
-  refetchHandler: () => void
+  // refetchHandler: () => void
 }) {
   const [createPortalMutation] = useMutation(CreatePortal)
   const schema = z.object({

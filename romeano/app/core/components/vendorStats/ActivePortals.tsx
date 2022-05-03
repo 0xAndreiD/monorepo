@@ -24,6 +24,7 @@ type ActivePortal = {
   primaryContact: Contact | null
   stakeholderEvents: Array<EventCounted<Stakeholder>>
   documentEvents: Array<EventCounted<Link>>
+  // refetchHandler: () => void
 }
 
 function ProgressBullets(props: { current: number; total: number }) {
@@ -51,7 +52,8 @@ function ProgressBullets(props: { current: number; total: number }) {
   )
 }
 
-export function ActivePortals(props: { data: ActivePortal[]; templates: Template[]; refetchHandler: () => void }) {
+//add refetchHandler = () => void
+export function ActivePortals(props: { data: ActivePortal[]; templates: Template[] }) {
   const [addTemplateProps, setAddTemplateProps] = useState<
     { isOpen: false; templateId: undefined } | { isOpen: true; templateId: number }
   >({
@@ -209,7 +211,7 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
             // setEditLinkModalProps({ isOpen: false, link: undefined })
           }}
           templates={props.templates}
-          refetchHandler={props.refetchHandler}
+          // refetchHandler={props.refetchHandler}
         />
       </Modal>
     </Card>
