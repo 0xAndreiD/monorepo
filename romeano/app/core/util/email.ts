@@ -1,6 +1,12 @@
 import nodemailer from "nodemailer"
 import { BACKEND_ENDPOINT } from "../config"
 import previewEmail from "preview-email"
+import { promisify } from "util"
+const fs = require("fs")
+import handlebars from "handlebars"
+import path from "path"
+
+const readFile = promisify(fs.readFile)
 
 export const transporter = nodemailer.createTransport({
   host: "smtp.sendgrid.net",
@@ -21,16 +27,32 @@ export async function sendInvite(
   vendorName: string,
   inviterFirstName: string,
   inviteeEmailAddress: string,
-  magicLink: string
+  magicLink: string,
+  vendorLogo: string,
+  customerLogo: string
 ) {
-  const body = `<h1>${inviterFirstName} has shared a customer portal with you</h1>
+  let html = await readFile("app/core/util/inviteEmail.html", "utf8")
+  let template = handlebars.compile(html)
+  const inviteUrl = `${BACKEND_ENDPOINT}/magicLink/${magicLink}`
+  let inviteEmailData = {
+    invitee_name: inviterFirstName,
+    invite_url: inviteUrl,
+    vendor_logo: `${BACKEND_ENDPOINT}` + vendorLogo,
+    customer_logo: `${BACKEND_ENDPOINT}` + customerLogo,
+  }
+
+  //use the handlebars object to inject custom template data into the email
+  let preparedInviteHTMLEmail = template(inviteEmailData)
+
+  const body = `<h1 >${inviterFirstName} has shared a customer portal with you</h1>
 <br/>
 <a href="${BACKEND_ENDPOINT}/magicLink/${magicLink}">Open Portal</a>`
+
   const msg = {
     from: `"Romeano" <hey@romeano.com>`,
     to: recipientProcessor([inviteeEmailAddress]),
     subject: `${customerName} Customer Portal Invitation - ${vendorName}`, // Subject line
-    html: body,
+    html: preparedInviteHTMLEmail,
   }
   if (process.env.NODE_ENV !== "production") {
     await previewEmail(msg)

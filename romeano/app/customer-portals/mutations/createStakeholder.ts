@@ -75,7 +75,15 @@ export default resolver.pipe(
       },
     })
 
-    sendInvite(portal.customerName, portal.vendor.name, userPortal.user.firstName, email, magicLink.id)
+    sendInvite(
+      portal.customerName,
+      portal.vendor.name,
+      userPortal.user.firstName,
+      email,
+      magicLink.id,
+      portal.vendor.logoUrl,
+      portal.customerLogoUrl
+    )
 
     return stakeholder
   }
