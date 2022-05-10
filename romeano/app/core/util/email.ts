@@ -12,7 +12,7 @@ export const transporter = nodemailer.createTransport({
 })
 
 function recipientProcessor(recipients: string[]) {
-  return process.env.NODE_ENV === "production" ? recipients : ["eric.semeniuc@gmail.com"]
+  return process.env.NODE_ENV === "production" ? recipients : ["mikemmb73@gmail.com"]
 }
 
 //invitation for a new stakeholder

@@ -9863,6 +9863,11 @@ responselike@^2.0.0:
   dependencies:
     lowercase-keys "^2.0.0"
 
+responsive-html-email-template@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/responsive-html-email-template/-/responsive-html-email-template-1.0.0.tgz#768e9134404ff1155a4c6dc73668454ac9b43e7b"
+  integrity sha1-do6RNEBP8RVaTG3HNmhFSsm0Pns=
+
 restore-cursor@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/restore-cursor/-/restore-cursor-3.1.0.tgz#39f67c54b3a7a58cea5236d95cf0034239631f7e"

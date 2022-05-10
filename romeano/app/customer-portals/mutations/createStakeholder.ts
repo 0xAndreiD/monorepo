@@ -50,12 +50,14 @@ export default resolver.pipe(
         },
       }))
 
-    const stakeholder = await db.stakeholder.create({
-      data: {
-        jobTitle,
-        userId: user.id,
-      },
-    })
+    const stakeholder =
+      (await db.stakeholder.findUnique({ where: { userId: user.id } })) ??
+      (await db.stakeholder.create({
+        data: {
+          jobTitle,
+          userId: user.id,
+        },
+      }))
 
     await db.userPortal.create({
       data: {
