@@ -5,7 +5,9 @@ import HomeIcon from "../../assets/HomeIcon"
 export function Header(props: { vendorLogo?: string }) {
   return (
     <div className="grid grid-cols-2 grid-rows-1 items-center">
-      {props.vendorLogo && <img alt="vendor logo" src={props.vendorLogo} width={150} height={121} />}
+      {props.vendorLogo && (
+        <img alt="vendor logo" src={props.vendorLogo} style={{ maxHeight: "75px", maxWidth: "150px", width: "auti" }} />
+      )}
 
       <div className="flex justify-self-end gap-x-3">
         <button>

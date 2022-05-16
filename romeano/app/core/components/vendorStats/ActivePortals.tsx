@@ -15,6 +15,7 @@ import Modal from "app/core/components/generic/Modal"
 import createPortal from "app/vendor-stats/mutations/createPortal"
 import { Template } from "db"
 import deletePortal from "../../../vendor-stats/mutations/deletePortal"
+import Router from "next/router"
 
 type ActivePortal = {
   portalId: number
@@ -175,6 +176,7 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300"
                               onClick={async () => {
                                 await deletePortalMutation({ thisPortalId: portal.portalId })
+                                Router.reload()
                               }}
                             >
                               Delete

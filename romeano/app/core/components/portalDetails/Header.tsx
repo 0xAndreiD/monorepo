@@ -16,9 +16,13 @@ export function Header(props: {
   return (
     <div className="grid grid-cols-3 grid-rows-1 items-center">
       <div className="flex gap-x-2 items-center">
-        <img alt="vendor logo" src={props.vendorLogo} width={150} height={121} />
+        <img alt="vendor logo" src={props.vendorLogo} style={{ maxHeight: "75px", maxWidth: "150px", width: "auto" }} />
         <hr className="border-l pt-9 h-full border-gray-300" />
-        <img alt="customer logo" src={props.customerLogo} width={150} height={30} />
+        <img
+          alt="customer logo"
+          src={props.customerLogo}
+          style={{ maxHeight: "75px", maxWidth: "150px", width: "auto" }}
+        />
         <UploadComponent
           uploadParams={{ portalId: props.portalId }}
           onUploadComplete={async () => {

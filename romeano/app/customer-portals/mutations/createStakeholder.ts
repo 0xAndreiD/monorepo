@@ -59,13 +59,18 @@ export default resolver.pipe(
         },
       }))
 
-    await db.userPortal.create({
-      data: {
-        portalId,
-        userId: user.id,
-        role: Role.Stakeholder,
-      },
-    })
+    try {
+      await db.userPortal.create({
+        data: {
+          portalId,
+          userId: user.id,
+          role: Role.Stakeholder,
+        },
+      })
+    } catch {
+      console.log("tree")
+    }
+
     const magicLink = await db.magicLink.create({
       data: {
         id: generateToken(),
