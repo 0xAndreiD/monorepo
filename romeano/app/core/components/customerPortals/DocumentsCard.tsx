@@ -62,7 +62,7 @@ export default function DocumentsCard(props: {
 
   const [createDocumentMutation] = useMutation(createDocument)
   return (
-    <Card>
+    <Card borderless={true}>
       <CardHeader>Documents</CardHeader>
       <DocumentList
         portalId={props.portalId}

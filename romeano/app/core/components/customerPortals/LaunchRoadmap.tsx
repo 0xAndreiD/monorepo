@@ -44,7 +44,7 @@ function RoadmapStage(props: {
   return (
     <React.Fragment>
       <div className="grid grid-rows-2 grid-col-1 items-end">
-        <div style={{ height: "64px" }} className="items-center" onClick={props.onClickCircle}>
+        <div style={{ height: "120px" }} className="items-center" onClick={props.onClickCircle}>
           {/*<div key={stage.name} className="flex justify-center w-full">*/}
           {/*className={classNames(stageIdx !== stages.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
           <RoadmapStageCircle stageNum={props.stageNum} status={props.status} hover={props.editingEnabled} />

@@ -61,7 +61,7 @@ export function ProductInfoCard(props: {
   const [updateProductInfoSectionLinkMutation] = useMutation(updateProductInfoSectionLink)
   const [deleteProductInfoImageMutation] = useMutation(deleteProductInfoImage)
   return (
-    <Card>
+    <Card borderless={true}>
       <CardHeader>Product Info</CardHeader>
       {props.data.images.length && (
         <div className="border-2 border-grey-600 px-12 mt-2 py-1 rounded-md margin">

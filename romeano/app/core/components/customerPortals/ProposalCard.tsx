@@ -66,7 +66,7 @@ function EditProposalCard(props: { portalId: number; data: Proposal; refetchHand
 
   const [uploadModal, setUploadModal] = useState<boolean>(false)
   return (
-    <Card>
+    <Card borderless={true}>
       <CardHeader>Proposal</CardHeader>
 
       <div className="mt-3 text-center sm:mt-0 sm:text-left">
@@ -168,7 +168,7 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
   const [updateProposalApprovalMutation] = useMutation(updateProposalApproval)
 
   return (
-    <Card>
+    <Card borderless={true}>
       <div className="flex flex-col items-center pb-6">
         <CardHeader>Proposal</CardHeader>
         <h5 className="text-center">{props.data.heading}</h5>

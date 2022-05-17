@@ -4,8 +4,8 @@ import { CSSProperties, PropsWithChildren } from "react"
 export function Card(props: PropsWithChildren<{ borderless?: boolean; className?: string; style?: CSSProperties }>) {
   return (
     // <div className={"bg-white overflow-hidden" + (props.borderless === true ? "" : "shadow rounded-lg")}>
-    <div className={"bg-white overflow-hidden" + (props.borderless === true ? "" : " shadow rounded-lg")}>
-      <div className={props.className ?? "px-4 py-5 sm:p-6"}>{props.children}</div>
+    <div className={"bg-white overflow-hidden" + (props.borderless === true ? " rounded-2xl" : " shadow rounded-2xl")}>
+      <div className={props.className ?? "px-5 py-5 sm:p-6"}>{props.children}</div>
     </div>
   )
 }

@@ -75,7 +75,7 @@ export default function NextStepsCard(props: NextSteps & { portalId: number; ref
 
   // <div style={{borderColor:'red',borderTopWidth:2,borderRadius:5}}></div>
   return (
-    <Card className="px-4 py-5 sm:p-6 border-t-8 border-green-500 rounded-md">
+    <Card borderless={true} className="px-4 py-5 sm:p-6 border-t-8 border-green-500 rounded-md">
       <CardHeader classNameOverride="text-lg leading-5 font-bold text-gray-900">Next Steps</CardHeader>
       <NextStepsTaskList
         portalId={props.portalId}
