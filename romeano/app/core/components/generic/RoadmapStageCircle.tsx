@@ -24,7 +24,9 @@ export function RoadmapStageCircle({
               (hover ? " hover:border-green-700" : "")
             }
           >
-            <span className={"text-green-500 text-2xl" + (hover ? " group-hover:text-green-700" : "")}>{stageNum}</span>
+            <span className={"text-green-500 font-medium text-4xl" + (hover ? " group-hover:text-green-700" : "")}>
+              {stageNum}
+            </span>
           </div>
         </div>
       )
@@ -41,7 +43,7 @@ export function RoadmapStageCircle({
               (hover ? " hover:bg-green-700" : "")
             }
           >
-            <span className="text-white text-2xl">{stageNum}</span>
+            <span className="text-white font-medium text-4xl">{stageNum}</span>
           </div>
         </>
       )
@@ -58,7 +60,9 @@ export function RoadmapStageCircle({
               (hover ? " hover:border-gray-400" : "")
             }
           >
-            <span className={"text-2xl text-gray-400" + (hover ? " group-hover:text-gray-600" : "")}>{stageNum}</span>
+            <span className={"text-4xl font-medium text-gray-400" + (hover ? " group-hover:text-gray-600" : "")}>
+              {stageNum}
+            </span>
           </div>
         </>
       )
