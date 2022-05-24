@@ -25,7 +25,8 @@ export default resolver.pipe(resolver.zod(LogoData), resolver.authorize(), async
 
   await db.portalImage.create({
     data: {
-      href: "http://127.0.0.1:3000/" + params.url,
+      // href: "http://127.0.0.1:3000/" + params.url,
+      href: params.url,
       portalId: params.portalId,
     },
   })
