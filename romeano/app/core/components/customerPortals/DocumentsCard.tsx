@@ -7,6 +7,7 @@ import { useMutation } from "blitz"
 import createDocument from "../../../customer-portals/mutations/createDocument"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import UploadCloudIcon from "../../assets/uploadCloud"
+import { UploadProductImageComponent } from "./UploadComponent"
 
 export type PortalDocument = {
   id: number
@@ -33,9 +34,16 @@ export default function DocumentsCard(props: {
   //reference: https://tailwindui.com/components/application-ui/data-display/title-lists#component-e1b5917b21bbe76a73a96c5ca876225f
   const user = useCurrentUser(props.portalId)
 
-  const DocumentUploadButton = ({ className }: { className?: string }) => {
-    return (
-      <div className={className} style={{ width: "min-content" }}>
+  const [createDocumentMutation] = useMutation(createDocument)
+  return (
+    <Card borderless={true}>
+      <CardHeader>Documents</CardHeader>
+      <DocumentList
+        portalId={props.portalId}
+        companyName={props.data.customer.name}
+        documents={props.data.customer.documents}
+      />
+      <div className="mb-5" style={{ width: "min-content" }}>
         <UploadComponent
           uploadParams={{ portalId: props.portalId }}
           onUploadComplete={async ({ id, body, href }) => {
@@ -49,34 +57,20 @@ export default function DocumentsCard(props: {
           <button
             type="button"
             className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
-             leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
           >
             <UploadCloudIcon className="h-4 w-4 mr-2" />
             Upload
           </button>
         </UploadComponent>
       </div>
-    )
-  }
-
-  const [createDocumentMutation] = useMutation(createDocument)
-  return (
-    <Card borderless={true}>
-      <CardHeader>Documents</CardHeader>
-      <DocumentList
-        portalId={props.portalId}
-        companyName={props.data.customer.name}
-        documents={props.data.customer.documents}
-      />
-      {user?.role === Role.AccountExecutive && <DocumentUploadButton className="mb-5" />}
       <CardDivider />
       <DocumentList
         portalId={props.portalId}
         companyName={props.data.vendor.name}
         documents={props.data.vendor.documents}
       />
-      {user?.role === Role.Stakeholder && <DocumentUploadButton />}
     </Card>
   )
 }

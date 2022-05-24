@@ -17,7 +17,7 @@ export function UploadComponent(
       const formData = new FormData()
       Object.entries(props.uploadParams).forEach(([k, v]) => formData.append(k, v.toString()))
       acceptedFiles.forEach((file, idx) => formData.append(`file_${idx}`, file))
-      // console.log("form data:", JSON.stringify(Object.fromEntries(formData)))
+      console.log("form data:", JSON.stringify(Object.fromEntries(formData)))
       axios
         .post<LinkWithId[]>("/api/uploadDocument", formData, {
           headers: {
@@ -58,7 +58,7 @@ export function UploadProductImageComponent(
       const formData = new FormData()
       Object.entries(props.uploadParams).forEach(([k, v]) => formData.append(k, v.toString()))
       acceptedFiles.forEach((file, idx) => formData.append(`file_${idx}`, file))
-      // console.log("form data:", JSON.stringify(Object.fromEntries(formData)))
+      console.log("form data:", JSON.stringify(Object.fromEntries(formData)))
       axios
         .post<LinkWithId[]>("/api/uploadProductImage", formData, {
           headers: {
