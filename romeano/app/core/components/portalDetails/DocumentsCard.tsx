@@ -37,19 +37,19 @@ export default function DocumentsCard(props: { portalId: number; data: PortalDoc
 function DocumentList(props: { companyName: string; documents: PortalDocument[] }) {
   return (
     <div>
-      <p className="max-w-2xl pt-4 text-sm">
+      <p className="max-w-2xl pt-4 text-md">
         for <span className="font-bold">{props.companyName}</span>
       </p>
-      <div className="py-4 flex justify-self-start gap-1.5">
+      <div className="py-4 flex justify-self-start gap-2">
         {props.documents.map((task, idx) => (
           <span key={idx}>
             <Link href={task.href}>
               <a>
                 <div
                   className={
-                    "inline-flex items-center px-3 py-2 border  text-sm\
-             leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 " +
+                    "inline-flex items-center px-4 py-3 border border-gray-300 text-[15px]\
+                leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50\
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" +
                     (task.isCompleted ? "border-green-500" : "border-gray-300")
                   }
                 >
