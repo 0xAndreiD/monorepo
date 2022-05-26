@@ -43,7 +43,7 @@ function RoadmapStage(props: {
 }) {
   return (
     <React.Fragment>
-      <div className="grid grid-col-1 items-baseline">
+      <div className="grid grid-col-1 items-baseline w-44">
         <div style={{ height: "120px" }} className="text-center m-auto items-center" onClick={props.onClickCircle}>
           {/*<div key={stage.name} className="flex justify-center w-full">*/}
           {/*className={classNames(stageIdx !== stages.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
@@ -247,7 +247,7 @@ export default function LaunchRoadmap(props: {
       <nav>
         <div className="flex justify-between mt-5">
           <h1 className="text-2xl font-semibold">Launch Roadmap</h1>
-          <div className="flex gap-1 font-bold">
+          <div className="gap-1 font-bold">
             <span className="text-gray-900">{props.currentRoadmapStage}</span>
             <span className="text-gray-400">&nbsp;/&nbsp;{props.stageData.length}</span>
           </div>
@@ -304,7 +304,7 @@ export default function LaunchRoadmap(props: {
                       gridTemplateRows: `repeat(${props.editingEnabled ? 6 : 5}, auto)`,
                       gridAutoColumns: "1fr",
                     }}
-                    className="grid grid-flow-col justify-items-center gap-y-3 gap-x-2 pt-5 -mb-12"
+                    className="grid grid-flow-col auto-cols-auto justify-items-center gap-y-4 gap-x-2 pt-5"
                   >
                     <RoadmapStage
                       key={idx}
