@@ -52,9 +52,9 @@ function PortalDetails() {
         <CardDivider />
         <StakeholderEngagementCard data={portal.stakeholderEngagement} />
       </div>
-      <div style={{ backgroundColor: "#F7F7F9" }}>
+      <div className="bg-gray-100">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-          <div style={{ backgroundColor: "#F7F7F9" }}>
+          <div className="bg-gray-100">
             <StakeholderActivityLogCard data={portal.stakeholderActivityLog} />
           </div>
         </div>

@@ -51,38 +51,38 @@ export function getActionText(eventType: EventType): string {
 
 export function StakeholderActivityLogCard(props: { data: StakeholderActivityEvent[] }) {
   return (
-    <Card className="bg-[#F7F7F9] overflow-hidden" borderless={true}>
+    <Card className="bg-gray-100 overflow-hidden" borderless={true}>
       <div className="mt-2"></div>
-      <CardHeader style={{ backgroundColor: "#F7F7F9" }}>Stakeholder Activity Log</CardHeader>
+      <CardHeader classNameAddition="bg-gray-100">Stakeholder Activity Log</CardHeader>
 
-      <div className="bg-[#F7F7F9] flex flex-col pt-4">
-        <div className="bg-[#F7F7F9] -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div className="bg-gray-100 flex flex-col pt-4">
+        <div className="bg-gray-100 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
             <div className="overflow-hidden overflow-y-auto" style={{ height: "32rem" }}>
               <table className="relative w-full boarder-color-gray  min-w-full divide-y">
-                <thead className="bg-[#F7F7F9]">
+                <thead className="bg-gray-100">
                   <tr>
                     <th
                       scope="col"
-                      className="sticky top-0 bg-[#F7F7F9] py-3 text-left text-s font-light text-gray-500 tracking-wider"
+                      className="sticky top-0 bg-gray-100 py-3 text-left text-s font-light text-gray-500 tracking-wider"
                     >
                       Activity
                     </th>
                     <th
                       scope="col"
-                      className="sticky top-0 bg-[#F7F7F9] py-3 px-4 text-left text-s font-light text-gray-500 tracking-wider"
+                      className="sticky top-0 bg-gray-100 py-3 px-4 text-left text-s font-light text-gray-500 tracking-wider"
                     >
                       Location
                     </th>
                     <th
                       scope="col"
-                      className="sticky top-0 bg-[#F7F7F9] py-3 text-left text-s font-light text-gray-500 tracking-wider"
+                      className="sticky top-0 bg-gray-100 py-3 text-left text-s font-light text-gray-500 tracking-wider"
                     >
                       Device
                     </th>
                     <th
                       scope="col"
-                      className="sticky top-0 bg-[#F7F7F9] py-3 text-left text-s font-light text-gray-500 tracking-wider"
+                      className="sticky top-0 bg-gray-100 py-3 text-left text-s font-light text-gray-500 tracking-wider"
                     >
                       Time
                     </th>

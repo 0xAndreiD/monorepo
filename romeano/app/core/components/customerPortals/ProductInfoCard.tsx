@@ -13,8 +13,12 @@ import createProductInfoSectionLink from "app/customer-portals/mutations/createP
 import updateProductInfoSectionLink from "app/customer-portals/mutations/updateProductInfoSectionLink"
 import deleteProductInfoImage from "app/customer-portals/mutations/deleteProductInfoImage"
 import addProductInfoImage from "app/customer-portals/mutations/addProductInfoImage"
+import createProductInfoSection from "app/customer-portals/mutations/createProductInfoSection"
+import CreateSectionModal from "./edit/createSectionModal"
+
 import { useMutation } from "blitz"
 import { UploadProductImageComponent } from "./UploadComponent"
+import { Props } from "@headlessui/react/dist/types"
 
 type ProductSectionLink = LinkWithType & { productInfoSectionLinkId: number }
 
@@ -57,9 +61,19 @@ export function ProductInfoCard(props: {
     isOpen: false,
     link: undefined,
   })
+
+  const [createSectionModalProps, setCreateSectionModalProps] = useState<
+    { isOpen: false; portalId: undefined } | { isOpen: true; portalId: number }
+  >({
+    isOpen: false,
+    portalId: undefined,
+  })
+
   const [createProductInfoSectionLinkMutation] = useMutation(createProductInfoSectionLink)
   const [updateProductInfoSectionLinkMutation] = useMutation(updateProductInfoSectionLink)
   const [deleteProductInfoImageMutation] = useMutation(deleteProductInfoImage)
+  const [createProductInfoSectionMutation] = useMutation(createProductInfoSection)
+
   return (
     <Card borderless={true}>
       <CardHeader>Product Info</CardHeader>
@@ -161,6 +175,18 @@ export function ProductInfoCard(props: {
           </ul>
         </div>
       ))}
+
+      {/* create new section modal */}
+      {props.editingEnabled && (
+        <li
+          className="pt-2 font-bold hover:text-gray-600"
+          style={{ listStyleType: '"+  "' }}
+          onClick={() => setCreateSectionModalProps({ isOpen: true, portalId: props.portalId })}
+        >
+          <a className="cursor-pointer">Add Section</a>
+        </li>
+      )}
+
       {/*upload modal*/}
       <Modal
         isOpen={createNewModalProps.isOpen}
@@ -186,6 +212,20 @@ export function ProductInfoCard(props: {
             })
             props.refetchHandler()
             setCreateNewModalProps({ isOpen: false, productInfoSectionId: undefined })
+          }}
+        />
+      </Modal>
+
+      {/* create section modal */}
+      <Modal
+        isOpen={createSectionModalProps.isOpen}
+        onClose={() => setCreateSectionModalProps({ isOpen: false, portalId: undefined })}
+      >
+        <CreateSectionModal
+          portalId={props.portalId}
+          onLinkComplete={async (portal) => {
+            setCreateSectionModalProps({ isOpen: false, portalId: undefined })
+            props.refetchHandler()
           }}
         />
       </Modal>
