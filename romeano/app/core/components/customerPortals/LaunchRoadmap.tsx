@@ -295,6 +295,8 @@ export default function LaunchRoadmap(props: {
             arrows={isShown}
           >
             {props.stageData.map((stage, idx) => {
+              const numStages = props.stageData.length
+
               const stageNum = idx + 1
               return (
                 <div key={idx} className="grid grid-cols-2 grid-rows-1 items-top display-flex">
@@ -339,9 +341,11 @@ export default function LaunchRoadmap(props: {
                     />
                   </div>
 
-                  <div className="h-90 pt-8 items-center">
-                    <hr className="mt-9" style={{ width: "85px", marginLeft: "auto", marginRight: "auto" }} />
-                  </div>
+                  {stageNum != numStages && (
+                    <div className="h-90 pt-8 items-center">
+                      <hr className="mt-9" style={{ width: "85px", marginLeft: "auto", marginRight: "auto" }} />
+                    </div>
+                  )}
                 </div>
               )
             })}
