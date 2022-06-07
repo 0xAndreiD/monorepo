@@ -123,7 +123,7 @@ export function ProductInfoCard(props: {
       >
         <button
           type="button"
-          className="inline-flex items-center px-3 py-2 border border-gray-300  text-sm
+          className="inline-flex items-center px-5 py-4 border border-gray-300  text-sm
            leading-4 font-medium rounded-full mt-2 text-gray-700 bg-white hover:bg-gray-50
             focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
         >
@@ -132,7 +132,7 @@ export function ProductInfoCard(props: {
         </button>
       </UploadProductImageComponent>
       {props.data.sections.map((section, idx) => (
-        <div key={idx}>
+        <div className="py-2" key={idx}>
           <h4 className="pt-2 font-bold">{section.heading}</h4>
           <ul className="py-1 mx-4 text-sm">
             {section.links.map((link, idx) => (

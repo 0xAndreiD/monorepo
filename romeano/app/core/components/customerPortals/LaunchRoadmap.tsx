@@ -43,7 +43,7 @@ function RoadmapStage(props: {
 }) {
   return (
     <React.Fragment>
-      <div className="grid grid-col-1 items-baseline w-44">
+      <div className="pl-4 grid grid-col-1 items-baseline w-44">
         <div style={{ height: "120px" }} className="text-center m-auto items-center" onClick={props.onClickCircle}>
           {/*<div key={stage.name} className="flex justify-center w-full">*/}
           {/*className={classNames(stageIdx !== stages.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
@@ -55,7 +55,7 @@ function RoadmapStage(props: {
         <div className="justify-items-center">
           <div
             className={
-              "text-sm pb-2 text-center font-semibold " +
+              "text-sm pb-2 pt-1 text-center font-semibold " +
               (props.status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
             }
           >
@@ -64,7 +64,7 @@ function RoadmapStage(props: {
 
           <div
             className={
-              "text-lg text-center font-semibold " +
+              "text-lg text-center pt-2 pb-5 font-semibold " +
               (props.status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
             }
           >
