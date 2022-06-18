@@ -14,12 +14,10 @@ import CreatePortal from "app/vendor-stats/mutations/createPortal"
 import { array, string } from "fp-ts"
 import getTemplates from "app/vendor-stats/queries/getTemplates"
 import { Dropdown } from "../Dropdown"
-import Router from "next/router"
 
 export default function AddPortalModal(props: {
   onLinkComplete: (portal: any) => Promise<void>
   templates: Template[]
-  // refetchHandler: () => void
 }) {
   const [createPortalMutation] = useMutation(CreatePortal)
   const schema = z.object({
@@ -39,6 +37,7 @@ export default function AddPortalModal(props: {
   // console.log(templates)
 
   const formOnSubmit = handleSubmit(async (portalData) => {
+    reset()
     // const dbLink = await createPortalMutation({
     //   oppName: portalData.oppName,
     //   customerFName: portalData.firstName,
@@ -48,8 +47,6 @@ export default function AddPortalModal(props: {
     // })
 
     await props.onLinkComplete(portalData)
-    reset()
-    Router.reload()
   })
   {
     /* <Dropdown data={props.templates} {...register("oppName", { required: true })}/> */
