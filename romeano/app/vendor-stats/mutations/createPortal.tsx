@@ -1,11 +1,9 @@
 import CustomerPortal from "app/pages/customerPortals/[portalId]"
-import { AuthenticationError, resolver, generateToken, Routes, useMutation } from "blitz"
+import { AuthenticationError, resolver } from "blitz"
 import { de } from "date-fns/locale"
 import db, { LinkType, Role } from "db"
 import { debuglog } from "util"
 import { z } from "zod"
-import { sendInvite } from "../../core/util/email"
-import createStakeholder from "app/customer-portals/mutations/createStakeholder"
 
 export const CreatePortal = z.object({
   oppName: z.string(),
@@ -21,8 +19,6 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
   const userId = ctx.session.userId
   if (!userId) throw new AuthenticationError("no userId provided")
 
-  const [inviteStakeholderMutation] = useMutation(createStakeholder)
-
   const user = await db.user.findUnique({ where: { id: userId } })
   const accountExec = await db.accountExecutive.findUnique({ where: { userId: userId } })
   if (!accountExec) throw new AuthenticationError("Portal can only be created by an AE")
@@ -34,7 +30,6 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
   var portal
 
   var id = 0
-  var newStakeholderId = 0
 
   //check if this customer already exists, if not, make a new stakeholder for them for them
   if (!existingCustomer) {
@@ -53,8 +48,6 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
       },
     })
 
-    newStakeholderId = newCustomer.id
-
     portal = await db.portal.create({
       data: {
         customerName: data.oppName,
@@ -69,11 +62,11 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
                 isPrimaryContact: true,
                 isSecondaryContact: false,
               },
-              // {
-              //   userId: newCustomer.id,
-              //   role: Role.Stakeholder,
-              //   isPrimaryContact: true,
-              // },
+              {
+                userId: newCustomer.id,
+                role: Role.Stakeholder,
+                isPrimaryContact: true,
+              },
             ],
           },
         },
@@ -82,13 +75,6 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
         proposalSubheading: "",
         vendorId: vendorTeam.vendorId,
       },
-    })
-
-    await inviteStakeholderMutation({
-      portalId: portal.id,
-      email: data.customerEmail,
-      fullName: data.customerFName + " " + data.customerLName,
-      jobTitle: data.roleName,
     })
 
     id = portal.id
@@ -122,15 +108,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
       },
     })
 
-    newStakeholderId = existingCustomer.id
     id = portal.id
-
-    await inviteStakeholderMutation({
-      portalId: portal.id,
-      email: data.customerEmail,
-      fullName: data.customerFName + " " + data.customerLName,
-      jobTitle: data.roleName,
-    })
   }
 
   //if a template was sent with this request

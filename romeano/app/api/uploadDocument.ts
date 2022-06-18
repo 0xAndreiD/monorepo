@@ -8,7 +8,6 @@ import formidable, { Fields, Files } from "formidable"
 import { flatten, isNil } from "lodash"
 import createEvent from "../event/mutations/createEvent"
 import { LinkWithId } from "../../types"
-import { CreateDocument } from "app/customer-portals/mutations/createDocument"
 
 export const config = {
   api: {
@@ -24,7 +23,6 @@ export type UploadParams = z.infer<typeof UploadParams>
 //on uploadDocument, get the fields and the files from the nextRequest, and Respond w LinkWId
 const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, NextApiResponse<LinkWithId[]>>()
   .use((req, res, next) => {
-    console.log("num files")
     const form = formidable({
       multiples: true,
       uploadDir: INTERNAL_UPLOAD_FS_PATH,
@@ -75,19 +73,10 @@ const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, Nex
         {
           portalId,
           type: EventType.DocumentUpload,
-          url: "/api/viewDocument" + link.href,
           linkId: link.id,
         },
         { req, res }
       )
-      // await invokeWithMiddleware(
-      //   CreateDocument,
-      //   {
-      //     portalId: portalId,
-      //     link: link.id,
-      //   },
-      //   { req, res }
-      // )
       return { id: link.id, body: link.body, href: link.href }
     })
 

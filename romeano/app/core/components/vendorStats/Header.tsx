@@ -7,7 +7,6 @@ import createPortal from "app/vendor-stats/mutations/createPortal"
 import { Link as BlitzLink, useMutation, Routes } from "blitz"
 import { Template } from "db"
 import logout from "../../../auth/mutations/logout"
-import Router from "next/router"
 
 export function Header(props: {
   vendorLogo?: string
@@ -90,7 +89,6 @@ export function Header(props: {
               roleName: portalData.roleName,
               templateId: portalData.templateId,
             })
-            Router.reload()
             // props.refetchHandler()
             // setEditLinkModalProps({ isOpen: false, link: undefined })
           }}

@@ -209,7 +209,6 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
               roleName: portalData.roleName,
               templateId: portalData.templateId,
             })
-            Router.reload()
             // props.refetchHandler()
             // setEditLinkModalProps({ isOpen: false, link: undefined })
           }}

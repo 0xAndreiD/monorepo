@@ -13,12 +13,8 @@ import createProductInfoSectionLink from "app/customer-portals/mutations/createP
 import updateProductInfoSectionLink from "app/customer-portals/mutations/updateProductInfoSectionLink"
 import deleteProductInfoImage from "app/customer-portals/mutations/deleteProductInfoImage"
 import addProductInfoImage from "app/customer-portals/mutations/addProductInfoImage"
-import createProductInfoSection from "app/customer-portals/mutations/createProductInfoSection"
-import CreateSectionModal from "./edit/createSectionModal"
-
 import { useMutation } from "blitz"
 import { UploadProductImageComponent } from "./UploadComponent"
-import { Props } from "@headlessui/react/dist/types"
 
 type ProductSectionLink = LinkWithType & { productInfoSectionLinkId: number }
 
@@ -61,21 +57,11 @@ export function ProductInfoCard(props: {
     isOpen: false,
     link: undefined,
   })
-
-  const [createSectionModalProps, setCreateSectionModalProps] = useState<
-    { isOpen: false; portalId: undefined } | { isOpen: true; portalId: number }
-  >({
-    isOpen: false,
-    portalId: undefined,
-  })
-
   const [createProductInfoSectionLinkMutation] = useMutation(createProductInfoSectionLink)
   const [updateProductInfoSectionLinkMutation] = useMutation(updateProductInfoSectionLink)
   const [deleteProductInfoImageMutation] = useMutation(deleteProductInfoImage)
-  const [createProductInfoSectionMutation] = useMutation(createProductInfoSection)
-
   return (
-    <Card borderless={true}>
+    <Card>
       <CardHeader>Product Info</CardHeader>
       {props.data.images.length && (
         <div className="border-2 border-grey-600 px-12 mt-2 py-1 rounded-md margin">
@@ -123,7 +109,7 @@ export function ProductInfoCard(props: {
       >
         <button
           type="button"
-          className="inline-flex items-center px-5 py-4 border border-gray-300  text-sm
+          className="inline-flex items-center px-3 py-2 border border-gray-300  text-sm
            leading-4 font-medium rounded-full mt-2 text-gray-700 bg-white hover:bg-gray-50
             focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
         >
@@ -132,7 +118,7 @@ export function ProductInfoCard(props: {
         </button>
       </UploadProductImageComponent>
       {props.data.sections.map((section, idx) => (
-        <div className="py-2" key={idx}>
+        <div key={idx}>
           <h4 className="pt-2 font-bold">{section.heading}</h4>
           <ul className="py-1 mx-4 text-sm">
             {section.links.map((link, idx) => (
@@ -175,18 +161,6 @@ export function ProductInfoCard(props: {
           </ul>
         </div>
       ))}
-
-      {/* create new section modal */}
-      {props.editingEnabled && (
-        <li
-          className="pt-2 font-bold hover:text-gray-600"
-          style={{ listStyleType: '"+  "' }}
-          onClick={() => setCreateSectionModalProps({ isOpen: true, portalId: props.portalId })}
-        >
-          <a className="cursor-pointer">Add Section</a>
-        </li>
-      )}
-
       {/*upload modal*/}
       <Modal
         isOpen={createNewModalProps.isOpen}
@@ -212,20 +186,6 @@ export function ProductInfoCard(props: {
             })
             props.refetchHandler()
             setCreateNewModalProps({ isOpen: false, productInfoSectionId: undefined })
-          }}
-        />
-      </Modal>
-
-      {/* create section modal */}
-      <Modal
-        isOpen={createSectionModalProps.isOpen}
-        onClose={() => setCreateSectionModalProps({ isOpen: false, portalId: undefined })}
-      >
-        <CreateSectionModal
-          portalId={props.portalId}
-          onLinkComplete={async (portal) => {
-            setCreateSectionModalProps({ isOpen: false, portalId: undefined })
-            props.refetchHandler()
           }}
         />
       </Modal>

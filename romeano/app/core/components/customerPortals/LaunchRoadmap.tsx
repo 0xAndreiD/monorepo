@@ -43,8 +43,8 @@ function RoadmapStage(props: {
 }) {
   return (
     <React.Fragment>
-      <div className="pl-4 grid grid-col-1 items-baseline w-44">
-        <div style={{ height: "120px" }} className="text-center m-auto items-center" onClick={props.onClickCircle}>
+      <div className="grid grid-rows-2 grid-col-1 items-end">
+        <div style={{ height: "64px" }} className="items-center" onClick={props.onClickCircle}>
           {/*<div key={stage.name} className="flex justify-center w-full">*/}
           {/*className={classNames(stageIdx !== stages.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
           <RoadmapStageCircle stageNum={props.stageNum} status={props.status} hover={props.editingEnabled} />
@@ -55,21 +55,13 @@ function RoadmapStage(props: {
         <div className="justify-items-center">
           <div
             className={
-              "text-sm pb-2 pt-1 text-center font-semibold " +
-              (props.status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
+              "text-xs " + (props.status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
             }
           >
             {props.stage.date ? format(utcToZonedTime(new Date(props.stage.date), "UTC"), "MMM d") : "TBD"}
           </div>
 
-          <div
-            className={
-              "text-lg text-center pt-2 pb-5 font-semibold " +
-              (props.status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
-            }
-          >
-            {props.stage.heading}
-          </div>
+          <div className="font-bold">{props.stage.heading}</div>
 
           <ul className="list-disc pl-7">
             {props.stage.tasks.map((item, idx) => (
@@ -245,9 +237,9 @@ export default function LaunchRoadmap(props: {
       />
 
       <nav>
-        <div className="flex justify-between mt-5">
-          <h1 className="text-2xl font-semibold">Launch Roadmap</h1>
-          <div className="gap-1 font-bold">
+        <div className="flex justify-between">
+          <h1 className="text-lg font-bold">Launch Roadmap</h1>
+          <div className="flex gap-1 font-bold">
             <span className="text-gray-900">{props.currentRoadmapStage}</span>
             <span className="text-gray-400">&nbsp;/&nbsp;{props.stageData.length}</span>
           </div>
@@ -288,25 +280,27 @@ export default function LaunchRoadmap(props: {
             draggable={false}
             responsive={responsive}
             ssr={true} // means to render carousel on server-side.
-            containerClass={"grid grid-flow-col justify-items-center gap-x-5 pt-6 mx-4"}
+            containerClass={"grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5"}
             showDots={false}
             infinite={false}
             // use the status from show hide
             arrows={isShown}
           >
             {props.stageData.map((stage, idx) => {
-              const numStages = props.stageData.length
-
               const stageNum = idx + 1
               return (
-                <div key={idx} className="grid grid-cols-2 grid-rows-1 items-top display-flex">
+                <div
+                  key={idx}
+                  className="grid grid-cols-2 grid-rows-1 items-center display-flex"
+                  style={{ height: "100%" }}
+                >
                   <div
                     // key={idx}
                     style={{
                       gridTemplateRows: `repeat(${props.editingEnabled ? 6 : 5}, auto)`,
                       gridAutoColumns: "1fr",
                     }}
-                    className="grid grid-flow-col auto-cols-auto justify-items-center gap-y-4 gap-x-2 pt-5"
+                    className="grid grid-flow-col justify-items-center gap-y-3 gap-x-2 py-5"
                   >
                     <RoadmapStage
                       key={idx}
@@ -341,11 +335,9 @@ export default function LaunchRoadmap(props: {
                     />
                   </div>
 
-                  {stageNum != numStages && (
-                    <div className="h-90 pt-8 items-center">
-                      <hr className="mt-9" style={{ width: "85px", marginLeft: "auto", marginRight: "auto" }} />
-                    </div>
-                  )}
+                  <div className="h-90">
+                    <hr style={{ width: "50px", marginLeft: "auto", marginRight: "auto" }} />
+                  </div>
                 </div>
               )
             })}
