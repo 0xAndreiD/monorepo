@@ -90,6 +90,7 @@ export function Header(props: {
               roleName: portalData.roleName,
               templateId: portalData.templateId,
             })
+            Router.reload()
             // props.refetchHandler()
             // setEditLinkModalProps({ isOpen: false, link: undefined })
           }}
