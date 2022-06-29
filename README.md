@@ -14,6 +14,8 @@ systemctl --user start docker.service
 #login with PAT
 docker login ghcr.io -u YOUR-GITHUB-EMAIL
 
+#Make sure you have created a SSH token and added it to your GitHub account before the next step 
+#https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
 git clone git@github.com:romeano-inc/monorepo.git
 cd monorepo/romeano
 docker pull ghcr.io/romeano-inc/core-app:latest
