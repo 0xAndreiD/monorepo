@@ -61,15 +61,15 @@ export function ContactsCard(props: {
   narrowLayout?: boolean
 }) {
   return (
-    <Card>
-      <CardHeader>Contacts</CardHeader>
+    <Card borderless={true}>
+      <CardHeader>Primary Contact</CardHeader>
       <div className="divide-y divide-gray-300">
         {props.data.contacts.slice(0, props.numContactsToDisplay).map((contact, idx) => {
           const name = getName(contact.firstName, contact.lastName)
 
           return (
             <div className="py-3" key={idx}>
-              <div className="text-sm text-gray-600 pb-2">{titleCase(getPrecedence(idx) ?? "")}:</div>
+              {/* <div className="text-sm text-gray-600 pb-2">{titleCase(getPrecedence(idx) ?? "")}:</div> */}
               <div className="relative flex items-center space-x-3">
                 <div className="flex-shrink-0">
                   {props.showProfilePictures && contact.photoUrl ? (

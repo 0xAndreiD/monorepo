@@ -31,7 +31,7 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
 
   return (
     <nav>
-      <h1 className="text-lg font-bold">Opportunity Overview</h1>
+      <h1 className="text-xl font-bold">Opportunity Overview</h1>
 
       {/*<ol className="flex justify-around gap-x-5 px-11 items-center">*/}
       {/*    {*/}
@@ -74,7 +74,7 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
                     {/*<div key={step.name} className="flex justify-center w-full">*/}
                     {/*className={classNames(stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
                     <RoadmapStageCircle hover={false} stageNum={stageIdx + 1} status={status} />
-                    {/*<div className="absolute left-96 text-green-300">*/}
+                    {/*<div className="absolute left-96 text-green-500">*/}
                     {/*    hi*/}
                     {/*</div>*/}
                   </div>
@@ -94,24 +94,26 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
         </Carousel>
       </div>
 
-      {/*<div className="rounded-lg p-5 bg-gray-100">*/}
-      {/*    <table className="min-w-full">*/}
-      {/*        <thead className="text-gray-500 text-left">*/}
-      {/*        <tr>*/}
-      {/*            <th>Open Date</th>*/}
-      {/*            <th>Amount</th>*/}
-      {/*            <th>Opportunity Owner</th>*/}
-      {/*        </tr>*/}
-      {/*        </thead>*/}
-      {/*        <tbody>*/}
-      {/*        <tr>*/}
-      {/*            <td>10/23/2020</td>*/}
-      {/*            <td>$16,000</td>*/}
-      {/*            <td>Greg Miller</td>*/}
-      {/*        </tr>*/}
-      {/*        </tbody>*/}
-      {/*    </table>*/}
-      {/*</div>*/}
+      <div className="rounded-lg p-5 bg-white">
+        <div className="ml-6">
+          {/* <table className="table-fixed">
+            <thead className="text-gray-500 text-left">
+              <tr>
+                <th className="w-1/3">Open Date</th>
+                <th className="w-1/3">Amount</th>
+                <th className="w-1/3">Opportunity Owner</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>10/23/2020</td>
+                <td>$16,000</td>
+                <td>Greg Miller</td>
+              </tr>
+            </tbody>
+          </table> */}
+        </div>
+      </div>
     </nav>
   )
 }

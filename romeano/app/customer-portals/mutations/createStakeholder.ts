@@ -50,20 +50,27 @@ export default resolver.pipe(
         },
       }))
 
-    const stakeholder = await db.stakeholder.create({
-      data: {
-        jobTitle,
-        userId: user.id,
-      },
-    })
+    const stakeholder =
+      (await db.stakeholder.findUnique({ where: { userId: user.id } })) ??
+      (await db.stakeholder.create({
+        data: {
+          jobTitle,
+          userId: user.id,
+        },
+      }))
 
-    await db.userPortal.create({
-      data: {
-        portalId,
-        userId: user.id,
-        role: Role.Stakeholder,
-      },
-    })
+    try {
+      await db.userPortal.create({
+        data: {
+          portalId,
+          userId: user.id,
+          role: Role.Stakeholder,
+        },
+      })
+    } catch {
+      console.log("tree")
+    }
+
     const magicLink = await db.magicLink.create({
       data: {
         id: generateToken(),
@@ -73,7 +80,15 @@ export default resolver.pipe(
       },
     })
 
-    sendInvite(portal.customerName, portal.vendor.name, userPortal.user.firstName, email, magicLink.id)
+    sendInvite(
+      portal.customerName,
+      portal.vendor.name,
+      userPortal.user.firstName,
+      email,
+      magicLink.id,
+      portal.vendor.logoUrl,
+      portal.customerLogoUrl
+    )
 
     return stakeholder
   }

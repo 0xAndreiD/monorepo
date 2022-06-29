@@ -10,7 +10,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "prepare": "cd .. && husky install romeano/.husky",
-    "postinstall": "set -eu -o pipefail && [ -d db/geoip ] || (mkdir -p db/geoip && wget -O - 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=YIvvlo88zRdlQ40h&suffix=tar.gz' | tar xz --strip-components=1 -C db/geoip)"
+    "postinstall": "set -eu pipefail && [ -d db/geoip ] || (mkdir -p db/geoip && wget -O - 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=YIvvlo88zRdlQ40h&suffix=tar.gz' | tar xz --strip-components=1 -C db/geoip)"
   },
   "prisma": {
     "schema": "db/schema.prisma",
@@ -39,6 +39,7 @@
     "@mikemmb73/react-responsive-carousel2": "^3.2.24",
     "@prisma/client": "3.4.1",
     "@trendyol-js/react-carousel": "2.0.1",
+    "@types/react-html-email": "^3.0.1",
     "analytics": "^0.7.18",
     "axios": "^0.24.0",
     "babel": "^6.23.0",
@@ -51,6 +52,7 @@
     "faker": "^5.5.3",
     "formidable": "^2.0.1",
     "fp-ts": "^2.11.4",
+    "handlebars": "^4.7.7",
     "husky": "7.0.4",
     "lint-staged": "11.2.6",
     "lodash": "^4.17.21",
@@ -70,7 +72,10 @@
     "react-dropzone": "^11.4.2",
     "react-error-boundary": "3.1.4",
     "react-hook-form": "7.19.0",
+    "react-icons": "^4.3.1",
     "react-multi-carousel": "^2.6.5",
+    "react-responsive-carousel": "^3.2.23",
+    "responsive-html-email-template": "^1.0.0",
     "serve-static": "^1.14.1",
     "ua-parser-js": "^1.0.2",
     "zod": "3.11.6"

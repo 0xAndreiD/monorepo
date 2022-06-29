@@ -1,11 +1,12 @@
 import React, { useState } from "react"
 import { Link, Routes, useMutation } from "blitz"
-import { UserAddIcon } from "@heroicons/react/solid"
+import { UserAddIcon, PencilIcon } from "@heroicons/react/solid"
 import Modal from "../generic/Modal"
 import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
 import { Stakeholder } from "./ProposalCard"
 import SaveTemplate from "app/customer-portals/mutations/saveTemplate"
 import SaveTemplateModal from "./edit/saveTemplateModal"
+import { UploadComponent } from "../portalDetails/uploadComponent"
 
 export function Header(props: {
   portalId: number
@@ -30,9 +31,28 @@ export function Header(props: {
   return (
     <div className="grid grid-cols-3 grid-rows-1 items-center">
       <div className="flex gap-2 items-center">
-        <img alt="vendor logo" src={props.vendorLogo} width={150} height={121} />
+        <img alt="vendor logo" src={props.vendorLogo} style={{ maxHeight: "75px", maxWidth: "150px", width: "auto" }} />
         <hr className="border-l pt-9 h-full border-gray-300" />
-        <img alt="customer logo" src={props.customerLogo} width={150} height={30} />
+        <img
+          alt="customer logo"
+          src={props.customerLogo}
+          style={{ maxHeight: "75px", maxWidth: "150px", width: "auto" }}
+        />
+        <UploadComponent
+          uploadParams={{ portalId: props.portalId }}
+          onUploadComplete={async () => {
+            props.refetchHandler()
+          }}
+        >
+          <button
+            type="button"
+            className="inline-flex items-center px-3 py-2 border border-gray-300  text-sm
+              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >
+            <PencilIcon className="-ml-0.5 h-4 w-4" />
+          </button>
+        </UploadComponent>
       </div>
 
       <span className="text-gray-500 justify-self-center">{props.customerName} Customer Portal</span>
@@ -43,7 +63,7 @@ export function Header(props: {
               <a
                 className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm
                 leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
-                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
                 Preview Portal
               </a>
@@ -54,7 +74,7 @@ export function Header(props: {
               <a
                 className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm
                 leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
-                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 onClick={() => setAddTemplateProps({ isOpen: true, templateId: props.portalId })}
               >
                 Save as Template
@@ -66,7 +86,7 @@ export function Header(props: {
               onClick={() => setIsInviteStakeholdersModalOpen(true)}
               className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm
               leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
-                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
               <UserAddIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
               Share Portal

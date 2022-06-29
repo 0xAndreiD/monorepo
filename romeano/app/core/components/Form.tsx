@@ -64,11 +64,11 @@ export function Form<S extends z.ZodType<any, any>>({
           </div>
         )}
 
-        {submitText && (
+        {/* {submitText && (
           <button type="submit" disabled={ctx.formState.isSubmitting}>
             {submitText}
           </button>
-        )}
+        )} */}
 
         <style global jsx>{`
           .form > * + * {

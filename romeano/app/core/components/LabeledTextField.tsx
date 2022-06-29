@@ -1,5 +1,6 @@
 import { forwardRef, PropsWithoutRef } from "react"
 import { useFormContext } from "react-hook-form"
+import Labeled from "app/core/components/generic/Labeled"
 
 export interface LabeledTextFieldProps extends PropsWithoutRef<JSX.IntrinsicElements["input"]> {
   /** Field name. */
@@ -17,24 +18,25 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
       register,
       formState: { isSubmitting, errors },
     } = useFormContext()
-    const error = Array.isArray(errors[name])
-      ? errors[name].join(", ")
-      : errors[name]?.message || errors[name]
+    const error = Array.isArray(errors[name]) ? errors[name].join(", ") : errors[name]?.message || errors[name]
 
     return (
       <div {...outerProps}>
-        <label>
-          {label}
-          <input disabled={isSubmitting} {...register(name)} {...props} />
-        </label>
-
+        <Labeled label={label}>
+          <input
+            className="border rounded-md p-3 w-full font-light text-sm"
+            disabled={isSubmitting}
+            {...register(name)}
+            {...props}
+          />
+        </Labeled>
         {error && (
           <div role="alert" style={{ color: "red" }}>
             {error}
           </div>
         )}
 
-        <style jsx>{`
+        {/* <style jsx>{`
           label {
             display: flex;
             flex-direction: column;
@@ -49,7 +51,7 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
             appearance: none;
             margin-top: 0.5rem;
           }
-        `}</style>
+        `}</style> */}
       </div>
     )
   }

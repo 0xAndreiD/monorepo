@@ -12,22 +12,28 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "blitz"
 import SaveTemplate from "app/customer-portals/mutations/saveTemplate"
 import { string } from "fp-ts"
+import createProductInfoSection from "app/customer-portals/mutations/createProductInfoSection"
 
-export default function SaveTemplateModal(props: { portalId: number; onLinkComplete: (portal: any) => Promise<void> }) {
-  const [saveTemplateMutation] = useMutation(SaveTemplate)
+export default function CreateSectionModal(props: {
+  portalId: number
+  onLinkComplete: (portal: any) => Promise<void>
+}) {
+  const [createProductInfoSectionMutation] = useMutation(createProductInfoSection)
+
   const schema = z.object({
-    templateName: z.string().nonempty(),
+    heading: z.string().nonempty(),
   })
+
   const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     // defaultValues: props.existingData?.type === LinkType.WebLink ? props.existingData : {},
   })
 
-  const formOnSubmit = handleSubmit(async (templateData) => {
+  const formOnSubmit = handleSubmit(async (CreateProductInfoSection) => {
     reset()
-    const dbLink = await saveTemplateMutation({
+    const dbLink = await createProductInfoSectionMutation({
       portalId: props.portalId,
-      templateName: templateData.templateName,
+      heading: CreateProductInfoSection.heading,
     })
     await props.onLinkComplete(dbLink)
   })
@@ -35,17 +41,17 @@ export default function SaveTemplateModal(props: { portalId: number; onLinkCompl
   return (
     <div className="mt-3 text-center sm:mt-0 sm:text-left">
       <Dialog.Title as="h3" className="text-lg leading-6 font-medium font-bold text-gray-900">
-        Save Template
+        Create New Product Info Section
       </Dialog.Title>
 
       <div>
         <form onSubmit={formOnSubmit}>
           <div>
-            <Labeled label={"Template Name"}>
+            <Labeled label={"Section Name"}>
               <input
                 className="border rounded-md p-3 w-full font-light text-sm"
                 placeholder="Industrial Workflow"
-                {...register("templateName", { required: true })}
+                {...register("heading", { required: true })}
               />
             </Labeled>
           </div>

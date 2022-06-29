@@ -1,12 +1,11 @@
 import { Link, Routes } from "blitz"
-// import { HomeIcon } from "@heroicons/react/outline"
-import HomeIcon from "../../assets/HomeIcon"
+import HomeIcon from "app/core/assets/HomeIcon"
 
 export function Header(props: { vendorLogo?: string }) {
   return (
     <div className="grid grid-cols-2 grid-rows-1 items-center">
       {props.vendorLogo && (
-        <img alt="vendor logo" src={props.vendorLogo} style={{ maxHeight: "75px", maxWidth: "150px", width: "auti" }} />
+        <img alt="vendor logo" src={props.vendorLogo} style={{ maxHeight: "75px", maxWidth: "150px", width: "auto" }} />
       )}
 
       <div className="flex justify-self-end gap-x-3">

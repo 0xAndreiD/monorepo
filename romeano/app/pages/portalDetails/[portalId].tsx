@@ -23,7 +23,7 @@ function PortalDetails() {
   if (!portalId || !portal) return <>Loading!</>
   return (
     <div>
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 pt-4">
         <Header
           portalId={portalId}
           vendorLogo={portal.header.vendorLogo}
@@ -31,18 +31,19 @@ function PortalDetails() {
           customerLogo={portal.header.customerLogo}
           refetchHandler={refetch}
         />
-        <div className="py-3">
+        <div className="pt-3">
           <CardDivider />
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-4">
             <OpportunityOverview {...portal.opportunityOverview} />
             <ContactsCard data={portal.contacts} numContactsToDisplay={1} narrowLayout />
           </div>
           <div className="flex flex-col gap-4">
+            <h1 className="text-xl font-bold pl-4">Overall Engagement</h1>
             <LineChart data={portal.overallEngagement} />
           </div>
         </div>
@@ -50,9 +51,15 @@ function PortalDetails() {
         <DocumentsCard portalId={portalId} data={portal.documents} />
         <CardDivider />
         <StakeholderEngagementCard data={portal.stakeholderEngagement} />
-        <StakeholderActivityLogCard data={portal.stakeholderActivityLog} />
-        <Footer />
       </div>
+      <div style={{ backgroundColor: "#F7F7F9" }}>
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+          <div style={{ backgroundColor: "#F7F7F9" }}>
+            <StakeholderActivityLogCard data={portal.stakeholderActivityLog} />
+          </div>
+        </div>
+      </div>
+      <Footer />
     </div>
   )
 }

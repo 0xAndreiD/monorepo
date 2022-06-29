@@ -43,52 +43,59 @@ function RoadmapStage(props: {
 }) {
   return (
     <React.Fragment>
-      <div onClick={props.onClickCircle}>
-        {/*<div key={stage.name} className="flex justify-center w-full">*/}
-        {/*className={classNames(stageIdx !== stages.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
-        <RoadmapStageCircle stageNum={props.stageNum} status={props.status} hover={props.editingEnabled} />
-        {/*<div className="absolute left-96 text-green-300">*/}
-        {/*    hi*/}
-        {/*</div>*/}
-      </div>
-
-      <div
-        className={
-          "text-xs " + (props.status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
-        }
-      >
-        {props.stage.date ? format(utcToZonedTime(new Date(props.stage.date), "UTC"), "MMM d") : "TBD"}
-      </div>
-      <div className="font-bold">{props.stage.heading}</div>
-      <ul className="list-disc pl-7">
-        {props.stage.tasks.map((item, idx) => (
-          <li key={idx}>{item}</li>
-        ))}
-      </ul>
-      <div className="text-center">
-        {props.stage.ctaLink && (
-          <TrackedLink
-            type={EventType.LaunchRoadmapLinkOpen}
-            portalId={props.portalId}
-            linkId={props.stage.ctaLink.id}
-            href={props.stage.ctaLink.href}
-            defaultStyle={true}
-            anchorProps={{ target: "_blank" }}
+      <div className="grid grid-rows-2 grid-col-1 items-end">
+        <div style={{ height: "64px" }} className="items-center" onClick={props.onClickCircle}>
+          {/*<div key={stage.name} className="flex justify-center w-full">*/}
+          {/*className={classNames(stageIdx !== stages.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
+          <RoadmapStageCircle stageNum={props.stageNum} status={props.status} hover={props.editingEnabled} />
+          {/*<div className="absolute left-96 text-green-500">*/}
+          {/*    hi*/}
+          {/*</div>*/}
+        </div>
+        <div className="justify-items-center">
+          <div
+            className={
+              "text-xs " + (props.status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
+            }
           >
-            {props.stage.ctaLink.body}
-          </TrackedLink>
-        )}
+            {props.stage.date ? format(utcToZonedTime(new Date(props.stage.date), "UTC"), "MMM d") : "TBD"}
+          </div>
+
+          <div className="font-bold">{props.stage.heading}</div>
+
+          <ul className="list-disc pl-7">
+            {props.stage.tasks.map((item, idx) => (
+              <li key={idx}>{item}</li>
+            ))}
+          </ul>
+
+          <div className="text-center">
+            {props.stage.ctaLink && (
+              <TrackedLink
+                type={EventType.LaunchRoadmapLinkOpen}
+                portalId={props.portalId}
+                linkId={props.stage.ctaLink.id}
+                href={props.stage.ctaLink.href}
+                defaultStyle={true}
+                anchorProps={{ target: "_blank" }}
+              >
+                {props.stage.ctaLink.body}
+              </TrackedLink>
+            )}
+          </div>
+
+          {props.editingEnabled && (
+            <button
+              className="inline-flex items-center px-6 py-3 border border-gray-300 text-sm
+              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              onClick={props.onClickEdit}
+            >
+              EDIT
+            </button>
+          )}
+        </div>
       </div>
-      {props.editingEnabled && (
-        <button
-          className="inline-flex items-center px-5 py-2 border border-gray-300  text-sm
-                  leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
-                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300"
-          onClick={props.onClickEdit}
-        >
-          Edit
-        </button>
-      )}
     </React.Fragment>
   )
 }
@@ -284,40 +291,53 @@ export default function LaunchRoadmap(props: {
               return (
                 <div
                   key={idx}
-                  style={{ gridTemplateRows: `repeat(${props.editingEnabled ? 6 : 5}, auto)`, gridAutoColumns: "1fr" }}
-                  className="grid grid-flow-col justify-items-center gap-y-3 gap-x-5 py-5"
+                  className="grid grid-cols-2 grid-rows-1 items-center display-flex"
+                  style={{ height: "100%" }}
                 >
-                  <RoadmapStage
-                    key={idx}
-                    stage={stage}
-                    stageId={stage.id}
-                    stageNum={stageNum}
-                    portalId={props.portalId}
-                    currentRoadmapStage={props.currentRoadmapStage}
-                    status={getCompletionStatus(props.currentRoadmapStage, idx)}
-                    editingEnabled={props.editingEnabled}
-                    onClickCircle={
-                      props.editingEnabled
-                        ? () =>
-                            updateCurrentLaunchRoadmapStageMutation({
-                              portalId: props.portalId,
-                              currentRoadmapStage: stageNum,
-                            }).then(props.refetchHandler)
-                        : () => null
-                    }
-                    onClickEdit={() => {
-                      modalDispatch({
-                        type: ModalActionChange.HANDLE_EDIT,
-                        payload: {
-                          roadmapStageId: stage.id,
-                          heading: stage.heading,
-                          date: (stage.date && new Date(stage.date)) || undefined,
-                          tasks: stage.tasks,
-                          link: stage.ctaLink,
-                        },
-                      })
+                  <div
+                    // key={idx}
+                    style={{
+                      gridTemplateRows: `repeat(${props.editingEnabled ? 6 : 5}, auto)`,
+                      gridAutoColumns: "1fr",
                     }}
-                  />
+                    className="grid grid-flow-col justify-items-center gap-y-3 gap-x-2 py-5"
+                  >
+                    <RoadmapStage
+                      key={idx}
+                      stage={stage}
+                      stageId={stage.id}
+                      stageNum={stageNum}
+                      portalId={props.portalId}
+                      currentRoadmapStage={props.currentRoadmapStage}
+                      status={getCompletionStatus(props.currentRoadmapStage, idx)}
+                      editingEnabled={props.editingEnabled}
+                      onClickCircle={
+                        props.editingEnabled
+                          ? () =>
+                              updateCurrentLaunchRoadmapStageMutation({
+                                portalId: props.portalId,
+                                currentRoadmapStage: stageNum,
+                              }).then(props.refetchHandler)
+                          : () => null
+                      }
+                      onClickEdit={() => {
+                        modalDispatch({
+                          type: ModalActionChange.HANDLE_EDIT,
+                          payload: {
+                            roadmapStageId: stage.id,
+                            heading: stage.heading,
+                            date: (stage.date && new Date(stage.date)) || undefined,
+                            tasks: stage.tasks,
+                            link: stage.ctaLink,
+                          },
+                        })
+                      }}
+                    />
+                  </div>
+
+                  <div className="h-90">
+                    <hr style={{ width: "50px", marginLeft: "auto", marginRight: "auto" }} />
+                  </div>
                 </div>
               )
             })}
