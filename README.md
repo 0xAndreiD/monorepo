@@ -12,7 +12,7 @@ systemctl --user start docker.service
 #Create Personal Auth Token on Github 
 #https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
 #login with PAT
-docker login ghcr.io -u YOUR-GITHUB-EMAIL
+docker login ghcr.io -u YOUR-GITHUB-UNAME
 
 #Make sure you have created a SSH token and added it to your GitHub account before the next step 
 #https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
