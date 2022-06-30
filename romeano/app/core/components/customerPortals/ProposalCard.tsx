@@ -66,7 +66,7 @@ function EditProposalCard(props: { portalId: number; data: Proposal; refetchHand
 
   const [uploadModal, setUploadModal] = useState<boolean>(false)
   return (
-    <Card borderless={true}>
+    <Card>
       <CardHeader>Proposal</CardHeader>
 
       <div className="mt-3 text-center sm:mt-0 sm:text-left">
@@ -168,12 +168,12 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
   const [updateProposalApprovalMutation] = useMutation(updateProposalApproval)
 
   return (
-    <Card borderless={true}>
+    <Card>
       <div className="flex flex-col items-center pb-6">
         <CardHeader>Proposal</CardHeader>
-        <h5 className="text-gray-600 text-center mt-4 mb-2">{props.data.heading}</h5>
+        <h5 className="text-center">{props.data.heading}</h5>
         <h5 className="py-2 font-bold text-center">{props.data.subheading}</h5>
-        <div className="sm:divide-y sm:divide-gray-200 pt-2" />
+        <div className="sm:divide-y sm:divide-gray-200" />
         {props.data.quote && (
           <TrackedLink
             portalId={props.portalId}
@@ -184,9 +184,9 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
           >
             <button
               type="button"
-              className="inline-flex items-center px-10 py-2 border border-transparent text-md font-medium rounded-md  text-white bg-green-700 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md  text-white bg-green-700 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
-              View Quote
+              Proposal
             </button>
           </TrackedLink>
         )}
@@ -220,10 +220,10 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
       <RevealSection isRevealed={isDetailsVisible} setter={setDetailsVisible}>
         <CardDivider />
 
-        <div className="flex gap-4">
+        <div className="flex gap-2">
           <button
             className="w-full text-center inline flex items-center px-3 py-2 border border-gray-300 text-sm
-             leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+             leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             onClick={async () => {
               await updateProposalApprovalMutation({
@@ -235,12 +235,12 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
             }}
           >
             <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500" />
-            <span className="flex-1 text-[15px]">Approve</span>
+            <span className="flex-1">Approve</span>
           </button>
 
           <button
-            className="w-full text-center inline-flex items-center px-5 py-3 border border-gray-300 text-sm
-             leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+            className="w-full text-center inline-flex items-center px-3 py-2 border border-gray-300 text-sm
+             leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             onClick={async () => {
               await updateProposalApprovalMutation({
@@ -252,7 +252,7 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
             }}
           >
             <XIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500" />
-            <span className="flex-1 text-[15px]">Decline</span>
+            <span className="flex-1">Decline</span>
           </button>
         </div>
 

@@ -59,9 +59,9 @@ function EditCustomerPortal() {
         />
       </div>
 
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-16 py-6 bg-gray-100">
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-9">
-          <div className="flex flex-col gap-9">
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 bg-gray-100">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-4">
             <NextStepsCard {...data.nextSteps} portalId={portalId} refetchHandler={refetch} />
             <DocumentsCard portalId={portalId} data={data.documents} refetchHandler={refetch} />
             <ProductInfoCard
@@ -71,7 +71,7 @@ function EditCustomerPortal() {
               editingEnabled={true}
             />
           </div>
-          <div className="flex flex-col gap-9">
+          <div className="flex flex-col gap-4">
             <ProposalCard portalId={portalId} data={data.proposal} refetchHandler={refetch} editingEnabled={true} />
             <ContactsCard data={data.contacts} />
             {/*<InternalNotesCard portalId={portalId} data={data.internalNotes} refetchHandler={refetch} />*/}

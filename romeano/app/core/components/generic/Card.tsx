@@ -4,8 +4,8 @@ import { CSSProperties, PropsWithChildren } from "react"
 export function Card(props: PropsWithChildren<{ borderless?: boolean; className?: string; style?: CSSProperties }>) {
   return (
     // <div className={"bg-white overflow-hidden" + (props.borderless === true ? "" : "shadow rounded-lg")}>
-    <div className={"bg-white overflow-hidden" + (props.borderless === true ? " rounded-2xl" : " shadow rounded-2xl")}>
-      <div className={props.className ?? "m-4 px-5 py-5 sm:p-6"}>{props.children}</div>
+    <div className={"bg-white overflow-hidden" + (props.borderless === true ? "" : " shadow rounded-lg")}>
+      <div className={props.className ?? "px-4 py-5 sm:p-6"}>{props.children}</div>
     </div>
   )
 }
@@ -23,7 +23,7 @@ export function CardHeader(
     <div
       style={props.style}
       className={
-        props.classNameOverride || `${props.classNameAddition ?? ""} text-xl leading-6 font-bold text-gray-900`
+        props.classNameOverride || `${props.classNameAddition ?? ""} text-lg leading-6 font-bold text-gray-900`
       }
     >
       {props.children}
