@@ -138,7 +138,7 @@ export default function AddPortalModal(props: {
             <button
               disabled={formState.isSubmitting}
               className="w-full inline-flex justify-center rounded-md border border-transparent  px-4 py-2 bg-black text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
-              // onClick={formOnSubmit}
+
               onClick={async () => {
                 await props.onLinkComplete(formOnSubmit)
                 Router.reload()
