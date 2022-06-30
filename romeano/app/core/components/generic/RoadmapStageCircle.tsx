@@ -20,13 +20,11 @@ export function RoadmapStageCircle({
 
           <div
             className={
-              "group relative w-24 h-24 flex items-center justify-center bg-white border-2 border-green-500 rounded-full" +
+              "group relative w-16 h-16 flex items-center justify-center bg-white border-2 border-green-500 rounded-full" +
               (hover ? " hover:border-green-700" : "")
             }
           >
-            <span className={"text-green-500 font-medium text-4xl" + (hover ? " group-hover:text-green-700" : "")}>
-              {stageNum}
-            </span>
+            <span className={"text-green-500 text-2xl" + (hover ? " group-hover:text-green-700" : "")}>{stageNum}</span>
           </div>
         </div>
       )
@@ -39,11 +37,11 @@ export function RoadmapStageCircle({
           {/*</div>*/}
           <div
             className={
-              "relative w-24 h-24 flex items-center justify-center bg-green-500 rounded-full" +
+              "relative w-16 h-16 flex items-center justify-center bg-green-500 rounded-full" +
               (hover ? " hover:bg-green-700" : "")
             }
           >
-            <span className="text-white font-medium text-4xl">{stageNum}</span>
+            <span className="text-white text-2xl">{stageNum}</span>
           </div>
         </>
       )
@@ -56,13 +54,11 @@ export function RoadmapStageCircle({
           {/*</div>*/}
           <div
             className={
-              "group relative w-24 h-24 flex items-center justify-center bg-white border-2 border-gray-300 rounded-full" +
+              "group relative w-16 h-16 flex items-center justify-center bg-white border-2 border-gray-300 rounded-full" +
               (hover ? " hover:border-gray-400" : "")
             }
           >
-            <span className={"text-4xl font-medium text-gray-400" + (hover ? " group-hover:text-gray-600" : "")}>
-              {stageNum}
-            </span>
+            <span className={"text-2xl text-gray-400" + (hover ? " group-hover:text-gray-600" : "")}>{stageNum}</span>
           </div>
         </>
       )

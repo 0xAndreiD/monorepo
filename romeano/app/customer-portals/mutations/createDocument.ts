@@ -3,8 +3,8 @@ import db from "db"
 import { z } from "zod"
 
 export const CreateDocument = z.object({
-  portalId: z.any(),
-  linkId: z.any(),
+  portalId: z.number().nonnegative(),
+  linkId: z.number().nonnegative(),
 })
 
 export default resolver.pipe(resolver.zod(CreateDocument), resolver.authorize(), async ({ portalId, linkId }, ctx) => {
