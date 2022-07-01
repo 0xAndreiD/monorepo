@@ -171,8 +171,8 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
     <Card borderless={true}>
       <div className="flex flex-col items-center pb-6">
         <CardHeader>Proposal</CardHeader>
-        <h5 className="text-gray-600 text-center mt-4 mb-2">{props.data.heading}</h5>
-        <h5 className="py-2 font-bold text-center">{props.data.subheading}</h5>
+        <p className="text-gray-600 text-center mt-4 mb-2 text-sm">{props.data.heading}</p>
+        <p className="py-2 font-semibold text-center text-sm">{props.data.subheading}</p>
         <div className="sm:divide-y sm:divide-gray-200 pt-2" />
         {props.data.quote && (
           <TrackedLink
@@ -184,7 +184,7 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
           >
             <button
               type="button"
-              className="inline-flex items-center px-10 py-2 border border-transparent text-md font-medium rounded-md  text-white bg-green-700 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              className="inline-flex items-center px-10 py-2 border border-transparent text-sm font-medium rounded-md  text-white bg-green-700 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
               View Quote
             </button>
@@ -193,7 +193,7 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
       </div>
       <CardDivider />
 
-      <h4 className="font-bold">Key Stakeholder Approval</h4>
+      <p className="text-sm font-semibold">Key Stakeholder Approval</p>
       <div className="py-4 flex gap-3">
         <StakeholderApprovalCircles data={props.data.stakeholders} />
         <div style={{ marginLeft: "auto" }}>
@@ -235,7 +235,7 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
             }}
           >
             <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500" />
-            <span className="flex-1 text-[15px]">Approve</span>
+            <span className="flex-1 text-[12px]">Approve</span>
           </button>
 
           <button
@@ -252,7 +252,7 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
             }}
           >
             <XIcon className="-ml-0.5 mr-2 h-4 w-4 text-grey-500" />
-            <span className="flex-1 text-[15px]">Decline</span>
+            <span className="flex-1 text-[12px]">Decline</span>
           </button>
         </div>
 
@@ -266,7 +266,7 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
                 <>
                   <span className="absolute inset-0" aria-hidden="true" />
                   <p className="text-sm font-medium text-gray-900">{getName(person.firstName, person.lastName)}</p>
-                  <p className="text-sm text-gray-500 truncate">{person.jobTitle}</p>
+                  <p className="text-xs text-gray-600 truncate">{person.jobTitle}</p>
                 </>
               </div>
             </div>

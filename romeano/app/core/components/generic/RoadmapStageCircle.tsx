@@ -20,7 +20,7 @@ export function RoadmapStageCircle({
 
           <div
             className={
-              "group relative w-24 h-24 flex items-center justify-center bg-white border-2 border-green-500 rounded-full" +
+              "group relative w-20 h-20 flex items-center justify-center bg-white border-2 border-green-500 rounded-full" +
               (hover ? " hover:border-green-700" : "")
             }
           >
@@ -39,7 +39,7 @@ export function RoadmapStageCircle({
           {/*</div>*/}
           <div
             className={
-              "relative w-24 h-24 flex items-center justify-center bg-green-500 rounded-full" +
+              "relative w-20 h-20 flex items-center justify-center bg-green-500 rounded-full" +
               (hover ? " hover:bg-green-700" : "")
             }
           >
@@ -56,11 +56,11 @@ export function RoadmapStageCircle({
           {/*</div>*/}
           <div
             className={
-              "group relative w-24 h-24 flex items-center justify-center bg-white border-2 border-gray-300 rounded-full" +
+              "group relative w-20 h-20 flex items-center justify-center bg-white border-2 border-gray-200 rounded-full" +
               (hover ? " hover:border-gray-400" : "")
             }
           >
-            <span className={"text-4xl font-medium text-gray-400" + (hover ? " group-hover:text-gray-600" : "")}>
+            <span className={"text-4xl font-medium text-gray-800" + (hover ? " group-hover:text-gray-600" : "")}>
               {stageNum}
             </span>
           </div>
