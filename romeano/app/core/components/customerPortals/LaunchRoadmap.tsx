@@ -44,7 +44,7 @@ function RoadmapStage(props: {
   return (
     <React.Fragment>
       <div className="pl-4 grid grid-col-1 items-baseline w-44">
-        <div style={{ height: "120px" }} className="text-center m-auto items-center" onClick={props.onClickCircle}>
+        <div className="text-center m-auto items-center" onClick={props.onClickCircle}>
           {/*<div key={stage.name} className="flex justify-center w-full">*/}
           {/*className={classNames(stageIdx !== stages.length - 1 ? 'pr-8 sm:pr-20' : '', 'relative')}>*/}
           <RoadmapStageCircle stageNum={props.stageNum} status={props.status} hover={props.editingEnabled} />
@@ -55,7 +55,7 @@ function RoadmapStage(props: {
         <div className="justify-items-center">
           <div
             className={
-              "text-sm pb-2 pt-1 text-center font-semibold " +
+              "text-xs pb-2 pt-4 text-center font-semibold " +
               (props.status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
             }
           >
@@ -63,17 +63,20 @@ function RoadmapStage(props: {
           </div>
 
           <div
+            style={{ height: 60 }}
             className={
-              "text-lg text-center pt-2 pb-5 font-semibold " +
+              "text-md text-center pb-5 font-semibold " +
               (props.status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
             }
           >
             {props.stage.heading}
           </div>
 
-          <ul className="list-disc pl-7">
+          <ul style={{ height: 60 }} className="list-disc pl-7">
             {props.stage.tasks.map((item, idx) => (
-              <li key={idx}>{item}</li>
+              <li key={idx} className="text-xs">
+                {item}
+              </li>
             ))}
           </ul>
 
@@ -87,7 +90,7 @@ function RoadmapStage(props: {
                 defaultStyle={true}
                 anchorProps={{ target: "_blank" }}
               >
-                {props.stage.ctaLink.body}
+                <p className="text-xs">{props.stage.ctaLink.body}</p>
               </TrackedLink>
             )}
           </div>
@@ -245,8 +248,8 @@ export default function LaunchRoadmap(props: {
       />
 
       <nav>
-        <div className="flex justify-between mt-5">
-          <h1 className="text-2xl font-semibold">Launch Roadmap</h1>
+        <div className="flex justify-between mt-6">
+          <h1 className="text-xl font-semibold">Launch Roadmap</h1>
           <div className="gap-1 font-bold">
             <span className="text-gray-900">{props.currentRoadmapStage}</span>
             <span className="text-gray-400">&nbsp;/&nbsp;{props.stageData.length}</span>
@@ -342,8 +345,8 @@ export default function LaunchRoadmap(props: {
                   </div>
 
                   {stageNum != numStages && (
-                    <div className="h-90 pt-8 items-center">
-                      <hr className="mt-9" style={{ width: "85px", marginLeft: "auto", marginRight: "auto" }} />
+                    <div className="h-90 pt-8 justify-items-center">
+                      <hr className="mt-7" style={{ width: "100px", marginLeft: "auto", marginRight: "auto" }} />
                     </div>
                   )}
                 </div>

@@ -5,9 +5,9 @@ const PoweredByRomeano = ({ className, alt }) => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
-      width="119"
-      height="40"
-      viewBox="0 0 119 40"
+      width="90"
+      height="24"
+      viewBox="0 0 160 40"
       className={className}
       alt={alt}
     >

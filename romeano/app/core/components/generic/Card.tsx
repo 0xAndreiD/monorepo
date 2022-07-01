@@ -22,9 +22,7 @@ export function CardHeader(
   return (
     <div
       style={props.style}
-      className={
-        props.classNameOverride || `${props.classNameAddition ?? ""} text-xl leading-6 font-bold text-gray-900`
-      }
+      className={props.classNameOverride || `${props.classNameAddition ?? ""} text-l leading-6 font-bold text-gray-900`}
     >
       {props.children}
     </div>
@@ -35,7 +33,7 @@ export function CardDivider() {
   return (
     <div className="relative">
       <div className="flex justify-center" aria-hidden="true">
-        <div className="border-t pt-4 w-full border-gray-300" />
+        <div className="border-t pt-4 w-full border-gray-100" />
       </div>
     </div>
   )

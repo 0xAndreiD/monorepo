@@ -8,7 +8,7 @@ export function Footer() {
   return (
     <Link passHref href="https://romeano.com">
       <div className="flex justify-center items-center gap-2 pb-2 bg-gray-100">
-        <span className="text-gray-400 text-sm font-bold">Powered by</span>
+        <span className="text-gray-500 text-xs">Powered by</span>
 
         <PoweredByRomeano alt="Romeano Logo" className="" />
       </div>

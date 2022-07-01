@@ -5,7 +5,7 @@ export function AddButton(props: ComponentProps<"button">) {
   return (
     <button
       {...props}
-      className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
+      className="inline-flex items-center px-4 py-3 border border-gray-300 text-xs
              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
     >

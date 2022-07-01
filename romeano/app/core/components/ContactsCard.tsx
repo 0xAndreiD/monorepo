@@ -80,7 +80,7 @@ export function ContactsCard(props: {
                 </div>
                 <div className={props.narrowLayout ? "" : "flex-1"}>
                   <p className="font-medium text-gray-900">{name}</p>
-                  <p className="text-sm truncate">{contact.jobTitle}</p>
+                  <p className="text-xs truncate">{contact.jobTitle}</p>
                 </div>
                 <div className="w-10 h-10 border flex items-center justify-center border-black-600 rounded-full ">
                   <a href={`mailto:${contact.email}`}>
