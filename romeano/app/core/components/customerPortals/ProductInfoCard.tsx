@@ -1,7 +1,8 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css" // requires a loader
 import { Carousel } from "@mikemmb73/react-responsive-carousel2"
 // import { Carousel } from "react-responsive-carousel"
-import { ChevronLeftIcon, ChevronRightIcon, PencilIcon, TrashIcon, CloudUploadIcon } from "@heroicons/react/outline"
+import { ChevronLeftIcon, ChevronRightIcon, PencilIcon, TrashIcon } from "@heroicons/react/outline"
+import UploadCloudIcon from "../../assets/uploadCloud"
 import { CSSProperties, useState } from "react"
 import { Card, CardHeader } from "../generic/Card"
 import { TrackedLink } from "../generic/Link"
@@ -123,12 +124,12 @@ export function ProductInfoCard(props: {
       >
         <button
           type="button"
-          className="inline-flex items-center px-5 py-4 border border-gray-300  text-sm
+          className="inline-flex items-center px-4 py-3 border border-gray-300 text-xs
            leading-4 font-medium rounded-full mt-2 text-gray-700 bg-white hover:bg-gray-50
             focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
         >
-          <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" />
-          Upload
+          <UploadCloudIcon className="h-4 w-4 mr-2" />
+          UPLOAD
         </button>
       </UploadProductImageComponent>
       {props.data.sections.map((section, idx) => (
