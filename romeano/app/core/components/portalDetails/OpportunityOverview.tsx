@@ -31,7 +31,7 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
 
   return (
     <nav>
-      <h1 className="text-xl font-bold">Opportunity Overview</h1>
+      <h1 className="text-xl font-semibold">Opportunity Overview</h1>
 
       {/*<ol className="flex justify-around gap-x-5 px-11 items-center">*/}
       {/*    {*/}

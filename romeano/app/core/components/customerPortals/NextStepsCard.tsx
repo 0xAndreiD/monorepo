@@ -116,7 +116,7 @@ function NextStepsTaskList(props: {
 
   return (
     <>
-      <p className="max-w-2xl pt-4 text-sm">
+      <p className="max-w-2xl pt-4 text-xs">
         for <span className="font-bold">{props.name}</span>
       </p>
 

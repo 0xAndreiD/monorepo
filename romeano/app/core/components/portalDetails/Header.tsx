@@ -16,12 +16,12 @@ export function Header(props: {
   return (
     <div className="grid grid-cols-3 grid-rows-1 items-center">
       <div className="flex gap-x-2 items-center">
-        <img alt="vendor logo" src={props.vendorLogo} style={{ maxHeight: "75px", maxWidth: "150px", width: "auto" }} />
-        <hr className="border-l pt-9 h-full border-gray-300" />
+        <img alt="vendor logo" src={props.vendorLogo} style={{ maxHeight: "70px", maxWidth: "120px", width: "auto" }} />
+        <hr className="border-l mx-1 pt-6 h-full border-gray-300" />
         <img
           alt="customer logo"
           src={props.customerLogo}
-          style={{ maxHeight: "75px", maxWidth: "150px", width: "auto" }}
+          style={{ maxHeight: "70px", maxWidth: "120px", width: "auto" }}
         />
         <UploadComponent
           uploadParams={{ portalId: props.portalId }}
@@ -31,8 +31,8 @@ export function Header(props: {
         >
           <button
             type="button"
-            className="inline-flex items-center px-4 py-3 border border-gray-300 text-md
-                leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+            className="inline-flex items-center px-2 py-2 border border-gray-300 text-md
+                font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
           >
             <PencilIcon className="-ml-0.5 h-4 w-4" />
@@ -40,15 +40,15 @@ export function Header(props: {
         </UploadComponent>
       </div>
 
-      <span className="text-gray-500 font-bold justify-self-center">{props.customerName} Portal Details</span>
+      <span className="text-gray-600 text-sm justify-self-center">{props.customerName} Portal Details</span>
 
       <div className="justify-self-end">
         <div className="flex flex-row">
           <div className="grid gap-2 grid-rows-1 grid-cols-2 place-items-center basis-2/3">
             <Link href={Routes.CustomerPortal({ portalId: props.portalId })}>
               <a
-                className="inline-flex items-center px-4 py-3 border border-gray-300 text-md
-                leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+                className="inline-flex items-center px-2 py-2 border border-gray-300 text-xs
+                font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
                 View Portal
@@ -56,8 +56,8 @@ export function Header(props: {
             </Link>
             <Link href={Routes.EditCustomerPortal({ portalId: props.portalId })}>
               <a
-                className="inline-flex items-center px-4 py-3 border border-gray-300 text-md
-                leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+                className="inline-flex items-center px-2 py-2 border border-gray-300 text-xs
+                font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
                 Edit Portal
@@ -67,11 +67,11 @@ export function Header(props: {
           <button className="basis-1/3 pl-2">
             <Link href={Routes.Home()}>
               <div
-                className="inline-flex items-center py-2  text-sm
-                    leading-4 font-medium rounded-md text-gray-700 bg-white
+                className="inline-flex items-center py-2 text-xs
+                    font-medium rounded-md text-gray-700 bg-white
                     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
-                <HomeIcon alt="Home" className="w-8 h-8" />
+                <HomeIcon alt="Home" className="w-6 h-6" />
               </div>
             </Link>
           </button>

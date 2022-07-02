@@ -23,7 +23,7 @@ function PortalDetails() {
   if (!portalId || !portal) return <>Loading!</>
   return (
     <div>
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 pt-4">
+      <div className="max-w-6xl mx-auto sm:px-6 lg:px-8 pt-2">
         <Header
           portalId={portalId}
           vendorLogo={portal.header.vendorLogo}
@@ -31,19 +31,22 @@ function PortalDetails() {
           customerLogo={portal.header.customerLogo}
           refetchHandler={refetch}
         />
-        <div className="pt-3">
+      </div>
+
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-2">
+        <div className="">
           <CardDivider />
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto sm:px-6 lg:px-8 py-2 mt-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col">
             <OpportunityOverview {...portal.opportunityOverview} />
             <ContactsCard data={portal.contacts} numContactsToDisplay={1} narrowLayout />
           </div>
           <div className="flex flex-col gap-4">
-            <h1 className="text-xl font-bold pl-4">Overall Engagement</h1>
+            <h1 className="text-xl font-semibold pl-4">Overall Engagement</h1>
             <LineChart data={portal.overallEngagement} />
           </div>
         </div>
@@ -52,12 +55,9 @@ function PortalDetails() {
         <CardDivider />
         <StakeholderEngagementCard data={portal.stakeholderEngagement} />
       </div>
-      <div className="bg-gray-100">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-          <div className="bg-gray-100">
-            <StakeholderActivityLogCard data={portal.stakeholderActivityLog} />
-          </div>
-        </div>
+
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-16 py-6 bg-gray-100">
+        <StakeholderActivityLogCard data={portal.stakeholderActivityLog} />
       </div>
       <Footer />
     </div>
