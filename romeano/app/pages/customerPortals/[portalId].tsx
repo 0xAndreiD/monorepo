@@ -34,7 +34,7 @@ function CustomerPortal() {
   //container: https://tailwindui.com/components/application-ui/layout/containers
   return (
     <>
-      <div className="max-w-6xl mx-auto sm:px-6 lg:px-8 py-2">
+      <div className="max-w-6xl mx-auto sm:px-6 lg:px-8 pt-2">
         <Header
           portalId={portalId}
           vendorLogo={data.header.vendorLogo}

@@ -57,12 +57,12 @@ export default function DocumentsCard(props: {
           >
             <button
               type="button"
-              className="inline-flex items-center px-5 py-4 border border-gray-300 text-sm
+              className="inline-flex items-center px-4 py-3 border border-gray-300 text-xs
               leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
               <UploadCloudIcon className="h-4 w-4 mr-2" />
-              Upload
+              UPLOAD
             </button>
           </UploadComponent>
         )}
@@ -102,7 +102,7 @@ export default function DocumentsCard(props: {
 function DocumentList(props: { portalId: number; companyName: string; documents: PortalDocument[] }) {
   return (
     <>
-      <p className="max-w-2xl pt-4 text-sm">
+      <p className="max-w-2xl pt-4 text-xs">
         for <span className="font-bold">{props.companyName}</span>
       </p>
       <div className="py-4 flex flex-wrap justify-self-start gap-2">
