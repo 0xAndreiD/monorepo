@@ -6,7 +6,6 @@ import { UploadComponent } from "./UploadComponent"
 import { useMutation } from "blitz"
 import createDocument from "../../../customer-portals/mutations/createDocument"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import UploadCloudIcon from "../../assets/uploadCloud"
 import { UploadProductImageComponent } from "./UploadComponent"
 
 export type PortalDocument = {
@@ -54,17 +53,7 @@ export default function DocumentsCard(props: {
               })
               props.refetchHandler()
             }}
-          >
-            <button
-              type="button"
-              className="inline-flex items-center px-4 py-3 border border-gray-300 text-xs
-              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
-                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
-              <UploadCloudIcon className="h-4 w-4 mr-2" />
-              UPLOAD
-            </button>
-          </UploadComponent>
+          />
         )}
       </div>
       <CardDivider />
@@ -83,17 +72,7 @@ export default function DocumentsCard(props: {
             })
             props.refetchHandler()
           }}
-        >
-          <button
-            type="button"
-            className="inline-flex items-center px-5 py-4 border border-gray-300 text-sm
-              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
-                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-          >
-            <UploadCloudIcon className="h-4 w-4 mr-2" />
-            UPLOAD
-          </button>
-        </UploadComponent>
+        />
       )}
     </Card>
   )

@@ -46,7 +46,7 @@ function CustomerPortal() {
         />
       </div>
 
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-2">
+      <div className="max-w-12xl mx-auto sm:px-6 lg:px-8 py-2">
         <div className="">
           <CardDivider />
         </div>
@@ -63,8 +63,8 @@ function CustomerPortal() {
       </div>
 
       {/* <div className="max-w-8xl mx-40 bg-gray-100"> */}
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-16 py-6 bg-gray-100">
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-9">
+      <div className="max-w-12xl mx-auto sm:px-6 lg:px-16 py-6 bg-gray-100">
+        <div className="max-w-6xl lg:px-8 mx-auto mt-10 grid grid-cols-1 md:grid-cols-2 gap-9">
           <div className="flex flex-col gap-9">
             <NextStepsCard {...data.nextSteps} portalId={portalId} refetchHandler={refetch} />
             <DocumentsCard portalId={portalId} data={data.documents} refetchHandler={refetch} />
