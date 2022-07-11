@@ -77,7 +77,7 @@ export default function NextStepsCard(props: NextSteps & { portalId: number; ref
   return (
     <Card borderless={true} className="px-5 py-5 sm:p-6 border-t-8 border-green-500 rounded-md">
       <div className="m-4">
-        <CardHeader classNameOverride="text-l leading-5 font-bold text-gray-900">Next Steps</CardHeader>
+        <CardHeader>Next Steps</CardHeader>
         <NextStepsTaskList
           portalId={props.portalId}
           isElementDeletable={user?.role === Role.AccountExecutive}
@@ -118,7 +118,7 @@ function NextStepsTaskList(props: {
 
   return (
     <>
-      <p className="max-w-2xl pt-4 text-xs">
+      <p className="max-w-2xl pt-2 text-xs">
         for <span className="font-bold">{props.name}</span>
       </p>
 
