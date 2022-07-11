@@ -75,25 +75,27 @@ export default function NextStepsCard(props: NextSteps & { portalId: number; ref
 
   // <div style={{borderColor:'red',borderTopWidth:2,borderRadius:5}}></div>
   return (
-    <Card borderless={true} className="px-4 py-5 sm:p-6 border-t-8 border-green-500 rounded-md">
-      <CardHeader classNameOverride="text-l leading-5 font-bold text-gray-900">Next Steps</CardHeader>
-      <NextStepsTaskList
-        portalId={props.portalId}
-        isElementDeletable={user?.role === Role.AccountExecutive}
-        name={props.customer.name}
-        tasks={props.customer.tasks}
-        refetchHandler={props.refetchHandler}
-      />
-      {user?.role === Role.AccountExecutive && <NextStepsAddButton className="mb-5" />}
-      <CardDivider />
-      <NextStepsTaskList
-        portalId={props.portalId}
-        isElementDeletable={user?.role === Role.Stakeholder}
-        name={props.vendor.name}
-        tasks={props.vendor.tasks}
-        refetchHandler={props.refetchHandler}
-      />
-      {user?.role === Role.Stakeholder && <NextStepsAddButton />}
+    <Card borderless={true} className="px-5 py-5 sm:p-6 border-t-8 border-green-500 rounded-md">
+      <div className="m-4">
+        <CardHeader classNameOverride="text-l leading-5 font-bold text-gray-900">Next Steps</CardHeader>
+        <NextStepsTaskList
+          portalId={props.portalId}
+          isElementDeletable={user?.role === Role.AccountExecutive}
+          name={props.customer.name}
+          tasks={props.customer.tasks}
+          refetchHandler={props.refetchHandler}
+        />
+        {user?.role === Role.AccountExecutive && <NextStepsAddButton className="mb-5" />}
+        <CardDivider />
+        <NextStepsTaskList
+          portalId={props.portalId}
+          isElementDeletable={user?.role === Role.Stakeholder}
+          name={props.vendor.name}
+          tasks={props.vendor.tasks}
+          refetchHandler={props.refetchHandler}
+        />
+        {user?.role === Role.Stakeholder && <NextStepsAddButton />}
+      </div>
     </Card>
   )
 }

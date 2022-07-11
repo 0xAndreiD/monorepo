@@ -33,7 +33,7 @@ function PortalDetails() {
         />
       </div>
 
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-2">
+      <div className="max-w-12xl mx-auto sm:px-6 lg:px-8 py-2">
         <div className="">
           <CardDivider />
         </div>
@@ -56,8 +56,10 @@ function PortalDetails() {
         <StakeholderEngagementCard data={portal.stakeholderEngagement} />
       </div>
 
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-16 py-6 bg-gray-100">
-        <StakeholderActivityLogCard data={portal.stakeholderActivityLog} />
+      <div className="max-w-12xl mx-auto sm:px-6 lg:px-16 py-6 bg-gray-100">
+        <div className="max-w-6xl mx-auto">
+          <StakeholderActivityLogCard data={portal.stakeholderActivityLog} />
+        </div>
       </div>
       <Footer />
     </div>
