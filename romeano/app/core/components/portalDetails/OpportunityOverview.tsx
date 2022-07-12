@@ -81,7 +81,7 @@ export default function OpportunityOverview(props: { currentRoadmapStage: number
 
                   <div
                     className={
-                      "text-xs " +
+                      "text-sm " +
                       (status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
                     }
                   >

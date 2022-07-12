@@ -81,7 +81,7 @@ export default function DocumentsCard(props: {
 function DocumentList(props: { portalId: number; companyName: string; documents: PortalDocument[] }) {
   return (
     <>
-      <p className="max-w-2xl pt-4 text-xs">
+      <p className="max-w-2xl pt-4 text-sm">
         for <span className="font-bold">{props.companyName}</span>
       </p>
       <div className="py-4 flex flex-wrap justify-self-start gap-2">

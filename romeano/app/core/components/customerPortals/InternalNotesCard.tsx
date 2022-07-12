@@ -71,7 +71,7 @@ export function InternalNotesCard(props: { portalId: number; data: InternalNotes
   return (
     <Card>
       <CardHeader>Internal Notes & Thoughts</CardHeader>
-      <div className="py-3 text-xs text-gray-600">(Not visible to Mira)</div>
+      <div className="py-3 text-sm text-gray-600">(Not visible to Mira)</div>
 
       <CardDivider />
 

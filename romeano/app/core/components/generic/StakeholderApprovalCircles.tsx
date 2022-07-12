@@ -30,7 +30,7 @@ export function StakeholderApprovalCircles(props: { data: Array<Stakeholder & { 
                 <div className="absolute top-7 left-7 h-4 w-4 rounded-full border-2 bg-gray-300" />
               )}
             </div>
-            {stakeholder.eventCount && <span className="text-xs">{stakeholder.eventCount}</span>}
+            {stakeholder.eventCount && <span className="text-sm">{stakeholder.eventCount}</span>}
           </div>
         )
       })}
