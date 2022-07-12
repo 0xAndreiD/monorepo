@@ -135,9 +135,9 @@ export function ProductInfoCard(props: {
       {props.data.sections.map((section, idx) => (
         <div className="py-2" key={idx}>
           <h4 className="pt-2 font-bold">{section.heading}</h4>
-          <ul className="py-1 mx-4 text-sm">
+          <ul className="list-disc py-1 mx-4 text-sm">
             {section.links.map((link, idx) => (
-              <li className="" key={idx} style={{ listStyleType: '"•   "', width: 400 }}>
+              <li className="" key={idx}>
                 <div className="flex gap-1 items-center">
                   <TrackedLink
                     href={link.href}
