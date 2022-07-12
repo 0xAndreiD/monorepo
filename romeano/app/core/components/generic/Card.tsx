@@ -22,7 +22,9 @@ export function CardHeader(
   return (
     <div
       style={props.style}
-      className={props.classNameOverride || `${props.classNameAddition ?? ""} text-l leading-6 font-bold text-gray-900`}
+      className={
+        props.classNameOverride || `${props.classNameAddition ?? ""} text-lg mb-3 leading-6 font-bold text-gray-900`
+      }
     >
       {props.children}
     </div>
