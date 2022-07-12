@@ -301,6 +301,10 @@ export default function LaunchRoadmap(props: {
               const numStages = props.stageData.length
 
               const stageNum = idx + 1
+              let linearGradient =
+                stageNum < props.currentRoadmapStage
+                  ? "linear-gradient(to right, #fff, rgb(99, 217, 187))"
+                  : "linear-gradient(to right, #fff, rgb(217, 217, 217))"
               return (
                 <div key={idx} className="grid grid-cols-2 grid-rows-1 items-top display-flex">
                   <div
@@ -345,8 +349,17 @@ export default function LaunchRoadmap(props: {
                   </div>
 
                   {stageNum != numStages && (
-                    <div className="h-90 pt-8 justify-items-center">
-                      <hr className="mt-7" style={{ width: "100px", marginLeft: "auto", marginRight: "auto" }} />
+                    <div className="h-90 gap-x-2 pt-8 justify-items-center" style={{ marginLeft: "40px" }}>
+                      <hr
+                        className="mt-7"
+                        style={{
+                          width: "100%",
+                          marginLeft: "auto",
+                          marginRight: "auto",
+                          height: "3px",
+                          background: linearGradient,
+                        }}
+                      />
                     </div>
                   )}
                 </div>
