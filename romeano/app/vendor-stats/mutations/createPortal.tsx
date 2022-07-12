@@ -116,7 +116,11 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
     const template = await db.template.findUnique({
       where: { id: parseInt(data.templateId) },
       include: {
-        roadmapStages: true,
+        roadmapStages: {
+          include: {
+            ctaLink: true,
+          },
+        },
         nextStepsTasks: true,
         images: true,
         productInfoSections: true,
@@ -136,17 +140,26 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
       },
     })
 
-    template?.roadmapStages.map(
-      async (roadmapStage) =>
-        await db.roadmapStage.create({
-          data: {
-            heading: roadmapStage.heading,
-            date: roadmapStage.date,
-            tasks: roadmapStage.tasks,
-            portalId: id,
-          },
-        })
-    )
+    template?.roadmapStages.map(async (roadmapStage) => {
+      const link = await db.link.create({
+        data: {
+          body: roadmapStage.ctaLink?.body ?? "",
+          href: roadmapStage.ctaLink?.href ?? "",
+          type: roadmapStage.ctaLink?.type ?? LinkType.Document,
+          userId: userId,
+        },
+      })
+
+      await db.roadmapStage.create({
+        data: {
+          heading: roadmapStage.heading,
+          date: roadmapStage.date,
+          tasks: roadmapStage.tasks,
+          portalId: id,
+          ctaLinkId: link.id,
+        },
+      })
+    })
 
     template?.nextStepsTasks.map(
       async (nextStepsTask) =>
