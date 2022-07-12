@@ -3,6 +3,7 @@
 import { CheckIcon } from "@heroicons/react/solid"
 import { Card, CardHeader } from "../generic/Card"
 import Link from "next/link"
+import { blockParams } from "handlebars"
 
 export type PortalDocument = {
   id: number
@@ -37,10 +38,10 @@ export default function DocumentsCard(props: { portalId: number; data: PortalDoc
 function DocumentList(props: { companyName: string; documents: PortalDocument[] }) {
   return (
     <div>
-      <p className="max-w-2xl pt-4 text-xs">
+      <p className="max-w-2xl pt-4 text-sm">
         for <span className="font-bold">{props.companyName}</span>
       </p>
-      <div className="py-4 flex justify-self-start gap-2">
+      <div className="py-4 flex justify-self-start gap-2" style={{ display: "block" }}>
         {props.documents.map((task, idx) => (
           <span key={idx}>
             <Link href={task.href}>

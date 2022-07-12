@@ -64,25 +64,25 @@ export function StakeholderActivityLogCard(props: { data: StakeholderActivityEve
                   <tr>
                     <th
                       scope="col"
-                      className="sticky top-0 bg-gray-100 px-6 py-3 text-left text-xs font-light text-gray-500 tracking-wider"
+                      className="sticky top-0 bg-gray-100 px-6 py-3 text-left text-sm font-light text-gray-500 tracking-wider"
                     >
                       Activity
                     </th>
                     <th
                       scope="col"
-                      className="sticky top-0 bg-gray-100 px-6 py-3 px-4 text-left text-xs font-light text-gray-500 tracking-wider"
+                      className="sticky top-0 bg-gray-100 px-6 py-3 px-4 text-left text-sm font-light text-gray-500 tracking-wider"
                     >
                       Location
                     </th>
                     <th
                       scope="col"
-                      className="sticky top-0 bg-gray-100 px-6 py-3 text-left text-xs font-light text-gray-500 tracking-wider"
+                      className="sticky top-0 bg-gray-100 px-6 py-3 text-left text-sm font-light text-gray-500 tracking-wider"
                     >
                       Device
                     </th>
                     <th
                       scope="col"
-                      className="sticky top-0 bg-gray-100 px-6 py-3 text-left text-xs font-light text-gray-500 tracking-wider"
+                      className="sticky top-0 bg-gray-100 px-6 py-3 text-left text-sm font-light text-gray-500 tracking-wider"
                     >
                       Time
                     </th>

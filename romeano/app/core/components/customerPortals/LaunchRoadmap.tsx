@@ -55,7 +55,7 @@ function RoadmapStage(props: {
         <div className="justify-items-center">
           <div
             className={
-              "text-xs pb-2 pt-4 text-center font-semibold " +
+              "text-sm pb-2 pt-4 text-center font-semibold " +
               (props.status === CompletionStatus.InProgress ? "text-gray-900 font-bold" : "text-gray-500")
             }
           >
@@ -72,9 +72,9 @@ function RoadmapStage(props: {
             {props.stage.heading}
           </div>
 
-          <ul style={{ height: 60 }} className="list-disc pl-7">
+          <ul style={{ height: 80 }} className="list-disc pl-7">
             {props.stage.tasks.map((item, idx) => (
-              <li key={idx} className="text-xs">
+              <li key={idx} className="text-sm">
                 {item}
               </li>
             ))}
@@ -90,7 +90,7 @@ function RoadmapStage(props: {
                 defaultStyle={true}
                 anchorProps={{ target: "_blank" }}
               >
-                <p className="text-xs">{props.stage.ctaLink.body}</p>
+                <p className="text-sm">{props.stage.ctaLink.body}</p>
               </TrackedLink>
             )}
           </div>

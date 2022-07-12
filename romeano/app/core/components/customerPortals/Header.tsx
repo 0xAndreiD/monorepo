@@ -61,7 +61,7 @@ export function Header(props: {
           {props.editingEnabled && (
             <Link href={Routes.CustomerPortal({ portalId: props.portalId })}>
               <a
-                className="inline-flex items-center px-4 py-3 border border-gray-300 text-xs
+                className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
                 leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
@@ -72,7 +72,7 @@ export function Header(props: {
           {props.editingEnabled && (
             <button>
               <a
-                className="inline-flex items-center px-4 py-3 border border-gray-300 text-xs
+                className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
                 leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 onClick={() => setAddTemplateProps({ isOpen: true, templateId: props.portalId })}
@@ -84,7 +84,7 @@ export function Header(props: {
           {!props.editingEnabled && (
             <button
               onClick={() => setIsInviteStakeholdersModalOpen(true)}
-              className="inline-flex items-center px-2 py-2 border border-gray-300 text-xs
+              className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
               font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >

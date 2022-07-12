@@ -47,7 +47,7 @@ export function Header(props: {
           <div className="grid gap-2 grid-rows-1 grid-cols-2 place-items-center basis-2/3">
             <Link href={Routes.CustomerPortal({ portalId: props.portalId })}>
               <a
-                className="inline-flex items-center px-2 py-2 border border-gray-300 text-xs
+                className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
                 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
@@ -56,7 +56,7 @@ export function Header(props: {
             </Link>
             <Link href={Routes.EditCustomerPortal({ portalId: props.portalId })}>
               <a
-                className="inline-flex items-center px-2 py-2 border border-gray-300 text-xs
+                className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
                 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
@@ -67,7 +67,7 @@ export function Header(props: {
           <button className="basis-1/3 pl-2">
             <Link href={Routes.Home()}>
               <div
-                className="inline-flex items-center py-2 text-xs
+                className="inline-flex items-center py-2 text-sm
                     font-medium rounded-md text-gray-700 bg-white
                     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >

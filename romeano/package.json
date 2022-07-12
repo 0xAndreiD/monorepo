@@ -40,6 +40,7 @@
     "@prisma/client": "3.4.1",
     "@trendyol-js/react-carousel": "2.0.1",
     "@types/react-html-email": "^3.0.1",
+    "@tailwindcss/line-clamp": "^0.4.0",
     "amplitude-js": "^8.18.4",
     "analytics": "^0.7.18",
     "axios": "^0.24.0",

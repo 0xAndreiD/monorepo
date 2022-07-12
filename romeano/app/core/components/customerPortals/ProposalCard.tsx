@@ -266,7 +266,7 @@ function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHand
                 <>
                   <span className="absolute inset-0" aria-hidden="true" />
                   <p className="text-sm font-medium text-gray-900">{getName(person.firstName, person.lastName)}</p>
-                  <p className="text-xs text-gray-600 truncate">{person.jobTitle}</p>
+                  <p className="text-sm text-gray-600 truncate">{person.jobTitle}</p>
                 </>
               </div>
             </div>
