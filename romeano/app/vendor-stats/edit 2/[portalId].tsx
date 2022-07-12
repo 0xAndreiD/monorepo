@@ -7,6 +7,7 @@ import { ProductInfoCard } from "app/core/components/customerPortals/ProductInfo
 import { ContactsCard } from "app/core/components/ContactsCard"
 import { Footer } from "app/core/components/Footer"
 import { Header } from "app/core/components/customerPortals/Header"
+import { LoadingSpinner } from "app/core/components/LoadingSpinner"
 import { CardDivider } from "app/core/components/generic/Card"
 import { useParam, useQuery, useSession } from "blitz"
 import getCustomerPortal from "app/customer-portals/queries/getCustomerPortal"
@@ -31,7 +32,7 @@ function EditTemplate() {
   }
 
   if (!portalId || !data) {
-    return <>Loading!</>
+    return <LoadingSpinner />
   }
 
   //container: https://tailwindui.com/components/application-ui/layout/containers

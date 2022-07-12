@@ -10,6 +10,7 @@ import { StakeholderEngagementCard } from "app/core/components/portalDetails/Sta
 import { StakeholderActivityLogCard } from "app/core/components/portalDetails/StakeholderActivityLogCard"
 import OpportunityOverview from "app/core/components/portalDetails/OpportunityOverview"
 import { Header } from "app/core/components/portalDetails/Header"
+import { LoadingSpinner } from "app/core/components/LoadingSpinner"
 
 function PortalDetails() {
   const portalId = useParam("portalId", "number")
@@ -20,7 +21,7 @@ function PortalDetails() {
   )
 
   //container: https://tailwindui.com/components/application-ui/layout/containers
-  if (!portalId || !portal) return <>Loading!</>
+  if (!portalId || !portal) return <LoadingSpinner />
   return (
     <div>
       <div className="max-w-6xl mx-auto sm:px-6 lg:px-8 pt-2">

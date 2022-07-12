@@ -11,6 +11,7 @@ import { CardDivider } from "app/core/components/generic/Card"
 import { useParam, useQuery, useSession } from "blitz"
 import getCustomerPortal from "app/customer-portals/queries/getCustomerPortal"
 import StakeholderLoginForm from "app/auth/components/StakeholderLoginForm"
+import { LoadingSpinner } from "app/core/components/LoadingSpinner"
 import React from "react"
 
 function EditTemplate() {
@@ -31,7 +32,7 @@ function EditTemplate() {
   }
 
   if (!portalId || !data) {
-    return <>Loading!</>
+    return <LoadingSpinner />
   }
 
   //container: https://tailwindui.com/components/application-ui/layout/containers
