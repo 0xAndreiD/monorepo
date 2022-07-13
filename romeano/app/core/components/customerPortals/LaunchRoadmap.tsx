@@ -79,11 +79,11 @@ function RoadmapStage(props: {
               <li key={idx} className="flex text-sm ml-[-16px]" style={{ display: "flex" }}>
                 <span className="mt-1">
                   {props.stageNum < props.currentRoadmapStage ? (
-                    <CheckIcon size="12" />
+                    <CheckIcon />
                   ) : props.status === CompletionStatus.InProgress ? (
-                    <DotIcon size="6" color="green" />
+                    <DotIcon color="green" />
                   ) : (
-                    <DotIcon size="6" color="black" />
+                    <DotIcon color="black" />
                   )}
                 </span>{" "}
                 <span className="ml-3 line-clamp-3">{item}</span>
