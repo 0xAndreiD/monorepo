@@ -1,6 +1,6 @@
 import React from "react"
 
-const CheckIcon = ({ className, size = 10, color = "green" }) => {
+const CheckIcon = ({ className, size = "12", color = "green" }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
