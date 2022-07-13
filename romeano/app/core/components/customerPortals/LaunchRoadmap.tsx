@@ -10,6 +10,8 @@ import { RoadmapStageCircle } from "../generic/RoadmapStageCircle"
 import { PlusIcon } from "@heroicons/react/solid"
 import { utcToZonedTime } from "date-fns-tz"
 import RoadmapModal from "./edit/RoadmapModal"
+import CheckIcon from "../../assets/CheckIcon"
+import DotIcon from "../../assets/DotIcon"
 import { AddButton } from "../generic/AddButton"
 import createRoadMapLaunchStage from "../../../customer-portals/mutations/createLaunchRoadmapStage"
 import { invoke } from "blitz"
@@ -72,10 +74,19 @@ function RoadmapStage(props: {
             {props.stage.heading}
           </div>
 
-          <ul style={{ height: 80 }} className="list-disc pl-7">
+          <ul style={{ height: 80 }} className="list-none pl-7">
             {props.stage.tasks.map((item, idx) => (
-              <li key={idx} className="text-sm">
-                {item}
+              <li key={idx} className="flex text-sm ml-[-16px]" style={{ display: "flex" }}>
+                <span className="mt-1">
+                  {props.stageNum < props.currentRoadmapStage ? (
+                    <CheckIcon size="12" />
+                  ) : props.status === CompletionStatus.InProgress ? (
+                    <DotIcon size="6" color="green" />
+                  ) : (
+                    <DotIcon size="6" color="black" />
+                  )}
+                </span>{" "}
+                <span className="ml-3 line-clamp-3">{item}</span>
               </li>
             ))}
           </ul>
