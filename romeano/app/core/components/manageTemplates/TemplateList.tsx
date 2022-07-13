@@ -9,6 +9,7 @@ import { range } from "lodash"
 import { Link as BlitzLink, Routes, useMutation } from "blitz"
 import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircles"
 import deleteTemplate from "app/vendor-stats/mutations/deleteTemplate"
+import Router from "next/router"
 
 type TemplateList = {
   id: number
@@ -88,6 +89,7 @@ export function TemplateList(props: { data: TemplateList[] }) {
                           type="button"
                           onClick={async () => {
                             await deleteTemplateMutation({ id: template.id })
+                            Router.reload()
                           }}
                         >
                           <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />

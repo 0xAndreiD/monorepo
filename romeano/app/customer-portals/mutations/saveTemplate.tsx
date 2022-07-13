@@ -1,4 +1,4 @@
-import { AuthenticationError, resolver } from "blitz"
+import { AuthenticationError, Document, resolver } from "blitz"
 import db, { LinkType, Role } from "db"
 import { debuglog } from "util"
 import { z } from "zod"
@@ -22,7 +22,11 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       id: data.portalId,
     },
     include: {
-      roadmapStages: true,
+      roadmapStages: {
+        include: {
+          ctaLink: true,
+        },
+      },
       nextStepsTasks: true,
       images: true,
       productInfoSections: true,
@@ -67,18 +71,27 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
     },
   })
 
-  //attach to new portalTeamplate
-  portal?.roadmapStages.map(
-    async (roadmapStage) =>
-      await db.roadmapStage.create({
-        data: {
-          portalId: templatePortal.id,
-          heading: roadmapStage.heading,
-          date: roadmapStage.date,
-          templateId: template.id,
-        },
-      })
-  )
+  portal?.roadmapStages.map(async (roadmapStage) => {
+    const link = await db.link.create({
+      data: {
+        body: roadmapStage.ctaLink?.body ?? "",
+        href: roadmapStage.ctaLink?.href ?? "",
+        type: roadmapStage.ctaLink?.type ?? LinkType.Document,
+        userId: userId,
+      },
+    })
+
+    await db.roadmapStage.create({
+      data: {
+        portalId: templatePortal.id,
+        heading: roadmapStage.heading,
+        date: roadmapStage.date,
+        templateId: template.id,
+        tasks: roadmapStage.tasks,
+        ctaLinkId: link.id,
+      },
+    })
+  })
 
   portal?.images.map(
     async (image) =>
