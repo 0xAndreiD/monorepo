@@ -111,12 +111,12 @@ export function Header(props: {
       >
         <SaveTemplateModal
           portalId={props.portalId}
-          onLinkComplete={async (portal) => {
+          onLinkComplete={async (template) => {
             await SaveTemplateMutation({
-              portalId: portal.portalId,
-              templateName: portal.templateName,
+              portalId: template.portalId,
+              templateName: template.templateName,
             })
-            props.refetchHandler()
+            // props.refetchHandler()
             // setEditLinkModalProps({ isOpen: false, link: undefined })
           }}
         />

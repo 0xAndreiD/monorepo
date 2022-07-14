@@ -2,7 +2,7 @@ import { AuthenticationError, Document, resolver } from "blitz"
 import db, { LinkType, Role } from "db"
 import { debuglog } from "util"
 import { z } from "zod"
-import { decodeHashId } from "../../core/util/crypto"
+import { encodeHashId, decodeHashId } from "../../core/util/crypto"
 
 export const SaveTemplate = z.object({
   portalId: z.string(),
@@ -153,4 +153,8 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
   )
 
   // userPortals:         UserPortal[]
+  return {
+    portalId: encodeHashId(template.portalId),
+    templateName: template.name,
+  }
 })

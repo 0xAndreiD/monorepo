@@ -29,7 +29,7 @@ export default function SaveTemplateModal(props: { portalId: string; onLinkCompl
       portalId: props.portalId,
       templateName: templateData.templateName,
     })
-    await props.onLinkComplete(dbLink)
+    return await props.onLinkComplete(dbLink)
   })
 
   return (
