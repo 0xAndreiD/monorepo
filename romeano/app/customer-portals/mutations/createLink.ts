@@ -1,9 +1,10 @@
 import { AuthenticationError, resolver } from "blitz"
 import db, { LinkType } from "db"
 import { z } from "zod"
+import { decodeHashId } from "../../core/util/crypto"
 
 export const CreateLink = z.object({
-  portalId: z.number().nonnegative(),
+  portalId: z.string(),
   link: z.object({
     //make new link
     body: z.string().nonempty(),

@@ -19,7 +19,7 @@ import { utcToZonedTime } from "date-fns-tz"
 import { TrashIcon } from "@heroicons/react/outline"
 
 export default function RoadmapModal(props: {
-  portalId: number
+  portalId: string
   roadmapStageId: number
   modalState: ModalState
   actionDispatcher: React.Dispatch<ModalAction>

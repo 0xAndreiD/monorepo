@@ -22,7 +22,7 @@ export type PortalDocumentsCard = {
   vendor: PortalDocumentList
 }
 
-export default function DocumentsCard(props: { portalId: number; data: PortalDocumentsCard }) {
+export default function DocumentsCard(props: { portalId: string; data: PortalDocumentsCard }) {
   //reference: https://tailwindui.com/components/application-ui/data-display/title-lists#component-e1b5917b21bbe76a73a96c5ca876225f
   return (
     <Card borderless={true}>

@@ -11,7 +11,7 @@ import logout from "../../../auth/mutations/logout"
 export function Header(props: {
   vendorLogo?: string
   //   refetchHandler: () => void
-  //   portalId: number
+  //   portalId: string
   templates: Template[]
 }) {
   const data = {

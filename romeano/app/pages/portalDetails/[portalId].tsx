@@ -13,7 +13,7 @@ import { Header } from "app/core/components/portalDetails/Header"
 import { LoadingSpinner } from "app/core/components/LoadingSpinner"
 
 function PortalDetails() {
-  const portalId = useParam("portalId", "number")
+  const portalId = useParam("portalId", "string")
   const [portal, { refetch }] = useQuery(
     getPortalDetail,
     { portalId },

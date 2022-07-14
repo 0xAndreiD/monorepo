@@ -1,6 +1,7 @@
 import { AuthenticationError, resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
+import { decodeHashId } from "../../core/util/crypto"
 
 export const CreateDocument = z.object({
   portalId: z.any(),
@@ -15,7 +16,7 @@ export default resolver.pipe(resolver.zod(CreateDocument), resolver.authorize(),
   return (
     await db.portalDocument.create({
       data: {
-        portal: { connect: { id: portalId } },
+        portal: { connect: { id: decodeHashId(portalId) } },
         link: { connect: { id: linkId } },
       },
       include: { link: true },

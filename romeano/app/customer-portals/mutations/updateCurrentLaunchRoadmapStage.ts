@@ -2,8 +2,10 @@ import { AuthenticationError, resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
 
+import { encodeHashId, decodeHashId } from "../../core/util/crypto"
+
 export const UpdateCurrentLaunchRoadmapStage = z.object({
-  portalId: z.number(),
+  portalId: z.string(),
   currentRoadmapStage: z.number(),
 })
 
@@ -17,7 +19,7 @@ export default resolver.pipe(
 
     return await db.portal.update({
       data: { currentRoadmapStage },
-      where: { id: portalId },
+      where: { id: decodeHashId(portalId) },
     })
   }
 )

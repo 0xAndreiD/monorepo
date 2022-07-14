@@ -13,7 +13,7 @@ import { useMutation } from "blitz"
 import SaveTemplate from "app/customer-portals/mutations/saveTemplate"
 import { string } from "fp-ts"
 
-export default function SaveTemplateModal(props: { portalId: number; onLinkComplete: (portal: any) => Promise<void> }) {
+export default function SaveTemplateModal(props: { portalId: string; onLinkComplete: (portal: any) => Promise<void> }) {
   const [saveTemplateMutation] = useMutation(SaveTemplate)
   const schema = z.object({
     templateName: z.string().nonempty(),

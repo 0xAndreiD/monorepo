@@ -3,8 +3,10 @@ import db from "db"
 // import { configStyleValidator } from "react-html-email"
 import { z } from "zod"
 
+import { encodeHashId, decodeHashId } from "../../core/util/crypto"
+
 const DeletePortal = z.object({
-  thisPortalId: z.number(),
+  thisPortalId: z.string(),
 })
 
 export default resolver.pipe(
@@ -15,6 +17,8 @@ export default resolver.pipe(
     const userId = ctx.session.userId
 
     //TODO FIXME: make sure delete is only for vendor (created by customer)
-    return await db.userPortal.delete({ where: { userId_portalId: { userId: userId, portalId: thisPortalId } } })
+    return await db.userPortal.delete({
+      where: { userId_portalId: { userId: userId, portalId: decodeHashId(thisPortalId) } },
+    })
   }
 )

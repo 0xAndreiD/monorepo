@@ -7,7 +7,7 @@ import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import createDocument from "../../../customer-portals/mutations/createDocument"
 
 export function Header(props: {
-  portalId: number
+  portalId: string
   vendorLogo: string
   customerName: string
   customerLogo: string

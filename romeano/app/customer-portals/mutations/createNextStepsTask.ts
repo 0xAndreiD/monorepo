@@ -1,9 +1,10 @@
+import { decodeHashId } from "app/core/util/crypto"
 import { AuthenticationError, resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
 
 export const CreateNextStepsTask = z.object({
-  portalId: z.number().nonnegative(),
+  portalId: z.string(),
   description: z.string().nonempty(),
 })
 
@@ -18,7 +19,7 @@ export default resolver.pipe(
 
     return await db.nextStepsTask.create({
       data: {
-        portalId,
+        portalId: decodeHashId(portalId),
         description,
         isCompleted: false,
         userId,

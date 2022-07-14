@@ -9,7 +9,7 @@ import SaveTemplateModal from "./edit/saveTemplateModal"
 import { UploadComponent } from "../portalDetails/uploadComponent"
 
 export function Header(props: {
-  portalId: number
+  portalId: string
   vendorLogo: string
   customerName: string
   customerLogo: string
@@ -116,7 +116,7 @@ export function Header(props: {
               portalId: portal.portalId,
               templateName: portal.templateName,
             })
-            // props.refetchHandler()
+            props.refetchHandler()
             // setEditLinkModalProps({ isOpen: false, link: undefined })
           }}
         />

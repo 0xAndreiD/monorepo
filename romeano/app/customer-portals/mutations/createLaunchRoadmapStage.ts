@@ -1,9 +1,10 @@
 import { AuthenticationError, resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
+import { decodeHashId } from "../../core/util/crypto"
 
 export const CreateLaunchRoadmapStage = z.object({
-  portalId: z.number(),
+  portalId: z.string(),
   date: z.date(),
   heading: z.string().nonempty(),
 })
@@ -15,7 +16,7 @@ export default resolver.pipe(resolver.zod(CreateLaunchRoadmapStage), resolver.au
 
   return await db.roadmapStage.create({
     data: {
-      portalId: data.portalId,
+      portalId: decodeHashId(data.portalId),
       heading: data.heading,
       date: data.date,
     },

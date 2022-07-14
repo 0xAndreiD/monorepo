@@ -9,6 +9,8 @@ import { flatten, isNil } from "lodash"
 import addProductInfoImage from "../customer-portals/mutations/addProductInfoImage"
 import { LinkWithId } from "../../types"
 
+import { decodeHashId } from "../core/util/crypto"
+
 export const config = {
   api: {
     bodyParser: false, //cannot parse fields if bodyparser is enabled
@@ -16,7 +18,7 @@ export const config = {
 }
 
 const UploadParams = z.object({
-  portalId: z.preprocess(Number, z.number()),
+  portalId: z.preprocess(String, z.string()),
 })
 export type UploadParams = z.infer<typeof UploadParams>
 
@@ -52,7 +54,7 @@ const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, Nex
     if (isNil(userId)) throw new AuthorizationError("invalid user id")
     const { portalId } = UploadParams.parse(req.fields)
 
-    const portal = await db.portal.findUnique({ where: { id: portalId } })
+    const portal = await db.portal.findUnique({ where: { id: decodeHashId(portalId) } })
     if (!portal) throw new NotFoundError("customer portal not found")
 
     console.log("fileUpload(): file uploaded")

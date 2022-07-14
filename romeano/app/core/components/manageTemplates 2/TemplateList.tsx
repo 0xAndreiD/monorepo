@@ -9,6 +9,7 @@ import { range } from "lodash"
 import { Link as BlitzLink, Routes, useMutation } from "blitz"
 import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircles"
 import deleteTemplate from "app/vendor-stats/mutations/deleteTemplate"
+import { encodeHashId } from "../../../core/util/crypto"
 
 type TemplateList = {
   id: number
@@ -17,7 +18,7 @@ type TemplateList = {
   proposalSubheading: string
   createdAt: any
   updatedAt: any
-  portalId: number
+  portalId: string
 }
 
 export function TemplateList(props: { data: TemplateList[] }) {
@@ -69,7 +70,7 @@ export function TemplateList(props: { data: TemplateList[] }) {
                       <td className="px-6 py-4 whitespace-nowrap">0</td>
                       <td className="px-6 py-4 items-center whitespace-nowrap">
                         <div className="flex justify-center gap-3">
-                          <BlitzLink href={Routes.EditCustomerPortal({ portalId: template.portalId })}>
+                          <BlitzLink href={Routes.EditCustomerPortal({ portalId: encodeHashId(template.portalId) })}>
                             <button
                               type="button"
                               className="items-center px-3 py-2 border border-gray-300 text-sm 

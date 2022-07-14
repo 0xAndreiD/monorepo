@@ -2,16 +2,18 @@ import { resolver } from "blitz"
 import db from "db"
 
 export default resolver.pipe(resolver.authorize(), async (params, ctx) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
 
-    const data = await db.$queryRaw<Array<{
-      vendorName: string,
-      firstName: string,
-      lastName: string,
-      email: string,
-      hasStakeholderApproved: boolean,
-      portalId: number
-    }>>`
+  const data = await db.$queryRaw<
+    Array<{
+      vendorName: string
+      firstName: string
+      lastName: string
+      email: string
+      hasStakeholderApproved: boolean
+      portalId: string
+    }>
+  >`
       SELECT V.name                       AS "vendorName",
              U."firstName",
              U."lastName",
@@ -28,6 +30,5 @@ export default resolver.pipe(resolver.authorize(), async (params, ctx) => {
         AND UP2."isPrimaryContact" IS TRUE
       ORDER BY P.id DESC;
     `
-    return data
-  }
-)
+  return data
+})

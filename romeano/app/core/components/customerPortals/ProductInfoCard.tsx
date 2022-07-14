@@ -35,7 +35,7 @@ type ProductInfo = {
 }
 
 export function ProductInfoCard(props: {
-  portalId: number
+  portalId: string
   data: ProductInfo
   refetchHandler: () => void
   editingEnabled: boolean
@@ -64,7 +64,7 @@ export function ProductInfoCard(props: {
   })
 
   const [createSectionModalProps, setCreateSectionModalProps] = useState<
-    { isOpen: false; portalId: undefined } | { isOpen: true; portalId: number }
+    { isOpen: false; portalId: undefined } | { isOpen: true; portalId: string }
   >({
     isOpen: false,
     portalId: undefined,

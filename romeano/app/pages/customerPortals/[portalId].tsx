@@ -14,7 +14,7 @@ import getCustomerPortal from "../../customer-portals/queries/getCustomerPortal"
 import StakeholderLoginForm from "../../auth/components/StakeholderLoginForm"
 
 function CustomerPortal() {
-  const portalId = useParam("portalId", "number")
+  const portalId = useParam("portalId", "string")
   const session = useSession()
   const [data, { refetch }] = useQuery(
     getCustomerPortal,

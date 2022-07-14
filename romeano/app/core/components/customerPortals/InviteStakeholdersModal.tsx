@@ -13,7 +13,7 @@ import { useEffect } from "react"
 
 export function InviteStakeholdersModal(props: {
   stakeholders: Array<Stakeholder>
-  portalId: number
+  portalId: string
   onClose: () => void
   refetchHandler: () => void
 }) {

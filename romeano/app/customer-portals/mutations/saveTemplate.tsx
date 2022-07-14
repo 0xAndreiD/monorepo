@@ -2,9 +2,10 @@ import { AuthenticationError, Document, resolver } from "blitz"
 import db, { LinkType, Role } from "db"
 import { debuglog } from "util"
 import { z } from "zod"
+import { decodeHashId } from "../../core/util/crypto"
 
 export const SaveTemplate = z.object({
-  portalId: z.number(),
+  portalId: z.string(),
   templateName: z.string(),
 })
 
@@ -19,7 +20,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
 
   const portal = await db.portal.findUnique({
     where: {
-      id: data.portalId,
+      id: decodeHashId(data.portalId),
     },
     include: {
       roadmapStages: {
@@ -71,7 +72,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
     },
   })
 
-  portal?.roadmapStages.map(async (roadmapStage) => {
+  portal?.roadmapStages?.map(async (roadmapStage) => {
     const link = await db.link.create({
       data: {
         body: roadmapStage.ctaLink?.body ?? "",
@@ -93,7 +94,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
     })
   })
 
-  portal?.images.map(
+  portal?.images?.map(
     async (image) =>
       await db.portalImage.create({
         data: {
@@ -104,7 +105,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       })
   )
 
-  portal?.nextStepsTasks.map(
+  portal?.nextStepsTasks?.map(
     async (nextStepsTask) =>
       await db.nextStepsTask.create({
         data: {
@@ -117,7 +118,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       })
   )
 
-  portal?.productInfoSections.map(
+  portal?.productInfoSections?.map(
     async (productInfoSection) =>
       await db.productInfoSection.create({
         data: {
@@ -128,7 +129,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       })
   )
 
-  portal?.portalDocuments.map(
+  portal?.portalDocuments?.map(
     async (portalDocument) =>
       await db.portalDocument.create({
         data: {
@@ -139,7 +140,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       })
   )
 
-  portal?.internalNotes.map(
+  portal?.internalNotes?.map(
     async (internalNote) =>
       await db.internalNote.create({
         data: {

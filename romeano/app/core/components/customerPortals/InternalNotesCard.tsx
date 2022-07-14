@@ -51,7 +51,7 @@ type InternalNotes = {
 //     return <InternalNotes messages={trendingPosts}/>;
 // }
 
-export function InternalNotesCard(props: { portalId: number; data: InternalNotes; refetchHandler: () => void }) {
+export function InternalNotesCard(props: { portalId: string; data: InternalNotes; refetchHandler: () => void }) {
   // const stakeholders= props.data.;
   const userLookup = keyBy(props.data.users, "id")
   const [createInternalNoteMutation] = useMutation(createInternalNote)

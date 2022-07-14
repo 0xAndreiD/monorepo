@@ -27,7 +27,7 @@ type NextSteps = {
   }
 }
 
-export default function NextStepsCard(props: NextSteps & { portalId: number; refetchHandler: () => void }) {
+export default function NextStepsCard(props: NextSteps & { portalId: string; refetchHandler: () => void }) {
   //reference: https://tailwindui.com/components/application-ui/data-display/description-lists#component-e1b5917b21bbe76a73a96c5ca876225f
   const [isAdding, setIsAdding] = useState(false)
   const [createNextStep] = useMutation(createNextStepsTask)
@@ -107,7 +107,7 @@ type NextStepsTask = {
 }
 
 function NextStepsTaskList(props: {
-  portalId: number
+  portalId: string
   isElementDeletable: boolean
   name: string
   tasks: NextStepsTask[]

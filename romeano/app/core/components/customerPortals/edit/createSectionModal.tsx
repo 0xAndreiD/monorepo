@@ -15,7 +15,7 @@ import { string } from "fp-ts"
 import createProductInfoSection from "app/customer-portals/mutations/createProductInfoSection"
 
 export default function CreateSectionModal(props: {
-  portalId: number
+  portalId: string
   onLinkComplete: (portal: any) => Promise<void>
 }) {
   const [createProductInfoSectionMutation] = useMutation(createProductInfoSection)

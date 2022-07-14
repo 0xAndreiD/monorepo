@@ -1,9 +1,10 @@
 import { AuthenticationError, resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
+import { decodeHashId } from "../../core/util/crypto"
 
 export const CreateProductInfoSection = z.object({
-  portalId: z.number().nonnegative(),
+  portalId: z.string(),
   heading: z.string(),
 })
 
@@ -17,7 +18,7 @@ export default resolver.pipe(
 
     return await db.productInfoSection.create({
       data: {
-        portalId: portalId,
+        portalId: decodeHashId(portalId),
         heading: heading,
       },
     })

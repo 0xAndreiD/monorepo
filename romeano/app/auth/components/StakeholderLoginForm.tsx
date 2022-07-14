@@ -30,7 +30,7 @@ export const StakeholderLoginForm = (props: { onSuccess?: () => void }) => {
           try {
             const magicLink = await loginStakeholderMutation({
               email: values.email,
-              portalId: parseInt(router.params.portalId as string), //FIXME
+              portalId: router.params.portalId, //FIXME
               destUrl: router.asPath,
             }) //router.pathname doesnt include query params
             setHasSubmitted(true)

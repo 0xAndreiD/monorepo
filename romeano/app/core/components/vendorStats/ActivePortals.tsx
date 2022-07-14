@@ -18,7 +18,7 @@ import deletePortal from "../../../vendor-stats/mutations/deletePortal"
 import Router from "next/router"
 
 type ActivePortal = {
-  portalId: number
+  portalId: string
   customerName: string
   currentRoadmapStage: number
   customerNumberOfStages: number

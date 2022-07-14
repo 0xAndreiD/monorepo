@@ -7,15 +7,20 @@ import { getDocuments } from "../../portal-details/queries/getPortalDetail"
 import { formatLink } from "../../core/util/upload"
 import { LinkWithId } from "../../../types"
 
+import { decodeHashId } from "../../core/util/crypto"
+
 const GetCustomerPortal = z.object({
   // This accepts type of undefined, but is required at runtime
-  portalId: z.number().optional().refine(Boolean, "Required"),
+  portalId: z.string().refine(Boolean, "Required"),
 })
 
 export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize(), async ({ portalId }) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const portal = await db.portal.findFirst({
-    where: { id: portalId },
+  const portalIdInt = decodeHashId(portalId)
+  if (!portalIdInt) throw new NotFoundError()
+
+  const portal = await db.portal.findUnique({
+    where: { id: portalIdInt },
     include: {
       proposalLink: true,
       roadmapStages: {

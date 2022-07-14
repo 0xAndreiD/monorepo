@@ -2,8 +2,10 @@ import { AuthenticationError, resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
 
+import { decodeHashId } from "../../core/util/crypto"
+
 export const UpdateProposalLink = z.object({
-  portalId: z.number().nonnegative(),
+  portalId: z.string(),
   linkId: z.number().nonnegative(),
 })
 
@@ -16,7 +18,7 @@ export default resolver.pipe(
     if (!userId) throw new AuthenticationError("no userId provided")
 
     return await db.portal.update({
-      where: { id: portalId },
+      where: { id: decodeHashId(portalId) },
       data: {
         proposalLink: { connect: { id: linkId } },
       },

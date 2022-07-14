@@ -15,7 +15,7 @@ import StakeholderLoginForm from "app/auth/components/StakeholderLoginForm"
 import React from "react"
 
 function EditCustomerPortal() {
-  const portalId = useParam("portalId", "number")
+  const portalId = useParam("portalId", "string")
   const session = useSession()
 
   const [data, { refetch }] = useQuery(
