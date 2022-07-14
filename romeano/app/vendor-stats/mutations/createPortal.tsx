@@ -1,9 +1,10 @@
 import CustomerPortal from "app/pages/customerPortals/[portalId]"
-import { AuthenticationError, resolver } from "blitz"
+import { AuthenticationError, resolver, useMutation } from "blitz"
 import { de } from "date-fns/locale"
 import db, { LinkType, Role } from "db"
 import { debuglog } from "util"
 import { z } from "zod"
+import createStakeholder from "app/customer-portals/mutations/createStakeholder"
 
 export const CreatePortal = z.object({
   oppName: z.string(),
@@ -18,6 +19,8 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const userId = ctx.session.userId
   if (!userId) throw new AuthenticationError("no userId provided")
+
+  const [inviteStakeholderMutation] = useMutation(createStakeholder)
 
   const user = await db.user.findUnique({ where: { id: userId } })
   const accountExec = await db.accountExecutive.findUnique({ where: { userId: userId } })
@@ -77,6 +80,13 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
       },
     })
 
+    await inviteStakeholderMutation({
+      portalId: portal.id,
+      email: data.customerEmail,
+      fullName: data.customerFName + " " + data.customerLName,
+      jobTitle: data.roleName,
+    })
+
     id = portal.id
   } else {
     portal = await db.portal.create({
@@ -110,6 +120,13 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
 
     id = portal.id
   }
+
+  await inviteStakeholderMutation({
+    portalId: portal.id,
+    email: data.customerEmail,
+    fullName: data.customerFName + " " + data.customerLName,
+    jobTitle: data.roleName,
+  })
 
   //if a template was sent with this request
   if (data.templateId != "") {
