@@ -1,3 +1,4 @@
+import { encodeHashId } from "app/core/util/crypto"
 import { AuthenticationError, AuthorizationError, Ctx, resolver } from "blitz"
 import db, { EventType, LinkType, Prisma, Template } from "db"
 import { groupBy } from "lodash"
@@ -41,6 +42,9 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
   // }))
 
   return {
-    templates: allTemplates,
+    templates: allTemplates.map((x) => {
+      x.portalId = encodeHashId(Number(x.portalId))
+      return x
+    }),
   }
 })

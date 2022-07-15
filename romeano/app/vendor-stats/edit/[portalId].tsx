@@ -15,7 +15,7 @@ import { LoadingSpinner } from "app/core/components/LoadingSpinner"
 import React from "react"
 
 function EditTemplate() {
-  const portalId = useParam("portalId", "string")
+  const portalId = useParam("portalId", "string")!
   const session = useSession()
 
   const [data, { refetch }] = useQuery(
