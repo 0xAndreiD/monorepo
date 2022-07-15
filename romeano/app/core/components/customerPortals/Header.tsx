@@ -7,6 +7,7 @@ import { Stakeholder } from "./ProposalCard"
 import SaveTemplate from "app/customer-portals/mutations/saveTemplate"
 import SaveTemplateModal from "./edit/saveTemplateModal"
 import { UploadComponent } from "../portalDetails/uploadComponent"
+import { decodeHashId } from "app/core/util/crypto"
 
 export function Header(props: {
   portalId: string
@@ -75,7 +76,7 @@ export function Header(props: {
                 className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
                 leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                onClick={() => setAddTemplateProps({ isOpen: true, templateId: props.portalId })}
+                onClick={() => setAddTemplateProps({ isOpen: true, templateId: decodeHashId(props.portalId) })}
               >
                 Save as Template
               </a>

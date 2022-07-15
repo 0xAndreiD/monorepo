@@ -10,7 +10,7 @@ export const GetCurrentUser = z.object({
 
 export default resolver.pipe(resolver.zod(GetCurrentUser), async ({ portalId }, { session }: Ctx) => {
   if (!session.userId) return null
-  const portalIdInt = decodeHashId(portalId)
+  const portalIdInt = portalId ? decodeHashId(portalId) : -1
   const user = await db.user.findFirst({
     include: {
       accountExecutive: true,
