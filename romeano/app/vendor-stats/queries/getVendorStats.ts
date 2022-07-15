@@ -114,7 +114,7 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
       ORDER BY "eventCount" DESC;
     `
     ).map((x) => {
-      x.portalId = encodeHashId(x.portalId)
+      x.portalId = encodeHashId(Number(x.portalId))
       return x
     })
 
@@ -186,7 +186,7 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
         FROM combined
     `
     ).map((x) => {
-      x.portalId = encodeHashId(x.portalId)
+      x.portalId = encodeHashId(Number(x.portalId))
       return x
     })
 
@@ -215,7 +215,7 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
       WHERE E."portalId" IN (${Prisma.join(portalIds)})
       GROUP BY E."portalId", E."userId", U."firstName", U."lastName", email, "hasStakeholderApproved"`
     ).map((x) => {
-      x.portalId = encodeHashId(x.portalId)
+      x.portalId = encodeHashId(Number(x.portalId))
       return x
     })
     const stakeholderEvents = groupBy(activePortalsStakeholders, "portalId")
@@ -243,12 +243,12 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
       GROUP BY E."portalId", title, path
     `
     ).map((x) => {
-      x.portalId = encodeHashId(x.portalId)
+      x.portalId = encodeHashId(Number(x.portalId))
       return x
     })
     const documentEvents = groupBy(
       activePortalsDocs.map((x) => ({
-        portalId: encodeHashId(x.portalId),
+        portalId: encodeHashId(Number(x.portalId)),
         body: x.title,
         href: getExternalUploadPath(x.path),
         eventCount: x.eventCount,
