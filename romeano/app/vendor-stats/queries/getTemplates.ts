@@ -42,16 +42,6 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
   // }))
 
   return {
-    templates: allTemplates.map((x) => {
-      return {
-        id: x.id,
-        name: x.name,
-        proposalHeading: x.proposalHeading,
-        proposalSubheading: x.proposalSubheading,
-        createdAt: x.createdAt,
-        updatedAt: x.updatedAt,
-        portalId: encodeHashId(Number(x.portalId)),
-      }
-    }),
+    templates: allTemplates,
   }
 })

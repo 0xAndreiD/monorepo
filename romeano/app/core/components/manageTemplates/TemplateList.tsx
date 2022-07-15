@@ -12,7 +12,7 @@ import deleteTemplate from "app/vendor-stats/mutations/deleteTemplate"
 import Router from "next/router"
 import { encodeHashId } from "../../../core/util/crypto"
 
-export type Template = {
+type Template = {
   id: number
   name: string
   proposalHeading: string
