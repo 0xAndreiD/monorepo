@@ -4,7 +4,7 @@ import { z } from "zod"
 import { splitName } from "../../core/util/text"
 import { sendInvite } from "../../core/util/email"
 
-import { encodeHashId, decodeHashId } from "../../core/util/crypto"
+import { decodeHashId } from "../../core/util/crypto"
 
 export const CreateStakeholder = z.object({
   portalId: z.string(),
