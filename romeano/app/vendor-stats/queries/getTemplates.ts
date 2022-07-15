@@ -42,7 +42,7 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
   // }))
 
   return {
-    templates: allTemplates.map((template: { portalId: string }) => {
+    templates: allTemplates.map((template) => {
       template.portalId = encodeHashId(Number(template.portalId))
       return template
     }),
