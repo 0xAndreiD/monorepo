@@ -42,9 +42,9 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
   // }))
 
   return {
-    templates: allTemplates.map((x) => {
-      x.portalId = encodeHashId(Number(x.portalId))
-      return x
+    templates: allTemplates.map((template: { portalId: string }) => {
+      template.portalId = encodeHashId(Number(template.portalId))
+      return template
     }),
   }
 })
