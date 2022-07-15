@@ -12,7 +12,7 @@ import deleteTemplate from "app/vendor-stats/mutations/deleteTemplate"
 import Router from "next/router"
 import { encodeHashId } from "../../../core/util/crypto"
 
-type TemplateList = {
+type Template = {
   id: number
   name: string
   proposalHeading: string
@@ -22,7 +22,7 @@ type TemplateList = {
   portalId: string
 }
 
-export function TemplateList(props: { data: TemplateList[] }) {
+export function TemplateList(props: { data: Template[] }) {
   const [deleteTemplateMutation] = useMutation(deleteTemplate)
 
   return (
