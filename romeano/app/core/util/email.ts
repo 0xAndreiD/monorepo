@@ -56,7 +56,7 @@ export async function sendInvite(
   }
   if (process.env.NODE_ENV !== "production") {
     await previewEmail(msg)
-    const info = await transporter.sendMail(msg)
+    // const info = await transporter.sendMail(msg)
   } else {
     const info = await transporter.sendMail(msg)
   }
@@ -85,7 +85,7 @@ You asked us to send you a magic link for quickly signing in to your ${customerN
   }
   if (process.env.NODE_ENV !== "production") {
     await previewEmail(msg)
-    const info = await transporter.sendMail(msg)
+    // const info = await transporter.sendMail(msg)
   } else {
     const info = await transporter.sendMail(msg)
   }
