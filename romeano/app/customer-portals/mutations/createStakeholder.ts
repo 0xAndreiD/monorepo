@@ -62,15 +62,21 @@ export default resolver.pipe(
       }))
 
     try {
-      await db.userPortal.create({
-        data: {
+      ;(await db.userPortal.findFirst({
+        where: {
           portalId: decodeHashId(portalId),
           userId: user.id,
-          role: Role.Stakeholder,
         },
-      })
-    } catch {
-      console.log("tree")
+      })) ??
+        (await db.userPortal.create({
+          data: {
+            portalId: decodeHashId(portalId),
+            userId: user.id,
+            role: Role.Stakeholder,
+          },
+        }))
+    } catch (err) {
+      console.log("Error while creating user portal", err)
     }
 
     const magicLink = await db.magicLink.create({
@@ -82,6 +88,7 @@ export default resolver.pipe(
       },
     })
 
+    console.log("Sending invite...")
     sendInvite(
       portal.customerName,
       portal.vendor.name,
@@ -91,6 +98,7 @@ export default resolver.pipe(
       portal.vendor.logoUrl,
       portal.customerLogoUrl
     )
+    console.log("Invite sent to stakeholder", stakeholder)
 
     return stakeholder
   }

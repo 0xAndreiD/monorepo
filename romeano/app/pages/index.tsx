@@ -119,6 +119,8 @@ const Home: BlitzPage = () => {
   const user = useCurrentUser()
   if (!user) return <>no user found :(</>
 
+  console.log("User", user)
+
   if (user.accountExecutive) {
     return <VendorStats />
   } else if (user.stakeholder && user.userPortals?.length === 1) {
