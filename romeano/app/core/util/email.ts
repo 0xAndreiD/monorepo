@@ -55,9 +55,12 @@ export async function sendInvite(
     html: preparedInviteHTMLEmail,
   }
   if (process.env.NODE_ENV !== "production") {
+    // @ts-ignore: FIXME
     await previewEmail(msg)
-    // const info = await transporter.sendMail(msg)
+    // @ts-ignore: FIXME
+    const info = await transporter.sendMail(msg)
   } else {
+    // @ts-ignore: FIXME
     const info = await transporter.sendMail(msg)
   }
 }
@@ -84,9 +87,12 @@ You asked us to send you a magic link for quickly signing in to your ${customerN
     html: body,
   }
   if (process.env.NODE_ENV !== "production") {
+    // @ts-ignore: FIXME
     await previewEmail(msg)
-    // const info = await transporter.sendMail(msg)
+    // @ts-ignore: FIXME
+    const info = await transporter.sendMail(msg)
   } else {
+    // @ts-ignore: FIXME
     const info = await transporter.sendMail(msg)
   }
 }
