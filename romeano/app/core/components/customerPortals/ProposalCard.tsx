@@ -37,7 +37,7 @@ type Proposal = {
 }
 
 export function ProposalCard(props: {
-  portalId: number
+  portalId: string
   data: Proposal
   refetchHandler: () => void
   editingEnabled: boolean
@@ -49,7 +49,7 @@ export function ProposalCard(props: {
   )
 }
 
-function EditProposalCard(props: { portalId: number; data: Proposal; refetchHandler: () => void }) {
+function EditProposalCard(props: { portalId: string; data: Proposal; refetchHandler: () => void }) {
   const schema = z.object({
     proposalHeading: z.string().nonempty(),
     proposalSubheading: z.string().nonempty(),
@@ -162,7 +162,7 @@ function EditProposalCard(props: { portalId: number; data: Proposal; refetchHand
   )
 }
 
-function ViewProposalCard(props: { portalId: number; data: Proposal; refetchHandler: () => void }) {
+function ViewProposalCard(props: { portalId: string; data: Proposal; refetchHandler: () => void }) {
   const [isDetailsVisible, setDetailsVisible] = useState(true)
   const [isInviteStakeholdersModalOpen, setIsInviteStakeholdersModalOpen] = useState(false)
   const [updateProposalApprovalMutation] = useMutation(updateProposalApproval)

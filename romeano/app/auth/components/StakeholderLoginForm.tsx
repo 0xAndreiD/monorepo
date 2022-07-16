@@ -4,9 +4,11 @@ import { Form, FORM_ERROR } from "app/core/components/Form"
 import loginStakeholder from "app/auth/mutations/loginStakeholder"
 import { MagicLink } from "app/auth/validations"
 import { useState } from "react"
+import { useParam } from "blitz"
 
 export const StakeholderLoginForm = (props: { onSuccess?: () => void }) => {
   const router = useRouter()
+  const portalId = useParam("portalId", "string")!
   const [loginStakeholderMutation] = useMutation(loginStakeholder)
   const [hasSubmitted, setHasSubmitted] = useState(false)
 
@@ -30,13 +32,14 @@ export const StakeholderLoginForm = (props: { onSuccess?: () => void }) => {
           try {
             const magicLink = await loginStakeholderMutation({
               email: values.email,
-              portalId: parseInt(router.params.portalId as string), //FIXME
+              portalId: portalId,
               destUrl: router.asPath,
             }) //router.pathname doesnt include query params
             setHasSubmitted(true)
             props.onSuccess?.() //catch error boundary auth error
             // await router.push(Routes.MagicLinkPage({ magicLinkId: magicLink })) //TODO: dev speed hack
           } catch (error) {
+            console.log("Error while authenticating", error)
             if (error instanceof AuthenticationError) {
               return { [FORM_ERROR]: "You currently don't have access, please contact your admin if this is a mistake" }
             } else {

@@ -9,8 +9,10 @@ import { TypeOf } from "zod"
 import { StakeholderActivityEvent } from "app/core/components/portalDetails/StakeholderActivityLogCard"
 import { Contact, EventCounted, Link, Stakeholder } from "types"
 
+import { encodeHashId } from "../../core/util/crypto"
+
 type ActivePortal = {
-  portalId: number
+  portalId: string
   customerName: string
   currentRoadmapStage: number
   customerNumberOfStages: number
@@ -93,14 +95,15 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
   ).map((x) => x.portalId)
 
   if (portalIds.length != 0) {
-    const opportunityEngagement = await db.$queryRaw<
-      Array<{
-        portalId: number
-        customerName: string
-        eventCount: number
-      }>
-    >`
-      SELECT E."portalId",
+    const opportunityEngagement = (
+      await db.$queryRaw<
+        Array<{
+          portalId: string
+          customerName: string
+          eventCount: number
+        }>
+      >`
+      SELECT E."portalId" As "portalId",
             (SELECT "customerName" FROM "Portal" WHERE id = E."portalId"),
             COUNT(*) AS "eventCount"
       FROM "Event" E
@@ -110,6 +113,10 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
       GROUP BY E."portalId"
       ORDER BY "eventCount" DESC;
     `
+    ).map((x) => {
+      x.portalId = encodeHashId(Number(x.portalId))
+      return x
+    })
 
     const stakeholderActivityLogRaw = await getStakeholderActivityLogRaw(portalIds)
     const stakeholderActivityLog = stakeholderActivityLogRaw.map((x) => ({
@@ -120,19 +127,20 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
       timestamp: new Date(x.createdAt).toISOString(),
     }))
 
-    const activePortals = await db.$queryRaw<
-      Array<{
-        portalId: number
-        customerName: string
-        currentRoadmapStage: number
-        customerNumberOfStages: number
-        hasPrimaryContact: boolean
-        primaryContactFirstName: string
-        primaryContactLastName: string
-        primaryContactJobTitle: string
-        primaryContactEmail: string
-      }>
-    >`WITH "hasStakeholder" AS (SELECT P.id                               AS "portalId",
+    const activePortals = (
+      await db.$queryRaw<
+        Array<{
+          portalId: string
+          customerName: string
+          currentRoadmapStage: number
+          customerNumberOfStages: number
+          hasPrimaryContact: boolean
+          primaryContactFirstName: string
+          primaryContactLastName: string
+          primaryContactJobTitle: string
+          primaryContactEmail: string
+        }>
+      >`WITH "hasStakeholder" AS (SELECT P.id                               AS "portalId",
                                         P."customerName"                   AS "customerName",
                                         P."currentRoadmapStage"            AS "currentRoadmapStage",
                                         (SELECT COUNT(*)
@@ -177,18 +185,23 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
         SELECT *
         FROM combined
     `
+    ).map((x) => {
+      x.portalId = encodeHashId(Number(x.portalId))
+      return x
+    })
 
-    const activePortalsStakeholders = await db.$queryRaw<
-      Array<{
-        portalId: number
-        firstName: string
-        lastName: string
-        email: string
-        hasStakeholderApproved: boolean | null
-        eventCount: number
-      }>
-    >`
-      SELECT E."portalId",
+    const activePortalsStakeholders = (
+      await db.$queryRaw<
+        Array<{
+          portalId: string
+          firstName: string
+          lastName: string
+          email: string
+          hasStakeholderApproved: boolean | null
+          eventCount: number
+        }>
+      >`
+      SELECT E."portalId" AS "portalId",
             U."firstName",
             U."lastName",
             U.email,
@@ -201,16 +214,21 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
         AND UP.role = 'Stakeholder'
       WHERE E."portalId" IN (${Prisma.join(portalIds)})
       GROUP BY E."portalId", E."userId", U."firstName", U."lastName", email, "hasStakeholderApproved"`
+    ).map((x) => {
+      x.portalId = encodeHashId(Number(x.portalId))
+      return x
+    })
     const stakeholderEvents = groupBy(activePortalsStakeholders, "portalId")
 
-    const activePortalsDocs = await db.$queryRaw<
-      Array<{
-        portalId: number
-        title: string
-        path: string
-        eventCount: number
-      }>
-    >`
+    const activePortalsDocs = (
+      await db.$queryRaw<
+        Array<{
+          portalId: string
+          title: string
+          path: string
+          eventCount: number
+        }>
+      >`
       SELECT E."portalId" AS "portalId",
             L.body       AS title,
             L.href       AS path,
@@ -224,9 +242,13 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
       WHERE E."portalId" IN (${Prisma.join(portalIds)})
       GROUP BY E."portalId", title, path
     `
+    ).map((x) => {
+      x.portalId = encodeHashId(Number(x.portalId))
+      return x
+    })
     const documentEvents = groupBy(
       activePortalsDocs.map((x) => ({
-        portalId: x.portalId,
+        portalId: encodeHashId(Number(x.portalId)),
         body: x.title,
         href: getExternalUploadPath(x.path),
         eventCount: x.eventCount,
@@ -234,22 +256,24 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
       "portalId"
     )
 
-    const all = activePortals.map((p) => ({
-      portalId: p.portalId,
-      customerName: p.customerName,
-      currentRoadmapStage: p.currentRoadmapStage,
-      customerNumberOfStages: p.customerNumberOfStages,
-      primaryContact: p.hasPrimaryContact
-        ? {
-            firstName: p.primaryContactFirstName,
-            lastName: p.primaryContactLastName,
-            jobTitle: p.primaryContactJobTitle,
-            email: p.primaryContactEmail,
-          }
-        : null,
-      stakeholderEvents: stakeholderEvents[p.portalId] ?? [],
-      documentEvents: documentEvents[p.portalId] ?? [],
-    }))
+    const all = activePortals.map((p) => {
+      return {
+        portalId: p.portalId,
+        customerName: p.customerName,
+        currentRoadmapStage: p.currentRoadmapStage,
+        customerNumberOfStages: p.customerNumberOfStages,
+        primaryContact: p.hasPrimaryContact
+          ? {
+              firstName: p.primaryContactFirstName,
+              lastName: p.primaryContactLastName,
+              jobTitle: p.primaryContactJobTitle,
+              email: p.primaryContactEmail,
+            }
+          : null,
+        stakeholderEvents: stakeholderEvents[p.portalId] ?? [],
+        documentEvents: documentEvents[p.portalId] ?? [],
+      }
+    })
 
     return {
       header,
@@ -262,7 +286,7 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
     //send null values for each of the arrays in order to allow the page to render
   } else {
     const opportunityEngagement = [] as Array<{
-      portalId: number
+      portalId: string
       customerName: string
       eventCount: number
     }>

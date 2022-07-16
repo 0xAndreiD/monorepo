@@ -2,9 +2,11 @@ import { Ctx, Middleware, resolver } from "blitz"
 import db, { EventType } from "db"
 import { z } from "zod"
 
+import { decodeHashId } from "../../core/util/crypto"
+
 //TODO: keep this in sync with redir.tsx
 export const CreateEvent = z.object({
-  portalId: z.number().nonnegative(),
+  portalId: z.string(),
   type: z.nativeEnum(EventType),
   url: z.string().optional(),
   // ip: z.string(),
@@ -38,7 +40,7 @@ export default resolver.pipe(resolver.zod(CreateEvent), resolver.authorize(), as
       ip: context.ip,
       userAgent: context.headers?.["user-agent"],
       linkId: params.linkId,
-      portalId: params.portalId,
+      portalId: decodeHashId(params.portalId),
       userId: context.session.userId!,
     },
   })

@@ -6,6 +6,8 @@ import { debuglog } from "util"
 import { z } from "zod"
 import createStakeholder from "app/customer-portals/mutations/createStakeholder"
 
+import { encodeHashId } from "../../core/util/crypto"
+
 export const CreatePortal = z.object({
   oppName: z.string(),
   customerFName: z.string(),
@@ -81,7 +83,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
     })
 
     await inviteStakeholderMutation({
-      portalId: portal.id,
+      portalId: encodeHashId(portal.id),
       email: data.customerEmail,
       fullName: data.customerFName + " " + data.customerLName,
       jobTitle: data.roleName,
@@ -122,7 +124,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
   }
 
   await inviteStakeholderMutation({
-    portalId: portal.id,
+    portalId: encodeHashId(portal.id),
     email: data.customerEmail,
     fullName: data.customerFName + " " + data.customerLName,
     jobTitle: data.roleName,

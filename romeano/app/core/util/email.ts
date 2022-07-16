@@ -18,7 +18,7 @@ export const transporter = nodemailer.createTransport({
 })
 
 function recipientProcessor(recipients: string[]) {
-  return process.env.NODE_ENV === "production" ? recipients : ["mikemmb73@gmail.com"]
+  return process.env.NODE_ENV === "production" ? recipients : [process.env.DEV_EMAIL_RECIPIENT]
 }
 
 //invitation for a new stakeholder
@@ -55,8 +55,12 @@ export async function sendInvite(
     html: preparedInviteHTMLEmail,
   }
   if (process.env.NODE_ENV !== "production") {
+    // @ts-ignore: FIXME
     await previewEmail(msg)
+    // @ts-ignore: FIXME
+    const info = await transporter.sendMail(msg)
   } else {
+    // @ts-ignore: FIXME
     const info = await transporter.sendMail(msg)
   }
 }
@@ -83,8 +87,12 @@ You asked us to send you a magic link for quickly signing in to your ${customerN
     html: body,
   }
   if (process.env.NODE_ENV !== "production") {
+    // @ts-ignore: FIXME
     await previewEmail(msg)
+    // @ts-ignore: FIXME
+    const info = await transporter.sendMail(msg)
   } else {
+    // @ts-ignore: FIXME
     const info = await transporter.sendMail(msg)
   }
 }

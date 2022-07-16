@@ -7,7 +7,7 @@ import createEvent, { CreateEvent } from "../event/mutations/createEvent"
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { portalId, linkId, type, url } = z
     .object({
-      portalId: z.string().transform(parseInt),
+      portalId: z.string(),
       type: z.nativeEnum(EventType),
       url: z.string(),
       linkId: z.string().transform(parseInt).optional(),

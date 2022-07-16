@@ -2,12 +2,15 @@ import { AuthenticationError, resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
 
+import { decodeHashId } from "../../core/util/crypto"
+
 export const CreateInternalNote = z.object({
-  portalId: z.number(),
-  message: z.string().nonempty()
+  portalId: z.string(),
+  message: z.string().nonempty(),
 })
 
-export default resolver.pipe(resolver.zod(CreateInternalNote),
+export default resolver.pipe(
+  resolver.zod(CreateInternalNote),
   resolver.authorize(),
   async ({ portalId, message }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
@@ -16,11 +19,12 @@ export default resolver.pipe(resolver.zod(CreateInternalNote),
 
     const note = await db.internalNote.create({
       data: {
-        portalId,
+        portalId: decodeHashId(portalId),
         message,
-        userId
-      }
+        userId,
+      },
     })
 
     return note
-  })
+  }
+)

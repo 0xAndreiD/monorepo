@@ -26,7 +26,7 @@ export type PortalDocumentsCard = {
 }
 
 export default function DocumentsCard(props: {
-  portalId: number
+  portalId: string
   data: PortalDocumentsCard
   refetchHandler: () => void
 }) {
@@ -78,7 +78,7 @@ export default function DocumentsCard(props: {
   )
 }
 
-function DocumentList(props: { portalId: number; companyName: string; documents: PortalDocument[] }) {
+function DocumentList(props: { portalId: string; companyName: string; documents: PortalDocument[] }) {
   return (
     <>
       <p className="max-w-2xl pt-4 text-sm">

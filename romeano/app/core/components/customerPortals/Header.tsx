@@ -7,9 +7,11 @@ import { Stakeholder } from "./ProposalCard"
 import SaveTemplate from "app/customer-portals/mutations/saveTemplate"
 import SaveTemplateModal from "./edit/saveTemplateModal"
 import { UploadComponent } from "../portalDetails/uploadComponent"
+import { decodeHashId } from "app/core/util/crypto"
+import { ZodUnknown } from "zod"
 
 export function Header(props: {
-  portalId: number
+  portalId: string
   vendorLogo: string
   customerName: string
   customerLogo: string
@@ -33,26 +35,30 @@ export function Header(props: {
       <div className="flex gap-2 items-center">
         <img alt="vendor logo" src={props.vendorLogo} style={{ maxHeight: "70px", maxWidth: "120px", width: "auto" }} />
         <hr className="border-l mx-1 pt-6 h-full border-gray-300" />
-        <img
-          alt="customer logo"
-          src={props.customerLogo}
-          style={{ maxHeight: "70px", maxWidth: "120px", width: "auto" }}
-        />
-        <UploadComponent
-          uploadParams={{ portalId: props.portalId }}
-          onUploadComplete={async () => {
-            props.refetchHandler()
-          }}
-        >
-          <button
-            type="button"
-            className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
-              font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
-                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+        {props.customerLogo && (
+          <img
+            alt="customer logo"
+            src={props.customerLogo}
+            style={{ maxHeight: "70px", maxWidth: "120px", width: "auto" }}
+          />
+        )}
+        {props.editingEnabled && (
+          <UploadComponent
+            uploadParams={{ portalId: props.portalId }}
+            onUploadComplete={async () => {
+              props.refetchHandler()
+            }}
           >
-            <PencilIcon className="-ml-0.5 h-4 w-4" />
-          </button>
-        </UploadComponent>
+            <button
+              type="button"
+              className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
+                font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            >
+              <PencilIcon className="-ml-0.5 h-4 w-4" />
+            </button>
+          </UploadComponent>
+        )}
       </div>
 
       <span className="text-gray-600 text-sm justify-self-center">{props.customerName} Customer Portal</span>
@@ -75,7 +81,7 @@ export function Header(props: {
                 className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
                 leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                onClick={() => setAddTemplateProps({ isOpen: true, templateId: props.portalId })}
+                onClick={() => setAddTemplateProps({ isOpen: true, templateId: decodeHashId(props.portalId) })}
               >
                 Save as Template
               </a>
@@ -111,10 +117,10 @@ export function Header(props: {
       >
         <SaveTemplateModal
           portalId={props.portalId}
-          onLinkComplete={async (portal) => {
+          onLinkComplete={async (template) => {
             await SaveTemplateMutation({
-              portalId: portal.portalId,
-              templateName: portal.templateName,
+              portalId: template.portalId,
+              templateName: template.templateName,
             })
             // props.refetchHandler()
             // setEditLinkModalProps({ isOpen: false, link: undefined })

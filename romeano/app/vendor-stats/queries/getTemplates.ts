@@ -1,3 +1,4 @@
+import { encodeHashId } from "app/core/util/crypto"
 import { AuthenticationError, AuthorizationError, Ctx, resolver } from "blitz"
 import db, { EventType, LinkType, Prisma, Template } from "db"
 import { groupBy } from "lodash"

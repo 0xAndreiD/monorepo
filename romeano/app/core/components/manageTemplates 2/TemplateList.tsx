@@ -9,6 +9,7 @@ import { range } from "lodash"
 import { Link as BlitzLink, Routes, useMutation } from "blitz"
 import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircles"
 import deleteTemplate from "app/vendor-stats/mutations/deleteTemplate"
+import { encodeHashId } from "../../../core/util/crypto"
 
 type TemplateList = {
   id: number
@@ -17,7 +18,7 @@ type TemplateList = {
   proposalSubheading: string
   createdAt: any
   updatedAt: any
-  portalId: number
+  portalId: string
 }
 
 export function TemplateList(props: { data: TemplateList[] }) {

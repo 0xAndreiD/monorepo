@@ -8,9 +8,11 @@ import { getLocation } from "../../core/util/location"
 import { StakeholderActivityEvent } from "app/core/components/portalDetails/StakeholderActivityLogCard"
 import { getStakeholderActivityLogRaw } from "../../vendor-stats/queries/getVendorStats"
 
+import { encodeHashId, decodeHashId } from "../../core/util/crypto"
+
 const GetPortalDetail = z.object({
   // This accepts type of undefined, but is required at runtime
-  portalId: z.number().optional().refine(Boolean, "Required"),
+  portalId: z.string().refine(Boolean, "Required"),
 })
 
 export function getDocuments(
@@ -35,8 +37,9 @@ export function getDocuments(
 
 export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize(), async ({ portalId }) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  const portalIdInt = decodeHashId(portalId)
   const portal = await db.portal.findUnique({
-    where: { id: portalId },
+    where: { id: portalIdInt },
     include: {
       roadmapStages: {
         include: { ctaLink: true },
@@ -115,7 +118,7 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
       FROM "Event" E
              JOIN "UserPortal" UP
                   ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
-      WHERE E."portalId" = ${portalId}
+      WHERE E."portalId" = ${portalIdInt}
       GROUP BY TIMESTAMP
       ORDER BY TIMESTAMP ASC;
     `
@@ -138,12 +141,12 @@ export default resolver.pipe(resolver.zod(GetPortalDetail), resolver.authorize()
     FROM "Event" E
            JOIN "UserPortal" UP
                 ON E."userId" = UP."userId" AND E."portalId" = UP."portalId" AND UP.role = 'Stakeholder'
-    WHERE E."portalId" = ${portalId}
+    WHERE E."portalId" = ${portalIdInt}
     GROUP BY E."userId"
     ORDER BY "eventCount" DESC;
   `
 
-  const stakeholderActivityLogRaw = await getStakeholderActivityLogRaw([portalId])
+  const stakeholderActivityLogRaw = await getStakeholderActivityLogRaw([portalIdInt])
   const stakeholderActivityLog: StakeholderActivityEvent[] = stakeholderActivityLogRaw.map((x) => ({
     stakeholderName: x.stakeholderName,
     customerName: x.customerName,

@@ -4,8 +4,10 @@ import { z } from "zod"
 import { splitName } from "../../core/util/text"
 import { sendInvite } from "../../core/util/email"
 
+import { decodeHashId } from "../../core/util/crypto"
+
 export const CreateStakeholder = z.object({
-  portalId: z.number().nonnegative(),
+  portalId: z.string(),
   email: z.string().email().nonempty(),
   fullName: z.string().nonempty(),
   jobTitle: z.string().nonempty(),
@@ -20,7 +22,7 @@ export default resolver.pipe(
     if (!userId) throw new AuthenticationError("no userId provided")
 
     const portal = await db.portal.findUnique({
-      where: { id: portalId },
+      where: { id: decodeHashId(portalId) },
       include: {
         vendor: true,
       },
@@ -29,7 +31,7 @@ export default resolver.pipe(
 
     const userPortal = await db.userPortal.findUnique({
       where: {
-        userId_portalId: { portalId, userId },
+        userId_portalId: { portalId: decodeHashId(portalId), userId },
       },
       include: {
         user: true,
@@ -60,26 +62,33 @@ export default resolver.pipe(
       }))
 
     try {
-      await db.userPortal.create({
-        data: {
-          portalId,
+      ;(await db.userPortal.findFirst({
+        where: {
+          portalId: decodeHashId(portalId),
           userId: user.id,
-          role: Role.Stakeholder,
         },
-      })
-    } catch {
-      console.log("tree")
+      })) ??
+        (await db.userPortal.create({
+          data: {
+            portalId: decodeHashId(portalId),
+            userId: user.id,
+            role: Role.Stakeholder,
+          },
+        }))
+    } catch (err) {
+      console.log("Error while creating user portal", err)
     }
 
     const magicLink = await db.magicLink.create({
       data: {
         id: generateToken(),
         userId: user.id,
-        destUrl: Routes.CustomerPortal({ portalId }).pathname.replace("[portalId]", portalId.toString()),
+        destUrl: Routes.CustomerPortal({ portalId }).pathname.replace("[portalId]", portalId),
         hasClicked: false,
       },
     })
 
+    console.log("Sending invite...")
     sendInvite(
       portal.customerName,
       portal.vendor.name,
@@ -89,6 +98,7 @@ export default resolver.pipe(
       portal.vendor.logoUrl,
       portal.customerLogoUrl
     )
+    console.log("Invite sent to stakeholder", stakeholder)
 
     return stakeholder
   }

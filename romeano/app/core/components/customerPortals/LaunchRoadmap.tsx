@@ -33,7 +33,7 @@ export type LaunchStage = {
 }
 
 function RoadmapStage(props: {
-  portalId: number
+  portalId: string
   currentRoadmapStage: number
   stage: LaunchStage
   stageId: number
@@ -236,7 +236,7 @@ export function useModalReducer() {
 }
 
 export default function LaunchRoadmap(props: {
-  portalId: number
+  portalId: string
   currentRoadmapStage: number
   stageData: LaunchStage[]
   editingEnabled: boolean

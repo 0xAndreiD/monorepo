@@ -35,7 +35,7 @@ type ProductInfo = {
 }
 
 export function ProductInfoCard(props: {
-  portalId: number
+  portalId: string
   data: ProductInfo
   refetchHandler: () => void
   editingEnabled: boolean
@@ -64,7 +64,7 @@ export function ProductInfoCard(props: {
   })
 
   const [createSectionModalProps, setCreateSectionModalProps] = useState<
-    { isOpen: false; portalId: undefined } | { isOpen: true; portalId: number }
+    { isOpen: false; portalId: undefined } | { isOpen: true; portalId: string }
   >({
     isOpen: false,
     portalId: undefined,
@@ -78,7 +78,7 @@ export function ProductInfoCard(props: {
   return (
     <Card borderless={true}>
       <CardHeader>Product Info</CardHeader>
-      {props.data.images.length && (
+      {props.data?.images?.length && (
         <div className="border-2 border-grey-600 px-12 mt-2 py-1 rounded-md margin">
           <Carousel
             infiniteLoop={true}
@@ -110,28 +110,30 @@ export function ProductInfoCard(props: {
               </button>
             )}
           >
-            {props.data.images.map((image, idx) => (
+            {props.data?.images?.map((image, idx) => (
               <img src={image} key={idx} alt="" className="height-10 wi" />
             ))}
           </Carousel>
         </div>
       )}
-      <UploadProductImageComponent
-        uploadParams={{ portalId: props.portalId }}
-        onUploadComplete={async () => {
-          props.refetchHandler()
-        }}
-      >
-        <button
-          type="button"
-          className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
-           leading-4 font-medium rounded-full mt-2 text-gray-700 bg-white hover:bg-gray-50
-            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+      {props.editingEnabled && (
+        <UploadProductImageComponent
+          uploadParams={{ portalId: props.portalId }}
+          onUploadComplete={async () => {
+            props.refetchHandler()
+          }}
         >
-          <UploadCloudIcon className="h-4 w-4 mr-2" />
-          UPLOAD
-        </button>
-      </UploadProductImageComponent>
+          <button
+            type="button"
+            className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
+            leading-4 font-medium rounded-full mt-2 text-gray-700 bg-white hover:bg-gray-50
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >
+            <UploadCloudIcon className="h-4 w-4 mr-2" />
+            UPLOAD
+          </button>
+        </UploadProductImageComponent>
+      )}
       {props.data.sections.map((section, idx) => (
         <div className="py-2" key={idx}>
           <h4 className="pt-2 font-bold">{section.heading}</h4>

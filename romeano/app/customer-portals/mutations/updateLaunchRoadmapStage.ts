@@ -1,9 +1,10 @@
 import { AuthenticationError, resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
+import { decodeHashId } from "../../core/util/crypto"
 
 export const UpdateLaunchRoadmapStage = z.object({
-  portalId: z.number(),
+  portalId: z.string(),
   roadmapStageId: z.number().nonnegative(),
   date: z.date().optional(),
   heading: z.string().nonempty(),
