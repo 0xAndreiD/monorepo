@@ -32,20 +32,17 @@ export default function AddPortalModal(props: {
     resolver: zodResolver(schema),
     // defaultValues: props.existingData?.type === LinkType.WebLink ? props.existingData : {},
   })
-  // const templates = useQuery(getTemplates, {}, { refetchOnWindowFocus: true })
-  // console.log("hello")
-  // console.log(templates)
 
   const formOnSubmit = handleSubmit(async (portalData) => {
     reset()
-    // const dbLink = await createPortalMutation({
-    //   oppName: portalData.oppName,
-    //   customerFName: portalData.firstName,
-    //   customerLName: portalData.lastName,
-    //   customerEmail: portalData.email,
-    //   roleName: portalData.roleName
-    // })
-
+    const dbLink = await createPortalMutation({
+      oppName: portalData.oppName,
+      customerFName: portalData.firstName,
+      customerLName: portalData.lastName,
+      customerEmail: portalData.email,
+      roleName: portalData.roleName,
+      templateId: portalData.templateId,
+    })
     await props.onLinkComplete(portalData)
   })
   {

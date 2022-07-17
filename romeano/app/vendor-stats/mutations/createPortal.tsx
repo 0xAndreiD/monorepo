@@ -22,7 +22,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
   const userId = ctx.session.userId
   if (!userId) throw new AuthenticationError("no userId provided")
 
-  const [inviteStakeholderMutation] = useMutation(createStakeholder)
+  // const [inviteStakeholderMutation] = useMutation(createStakeholder)
 
   const user = await db.user.findUnique({ where: { id: userId } })
   const accountExec = await db.accountExecutive.findUnique({ where: { userId: userId } })
@@ -82,12 +82,12 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
       },
     })
 
-    await inviteStakeholderMutation({
-      portalId: encodeHashId(portal.id),
-      email: data.customerEmail,
-      fullName: data.customerFName + " " + data.customerLName,
-      jobTitle: data.roleName,
-    })
+    // await inviteStakeholderMutation({
+    //   portalId: encodeHashId(portal.id),
+    //   email: data.customerEmail,
+    //   fullName: data.customerFName + " " + data.customerLName,
+    //   jobTitle: data.roleName,
+    // })
 
     id = portal.id
   } else {
@@ -123,12 +123,12 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
     id = portal.id
   }
 
-  await inviteStakeholderMutation({
-    portalId: encodeHashId(portal.id),
-    email: data.customerEmail,
-    fullName: data.customerFName + " " + data.customerLName,
-    jobTitle: data.roleName,
-  })
+  // await inviteStakeholderMutation({
+  //   portalId: encodeHashId(portal.id),
+  //   email: data.customerEmail,
+  //   fullName: data.customerFName + " " + data.customerLName,
+  //   jobTitle: data.roleName,
+  // })
 
   //if a template was sent with this request
   if (data.templateId != "") {
