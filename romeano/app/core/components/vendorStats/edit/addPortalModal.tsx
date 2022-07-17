@@ -11,6 +11,10 @@ import { LinkWithId, LinkWithType } from "types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQuery } from "blitz"
 import CreatePortal from "app/vendor-stats/mutations/createPortal"
+import createStakeholder from "app/customer-portals/mutations/createStakeholder"
+
+import { encodeHashId } from "app/core/util/crypto"
+
 import { array, string } from "fp-ts"
 import getTemplates from "app/vendor-stats/queries/getTemplates"
 import { Dropdown } from "../Dropdown"
@@ -19,10 +23,9 @@ import Router from "next/router"
 export default function AddPortalModal(props: {
   onLinkComplete: (portal: any) => Promise<void>
   templates: Template[]
-  onClose: () => void
-  refetchHandler: () => void
 }) {
   const [createPortalMutation] = useMutation(CreatePortal)
+  const [inviteStakeholderMutation] = useMutation(createStakeholder)
   const schema = z.object({
     oppName: z.string().nonempty(),
     firstName: z.string().nonempty(),
@@ -35,20 +38,25 @@ export default function AddPortalModal(props: {
     resolver: zodResolver(schema),
     // defaultValues: props.existingData?.type === LinkType.WebLink ? props.existingData : {},
   })
-  // const templates = useQuery(getTemplates, {}, { refetchOnWindowFocus: true })
-  // console.log("hello")
-  // console.log(templates)
 
   const formOnSubmit = handleSubmit(async (portalData) => {
-    // const dbLink = await createPortalMutation({
-    //   oppName: portalData.oppName,
-    //   customerFName: portalData.firstName,
-    //   customerLName: portalData.lastName,
-    //   customerEmail: portalData.email,
-    //   roleName: portalData.roleName
-    // })
+    const dbLink = await createPortalMutation({
+      oppName: portalData.oppName,
+      customerFName: portalData.firstName,
+      customerLName: portalData.lastName,
+      customerEmail: portalData.email,
+      roleName: portalData.roleName,
+      templateId: portalData.templateId,
+    })
+    await props.onLinkComplete(dbLink)
 
-    await props.onLinkComplete(portalData)
+    await inviteStakeholderMutation({
+      portalId: encodeHashId(dbLink.id),
+      email: portalData.email,
+      fullName: portalData.firstName + " " + portalData.lastName,
+      jobTitle: portalData.roleName,
+    })
+
     reset()
     Router.reload()
   })

@@ -62,7 +62,7 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
     templateId: undefined,
   })
 
-  const [createPortalMutation] = useMutation(createPortal)
+  // const [createPortalMutation] = useMutation(createPortal)
   const [deletePortalMutation] = useMutation(deletePortal)
 
   return (
@@ -200,15 +200,15 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
         <AddPortalModal
           //issue is coming from line 26 in addPortalModal
           //schema is different here
-          onLinkComplete={async (portalData) => {
-            await createPortalMutation({
-              oppName: portalData.oppName,
-              customerFName: portalData.firstName,
-              customerLName: portalData.lastName,
-              customerEmail: portalData.email,
-              roleName: portalData.roleName,
-              templateId: portalData.templateId,
-            })
+          onLinkComplete={async (portal) => {
+            // await createPortalMutation({
+            //   oppName: portalData.oppName,
+            //   customerFName: portalData.firstName,
+            //   customerLName: portalData.lastName,
+            //   customerEmail: portalData.email,
+            //   roleName: portalData.roleName,
+            //   templateId: portalData.templateId,
+            // })
             // props.refetchHandler()
             // setEditLinkModalProps({ isOpen: false, link: undefined })
           }}
