@@ -5,6 +5,7 @@ import login from "app/auth/mutations/login"
 import { Login } from "app/auth/validations"
 import Labeled from "app/core/components/generic/Labeled"
 import PoweredByRomeano from "app/core/assets/poweredRomeano"
+import { Footer } from "app/core/components/Footer"
 
 export const LoginForm = (props: { onSuccess?: () => void }) => {
   const router = useRouter()
@@ -12,7 +13,10 @@ export const LoginForm = (props: { onSuccess?: () => void }) => {
 
   return (
     <div className="grid place-items-center mt-12">
-      <PoweredByRomeano alt="Romeano Logo" className="" />
+      <div className="mb-10">
+        <PoweredByRomeano alt="Romeano Logo" className="" width={180} height={96} />
+      </div>
+
       <Form
         submitText="Login"
         schema={Login}
@@ -47,20 +51,19 @@ export const LoginForm = (props: { onSuccess?: () => void }) => {
           </Link>
           <button
             type="submit"
-            className="inline-flex items-center px-12 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-white hover:text-black hover:border-black focus:outline focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            className="inline-flex items-center px-12 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-600 hover:border-green-500 focus:outline focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
           >
             Sign In
           </button>
         </div>
       </Form>
 
-      <footer>
-        <div className="space-y-14"></div>
-        <div className="pt-60 align-bottom">
-          <Link href={Routes.ForgotPasswordPage()}>
-            <a>Forgot password</a>
-          </Link>
-        </div>
+      <Link href={Routes.ForgotPasswordPage()}>
+        <a className="pt-4 text-sm text-blue-600">Forgot password</a>
+      </Link>
+
+      <footer className="pt-24">
+        <div className="align-bottom text-sm text-gray-800">&copy; 2022 Romeano Inc. All Rights Reserved.</div>
       </footer>
     </div>
   )
