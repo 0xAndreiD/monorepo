@@ -1,12 +1,12 @@
 import React from "react"
 
-const PoweredByRomeano = ({ className, alt }) => {
+const PoweredByRomeano = ({ width = 90, height = 48, className, alt }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
-      width="90"
-      height="24"
+      width={width}
+      height={height}
       viewBox="0 0 160 40"
       className={className}
       alt={alt}
