@@ -51,7 +51,7 @@ export const LoginForm = (props: { onSuccess?: () => void }) => {
           </Link>
           <button
             type="submit"
-            className="inline-flex items-center px-12 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-600 hover:border-green-500 focus:outline focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            className="inline-flex items-center px-12 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-white hover:text-black hover:border-black focus:outline focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
           >
             Sign In
           </button>
