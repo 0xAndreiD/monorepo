@@ -7,6 +7,7 @@ import createPortal from "app/vendor-stats/mutations/createPortal"
 import { Link as BlitzLink, useMutation, Routes } from "blitz"
 import { Template } from "db"
 import logout from "../../../auth/mutations/logout"
+import PoweredByRomeano from "app/core/assets/poweredRomeano"
 
 export function Header(props: {
   vendorLogo?: string
@@ -30,8 +31,10 @@ export function Header(props: {
 
   return (
     <div className="grid grid-cols-2 grid-rows-1 items-center">
-      {props.vendorLogo && (
+      {props.vendorLogo ? (
         <img alt="vendor logo" src={props.vendorLogo} style={{ maxHeight: "75px", maxWidth: "150px", width: "auto" }} />
+      ) : (
+        <PoweredByRomeano alt="Romeano Logo" className="" width={150} height={30} />
       )}
 
       <div className="flex justify-self-end gap-x-3">
