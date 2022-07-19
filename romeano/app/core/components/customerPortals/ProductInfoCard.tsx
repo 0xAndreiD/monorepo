@@ -78,7 +78,7 @@ export function ProductInfoCard(props: {
   return (
     <Card borderless={true}>
       <CardHeader>Product Info</CardHeader>
-      {props.data?.images?.length && (
+      {props.data?.images?.length !=0 && (
         <div className="border-2 border-grey-600 px-12 mt-2 py-1 rounded-md margin">
           <Carousel
             infiniteLoop={true}

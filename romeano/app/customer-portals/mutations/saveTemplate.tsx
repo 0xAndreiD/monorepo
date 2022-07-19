@@ -31,7 +31,11 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       nextStepsTasks: true,
       images: true,
       productInfoSections: true,
-      portalDocuments: true,
+      portalDocuments: {
+        include: {
+          link: true,
+        },
+      },
       internalNotes: true,
     },
   })
@@ -129,16 +133,24 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       })
   )
 
-  portal?.portalDocuments?.map(
-    async (portalDocument) =>
-      await db.portalDocument.create({
-        data: {
-          linkId: portalDocument.linkId,
-          portalId: templatePortal.id,
-          templateId: template.id,
-        },
-      })
-  )
+  portal?.portalDocuments?.map(async (portalDocument) => {
+    const link = await db.link.create({
+      data: {
+        body: portalDocument.link?.body ?? "",
+        href: portalDocument.link?.href ?? "",
+        type: portalDocument.link?.type ?? LinkType.Document,
+        userId: userId,
+      },
+    })
+
+    await db.portalDocument.create({
+      data: {
+        linkId: link.id,
+        portalId: templatePortal.id,
+        templateId: template.id,
+      },
+    })
+  })
 
   portal?.internalNotes?.map(
     async (internalNote) =>
