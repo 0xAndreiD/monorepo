@@ -38,7 +38,7 @@ function CustomerPortal() {
       <div className="max-w-6xl mx-auto sm:px-6 lg:px-8 pt-2">
         <Header
           portalId={portalId}
-          vendorLogo={data.header.vendorLogo}
+          vendorLogo={data.header.vendorLogo || ""}
           customerName={data.header.customerName}
           customerLogo={data.header.customerLogo}
           data={data.proposal.stakeholders}

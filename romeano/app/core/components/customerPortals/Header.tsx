@@ -9,6 +9,7 @@ import SaveTemplateModal from "./edit/saveTemplateModal"
 import { UploadComponent } from "../portalDetails/uploadComponent"
 import { decodeHashId } from "app/core/util/crypto"
 import { ZodUnknown } from "zod"
+import PoweredByRomeano from "app/core/assets/poweredRomeano"
 
 export function Header(props: {
   portalId: string
@@ -33,7 +34,15 @@ export function Header(props: {
   return (
     <div className="grid grid-cols-3 grid-rows-1 items-center">
       <div className="flex gap-2 items-center">
-        <img alt="vendor logo" src={props.vendorLogo} style={{ maxHeight: "70px", maxWidth: "120px", width: "auto" }} />
+        {props.vendorLogo ? (
+          <img
+            alt="vendor logo"
+            src={props.vendorLogo}
+            style={{ maxHeight: "75px", maxWidth: "150px", width: "auto" }}
+          />
+        ) : (
+          <PoweredByRomeano alt="Romeano Logo" className="" width={150} height={30} />
+        )}
         <hr className="border-l mx-1 pt-6 h-full border-gray-300" />
         {props.customerLogo && (
           <img

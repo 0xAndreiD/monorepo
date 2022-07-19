@@ -2,59 +2,108 @@ import { resolver, SecurePassword } from "blitz"
 import db, { Role } from "db"
 import { Signup } from "app/auth/validations"
 import { endsWith } from "lodash"
+import { sendVendorSignupNotificationToAdmin, sendVendorWelcomeEmail } from "app/core/util/email"
 
-export default resolver.pipe(resolver.zod(Signup), async ({ email, password }, ctx) => {
-  const hashedPassword = await SecurePassword.hash(password.trim())
+export default resolver.pipe(
+  resolver.zod(Signup),
+  async ({ email, password, firstName, lastName, vendorName, vendorTeam, jobTitle }, ctx) => {
+    const hashedPassword = await SecurePassword.hash(password.trim())
 
-  //get the email domain of the user signing up
-  const domain = email.substring(email.lastIndexOf("@") + 1)
+    const UNSUPPORTED_EMAIL_DOMAINS = [
+      "gmail.com",
+      "yahoo.com",
+      "hotmail.com",
+      "msn.com",
+      "comcast.net",
+      "icloud.com",
+      "aol.com",
+      "outlook.com",
+      "msn.com",
+    ]
 
-  //find a user that already uses this domain
-  const existingUser = await db.user.findFirst({
-    where: {
-      email: {
-        endsWith: domain,
-      },
-      accountExecutive: {
-        isNot: null,
-      },
-    },
-    include: {
-      accountExecutive: { include: { vendorTeam: { include: { vendor: true } } } },
-    },
-  })
+    //get the email domain of the user signing up
+    const emailTrimmed = email.toLowerCase().trim()
+    const domain = emailTrimmed.substring(emailTrimmed.lastIndexOf("@") + 1)
+    console.log("Domain", domain, UNSUPPORTED_EMAIL_DOMAINS.includes(domain))
+    if (UNSUPPORTED_EMAIL_DOMAINS.includes(domain))
+      throw new Error("Unsupported domain. Please enter your work email address.")
 
-  // this verifies that a vendor team actually exists, and if so, attaches the user to it
-  if (existingUser) {
-    if (existingUser.accountExecutive != null) {
-      //TODO: Change functionality for if the vendor is not signed up
-      const vendorTeamId = existingUser.accountExecutive.vendorTeamId
+    // Check if user already exists with this email
+    var userRecord = await db.user.findUnique({
+      where: { email: emailTrimmed },
+    })
+    console.log("User...", userRecord)
+    if (userRecord) {
+      console.log("User already exists... returning")
+      await ctx.session.$create({ userId: userRecord.id, role: userRecord.role as Role })
+      return userRecord
+    }
 
-      const user = await db.user.create({
+    // Find the vendor with this email domain first and if one doesn't exist, create it
+    var vendorRecord = await db.vendor.findUnique({
+      where: { emailDomain: domain },
+      select: { id: true, name: true, emailDomain: true },
+    })
+    console.log("Vendor...", vendorRecord)
+    if (!vendorRecord) {
+      console.log("Vendor not found, creating one", vendorName, domain)
+      // Create vendor first
+      vendorRecord = await db.vendor.create({
         data: {
-          firstName: "Test",
-          lastName: "User",
-          email: email.toLowerCase().trim(),
-          hashedPassword,
-          accountExecutive: {
-            //make AE
-            create: {
-              jobTitle: "Account Executive",
-              vendorTeamId: vendorTeamId,
-            },
+          name: vendorName,
+          emailDomain: domain,
+        },
+        select: { id: true, name: true, emailDomain: true },
+      })
+    }
+    console.log("Vendor...", vendorRecord)
+
+    // Find a vendor team with this vendor email domaoin first and if one doesn't exist, create it
+    var vendorTeamRecord = await db.vendorTeam.findFirst({
+      where: { vendorId: vendorRecord.id },
+      select: { id: true, vendorId: true },
+    })
+    console.log("Vendor Team...", vendorTeamRecord)
+    if (!vendorTeamRecord) {
+      console.log("Vendor team not found, creating one")
+      // Create vendor team
+      vendorTeamRecord = await db.vendorTeam.create({
+        data: {
+          vendorId: vendorRecord.id,
+        },
+        select: { id: true, vendorId: true },
+      })
+    }
+    console.log("Vendor Team...", vendorTeamRecord)
+
+    userRecord = await db.user.create({
+      data: {
+        firstName: firstName,
+        lastName: lastName,
+        email: emailTrimmed,
+        hashedPassword,
+        accountExecutive: {
+          //make AE
+          create: {
+            jobTitle: jobTitle,
+            vendorTeamId: vendorTeamRecord.id,
           },
         },
-        select: { id: true, firstName: true, email: true, role: true },
-      })
+      },
+      include: {
+        accountExecutive: { include: { vendorTeam: { include: { vendor: true } } } },
+      },
+    })
 
-      await ctx.session.$create({ userId: user.id, role: user.role as Role })
-      return user
+    // Send email notification to admin(s)
+    console.log("Sending vendor sign up email notification to admin(s)")
+    await sendVendorSignupNotificationToAdmin(emailTrimmed, firstName, lastName, jobTitle, vendorName)
 
-      //if the vendor team does not exist, return null and do not process the sign up
-    } else {
-      return null
-    }
-  } else {
-    return null
+    // TODO: send welcome email to AE
+    console.log("Sending welcome email to vendor")
+    await sendVendorWelcomeEmail(emailTrimmed, firstName, lastName)
+
+    await ctx.session.$create({ userId: userRecord.id, role: userRecord.role as Role })
+    return userRecord
   }
-})
+)

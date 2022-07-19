@@ -1,11 +1,14 @@
 import { Link, Routes } from "blitz"
 import HomeIcon from "app/core/assets/HomeIcon"
+import PoweredByRomeano from "app/core/assets/poweredRomeano"
 
 export function Header(props: { vendorLogo?: string }) {
   return (
     <div className="grid grid-cols-2 grid-rows-1 items-center">
-      {props.vendorLogo && (
+      {props.vendorLogo ? (
         <img alt="vendor logo" src={props.vendorLogo} style={{ maxHeight: "75px", maxWidth: "150px", width: "auto" }} />
+      ) : (
+        <PoweredByRomeano alt="Romeano Logo" className="" width={150} height={30} />
       )}
 
       <div className="flex justify-self-end gap-x-3">

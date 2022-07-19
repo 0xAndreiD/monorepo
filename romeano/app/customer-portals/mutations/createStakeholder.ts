@@ -95,8 +95,8 @@ export default resolver.pipe(
       userPortal.user.firstName,
       email,
       magicLink.id,
-      portal.vendor.logoUrl,
-      portal.customerLogoUrl
+      portal.customerLogoUrl,
+      portal.vendor.logoUrl || ""
     )
     console.log("Invite sent to stakeholder", stakeholder)
 

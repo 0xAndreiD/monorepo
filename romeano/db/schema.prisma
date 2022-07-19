@@ -116,7 +116,9 @@ enum TokenType {
 model Vendor {
   id          Int          @id @default(autoincrement())
   name        String       @unique
-  logoUrl     String
+  emailDomain String       @unique @default(dbgenerated("gen_random_uuid()"))
+  websiteUrl  String?
+  logoUrl     String?
   vendorTeams VendorTeam[]
   portals     Portal[]
   createdAt   DateTime     @default(now())
