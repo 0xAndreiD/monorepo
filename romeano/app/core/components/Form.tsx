@@ -55,14 +55,14 @@ export function Form<S extends z.ZodType<any, any>>({
         className="form"
         {...props}
       >
-        {/* Form fields supplied as children are rendered here */}
-        {children}
-
         {formError && (
           <div role="alert" style={{ color: "red" }}>
             {formError}
           </div>
         )}
+
+        {/* Form fields supplied as children are rendered here */}
+        {children}
 
         {/* {submitText && (
           <button type="submit" disabled={ctx.formState.isSubmitting}>

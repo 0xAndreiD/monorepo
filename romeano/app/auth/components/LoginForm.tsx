@@ -5,6 +5,7 @@ import login from "app/auth/mutations/login"
 import { Login } from "app/auth/validations"
 import Labeled from "app/core/components/generic/Labeled"
 import PoweredByRomeano from "app/core/assets/poweredRomeano"
+import { Footer } from "app/core/components/Footer"
 
 export const LoginForm = (props: { onSuccess?: () => void }) => {
   const router = useRouter()
@@ -12,7 +13,10 @@ export const LoginForm = (props: { onSuccess?: () => void }) => {
 
   return (
     <div className="grid place-items-center mt-12">
-      <PoweredByRomeano alt="Romeano Logo" className="" />
+      <div className="mb-10">
+        <PoweredByRomeano alt="Romeano Logo" className="" width={180} height={96} />
+      </div>
+
       <Form
         submitText="Login"
         schema={Login}
@@ -54,13 +58,12 @@ export const LoginForm = (props: { onSuccess?: () => void }) => {
         </div>
       </Form>
 
-      <footer>
-        <div className="space-y-14"></div>
-        <div className="pt-60 align-bottom">
-          <Link href={Routes.ForgotPasswordPage()}>
-            <a>Forgot password</a>
-          </Link>
-        </div>
+      <Link href={Routes.ForgotPasswordPage()}>
+        <a className="pt-4 text-sm text-blue-600">Forgot password</a>
+      </Link>
+
+      <footer className="pt-24">
+        <div className="align-bottom text-sm text-gray-800">&copy; 2022 Romeano Inc. All Rights Reserved.</div>
       </footer>
     </div>
   )
