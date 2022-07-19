@@ -5,7 +5,7 @@
 
 */
 -- AlterTable
-ALTER TABLE "Vendor" ADD COLUMN     "emailDomain" TEXT NOT NULL DEFAULT E'';
+ALTER TABLE "Vendor" ADD COLUMN     "emailDomain" TEXT NOT NULL DEFAULT gen_random_uuid();
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Vendor_emailDomain_key" ON "Vendor"("emailDomain");
