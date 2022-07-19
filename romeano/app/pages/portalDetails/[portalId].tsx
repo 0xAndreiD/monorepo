@@ -27,7 +27,7 @@ function PortalDetails() {
       <div className="max-w-6xl mx-auto sm:px-6 lg:px-8 pt-2">
         <Header
           portalId={portalId}
-          vendorLogo={portal.header.vendorLogo}
+          vendorLogo={portal.header.vendorLogo || ""}
           customerName={portal.header.customerName}
           customerLogo={portal.header.customerLogo}
           refetchHandler={refetch}

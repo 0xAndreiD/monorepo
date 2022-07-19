@@ -42,6 +42,7 @@ export default resolver.pipe(
     // Find the vendor with this email domain first and if one doesn't exist, create it
     var vendorRecord = await db.vendor.findUnique({
       where: { emailDomain: domain },
+      select: { id: true, name: true, emailDomain: true },
     })
     console.log("Vendor...", vendorRecord)
     if (!vendorRecord) {
@@ -60,6 +61,7 @@ export default resolver.pipe(
     // Find a vendor team with this vendor email domaoin first and if one doesn't exist, create it
     var vendorTeamRecord = await db.vendorTeam.findFirst({
       where: { vendorId: vendorRecord.id },
+      select: { id: true, vendorId: true },
     })
     console.log("Vendor Team...", vendorTeamRecord)
     if (!vendorTeamRecord) {
