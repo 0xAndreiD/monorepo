@@ -40,7 +40,7 @@ export async function sendInvite(
   let inviteEmailData = {
     invitee_name: inviterFirstName,
     invite_url: inviteUrl,
-    vendor_logo: `${BACKEND_ENDPOINT}` + vendorLogo,
+    vendor_logo: vendorLogo,
     customer_logo: `${BACKEND_ENDPOINT}` + customerLogo,
   }
 
