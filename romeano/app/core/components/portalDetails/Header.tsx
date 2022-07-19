@@ -5,10 +5,11 @@ import { CheckIcon, CloudUploadIcon, PencilIcon } from "@heroicons/react/solid"
 import HomeIcon from "app/core/assets/HomeIcon"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import createDocument from "../../../customer-portals/mutations/createDocument"
+import PoweredByRomeano from "app/core/assets/poweredRomeano"
 
 export function Header(props: {
   portalId: string
-  vendorLogo: string
+  vendorLogo?: string
   customerName: string
   customerLogo: string
   refetchHandler: () => void
@@ -16,7 +17,15 @@ export function Header(props: {
   return (
     <div className="grid grid-cols-3 grid-rows-1 items-center">
       <div className="flex gap-x-2 items-center">
-        <img alt="vendor logo" src={props.vendorLogo} style={{ maxHeight: "70px", maxWidth: "120px", width: "auto" }} />
+        {props.vendorLogo ? (
+          <img
+            alt="vendor logo"
+            src={props.vendorLogo}
+            style={{ maxHeight: "75px", maxWidth: "150px", width: "auto" }}
+          />
+        ) : (
+          <PoweredByRomeano alt="Romeano Logo" className="" width={150} height={30} />
+        )}
         <hr className="border-l mx-1 pt-6 h-full border-gray-300" />
         <img
           alt="customer logo"

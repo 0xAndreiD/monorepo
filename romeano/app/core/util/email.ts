@@ -9,7 +9,7 @@ import path from "path"
 const readFile = promisify(fs.readFile)
 
 // TODO: Move this to env
-const ADMIN_EMAILS = [process.env.ADMIN_EMAIL]
+const ADMIN_EMAILS = [process.env.ADMIN_EMAIL || "ben@romeano.com"]
 
 export const transporter = nodemailer.createTransport({
   host: "smtp.sendgrid.net",
@@ -31,8 +31,8 @@ export async function sendInvite(
   inviterFirstName: string,
   inviteeEmailAddress: string,
   magicLink: string,
-  vendorLogo: string,
-  customerLogo: string
+  customerLogo: string,
+  vendorLogo?: string
 ) {
   let html = await readFile("app/core/util/inviteEmail.html", "utf8")
   let template = handlebars.compile(html)

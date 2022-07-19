@@ -29,54 +29,52 @@ export default resolver.pipe(
       throw new Error("Unsupported domain. Please enter your work email address.")
 
     // Check if user already exists with this email
-    var user = await db.user.findUnique({
+    var userRecord = await db.user.findUnique({
       where: { email: emailTrimmed },
     })
-    console.log("User...", user)
-    if (user) {
+    console.log("User...", userRecord)
+    if (userRecord) {
       console.log("User already exists... returning")
-      await ctx.session.$create({ userId: user.id, role: user.role as Role })
-      return user
+      await ctx.session.$create({ userId: userRecord.id, role: userRecord.role as Role })
+      return userRecord
     }
 
     // Find the vendor with this email domain first and if one doesn't exist, create it
-    var vendor = await db.vendor.findUnique({
+    var vendorRecord = await db.vendor.findUnique({
       where: { emailDomain: domain },
     })
-    var vendorCreated = false
-    console.log("Vendor...", vendor)
-    if (!vendor) {
+    console.log("Vendor...", vendorRecord)
+    if (!vendorRecord) {
       console.log("Vendor not found, creating one", vendorName, domain)
       // Create vendor first
-      vendor = await db.vendor.create({
+      vendorRecord = await db.vendor.create({
         data: {
           name: vendorName,
           emailDomain: domain,
         },
         select: { id: true, name: true, emailDomain: true },
       })
-      vendorCreated = true
     }
-    console.log("Vendor...", vendor)
+    console.log("Vendor...", vendorRecord)
 
     // Find a vendor team with this vendor email domaoin first and if one doesn't exist, create it
-    var vendorTeam = await db.vendorTeam.findFirst({
-      where: { vendorId: vendor.id },
+    var vendorTeamRecord = await db.vendorTeam.findFirst({
+      where: { vendorId: vendorRecord.id },
     })
-    console.log("Vendor Team...", vendorTeam)
-    if (!vendorTeam) {
+    console.log("Vendor Team...", vendorTeamRecord)
+    if (!vendorTeamRecord) {
       console.log("Vendor team not found, creating one")
       // Create vendor team
-      vendorTeam = await db.vendorTeam.create({
+      vendorTeamRecord = await db.vendorTeam.create({
         data: {
-          vendorId: vendor.id,
+          vendorId: vendorRecord.id,
         },
         select: { id: true, vendorId: true },
       })
     }
-    console.log("Vendor Team...", vendorTeam)
+    console.log("Vendor Team...", vendorTeamRecord)
 
-    user = await db.user.create({
+    userRecord = await db.user.create({
       data: {
         firstName: firstName,
         lastName: lastName,
@@ -86,7 +84,7 @@ export default resolver.pipe(
           //make AE
           create: {
             jobTitle: jobTitle,
-            vendorTeamId: vendorTeam.id,
+            vendorTeamId: vendorTeamRecord.id,
           },
         },
       },
@@ -103,7 +101,7 @@ export default resolver.pipe(
     console.log("Sending welcome email to vendor")
     await sendVendorWelcomeEmail(emailTrimmed, firstName, lastName)
 
-    await ctx.session.$create({ userId: user.id, role: user.role as Role })
-    return user
+    await ctx.session.$create({ userId: userRecord.id, role: userRecord.role as Role })
+    return userRecord
   }
 )
