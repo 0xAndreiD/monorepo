@@ -131,6 +131,7 @@ export function Header(props: {
               portalId: template.portalId,
               templateName: template.templateName,
             })
+            setAddTemplateProps({ isOpen: false, templateId: undefined })
             // props.refetchHandler()
             // setEditLinkModalProps({ isOpen: false, link: undefined })
           }}

@@ -142,7 +142,15 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
         },
         nextStepsTasks: true,
         images: true,
-        productInfoSections: true,
+        productInfoSections: {
+          include: {
+            productInfoSectionLink: {
+              include: {
+                link: true,
+              },
+            },
+          },
+        },
         portalDocuments: {
           include: {
             link: true,
@@ -207,15 +215,35 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
     )
 
     //this will not bring over the product info section links
-    template?.productInfoSections.map(
-      async (productInfoSection) =>
-        await db.productInfoSection.create({
+    template?.productInfoSections.map(async (productInfoSection) => {
+      const section = await db.productInfoSection.create({
+        data: {
+          heading: productInfoSection.heading,
+          portalId: id,
+        },
+      })
+
+      //extract the info neccesary to create productInfoSectionLinks
+      var linkData = productInfoSection.productInfoSectionLink
+
+      for (let link of linkData) {
+        const thisLink = await db.link.create({
           data: {
-            heading: productInfoSection.heading,
-            portalId: id,
+            body: link.link.body ?? "",
+            href: link.link.href ?? "",
+            type: link.link?.type ?? LinkType.Document,
+            userId: userId,
           },
         })
-    )
+
+        await db.productInfoSectionLink.create({
+          data: {
+            linkId: thisLink.id,
+            productInfoSectionId: section.id,
+          },
+        })
+      }
+    })
 
     //need to duplicate the links as well
     template?.portalDocuments.map(async (portalDocument) => {
