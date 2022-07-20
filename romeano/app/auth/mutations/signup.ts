@@ -99,7 +99,7 @@ export default resolver.pipe(
       })
       if (!accountExecRecord) {
         console.log("Account exec record does not exist for this user, creating one")
-        accountExecRecord = await db.accountExecRecord.create({
+        accountExecRecord = await db.accountExecutive.create({
           data: {
             userId: userRecord.id,
             vendorTeamId: vendorTeamRecord.id,
