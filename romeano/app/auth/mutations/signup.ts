@@ -91,6 +91,23 @@ export default resolver.pipe(
           accountExecutive: { include: { vendorTeam: { include: { vendor: true } } } },
         },
       })
+    } else {
+      // Check if AE exists for this user
+      var accountExecRecord = await db.accountExecutive.findUnique({
+        where: { userId: userRecord.id },
+        select: { id: true, userId: true, vendorTeamId: true },
+      })
+      if (!accountExecRecord) {
+        console.log("Account exec record does not exist for this user, creating one")
+        accountExecRecord = await db.accountExecRecord.create({
+          data: {
+            userId: userRecord.id,
+            vendorTeamId: vendorTeamRecord.id,
+            jobTitle: jobTitle,
+          },
+          select: { id: true, userId: true, vendorTeamId: true },
+        })
+      }
     }
 
     // Send email notification to admin(s)
