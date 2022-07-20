@@ -1,8 +1,5 @@
 import Link from "next/link"
 import React from "react"
-import logo from "../../../public/logo.png"
-import Image from "next/image"
-import PoweredByRomeano from "../assets/poweredRomeano"
 
 export function LoadingSpinner() {
   return (

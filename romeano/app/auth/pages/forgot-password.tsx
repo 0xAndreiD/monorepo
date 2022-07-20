@@ -4,7 +4,7 @@ import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
 import { ForgotPassword } from "app/auth/validations"
 import forgotPassword from "app/auth/mutations/forgotPassword"
-import PoweredByRomeano from "app/core/assets/poweredRomeano"
+import RomeanoLogo from "app/core/assets/RomeanoLogo"
 
 const ForgotPasswordPage: BlitzPage = () => {
   const [forgotPasswordMutation, { isSuccess }] = useMutation(forgotPassword)
@@ -12,7 +12,7 @@ const ForgotPasswordPage: BlitzPage = () => {
   return (
     <div className="grid place-items-center mt-12">
       <div className="mb-10">
-        <PoweredByRomeano alt="Romeano Logo" className="" width={180} height={96} />
+        <RomeanoLogo alt="Romeano Logo" className="" width={180} height={96} />
       </div>
 
       <h1 className="text-xl">{isSuccess ? "Request Submitted" : "Forgot your password?"}</h1>
