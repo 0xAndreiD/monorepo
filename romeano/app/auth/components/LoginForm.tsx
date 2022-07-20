@@ -4,7 +4,7 @@ import { Form, FORM_ERROR } from "app/core/components/Form"
 import login from "app/auth/mutations/login"
 import { Login } from "app/auth/validations"
 import Labeled from "app/core/components/generic/Labeled"
-import PoweredByRomeano from "app/core/assets/poweredRomeano"
+import RomeanoLogo from "app/core/assets/RomeanoLogo"
 import { Footer } from "app/core/components/Footer"
 
 export const LoginForm = (props: { onSuccess?: () => void }) => {
@@ -14,7 +14,7 @@ export const LoginForm = (props: { onSuccess?: () => void }) => {
   return (
     <div className="grid place-items-center mt-12">
       <div className="mb-10">
-        <PoweredByRomeano alt="Romeano Logo" className="" width={180} height={96} />
+        <RomeanoLogo alt="Romeano Logo" className="" width={180} height={96} />
       </div>
 
       <Form

@@ -33,11 +33,6 @@ export default resolver.pipe(
       where: { email: emailTrimmed },
     })
     console.log("User...", userRecord)
-    if (userRecord) {
-      console.log("User already exists... returning")
-      await ctx.session.$create({ userId: userRecord.id, role: userRecord.role as Role })
-      return userRecord
-    }
 
     // Find the vendor with this email domain first and if one doesn't exist, create it
     var vendorRecord = await db.vendor.findUnique({
@@ -76,24 +71,27 @@ export default resolver.pipe(
     }
     console.log("Vendor Team...", vendorTeamRecord)
 
-    userRecord = await db.user.create({
-      data: {
-        firstName: firstName,
-        lastName: lastName,
-        email: emailTrimmed,
-        hashedPassword,
-        accountExecutive: {
-          //make AE
-          create: {
-            jobTitle: jobTitle,
-            vendorTeamId: vendorTeamRecord.id,
+    if (!userRecord) {
+      console.log("User not found, creating one", emailTrimmed)
+      userRecord = await db.user.create({
+        data: {
+          firstName: firstName,
+          lastName: lastName,
+          email: emailTrimmed,
+          hashedPassword,
+          accountExecutive: {
+            //make AE
+            create: {
+              jobTitle: jobTitle,
+              vendorTeamId: vendorTeamRecord.id,
+            },
           },
         },
-      },
-      include: {
-        accountExecutive: { include: { vendorTeam: { include: { vendor: true } } } },
-      },
-    })
+        include: {
+          accountExecutive: { include: { vendorTeam: { include: { vendor: true } } } },
+        },
+      })
+    }
 
     // Send email notification to admin(s)
     console.log("Sending vendor sign up email notification to admin(s)")

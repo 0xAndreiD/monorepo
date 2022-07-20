@@ -1,6 +1,6 @@
 import React from "react"
 
-const PoweredByRomeano = ({ width = 90, height = 48, className, alt }) => {
+const RomeanoLogo = ({ width = 90, height = 48, className, alt }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -25,4 +25,4 @@ const PoweredByRomeano = ({ width = 90, height = 48, className, alt }) => {
   )
 }
 
-export default PoweredByRomeano
+export default RomeanoLogo

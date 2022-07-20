@@ -4,7 +4,7 @@ import { LabeledSelectField } from "app/core/components/LabeledSelectField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
 import signup from "app/auth/mutations/signup"
 import { Signup } from "app/auth/validations"
-import PoweredByRomeano from "app/core/assets/poweredRomeano"
+import RomeanoLogo from "app/core/assets/RomeanoLogo"
 
 type SignupFormProps = {
   onSuccess?: () => void
@@ -16,7 +16,7 @@ export const SignupForm = (props: SignupFormProps) => {
   return (
     <div className="grid place-items-center mt-12">
       <div className="mb-6">
-        <PoweredByRomeano alt="Romeano Logo" className="" width={180} height={96} />
+        <RomeanoLogo alt="Romeano Logo" className="" width={180} height={96} />
       </div>
 
       <h1 className="text-xl">Create Account</h1>
