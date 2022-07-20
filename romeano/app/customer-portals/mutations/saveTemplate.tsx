@@ -30,7 +30,15 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       },
       nextStepsTasks: true,
       images: true,
-      productInfoSections: true,
+      productInfoSections: {
+        include: {
+          productInfoSectionLink: {
+            include: {
+              link: true,
+            },
+          },
+        },
+      },
       portalDocuments: {
         include: {
           link: true,
@@ -122,16 +130,38 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       })
   )
 
-  portal?.productInfoSections?.map(
-    async (productInfoSection) =>
-      await db.productInfoSection.create({
+  portal?.productInfoSections?.map(async (productInfoSection) => {
+    const section = await db.productInfoSection.create({
+      data: {
+        heading: productInfoSection.heading,
+        portalId: templatePortal.id,
+        templateId: template.id,
+      },
+    })
+
+    //extract the info neccesary to create productInfoSectionLinks
+    var linkData = productInfoSection.productInfoSectionLink
+
+    for (let link of linkData) {
+      const thisLink = await db.link.create({
         data: {
-          heading: productInfoSection.heading,
-          portalId: templatePortal.id,
-          templateId: template.id,
+          body: link.link.body ?? "",
+          href: link.link.href ?? "",
+          type: link.link?.type ?? LinkType.Document,
+          userId: userId,
         },
       })
-  )
+
+      const sectionLink = await db.productInfoSectionLink.create({
+        data: {
+          linkId: thisLink.id,
+          productInfoSectionId: section.id,
+        },
+      })
+
+      console.log(sectionLink)
+    }
+  })
 
   portal?.portalDocuments?.map(async (portalDocument) => {
     const link = await db.link.create({
