@@ -35,6 +35,7 @@ export function forgotPasswordMailer({ to, token }: ResetPasswordMailer) {
       } else {
         // Preview email in the browser
         await previewEmail(msg)
+        await transporter.sendMail(msg)
       }
     },
   }
