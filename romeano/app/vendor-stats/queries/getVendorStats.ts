@@ -90,7 +90,7 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
       SELECT "portalId"
       FROM "UserPortal"
       WHERE ("isPrimaryContact" IS TRUE OR "isSecondaryContact" IS TRUE)
-        AND "userId" = ${userId}
+        AND "userId" = ${userId} AND "templateId" IS NULL
     `
   ).map((x) => x.portalId)
 
