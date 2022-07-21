@@ -28,9 +28,6 @@ export function Header(props: {
     templateId: undefined,
   })
 
-  //this breaks everything
-  const [SaveTemplateMutation] = useMutation(SaveTemplate)
-
   return (
     <div className="grid grid-cols-3 grid-rows-1 items-center">
       <div className="flex gap-2 items-center">
@@ -126,14 +123,8 @@ export function Header(props: {
       >
         <SaveTemplateModal
           portalId={props.portalId}
-          onLinkComplete={async (template) => {
-            await SaveTemplateMutation({
-              portalId: template.portalId,
-              templateName: template.templateName,
-            })
+          onLinkComplete={async () => {
             setAddTemplateProps({ isOpen: false, templateId: undefined })
-            // props.refetchHandler()
-            // setEditLinkModalProps({ isOpen: false, link: undefined })
           }}
         />
       </Modal>
