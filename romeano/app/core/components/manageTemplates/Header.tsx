@@ -2,6 +2,7 @@ import { Link, Routes } from "blitz"
 // import { HomeIcon } from "@heroicons/react/outline"
 import HomeIcon from "../../assets/HomeIcon"
 import RomeanoLogo from "app/core/assets/RomeanoLogo"
+import UserDropDown from "../UserDropDown"
 
 export function Header(props: { vendorLogo?: string }) {
   return (
@@ -13,17 +14,7 @@ export function Header(props: { vendorLogo?: string }) {
       )}
 
       <div className="flex justify-self-end gap-x-3">
-        <button>
-          <Link href={Routes.Home()}>
-            <div
-              className="inline-flex items-center px-3 py-2  text-sm
-                    leading-4 font-medium rounded-md text-gray-700 bg-white
-                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
-              <HomeIcon alt="Romeano Logo" className="w-8 h-8" />
-            </div>
-          </Link>
-        </button>
+        <UserDropDown {...props} />
       </div>
     </div>
   )
