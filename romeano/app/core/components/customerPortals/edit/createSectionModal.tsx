@@ -10,7 +10,6 @@ import Labeled from "app/core/components/generic/Labeled"
 import { LinkWithId, LinkWithType } from "types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "blitz"
-import SaveTemplate from "app/customer-portals/mutations/saveTemplate"
 import { string } from "fp-ts"
 import createProductInfoSection from "app/customer-portals/mutations/createProductInfoSection"
 

@@ -58,18 +58,18 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       currentRoadmapStage: portal?.currentRoadmapStage ?? 0,
       proposalHeading: portal?.proposalHeading ?? "",
       proposalSubheading: portal?.proposalSubheading ?? "",
-      userPortals: {
-        createMany: {
-          data: [
-            {
-              userId: userId,
-              role: Role.AccountExecutive,
-              isPrimaryContact: true,
-              isSecondaryContact: false,
-            },
-          ],
-        },
-      },
+      // userPortals: {
+      //   createMany: {
+      //     data: [
+      //       {
+      //         userId: userId,
+      //         role: Role.AccountExecutive,
+      //         isPrimaryContact: true,
+      //         isSecondaryContact: false,
+      //       },
+      //     ],
+      //   },
+      // },
       vendorId: portal?.vendorId ?? 0,
       isTemplate: true,
     },
@@ -81,6 +81,17 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       proposalHeading: portal?.proposalHeading ?? "",
       proposalSubheading: portal?.proposalSubheading ?? "",
       portalId: templatePortal.id,
+    },
+  })
+
+  await db.userPortal.create({
+    data: {
+      userId: userId,
+      role: Role.AccountExecutive,
+      isPrimaryContact: true,
+      isSecondaryContact: false,
+      portalId: templatePortal.id,
+      templateId: template.id,
     },
   })
 
