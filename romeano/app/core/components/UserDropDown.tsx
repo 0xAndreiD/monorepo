@@ -8,7 +8,7 @@ import logout from "app/auth/mutations/logout"
 import { Template } from "db"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ")
 }
 
@@ -44,9 +44,9 @@ export default function UserDropDown(props: { templates: Template[] }) {
             <div className="py-1">
               <Menu.Item>
                 <span className="bg-gray-100 text-gray-900 block px-4 py-2 text-xs">
-                  Welcome, {user.firstName} {user.lastName}
+                  Welcome, {user?.firstName} {user?.lastName}
                   <br />
-                  {user.email}
+                  {user?.email}
                 </span>
               </Menu.Item>
             </div>

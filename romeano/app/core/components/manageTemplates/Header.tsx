@@ -3,8 +3,9 @@ import { Link, Routes } from "blitz"
 import HomeIcon from "../../assets/HomeIcon"
 import RomeanoLogo from "app/core/assets/RomeanoLogo"
 import UserDropDown from "../UserDropDown"
+import { Template } from "db"
 
-export function Header(props: { vendorLogo?: string }) {
+export function Header(props: { vendorLogo?: string; templates: Template[] }) {
   return (
     <div className="grid grid-cols-2 grid-rows-1 items-center">
       {props.vendorLogo ? (
