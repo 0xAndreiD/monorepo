@@ -26,8 +26,11 @@ export default function UserDropDown(props: { templates: Template[] }) {
     <>
       <Menu as="div" className="relative inline-block text-left" style={{ zIndex: 100 }}>
         <div>
-          <Menu.Button className="inline-flex justify-center w-full rounded-md px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
-            <UserCircleIcon className="-mr-1 h-6 w-6" aria-hidden="true" />
+          <Menu.Button className="bg-gray-100 inline-flex justify-center w-full rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+            <span className="text-gray-900 block px-4 py-2 text-xs">
+              {user?.firstName} {user?.lastName}
+            </span>
+            <UserCircleIcon className="h-7 w-7" aria-hidden="true" />
           </Menu.Button>
         </div>
 
