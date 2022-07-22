@@ -7,7 +7,7 @@ import Labeled from "app/core/components/generic/Labeled"
 import RomeanoLogo from "app/core/assets/RomeanoLogo"
 import { Footer } from "app/core/components/Footer"
 
-export const LoginForm = (props: { onSuccess?: () => void }) => {
+export const LoginForm = (props: { errorMessage?: string; onSuccess?: () => void }) => {
   const router = useRouter()
   const [loginMutation] = useMutation(login)
 
@@ -17,6 +17,11 @@ export const LoginForm = (props: { onSuccess?: () => void }) => {
         <RomeanoLogo alt="Romeano Logo" className="" width={180} height={96} />
       </div>
 
+      {props.errorMessage && (
+        <div role="alert" style={{ color: "red" }}>
+          {props.errorMessage}
+        </div>
+      )}
       <Form
         submitText="Login"
         schema={Login}
