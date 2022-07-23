@@ -3,7 +3,7 @@ import { AddButton } from "../generic/AddButton"
 import { Stakeholder } from "./ProposalCard"
 import { invoke, useMutation } from "blitz"
 
-import createStakeholder, { CreateStakeholder } from "../../../customer-portals/mutations/deleteStakeholder"
+import createStakeholder, { CreateStakeholder } from "../../../customer-portals/mutations/createStakeholder"
 import deleteStakeholder, { DeleteStakeholder } from "../../../customer-portals/mutations/deleteStakeholder"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
