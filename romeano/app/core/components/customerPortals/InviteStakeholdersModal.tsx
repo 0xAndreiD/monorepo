@@ -3,13 +3,15 @@ import { AddButton } from "../generic/AddButton"
 import { Stakeholder } from "./ProposalCard"
 import { invoke, useMutation } from "blitz"
 
-import createStakeholder, { CreateStakeholder } from "../../../customer-portals/mutations/createStakeholder"
+import createStakeholder, { CreateStakeholder } from "../../../customer-portals/mutations/deleteStakeholder"
+import deleteStakeholder, { DeleteStakeholder } from "../../../customer-portals/mutations/deleteStakeholder"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { getName } from "../../util/text"
 import createEvent from "../../../event/mutations/createEvent"
 import { EventType } from "db"
 import { useEffect } from "react"
+import CustomTrashIcon from "app/core/assets/trashIcon"
 
 export function InviteStakeholdersModal(props: {
   stakeholders: Array<Stakeholder>
@@ -18,6 +20,7 @@ export function InviteStakeholdersModal(props: {
   refetchHandler: () => void
 }) {
   const [inviteStakeholderMutation] = useMutation(createStakeholder)
+  const [deleteStakeholderMutation] = useMutation(deleteStakeholder)
 
   const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof CreateStakeholder>>({
     // resolver: zodResolver(CreateStakeholder.omit({portalId:true}))
@@ -86,9 +89,20 @@ export function InviteStakeholdersModal(props: {
           {props.stakeholders.map((person, idx) => (
             <div key={idx}>
               <h4 className="text-sm text-gray-900 text-left">{getName(person.firstName, person.lastName)}</h4>
-              <div className="flex justify-between">
+              <div className="flex justify-between py-1">
                 <span className="text-sm text-gray-500 text-left">{person.email}</span>
-                <span className="text-sm text-gray-500 text-right">{person.jobTitle}</span>
+                <span className="text-sm text-gray-500 text-right">
+                  {person.jobTitle}
+                  <button
+                    style={{ marginLeft: "10px" }}
+                    onClick={async () => {
+                      await deleteStakeholderMutation({ portalId: props.portalId, email: person.email })
+                      props.refetchHandler()
+                    }}
+                  >
+                    <CustomTrashIcon className="w-4 h-4 text-gray-400" />
+                  </button>
+                </span>
               </div>
             </div>
           ))}
