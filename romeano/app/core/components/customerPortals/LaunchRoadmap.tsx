@@ -368,6 +368,7 @@ export default function LaunchRoadmap(props: {
                           marginLeft: "auto",
                           marginRight: "auto",
                           height: "3px",
+                          border: "0px",
                           background: linearGradient,
                         }}
                       />
@@ -379,6 +380,11 @@ export default function LaunchRoadmap(props: {
           </Carousel>
         </div>
       </nav>
+      <style global jsx>{`
+        .react-multi-carousel-list {
+          display: grid !important;
+        }
+      `}</style>
     </>
   )
 }
