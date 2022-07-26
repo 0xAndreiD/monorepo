@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import React, { useReducer, useState, useEffect, useRef } from "react"
+import React, { useReducer, useState, useEffect, useRef, MutableRefObject } from "react"
 import { format } from "date-fns"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
@@ -242,7 +242,8 @@ export default function LaunchRoadmap(props: {
   editingEnabled: boolean
   refetchHandler: () => void
 }) {
-  const carouselRef = useRef()
+  // @ts-ignore
+  const carouselRef: MutableRefObject<Carousel> = useRef()
   const [updateCurrentLaunchRoadmapStageMutation] = useMutation(updateCurrentLaunchRoadmapStage)
   const [modalState, modalDispatch] = useModalReducer()
 
