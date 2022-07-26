@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import React, { useReducer, useState } from "react"
+import React, { useReducer, useState, useEffect, useRef } from "react"
 import { format } from "date-fns"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
@@ -242,11 +242,18 @@ export default function LaunchRoadmap(props: {
   editingEnabled: boolean
   refetchHandler: () => void
 }) {
+  const carouselRef = useRef()
   const [updateCurrentLaunchRoadmapStageMutation] = useMutation(updateCurrentLaunchRoadmapStage)
   const [modalState, modalDispatch] = useModalReducer()
 
   //used to set if the arrows are visible or not
   const [isShown, setIsShown] = useState(false)
+
+  useEffect(() => {
+    if (carouselRef && carouselRef.current) {
+      carouselRef.current.goToSlide(props.currentRoadmapStage - 1)
+    }
+  }, [carouselRef])
 
   return (
     <>
@@ -298,6 +305,7 @@ export default function LaunchRoadmap(props: {
         {/* Track if mouse enters or leaves, and show/hide the arrows accordingly */}
         <div onMouseEnter={() => setIsShown(true)} onMouseLeave={() => setIsShown(false)}>
           <Carousel
+            ref={carouselRef}
             swipeable={false}
             draggable={false}
             responsive={responsive}
@@ -383,6 +391,7 @@ export default function LaunchRoadmap(props: {
       <style global jsx>{`
         .react-multi-carousel-list {
           display: grid !important;
+          min-height: 48px;
         }
       `}</style>
     </>
