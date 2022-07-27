@@ -196,7 +196,7 @@ function ViewProposalCard(props: { portalId: string; data: Proposal; refetchHand
       <p className="text-sm font-semibold">Key Stakeholder Approval</p>
 
       <div className="py-4 flex gap-3">
-        <StakeholderApprovalCircles data={props.data.stakeholders} />
+        <StakeholderApprovalCircles carousel={true} data={props.data.stakeholders} />
         <div style={{ marginLeft: "-50px", marginTop: "3px" }}>
           <button
             type="button"
