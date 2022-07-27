@@ -217,7 +217,6 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
     if (template?.productInfoSections) {
       for (var i = 0; i < template?.productInfoSections.length; i++) {
         const productInfoSection = template?.productInfoSections[i]
-        // console.log(productInfoSection.id)
 
         const section = await db.productInfoSection.create({
           data: {
@@ -225,9 +224,6 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
             portalId: id,
           },
         })
-
-        console.log(section.id)
-        console.log(section.heading)
 
         //extract the info neccesary to create productInfoSectionLinks
         var linkData = productInfoSection.productInfoSectionLink
@@ -251,37 +247,6 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
         }
       }
     }
-
-    // //this will not bring over the product info section links
-    // template?.productInfoSections.map(async (productInfoSection) => {
-    //   const section = await db.productInfoSection.create({
-    //     data: {
-    //       heading: productInfoSection.heading,
-    //       portalId: id,
-    //     },
-    //   })
-
-    //   //extract the info neccesary to create productInfoSectionLinks
-    //   var linkData = productInfoSection.productInfoSectionLink
-
-    //   for (let link of linkData) {
-    //     const thisLink = await db.link.create({
-    //       data: {
-    //         body: link.link.body ?? "",
-    //         href: link.link.href ?? "",
-    //         type: link.link?.type ?? LinkType.Document,
-    //         userId: userId,
-    //       },
-    //     })
-
-    //     await db.productInfoSectionLink.create({
-    //       data: {
-    //         linkId: thisLink.id,
-    //         productInfoSectionId: section.id,
-    //       },
-    //     })
-    //   }
-    // })
 
     //need to duplicate the links as well
     template?.portalDocuments.map(async (portalDocument) => {
