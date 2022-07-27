@@ -1,5 +1,5 @@
 import { AuthenticationError, Document, resolver } from "blitz"
-import db, { LinkType, Role } from "db"
+import db, { LinkType, Role, ProductInfoSection } from "db"
 import { debuglog } from "util"
 import { z } from "zod"
 import { encodeHashId, decodeHashId } from "../../core/util/crypto"
@@ -141,38 +141,85 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       })
   )
 
-  portal?.productInfoSections?.map(async (productInfoSection) => {
-    const section = await db.productInfoSection.create({
-      data: {
-        heading: productInfoSection.heading,
-        portalId: templatePortal.id,
-        templateId: template.id,
-      },
-    })
+  if (portal?.productInfoSections) {
+    for (var i = 0; i < portal?.productInfoSections.length; i++) {
+      const productInfoSection = portal?.productInfoSections[i]
+      // console.log(productInfoSection.id)
 
-    //extract the info neccesary to create productInfoSectionLinks
-    var linkData = productInfoSection.productInfoSectionLink
-
-    for (let link of linkData) {
-      const thisLink = await db.link.create({
+      const section = await db.productInfoSection.create({
         data: {
-          body: link.link.body ?? "",
-          href: link.link.href ?? "",
-          type: link.link?.type ?? LinkType.Document,
-          userId: userId,
+          heading: productInfoSection.heading,
+          portalId: templatePortal.id,
+          templateId: template.id,
         },
       })
 
-      const sectionLink = await db.productInfoSectionLink.create({
-        data: {
-          linkId: thisLink.id,
-          productInfoSectionId: section.id,
-        },
-      })
+      console.log(section.id)
+      console.log(section.heading)
 
-      console.log(sectionLink)
+      //extract the info neccesary to create productInfoSectionLinks
+      var linkData = productInfoSection.productInfoSectionLink
+
+      for (let link of linkData) {
+        const thisLink = await db.link.create({
+          data: {
+            body: link.link.body ?? "",
+            href: link.link.href ?? "",
+            type: link.link?.type ?? LinkType.Document,
+            userId: userId,
+          },
+        })
+
+        const sectionLink = await db.productInfoSectionLink.create({
+          data: {
+            linkId: thisLink.id,
+            productInfoSectionId: section.id,
+          },
+        })
+      }
     }
-  })
+  }
+
+  // portal?.productInfoSections?.map(async (productInfoSection) => {
+
+  //   const section = new Promise<ProductInfoSection>((resolve) => {
+  //       resolve(db.productInfoSection.create({
+  //         data: {
+  //           heading: productInfoSection.heading,
+  //           portalId: templatePortal.id,
+  //           templateId: template.id,
+  //         },
+  //         }))
+  //   })
+
+  //   //extract the info neccesary to create productInfoSectionLinks
+  //   var linkData = productInfoSection.productInfoSectionLink
+
+  //   section.then( async (values) => {
+  //     for(let link of linkData) {
+  //         const thisLink = await db.link.create({
+  //           data: {
+  //             body: link.link.body ?? "",
+  //             href: link.link.href ?? "",
+  //             type: link.link?.type ?? LinkType.Document,
+  //             userId: userId,
+  //           },
+  //         })
+
+  //         const sectionLink = await new Promise((resolve) => {
+  //             resolve(db.productInfoSectionLink.create({
+  //                 data: {
+  //                   linkId: thisLink?.id ?? 0,
+  //                   productInfoSectionId: values.id ?? 0,
+  //                 },
+  //               })
+  //             )
+  //         })
+  //       }
+  //     }
+  //   )
+
+  // })
 
   portal?.portalDocuments?.map(async (portalDocument) => {
     const link = await db.link.create({
