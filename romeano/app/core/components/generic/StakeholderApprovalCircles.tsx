@@ -28,8 +28,8 @@ export function StakeholderApprovalCircles(props: {
     },
   }
 
-  const renderItems = (data) => {
-    return data.map((stakeholder, idx) => {
+  const renderItems = () => {
+    return props.data.map((stakeholder, idx) => {
       const initials = getInitialsOfName(stakeholder.firstName, stakeholder.lastName)
       const colour = getColourFromString(initials)
 
@@ -75,10 +75,10 @@ export function StakeholderApprovalCircles(props: {
         infinite={false}
         arrows={isShown}
       >
-        {renderItems(props.data)}
+        {renderItems()}
       </Carousel>
     </div>
   ) : (
-    <>{renderItems(props.data)}</>
+    <>{renderItems()}</>
   )
 }
