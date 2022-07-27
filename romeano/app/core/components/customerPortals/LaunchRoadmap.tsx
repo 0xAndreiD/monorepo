@@ -153,7 +153,7 @@ const responsive = {
   tablet: {
     breakpoint: { max: 1024, min: 464 },
     items: 2,
-    slidesToSlide: 2, // optional, default to 1.
+    slidesToSlide: 1, // optional, default to 1.
   },
   mobile: {
     breakpoint: { max: 464, min: 0 },
@@ -252,7 +252,7 @@ export default function LaunchRoadmap(props: {
 
   useEffect(() => {
     if (carouselRef && carouselRef.current) {
-      carouselRef.current.goToSlide(props.currentRoadmapStage - 1)
+      carouselRef.current.goToSlide(Math.max(0, props.currentRoadmapStage - 2))
     }
   }, [carouselRef])
 
@@ -326,7 +326,14 @@ export default function LaunchRoadmap(props: {
                   ? "linear-gradient(to right, #fff, rgb(99, 217, 187))"
                   : "linear-gradient(to right, #fff, rgb(217, 217, 217))"
               return (
-                <div key={idx} className="grid grid-cols-2 grid-rows-1 items-top display-flex">
+                <div
+                  key={idx}
+                  className={`grid grid-cols-2 grid-rows-1 items-top display-flex ${
+                    stageNum === props.currentRoadmapStage
+                      ? "react-multi-carousel-item--active"
+                      : "react-multi-carousel-item"
+                  }`}
+                >
                   <div
                     // key={idx}
                     style={{
