@@ -304,7 +304,7 @@ export default function LaunchRoadmap(props: {
         {/*</ol>*/}
 
         {/* Track if mouse enters or leaves, and show/hide the arrows accordingly */}
-        <div onMouseEnter={() => setIsShown(true)} onMouseLeave={() => setIsShown(false)}>
+        <div id="launchroadmap" onMouseEnter={() => setIsShown(true)} onMouseLeave={() => setIsShown(false)}>
           <Carousel
             ref={carouselRef}
             swipeable={false}
@@ -397,8 +397,10 @@ export default function LaunchRoadmap(props: {
         </div>
       </nav>
       <style global jsx>{`
-        .react-multi-carousel-list {
+        #launchroadmap.react-multi-carousel-list {
           display: grid !important;
+        }
+        .react-multi-carousel-list {
           min-height: 48px;
         }
       `}</style>
