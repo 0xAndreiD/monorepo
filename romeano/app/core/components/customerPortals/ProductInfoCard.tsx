@@ -13,11 +13,13 @@ import { UploadModal } from "./edit/uploadModal"
 import createProductInfoSectionLink from "app/customer-portals/mutations/createProductInfoSectionLink"
 import updateProductInfoSectionLink from "app/customer-portals/mutations/updateProductInfoSectionLink"
 import deleteProductInfoImage from "app/customer-portals/mutations/deleteProductInfoImage"
+import deleteProductInfoLink from "app/customer-portals/mutations/deleteProductInfoLink"
 import addProductInfoImage from "app/customer-portals/mutations/addProductInfoImage"
 import createProductInfoSection from "app/customer-portals/mutations/createProductInfoSection"
 import CreateSectionModal from "./edit/createSectionModal"
+import createEvent from "app/event/mutations/createEvent"
 
-import { useMutation } from "blitz"
+import { invoke, useMutation } from "blitz"
 import { UploadProductImageComponent } from "./UploadComponent"
 import { Props } from "@headlessui/react/dist/types"
 
@@ -74,11 +76,12 @@ export function ProductInfoCard(props: {
   const [updateProductInfoSectionLinkMutation] = useMutation(updateProductInfoSectionLink)
   const [deleteProductInfoImageMutation] = useMutation(deleteProductInfoImage)
   const [createProductInfoSectionMutation] = useMutation(createProductInfoSection)
+  const [deleteProductInfoLinkMutation] = useMutation(deleteProductInfoLink)
 
   return (
     <Card borderless={true}>
       <CardHeader>Product Info</CardHeader>
-      {props.data?.images?.length !=0 && (
+      {props.data?.images?.length != 0 && (
         <div className="border-2 border-grey-600 px-12 mt-2 py-1 rounded-md margin">
           <Carousel
             infiniteLoop={true}
@@ -138,30 +141,44 @@ export function ProductInfoCard(props: {
         <div className="py-2" key={idx}>
           <h4 className="pt-2 font-bold">{section.heading}</h4>
           <ul className="list-disc py-1 mx-4 text-sm">
-            {section.links.map((link, idx) => (
+            {section.links.map((sectionLink, idx) => (
               <li className="" key={idx}>
                 <div className="flex gap-1 items-center">
                   <TrackedLink
-                    href={link.href}
+                    href={sectionLink.href}
                     defaultStyle={true}
                     portalId={props.portalId}
-                    linkId={link.id}
+                    linkId={sectionLink.id}
                     type={EventType.ProductInfoLinkOpen}
                     anchorProps={{ target: "_blank" }}
                   >
-                    {link.body}
+                    {sectionLink.body}
                   </TrackedLink>
                   {props.editingEnabled && (
-                    <PencilIcon
-                      style={{ cursor: "pointer" }}
-                      className="w-4 h-4 text-gray-400"
-                      onClick={() =>
-                        setEditLinkModalProps({
-                          isOpen: true,
-                          link: link,
-                        })
-                      }
-                    />
+                    <div className="flex" style={{ marginLeft: "auto" }}>
+                      <PencilIcon
+                        style={{ cursor: "pointer" }}
+                        className="w-4 h-4 text-gray-400"
+                        onClick={() =>
+                          setEditLinkModalProps({
+                            isOpen: true,
+                            link: sectionLink,
+                          })
+                        }
+                      />
+                      <TrashIcon
+                        style={{ cursor: "pointer" }}
+                        className="w-4 h-4 text-gray-400"
+                        onClick={async () => {
+                          await deleteProductInfoLinkMutation({
+                            portalId: props.portalId,
+                            sectionId: section.id,
+                            linkId: sectionLink.id,
+                          })
+                          props.refetchHandler()
+                        }}
+                      />
+                    </div>
                   )}
                 </div>
               </li>
