@@ -3,19 +3,19 @@ import db from "db"
 import { z } from "zod"
 import { decodeHashId } from "../../core/util/crypto"
 
-export default resolver.pipe(async ({ ...data }, ctx) => {
+export default resolver.pipe(async ({ portalId, sectionId, linkId }, ctx) => {
   const currentUserId = ctx.session.userId
   if (!currentUserId) throw new AuthenticationError("no userId provided")
 
-  console.log("DELETE LINK", data, currentUserId)
+  console.log("DELETE LINK", currentUserId)
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const portal = await db.portal.findUnique({ where: { id: decodeHashId(data.portalId) } })
+  const portal = await db.portal.findUnique({ where: { id: decodeHashId(portalId) } })
   if (!portal) throw new NotFoundError("customer portal not found")
 
   // Find link
   const link = await db.link.findUnique({
     where: {
-      id: data.linkId,
+      id: linkId,
     },
   })
   if (!link || link.userId !== currentUserId)
@@ -25,8 +25,8 @@ export default resolver.pipe(async ({ ...data }, ctx) => {
   // Find section link
   const sectionLink = await db.productInfoSectionLink.findFirst({
     where: {
-      productInfoSectionId: data.sectionId,
-      linkId: data.linkId,
+      productInfoSectionId: sectionId,
+      linkId: linkId,
     },
   })
   if (!sectionLink) throw new AuthorizationError("Section link not found")
