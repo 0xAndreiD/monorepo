@@ -20,8 +20,22 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
     include: { accountExecutive: { include: { vendorTeam: { include: { vendor: true } } } } },
   })
   if (!user || !user.accountExecutive) throw new AuthorizationError("Not an account executive")
+  console.log("USER", user)
 
   const allTemplates = await db.template.findMany()
+  var vendorTemplates = []
+  allTemplates.map(async (template) => {
+    const portal = await db.portal.findUnique({
+      where: { id: template.portalId },
+    })
+    if (!portal) {
+      console.warn("No portal found for template id and portal id", template.id, template.portalId)
+    }
+    if (portal?.vendorId === user?.accountExecutive?.vendorTeam.vendorId) {
+      vendorTemplates.push(template)
+    }
+  })
+  console.log("TEMPLATES", allTemplates, vendorTemplates)
 
   // console.log(allTemplates)
   // const all = activePortals.map((p) => ({
@@ -42,6 +56,6 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
   // }))
 
   return {
-    templates: allTemplates,
+    templates: vendorTemplates,
   }
 })
