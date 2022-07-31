@@ -23,7 +23,7 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
   console.log("USER", user)
 
   const allTemplates = await db.template.findMany()
-  var vendorTemplates = []
+  let vendorTemplates: Template[] = []
   allTemplates.map(async (template) => {
     const portal = await db.portal.findUnique({
       where: { id: template.portalId },
