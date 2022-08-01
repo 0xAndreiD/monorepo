@@ -1,9 +1,5 @@
-import { encodeHashId } from "app/core/util/crypto"
 import { AuthenticationError, AuthorizationError, Ctx, resolver } from "blitz"
-import db, { EventType, LinkType, Prisma, Template } from "db"
-import { groupBy } from "lodash"
-import { getExternalUploadPath } from "../../core/util/upload"
-import { generateLinkFromEventType } from "../../portal-details/queries/getPortalDetail"
+import db, { Template } from "db"
 
 export async function getTemplateDataRaw() {
   return await db.template.findMany()
@@ -20,7 +16,7 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
     include: { accountExecutive: { include: { vendorTeam: { include: { vendor: true } } } } },
   })
   if (!user || !user.accountExecutive) throw new AuthorizationError("Not an account executive")
-  console.log("USER", user)
+  // console.log("USER", user)
 
   const allTemplates = await db.template.findMany()
   let vendorTemplates = await Promise.all(
@@ -36,7 +32,7 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
       }
     })
   )
-  console.log("TEMPLATES", allTemplates, vendorTemplates)
+  // console.log("TEMPLATES", allTemplates, vendorTemplates)
 
   return {
     templates: <Template[]>vendorTemplates.filter((x) => {
