@@ -23,9 +23,7 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
   console.log("USER", user)
 
   const allTemplates = await db.template.findMany()
-  // let vendorTemplates: Template[] = []
-
-  const vendorTemplates = await Promise.all(
+  let vendorTemplates = await Promise.all(
     allTemplates.map(async (template) => {
       const portal = await db.portal.findUnique({
         where: { id: template.portalId },
@@ -34,32 +32,14 @@ export default resolver.pipe(resolver.authorize(), async (input: {}, ctx: Ctx) =
         console.warn("No portal found for template id and portal id", template.id, template.portalId)
       }
       if (portal?.vendorId === user?.accountExecutive?.vendorTeam.vendorId) {
-        return template || null
+        return template
       }
     })
   )
   console.log("TEMPLATES", allTemplates, vendorTemplates)
 
-  // console.log(allTemplates)
-  // const all = activePortals.map((p) => ({
-  //   portalId: p.portalId,
-  //   customerName: p.customerName,
-  //   currentRoadmapStage: p.currentRoadmapStage,
-  //   customerNumberOfStages: p.customerNumberOfStages,
-  //   primaryContact: p.hasPrimaryContact
-  //     ? {
-  //         firstName: p.primaryContactFirstName,
-  //         lastName: p.primaryContactLastName,
-  //         jobTitle: p.primaryContactJobTitle,
-  //         email: p.primaryContactEmail,
-  //       }
-  //     : null,
-  //   stakeholderEvents: stakeholderEvents[p.portalId] ?? [],
-  //   documentEvents: documentEvents[p.portalId] ?? [],
-  // }))
-
   return {
-    templates: vendorTemplates.filter((x) => {
+    templates: <Template[]>vendorTemplates.filter((x) => {
       return x !== undefined
     }),
   }
