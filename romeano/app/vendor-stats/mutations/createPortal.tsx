@@ -54,7 +54,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
       include: {
         roadmapStages: {
           orderBy: {
-            id: "asc",
+            date: "asc",
           },
           include: {
             ctaLink: true,
