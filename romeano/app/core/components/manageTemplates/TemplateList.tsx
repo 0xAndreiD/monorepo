@@ -63,7 +63,7 @@ export function TemplateList(props: { data: Template[] }) {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="flex flex-col gap-y-1">
-                            <div className="text-lg font-medium text-gray-900">{template.name}</div>
+                            <div className="text-lg font-medium text-gray-900">{template?.name}</div>
                           </div>
                         </div>
                       </td>
@@ -71,7 +71,7 @@ export function TemplateList(props: { data: Template[] }) {
                       <td className="px-6 py-4 whitespace-nowrap">0</td>
                       <td className="px-6 py-4 items-center whitespace-nowrap">
                         <div className="flex justify-center gap-3">
-                          <BlitzLink href={Routes.EditCustomerPortal({ portalId: encodeHashId(template.portalId) })}>
+                          <BlitzLink href={Routes.EditCustomerPortal({ portalId: encodeHashId(template?.portalId) })}>
                             <button
                               type="button"
                               className="items-center px-3 py-2 border border-gray-300 text-sm 
@@ -89,7 +89,7 @@ export function TemplateList(props: { data: Template[] }) {
                         <button
                           type="button"
                           onClick={async () => {
-                            await deleteTemplateMutation({ id: template.id })
+                            await deleteTemplateMutation({ id: template?.id })
                             Router.reload()
                           }}
                         >
