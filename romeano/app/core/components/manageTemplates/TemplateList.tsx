@@ -26,7 +26,7 @@ export function TemplateList(props: { data: Template[] }) {
   const [deleteTemplateMutation] = useMutation(deleteTemplate)
 
   return (
-    <Card>
+    <Card borderless={true}>
       <CardHeader>Manage Templates</CardHeader>
       <div className="flex flex-col pt-4">
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
