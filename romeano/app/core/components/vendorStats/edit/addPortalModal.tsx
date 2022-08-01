@@ -82,8 +82,8 @@ export default function AddPortalModal(props: {
                   {" "}
                 </option>
                 {props.templates.map((element, index) => (
-                  <option key={index} value={element.id}>
-                    {element.name}
+                  <option key={index} value={element?.id}>
+                    {element?.name}
                   </option>
                 ))}
               </select>
