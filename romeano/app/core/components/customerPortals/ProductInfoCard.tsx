@@ -24,6 +24,8 @@ import createEvent from "app/event/mutations/createEvent"
 import { invoke, useMutation } from "blitz"
 import { UploadProductImageComponent } from "./UploadComponent"
 import { Props } from "@headlessui/react/dist/types"
+import { confirmAlert } from "react-confirm-alert" // Import
+import "react-confirm-alert/src/react-confirm-alert.css" // Import css
 
 type ProductSectionLink = LinkWithType & { productInfoSectionLinkId: number }
 
@@ -155,29 +157,47 @@ export function ProductInfoCard(props: {
           <div className="flex justify-between mt-2 mr-4">
             <h4 className="font-bold">{section.heading}</h4>
             <div className="flex mt-1">
-              <PencilIcon
-                style={{ cursor: "pointer" }}
-                className="w-4 h-4 text-gray-400"
-                onClick={() =>
-                  setEditSectionModalProps({
-                    isOpen: true,
-                    portalId: props.portalId,
-                    sectionId: section.id,
-                    heading: section.heading,
-                  })
-                }
-              />
-              <TrashIcon
-                style={{ cursor: "pointer" }}
-                className="w-4 h-4 text-gray-400"
-                onClick={async () => {
-                  await deleteProductInfoSectionMutation({
-                    portalId: props.portalId,
-                    sectionId: section.id,
-                  })
-                  props.refetchHandler()
-                }}
-              />
+              {props.editingEnabled && (
+                <>
+                  <PencilIcon
+                    style={{ cursor: "pointer" }}
+                    className="w-4 h-4 text-gray-400"
+                    onClick={() =>
+                      setEditSectionModalProps({
+                        isOpen: true,
+                        portalId: props.portalId,
+                        sectionId: section.id,
+                        heading: section.heading,
+                      })
+                    }
+                  />
+                  <TrashIcon
+                    style={{ cursor: "pointer" }}
+                    className="w-4 h-4 text-gray-400"
+                    onClick={() => {
+                      confirmAlert({
+                        title: "Are you sure",
+                        message: "Deleting a section will delete all associated links as well",
+                        buttons: [
+                          {
+                            label: "Yes",
+                            onClick: async () => {
+                              await deleteProductInfoSectionMutation({
+                                portalId: props.portalId,
+                                sectionId: section.id,
+                              })
+                              props.refetchHandler()
+                            },
+                          },
+                          {
+                            label: "No",
+                          },
+                        ],
+                      })
+                    }}
+                  />
+                </>
+              )}
             </div>
           </div>
           <ul className="list-disc py-1 mx-4 text-sm">
