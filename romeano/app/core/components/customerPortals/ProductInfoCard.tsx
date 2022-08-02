@@ -16,7 +16,9 @@ import deleteProductInfoImage from "app/customer-portals/mutations/deleteProduct
 import deleteProductInfoLink from "app/customer-portals/mutations/deleteProductInfoLink"
 import addProductInfoImage from "app/customer-portals/mutations/addProductInfoImage"
 import createProductInfoSection from "app/customer-portals/mutations/createProductInfoSection"
+import deleteProductInfoSection from "app/customer-portals/mutations/deleteProductInfoSection"
 import CreateSectionModal from "./edit/createSectionModal"
+import EditSectionModal from "./edit/editSectionModal"
 import createEvent from "app/event/mutations/createEvent"
 
 import { invoke, useMutation } from "blitz"
@@ -72,10 +74,21 @@ export function ProductInfoCard(props: {
     portalId: undefined,
   })
 
+  const [editSectionModalProps, setEditSectionModalProps] = useState<
+    | { isOpen: false; portalId: undefined; sectionId: undefined; heading: undefined }
+    | { isOpen: true; portalId: string; sectionId: number; heading: string }
+  >({
+    isOpen: false,
+    portalId: undefined,
+    sectionId: undefined,
+    heading: undefined,
+  })
+
   const [createProductInfoSectionLinkMutation] = useMutation(createProductInfoSectionLink)
   const [updateProductInfoSectionLinkMutation] = useMutation(updateProductInfoSectionLink)
   const [deleteProductInfoImageMutation] = useMutation(deleteProductInfoImage)
   const [createProductInfoSectionMutation] = useMutation(createProductInfoSection)
+  const [deleteProductInfoSectionMutation] = useMutation(deleteProductInfoSection)
   const [deleteProductInfoLinkMutation] = useMutation(deleteProductInfoLink)
 
   return (
@@ -139,7 +152,34 @@ export function ProductInfoCard(props: {
       )}
       {props.data.sections.map((section, idx) => (
         <div className="py-2" key={idx}>
-          <h4 className="pt-2 font-bold">{section.heading}</h4>
+          <div className="flex justify-between mt-2 mr-4">
+            <h4 className="font-bold">{section.heading}</h4>
+            <div className="flex mt-1">
+              <PencilIcon
+                style={{ cursor: "pointer" }}
+                className="w-4 h-4 text-gray-400"
+                onClick={() =>
+                  setEditSectionModalProps({
+                    isOpen: true,
+                    portalId: props.portalId,
+                    sectionId: section.id,
+                    heading: section.heading,
+                  })
+                }
+              />
+              <TrashIcon
+                style={{ cursor: "pointer" }}
+                className="w-4 h-4 text-gray-400"
+                onClick={async () => {
+                  await deleteProductInfoSectionMutation({
+                    portalId: props.portalId,
+                    sectionId: section.id,
+                  })
+                  props.refetchHandler()
+                }}
+              />
+            </div>
+          </div>
           <ul className="list-disc py-1 mx-4 text-sm">
             {section.links.map((sectionLink, idx) => (
               <li className="" key={idx}>
@@ -245,6 +285,24 @@ export function ProductInfoCard(props: {
           portalId={props.portalId}
           onLinkComplete={async (portal) => {
             setCreateSectionModalProps({ isOpen: false, portalId: undefined })
+            props.refetchHandler()
+          }}
+        />
+      </Modal>
+
+      {/* edit section modal */}
+      <Modal
+        isOpen={editSectionModalProps.isOpen}
+        onClose={() =>
+          setEditSectionModalProps({ isOpen: false, portalId: undefined, sectionId: undefined, heading: undefined })
+        }
+      >
+        <EditSectionModal
+          portalId={props.portalId}
+          sectionId={editSectionModalProps.sectionId}
+          heading={editSectionModalProps.heading}
+          onLinkComplete={async (portal) => {
+            setEditSectionModalProps({ isOpen: false, portalId: undefined, sectionId: undefined, heading: undefined })
             props.refetchHandler()
           }}
         />
