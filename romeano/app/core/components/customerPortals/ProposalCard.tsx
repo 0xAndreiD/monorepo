@@ -194,9 +194,10 @@ function ViewProposalCard(props: { portalId: string; data: Proposal; refetchHand
       <CardDivider />
 
       <p className="text-sm font-semibold">Key Stakeholder Approval</p>
+
       <div className="py-4 flex gap-3">
-        <StakeholderApprovalCircles data={props.data.stakeholders} />
-        <div style={{ marginLeft: "auto" }}>
+        <StakeholderApprovalCircles carousel={true} data={props.data.stakeholders} />
+        <div style={{ marginLeft: "-50px", marginTop: "3px" }}>
           <button
             type="button"
             className="w-10 h-10 border flex items-center justify-center border-grey-300 rounded-full "

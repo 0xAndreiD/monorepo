@@ -43,6 +43,7 @@
     "@tailwindcss/line-clamp": "^0.4.0",
     "amplitude-js": "^8.18.4",
     "analytics": "^0.7.18",
+    "aws-sdk": "^2.1181.0",
     "axios": "^0.24.0",
     "babel": "^6.23.0",
     "blitz": "0.42.0",

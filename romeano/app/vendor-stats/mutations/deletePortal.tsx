@@ -1,3 +1,4 @@
+import { StakeholderApprovalCircles } from "app/core/components/generic/StakeholderApprovalCircles"
 import { resolver } from "blitz"
 import db from "db"
 // import { configStyleValidator } from "react-html-email"
@@ -20,5 +21,7 @@ export default resolver.pipe(
     return await db.userPortal.delete({
       where: { userId_portalId: { userId: userId, portalId: decodeHashId(thisPortalId) } },
     })
+
+    // TODO: make sure to delete orphaned Stakeholders and Users?
   }
 )

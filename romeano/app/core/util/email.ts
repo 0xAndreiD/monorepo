@@ -16,7 +16,8 @@ export const transporter = nodemailer.createTransport({
   port: 465,
   auth: {
     user: "apikey",
-    pass: "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",
+    // pass: "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",
+    pass: "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",
   },
 })
 

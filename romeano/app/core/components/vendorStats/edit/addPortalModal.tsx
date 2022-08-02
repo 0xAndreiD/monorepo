@@ -1,13 +1,10 @@
 import { useForm } from "react-hook-form"
 
-import React, { useState } from "react"
-import { LinkType, Template } from "db"
+import React from "react"
+import { Template } from "db"
 import { Dialog } from "@headlessui/react"
-import { CloudUploadIcon, LinkIcon } from "@heroicons/react/outline"
-import { UploadComponent } from "app/core/components/customerPortals/UploadComponent"
 import { z } from "zod"
 import Labeled from "app/core/components/generic/Labeled"
-import { LinkWithId, LinkWithType } from "types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQuery } from "blitz"
 import CreatePortal from "app/vendor-stats/mutations/createPortal"
@@ -15,9 +12,6 @@ import createStakeholder from "app/customer-portals/mutations/createStakeholder"
 
 import { encodeHashId } from "app/core/util/crypto"
 
-import { array, string } from "fp-ts"
-import getTemplates from "app/vendor-stats/queries/getTemplates"
-import { Dropdown } from "../Dropdown"
 import Router from "next/router"
 
 export default function AddPortalModal(props: {
@@ -36,7 +30,6 @@ export default function AddPortalModal(props: {
   })
   const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    // defaultValues: props.existingData?.type === LinkType.WebLink ? props.existingData : {},
   })
 
   const formOnSubmit = handleSubmit(async (portalData) => {
@@ -60,9 +53,7 @@ export default function AddPortalModal(props: {
     reset()
     Router.reload()
   })
-  {
-    /* <Dropdown data={props.templates} {...register("oppName", { required: true })}/> */
-  }
+
   return (
     <div className="mt-3 text-center sm:mt-0 sm:text-left">
       <Dialog.Title as="h3" className="text-lg leading-6 font-medium font-bold text-gray-900">
@@ -82,8 +73,8 @@ export default function AddPortalModal(props: {
                   {" "}
                 </option>
                 {props.templates.map((element, index) => (
-                  <option key={index} value={element.id}>
-                    {element.name}
+                  <option key={index} value={element?.id}>
+                    {element?.name}
                   </option>
                 ))}
               </select>

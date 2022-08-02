@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import React, { useReducer, useState } from "react"
+import React, { useReducer, useState, useEffect, useRef, MutableRefObject } from "react"
 import { format } from "date-fns"
 import { TrackedLink } from "../generic/Link"
 import { EventType } from "db"
@@ -153,7 +153,7 @@ const responsive = {
   tablet: {
     breakpoint: { max: 1024, min: 464 },
     items: 2,
-    slidesToSlide: 2, // optional, default to 1.
+    slidesToSlide: 1, // optional, default to 1.
   },
   mobile: {
     breakpoint: { max: 464, min: 0 },
@@ -242,11 +242,19 @@ export default function LaunchRoadmap(props: {
   editingEnabled: boolean
   refetchHandler: () => void
 }) {
+  // @ts-ignore
+  const carouselRef: MutableRefObject<Carousel> = useRef()
   const [updateCurrentLaunchRoadmapStageMutation] = useMutation(updateCurrentLaunchRoadmapStage)
   const [modalState, modalDispatch] = useModalReducer()
 
   //used to set if the arrows are visible or not
   const [isShown, setIsShown] = useState(false)
+
+  useEffect(() => {
+    if (carouselRef && carouselRef.current) {
+      carouselRef.current.goToSlide(Math.max(0, props.currentRoadmapStage - 2))
+    }
+  }, [carouselRef])
 
   return (
     <>
@@ -296,8 +304,9 @@ export default function LaunchRoadmap(props: {
         {/*</ol>*/}
 
         {/* Track if mouse enters or leaves, and show/hide the arrows accordingly */}
-        <div onMouseEnter={() => setIsShown(true)} onMouseLeave={() => setIsShown(false)}>
+        <div id="launchroadmap" onMouseEnter={() => setIsShown(true)} onMouseLeave={() => setIsShown(false)}>
           <Carousel
+            ref={carouselRef}
             swipeable={false}
             draggable={false}
             responsive={responsive}
@@ -317,7 +326,14 @@ export default function LaunchRoadmap(props: {
                   ? "linear-gradient(to right, #fff, rgb(99, 217, 187))"
                   : "linear-gradient(to right, #fff, rgb(217, 217, 217))"
               return (
-                <div key={idx} className="grid grid-cols-2 grid-rows-1 items-top display-flex">
+                <div
+                  key={idx}
+                  className={`grid grid-cols-2 grid-rows-1 items-top display-flex ${
+                    stageNum === props.currentRoadmapStage
+                      ? "react-multi-carousel-item--active"
+                      : "react-multi-carousel-item"
+                  }`}
+                >
                   <div
                     // key={idx}
                     style={{
@@ -368,6 +384,7 @@ export default function LaunchRoadmap(props: {
                           marginLeft: "auto",
                           marginRight: "auto",
                           height: "3px",
+                          border: "0px",
                           background: linearGradient,
                         }}
                       />
@@ -379,6 +396,14 @@ export default function LaunchRoadmap(props: {
           </Carousel>
         </div>
       </nav>
+      <style global jsx>{`
+        #launchroadmap.react-multi-carousel-list {
+          display: grid !important;
+        }
+        .react-multi-carousel-list {
+          min-height: 48px;
+        }
+      `}</style>
     </>
   )
 }

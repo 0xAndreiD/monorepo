@@ -14,7 +14,6 @@ import getTemplates from "app/vendor-stats/queries/getTemplates"
 function VendorStats() {
   const [vendorStats] = useQuery(getVendorStats, {}, { refetchOnWindowFocus: false })
   const [templates] = useQuery(getTemplates, {}, { refetchOnWindowFocus: false })
-
   return (
     <>
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
@@ -23,7 +22,7 @@ function VendorStats() {
           <CardDivider />
         </div>
       </div>
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
+      <div className="max-w-7xl mx-auto py-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <OpportunityEngagement data={vendorStats.opportunityEngagement} />
           <StakeholderActivity data={vendorStats.stakeholderActivityLog} />
