@@ -95,27 +95,31 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
     },
   })
 
-  portal?.roadmapStages?.map(async (roadmapStage) => {
-    const link = await db.link.create({
-      data: {
-        body: roadmapStage.ctaLink?.body ?? "",
-        href: roadmapStage.ctaLink?.href ?? "",
-        type: roadmapStage.ctaLink?.type ?? LinkType.Document,
-        userId: userId,
-      },
-    })
+  if (portal?.roadmapStages) {
+    for (var i = 0; i < portal?.roadmapStages.length; i++) {
+      const roadmapStage = portal?.roadmapStages[i]
 
-    await db.roadmapStage.create({
-      data: {
-        portalId: templatePortal.id,
-        heading: roadmapStage.heading,
-        date: roadmapStage.date,
-        templateId: template.id,
-        tasks: roadmapStage.tasks,
-        ctaLinkId: link.id,
-      },
-    })
-  })
+      const link = await db.link.create({
+        data: {
+          body: roadmapStage.ctaLink?.body ?? "",
+          href: roadmapStage.ctaLink?.href ?? "",
+          type: roadmapStage.ctaLink?.type ?? LinkType.Document,
+          userId: userId,
+        },
+      })
+
+      await db.roadmapStage.create({
+        data: {
+          portalId: templatePortal.id,
+          heading: roadmapStage.heading,
+          date: roadmapStage.date,
+          templateId: template.id,
+          tasks: roadmapStage.tasks,
+          ctaLinkId: link.id,
+        },
+      })
+    }
+  }
 
   portal?.images?.map(
     async (image) =>

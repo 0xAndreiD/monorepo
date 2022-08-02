@@ -112,26 +112,30 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
   id = portal.id
 
   if (template) {
-    template?.roadmapStages.map(async (roadmapStage) => {
-      const link = await db.link.create({
-        data: {
-          body: roadmapStage.ctaLink?.body ?? "",
-          href: roadmapStage.ctaLink?.href ?? "",
-          type: roadmapStage.ctaLink?.type ?? LinkType.Document,
-          userId: userId,
-        },
-      })
+    if (template?.roadmapStages) {
+      for (var i = 0; i < template?.roadmapStages.length; i++) {
+        const roadmapStage = template?.roadmapStages[i]
 
-      await db.roadmapStage.create({
-        data: {
-          heading: roadmapStage.heading,
-          date: roadmapStage.date,
-          tasks: roadmapStage.tasks,
-          portalId: id,
-          ctaLinkId: link.id,
-        },
-      })
-    })
+        const link = await db.link.create({
+          data: {
+            body: roadmapStage.ctaLink?.body ?? "",
+            href: roadmapStage.ctaLink?.href ?? "",
+            type: roadmapStage.ctaLink?.type ?? LinkType.Document,
+            userId: userId,
+          },
+        })
+
+        await db.roadmapStage.create({
+          data: {
+            portalId: id,
+            heading: roadmapStage.heading,
+            date: roadmapStage.date,
+            tasks: roadmapStage.tasks,
+            ctaLinkId: link.id,
+          },
+        })
+      }
+    }
 
     template?.nextStepsTasks.map(
       async (nextStepsTask) =>
