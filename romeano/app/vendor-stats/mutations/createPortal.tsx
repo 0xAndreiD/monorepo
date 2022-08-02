@@ -112,26 +112,33 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
   id = portal.id
 
   if (template) {
-    template?.roadmapStages.map(async (roadmapStage) => {
-      const link = await db.link.create({
-        data: {
-          body: roadmapStage.ctaLink?.body ?? "",
-          href: roadmapStage.ctaLink?.href ?? "",
-          type: roadmapStage.ctaLink?.type ?? LinkType.Document,
-          userId: userId,
-        },
-      })
+    if (template?.roadmapStages) {
+      //templates are saved in reverse order, so save it from back to
+      //front to get right order
 
-      await db.roadmapStage.create({
-        data: {
-          heading: roadmapStage.heading,
-          date: roadmapStage.date,
-          tasks: roadmapStage.tasks,
-          portalId: id,
-          ctaLinkId: link.id,
-        },
-      })
-    })
+      for (var i = template?.roadmapStages.length - 1; i >= 0; i--) {
+        const roadmapStage = template?.roadmapStages[i]
+
+        const link = await db.link.create({
+          data: {
+            body: roadmapStage.ctaLink?.body ?? "",
+            href: roadmapStage.ctaLink?.href ?? "",
+            type: roadmapStage.ctaLink?.type ?? LinkType.Document,
+            userId: userId,
+          },
+        })
+
+        await db.roadmapStage.create({
+          data: {
+            portalId: id,
+            heading: roadmapStage.heading,
+            date: roadmapStage.date,
+            tasks: roadmapStage.tasks,
+            ctaLinkId: link.id,
+          },
+        })
+      }
+    }
 
     template?.nextStepsTasks.map(
       async (nextStepsTask) =>
@@ -155,36 +162,39 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
         })
     )
 
-    //this will not bring over the product info section links
-    template?.productInfoSections.map(async (productInfoSection) => {
-      const section = await db.productInfoSection.create({
-        data: {
-          heading: productInfoSection.heading,
-          portalId: id,
-        },
-      })
+    if (template?.productInfoSections) {
+      for (var i = 0; i < template?.productInfoSections.length; i++) {
+        const productInfoSection = template?.productInfoSections[i]
 
-      //extract the info neccesary to create productInfoSectionLinks
-      var linkData = productInfoSection.productInfoSectionLink
-
-      for (let link of linkData) {
-        const thisLink = await db.link.create({
+        const section = await db.productInfoSection.create({
           data: {
-            body: link.link.body ?? "",
-            href: link.link.href ?? "",
-            type: link.link?.type ?? LinkType.Document,
-            userId: userId,
+            heading: productInfoSection.heading,
+            portalId: id,
           },
         })
 
-        await db.productInfoSectionLink.create({
-          data: {
-            linkId: thisLink.id,
-            productInfoSectionId: section.id,
-          },
-        })
+        //extract the info neccesary to create productInfoSectionLinks
+        var linkData = productInfoSection.productInfoSectionLink
+
+        for (let link of linkData) {
+          const thisLink = await db.link.create({
+            data: {
+              body: link.link.body ?? "",
+              href: link.link.href ?? "",
+              type: link.link?.type ?? LinkType.Document,
+              userId: userId,
+            },
+          })
+
+          await db.productInfoSectionLink.create({
+            data: {
+              linkId: thisLink.id,
+              productInfoSectionId: section.id,
+            },
+          })
+        }
       }
-    })
+    }
 
     //need to duplicate the links as well
     template?.portalDocuments.map(async (portalDocument) => {
