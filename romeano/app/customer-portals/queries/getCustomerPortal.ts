@@ -1,5 +1,5 @@
 import { AuthenticationError, NotFoundError, resolver, Ctx, AuthorizationError } from "blitz"
-import db, { Portal, Role } from "db"
+import db, { Portal, Role, UserPortal } from "db"
 import { orderBy } from "lodash"
 import { z } from "zod"
 import { Stakeholder } from "../../core/components/customerPortals/ProposalCard"
@@ -14,7 +14,11 @@ const GetCustomerPortal = z.object({
   portalId: z.string().refine(Boolean, "Required"),
 })
 
-export function checkIfUserCanAccessPortal(ctx: Ctx, portal: Portal, checkIfCanEdit: boolean) {
+export function checkIfUserCanAccessPortal(
+  ctx: Ctx,
+  portal: Portal & { userPortals: UserPortal[] },
+  checkIfCanEdit: boolean
+) {
   const userId = ctx.session.userId
   if (!userId) throw new AuthenticationError("no userId provided")
 
