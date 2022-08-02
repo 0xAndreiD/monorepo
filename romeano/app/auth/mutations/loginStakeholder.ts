@@ -41,7 +41,14 @@ export default resolver.pipe(resolver.zod(LoginStakeholder), async ({ portalId, 
     },
   })
 
-  sendPortalLoginLink(portal.customerName, portal.vendor.name, userPortal.user.firstName, email, magicLink.id)
+  sendPortalLoginLink(
+    portal.customerName,
+    portal.vendor.name,
+    userPortal.user.firstName,
+    email,
+    magicLink.id,
+    userPortal.user.firstName
+  )
 
   return magicLink.id //FIXME: dev speed hack, frontend shouldn't get this
 })

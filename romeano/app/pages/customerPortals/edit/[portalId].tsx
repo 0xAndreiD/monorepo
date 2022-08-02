@@ -35,7 +35,6 @@ function EditCustomerPortal() {
     return <LoadingSpinner />
   }
 
-  //container: https://tailwindui.com/components/application-ui/layout/containers
   return (
     <>
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
