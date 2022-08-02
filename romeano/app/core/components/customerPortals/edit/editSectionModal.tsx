@@ -32,12 +32,14 @@ export default function EditSectionModal(props: {
 
   const formOnSubmit = handleSubmit(async (EditProductInfoSection) => {
     reset()
-    const dbLink = await editProductInfoSectionMutation({
-      portalId: props.portalId,
-      sectionId: props.sectionId,
-      heading: EditProductInfoSection.heading,
-    })
-    await props.onLinkComplete(dbLink)
+    if (props.sectionId !== undefined) {
+      const dbLink = await editProductInfoSectionMutation({
+        portalId: props.portalId,
+        sectionId: props.sectionId,
+        heading: EditProductInfoSection.heading,
+      })
+      await props.onLinkComplete(dbLink)
+    }
   })
 
   return (
