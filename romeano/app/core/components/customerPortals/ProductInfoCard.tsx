@@ -191,6 +191,7 @@ export function ProductInfoCard(props: {
                           },
                           {
                             label: "No",
+                            onClick: () => {},
                           },
                         ],
                       })
