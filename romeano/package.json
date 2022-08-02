@@ -70,6 +70,7 @@
     "prisma": "3.4.1",
     "react": "alpha",
     "react-chartjs-2": "^3.3.0",
+    "react-confirm-alert": "^2.8.0",
     "react-dnd": "^14.0.4",
     "react-dnd-html5-backend": "^14.0.2",
     "react-dom": "alpha",
