@@ -113,7 +113,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
 
   if (template) {
     if (template?.roadmapStages) {
-      for (var i = 0; i < template?.roadmapStages.length; i++) {
+      for (var i = template?.roadmapStages.length - 1; i >= 0; i--) {
         const roadmapStage = template?.roadmapStages[i]
 
         const link = await db.link.create({
