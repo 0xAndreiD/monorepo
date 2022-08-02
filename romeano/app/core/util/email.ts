@@ -75,19 +75,20 @@ export async function sendPortalLoginLink(
   vendorName: string,
   inviterFirstName: string,
   inviteeEmailAddress: string,
-  magicLink: string
+  magicLink: string,
+  inviteeFirstName: string
 ) {
-  const body = `<h1>Hello!</h1>
-<p>
-You asked us to send you a magic link for quickly signing in to your ${customerName} portal from ${vendorName}. Your wish is our command!
-</p>
-<br/>
-<a href="${BACKEND_ENDPOINT}/magicLink/${magicLink}">Sign in to ${customerName} portal</a>`
+  const body = `<p>Hi ${inviteeFirstName},</p>
+<p>Please use <a href="${BACKEND_ENDPOINT}/magicLink/${magicLink}">this link</a> to re-login to your ${vendorName} sales portal! </p>
+
+<div>Best,</div>
+<div>Team ${vendorName}</div>
+`
 
   const msg = {
     from: `"Romeano" <hey@romeano.com>`,
     to: recipientProcessor([inviteeEmailAddress]),
-    subject: `${customerName} Customer Portal Login - ${vendorName}`, // Subject line
+    subject: `Login to your ${vendorName} Sales Portal`, // Subject line
     html: body,
   }
   if (process.env.NODE_ENV !== "production") {
@@ -154,17 +155,19 @@ Please make sure you update the vendor logo if it is not already in the system.
 
 // Welcome email to vendor email
 export async function sendVendorWelcomeEmail(userEmail: string, userFirstName: string, userLastName: string) {
-  const body = `<h1>Hello ${userFirstName}!</h1>
-<p>
-Welcome to Romeano. <a href="http://app.romeano.com">Click here</a> to login.
-</p>
-<br/>
-`
+  const body = `<p>Hi ${userFirstName},</p>
+<p>Please bookmark this link for future reference -</p>
+<ul><li>Beta Link: <a href="http://app.romeano.com">app.romeano.com</a></li></ul>
+<p>We're excited to have you onboard our Beta.</p>
 
+<div>Best,</div>
+<div>Ben Du</div>
+<div>Romeano | <a href="mailto:ben@romeano.com">ben@romeano.com</a></div>
+`
   const msg = {
     from: `"Romeano" <hey@romeano.com>`,
     to: recipientProcessor([userEmail]),
-    subject: `Welcome to Romeano, ${userFirstName}`, // Subject line
+    subject: `Welcome to Romeano's Beta`, // Subject line
     html: body,
   }
   if (process.env.NODE_ENV !== "production") {

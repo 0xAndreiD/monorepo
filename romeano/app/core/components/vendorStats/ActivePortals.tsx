@@ -3,7 +3,7 @@ import "tailwindcss/tailwind.css"
 import { MailIcon } from "@heroicons/react/outline"
 import { getName } from "../../util/text"
 import { StyledLink } from "../generic/Link"
-import { CogIcon, PlusIcon } from "@heroicons/react/solid"
+import { PlusIcon } from "@heroicons/react/solid"
 import { Card, CardHeader } from "../generic/Card"
 import { Contact, EventCounted, Link, Stakeholder } from "../../../../types"
 import { range } from "lodash"
@@ -12,7 +12,6 @@ import { useState } from "react"
 import { Link as BlitzLink, Routes, useMutation } from "blitz"
 import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircles"
 import Modal from "app/core/components/generic/Modal"
-import createPortal from "app/vendor-stats/mutations/createPortal"
 import { Template } from "db"
 import deletePortal from "../../../vendor-stats/mutations/deletePortal"
 import Router from "next/router"
@@ -25,7 +24,6 @@ type ActivePortal = {
   primaryContact: Contact | null
   stakeholderEvents: Array<EventCounted<Stakeholder>>
   documentEvents: Array<EventCounted<Link>>
-  // refetchHandler: () => void
 }
 
 function ProgressBullets(props: { current: number; total: number }) {
@@ -53,7 +51,6 @@ function ProgressBullets(props: { current: number; total: number }) {
   )
 }
 
-//add refetchHandler = () => void
 export function ActivePortals(props: { data: ActivePortal[]; templates: Template[] }) {
   const [addTemplateProps, setAddTemplateProps] = useState<
     { isOpen: false; templateId: undefined } | { isOpen: true; templateId: number }
@@ -115,7 +112,13 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                       <td className="px-6 py-12 whitespace-nowrap sm:rounded-lg">
                         <div className="flex items-center">
                           <div className="flex flex-col gap-y-1">
-                            <div className="text-lg font-medium text-gray-900">{portal.customerName}</div>
+                            <div className="text-lg font-medium text-gray-900">
+                              <BlitzLink href={Routes.PortalDetails({ portalId: portal.portalId })}>
+                                <a className="hover:text-blue-600 hover:underline" title="View Portal">
+                                  {portal.customerName}
+                                </a>
+                              </BlitzLink>
+                            </div>
                             <ProgressBullets
                               current={portal.currentRoadmapStage}
                               total={portal.customerNumberOfStages}
@@ -160,18 +163,16 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                           <div className="grid grid-rows-2">
                             <BlitzLink href={Routes.PortalDetails({ portalId: portal.portalId })}>
                               <a
-                                className="inline-flex items-center px-5 my-3 border text-sm\
+                                className="inline-flex items-center px-5 py-2 my-3 border text-sm\
                 leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300"
                               >
                                 View
                               </a>
                             </BlitzLink>
-                            {/* TODO: Make this a blitz link */}
-                            {/* <BlitzLink> */}
                             <button
                               type="button"
-                              className="inline-flex items-center px-5 my-3 border text-sm\
+                              className="inline-flex items-center px-5 py-2 my-3 border text-sm\
                 leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300"
                               onClick={async () => {
@@ -181,7 +182,6 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                             >
                               Delete
                             </button>
-                            {/* </BlitzLink> */}
                           </div>
                         </div>
                       </td>
@@ -197,24 +197,7 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
         isOpen={addTemplateProps.isOpen}
         onClose={() => setAddTemplateProps({ isOpen: false, templateId: undefined })}
       >
-        <AddPortalModal
-          //issue is coming from line 26 in addPortalModal
-          //schema is different here
-          onLinkComplete={async (portal) => {
-            // await createPortalMutation({
-            //   oppName: portalData.oppName,
-            //   customerFName: portalData.firstName,
-            //   customerLName: portalData.lastName,
-            //   customerEmail: portalData.email,
-            //   roleName: portalData.roleName,
-            //   templateId: portalData.templateId,
-            // })
-            // props.refetchHandler()
-            // setEditLinkModalProps({ isOpen: false, link: undefined })
-          }}
-          templates={props.templates}
-          // refetchHandler={props.refetchHandler}
-        />
+        <AddPortalModal onLinkComplete={async (portal) => {}} templates={props.templates} />
       </Modal>
     </Card>
   )

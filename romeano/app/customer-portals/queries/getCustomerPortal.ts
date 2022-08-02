@@ -1,5 +1,5 @@
-import { NotFoundError, resolver } from "blitz"
-import db, { Role } from "db"
+import { AuthenticationError, NotFoundError, resolver, Ctx, AuthorizationError } from "blitz"
+import db, { Portal, Role, UserPortal } from "db"
 import { orderBy } from "lodash"
 import { z } from "zod"
 import { Stakeholder } from "../../core/components/customerPortals/ProposalCard"
@@ -14,7 +14,32 @@ const GetCustomerPortal = z.object({
   portalId: z.string().refine(Boolean, "Required"),
 })
 
-export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize(), async ({ portalId }) => {
+export function checkIfUserCanAccessPortal(
+  ctx: Ctx,
+  portal: Portal & { userPortals: UserPortal[] },
+  checkIfCanEdit: boolean
+) {
+  const userId = ctx.session.userId
+  if (!userId) throw new AuthenticationError("no userId provided")
+
+  if (!portal) throw new NotFoundError("Portal not found")
+
+  const accountExecutiveIds = new Set(
+    portal.userPortals?.filter((x) => x.role === Role.AccountExecutive).map((x) => x.userId)
+  )
+  const stakeholderIds = new Set(portal.userPortals?.filter((x) => x.role === Role.Stakeholder).map((x) => x.userId))
+  console.log("Verifying USER ACCESS TO PORTAL", userId, accountExecutiveIds, stakeholderIds)
+
+  if (!accountExecutiveIds?.has(userId) && !stakeholderIds?.has(userId)) {
+    throw new AuthorizationError("User does not have access to the requested portal")
+  }
+
+  if (checkIfCanEdit && !accountExecutiveIds?.has(userId)) {
+    throw new AuthorizationError("User is not an AE on portal and hence cannot edit")
+  }
+}
+
+export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize(), async ({ portalId }, ctx: Ctx) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const portalIdInt = decodeHashId(portalId)
   if (!portalIdInt) throw new NotFoundError()
@@ -65,6 +90,12 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   })
 
   if (!portal) throw new NotFoundError()
+  checkIfUserCanAccessPortal(ctx, portal, false)
+
+  const accountExecutiveIds = new Set(
+    portal.userPortals.filter((x) => x.role === Role.AccountExecutive).map((x) => x.userId)
+  )
+  const stakeholderIds = new Set(portal.userPortals.filter((x) => x.role === Role.Stakeholder).map((x) => x.userId))
 
   const header = {
     vendorLogo: portal.vendor.logoUrl,
@@ -82,11 +113,6 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
       ctaLink: stage.ctaLink ? { ...stage.ctaLink, href: formatLink(stage.ctaLink) } : undefined,
     })),
   }
-
-  const accountExecutiveIds = new Set(
-    portal.userPortals.filter((x) => x.role === Role.AccountExecutive).map((x) => x.userId)
-  )
-  const stakeholderIds = new Set(portal.userPortals.filter((x) => x.role === Role.Stakeholder).map((x) => x.userId))
 
   const nextSteps = {
     customer: {

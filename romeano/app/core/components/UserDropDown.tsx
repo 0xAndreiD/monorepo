@@ -26,11 +26,21 @@ export default function UserDropDown(props: { templates: Template[] }) {
     <>
       <Menu as="div" className="relative inline-block text-left" style={{ zIndex: 100 }}>
         <div>
-          <Menu.Button className="bg-gray-100 inline-flex justify-center w-full rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+          <Menu.Button className="bg-gray-100 inline-flex justify-center w-full rounded-md font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
             <span className="text-gray-900 block px-4 py-2 text-xs">
               {user?.firstName} {user?.lastName}
             </span>
-            <UserCircleIcon className="h-7 w-7" aria-hidden="true" />
+            {user?.photoUrl ? (
+              <img
+                className="rounded-full"
+                src={user.photoUrl}
+                width={30}
+                height={30}
+                style={{ width: "30px", height: "30px", marginTop: "1px" }}
+              />
+            ) : (
+              <UserCircleIcon className="h-7 w-7" aria-hidden="true" />
+            )}
           </Menu.Button>
         </div>
 
@@ -46,11 +56,7 @@ export default function UserDropDown(props: { templates: Template[] }) {
           <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
             <div className="py-1">
               <Menu.Item>
-                <span className="bg-gray-100 text-gray-900 block px-4 py-2 text-xs">
-                  Welcome, {user?.firstName} {user?.lastName}
-                  <br />
-                  {user?.email}
-                </span>
+                <span className="bg-gray-100 text-gray-900 block px-4 py-2 text-sm">{user?.email}</span>
               </Menu.Item>
             </div>
 
