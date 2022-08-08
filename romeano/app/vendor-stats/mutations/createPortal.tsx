@@ -113,10 +113,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
 
   if (template) {
     if (template?.roadmapStages) {
-      //templates are saved in reverse order, so save it from back to
-      //front to get right order
-
-      for (var i = template?.roadmapStages.length - 1; i >= 0; i--) {
+      for (var i = 0; i < template?.roadmapStages.length; i++) {
         const roadmapStage = template?.roadmapStages[i]
 
         const link = await db.link.create({
