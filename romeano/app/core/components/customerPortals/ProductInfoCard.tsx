@@ -120,7 +120,8 @@ export function ProductInfoCard(props: {
                   await deleteProductInfoImageMutation({
                     current: current,
                     portalId: props.portalId,
-                  })
+                  }),
+                    props.refetchHandler()
                 }}
                 style={{ ...style, right: 15 }}
               >
