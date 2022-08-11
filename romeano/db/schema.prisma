@@ -2,8 +2,9 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 generator client {
@@ -29,6 +30,8 @@ model Portal {
   userPortals         UserPortal[]
   internalNotes       InternalNote[]
   events              Event[]
+  user                User?                @relation(fields: [userId], references: [id])
+  userId              Int?
   vendor              Vendor               @relation(fields: [vendorId], references: [id])
   vendorId            Int
   isTemplate          Boolean?
@@ -41,6 +44,8 @@ model UserPortal {
   userId                 Int
   portal                 Portal   @relation(fields: [portalId], references: [id])
   portalId               Int
+  vendor                 Vendor?  @relation(fields: [vendorId], references: [id])
+  vendorId               Int?
   role                   Role
   hasStakeholderApproved Boolean?
   isPrimaryContact       Boolean?
@@ -50,6 +55,7 @@ model UserPortal {
 
   Template   Template? @relation(fields: [templateId], references: [id])
   templateId Int?
+
   @@id([userId, portalId])
 }
 
@@ -64,9 +70,13 @@ model User {
   lastName         String
   email            String            @unique
   photoUrl         String?
+  vendor           Vendor?           @relation(fields: [vendorId], references: [id])
+  vendorId         Int?
   accountExecutive AccountExecutive?
   stakeholder      Stakeholder?
+  templates        Template[]
   links            Link[]
+  portals          Portal[]
   userPortals      UserPortal[]
   messagesSent     InternalNote[]
   events           Event[]
@@ -123,10 +133,17 @@ model Vendor {
   portals     Portal[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+
+  users             User[]
+  accountExecutives AccountExecutive[]
+  userPortals       UserPortal[]
+  templates         Template[]
+  Stakeholder       Stakeholder[]
 }
 
 model VendorTeam {
   id                Int                @id @default(autoincrement())
+  name              String?
   vendor            Vendor             @relation(fields: [vendorId], references: [id])
   vendorId          Int
   accountExecutives AccountExecutive[]
@@ -141,13 +158,17 @@ enum Role {
 
 model Stakeholder {
   jobTitle String
-  user     User   @relation(fields: [userId], references: [id])
-  userId   Int    @unique
+  user     User    @relation(fields: [userId], references: [id])
+  userId   Int     @unique
+  vendor   Vendor? @relation(fields: [vendorId], references: [id])
+  vendorId Int?
 }
 
 model AccountExecutive {
   id           Int        @id @default(autoincrement())
   jobTitle     String
+  vendor       Vendor?    @relation(fields: [vendorId], references: [id])
+  vendorId     Int?
   vendorTeam   VendorTeam @relation(fields: [vendorTeamId], references: [id])
   vendorTeamId Int
   user         User       @relation(fields: [userId], references: [id])
@@ -297,6 +318,10 @@ model Template {
   portalDocuments     PortalDocument[]
   internalNotes       InternalNote[]
   portalId            Int
+  user                User?                @relation(fields: [userId], references: [id])
+  userId              Int?
+  vendor              Vendor?              @relation(fields: [vendorId], references: [id])
+  vendorId            Int?
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
 }
