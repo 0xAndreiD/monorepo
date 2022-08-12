@@ -20,6 +20,7 @@ export default resolver.pipe(resolver.zod(GetCurrentUser), async ({ portalId }, 
       photoUrl: true,
       email: true,
       role: true,
+      vendorId: true,
       accountExecutive: {
         select: {
           id: true,

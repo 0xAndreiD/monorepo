@@ -36,6 +36,7 @@ const seedCustomerPortal = async () => {
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
+      vendorId: vendorTeam.vendorId,
       accountExecutive: {
         //make AE
         create: {
@@ -56,6 +57,7 @@ const seedCustomerPortal = async () => {
       photoUrl:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
+      vendorId: vendorTeam.vendorId,
       accountExecutive: {
         //make AE
         create: {
@@ -80,12 +82,14 @@ const seedCustomerPortal = async () => {
           data: [
             {
               userId: aeUser.id,
+              vendorId: aeUser.vendorId,
               role: Role.AccountExecutive,
               isPrimaryContact: true,
               isSecondaryContact: false,
             },
             {
               userId: aeUser2.id,
+              vendorId: aeUser2.vendorId,
               role: Role.AccountExecutive,
               isPrimaryContact: false,
               isSecondaryContact: true,
@@ -175,6 +179,7 @@ const seedCustomerPortal = async () => {
           userPortals: {
             create: {
               portalId: portal.id,
+              vendorId: vendorTeam.vendorId,
               role: Role.Stakeholder,
               hasStakeholderApproved: stakeholder.hasStakeholderApproved,
               isPrimaryContact: stakeholder.firstName === "Kristin",
@@ -429,6 +434,7 @@ async function seedPortalDetails() {
         create: {
           jobTitle: "Account Executive",
           vendorTeamId: 1,
+          vendorId: 1,
         },
       },
     },
@@ -466,6 +472,7 @@ async function seedPortalDetails() {
       firstName: "Ali",
       lastName: "G",
       email: "ali@raytheon.com",
+      vendorId: portal.vendorId,
       stakeholder: {
         create: {
           jobTitle: "Director",
@@ -475,6 +482,7 @@ async function seedPortalDetails() {
         create: {
           role: Role.Stakeholder,
           portalId: portal.id,
+          vendorId: portal.vendorId,
         },
       },
     },
@@ -565,6 +573,7 @@ async function seedMira() {
         create: {
           jobTitle: "Account Executive",
           vendorTeamId: vendorTeam.vendorId,
+          vendorId: vendorTeam.vendorId,
         },
       },
     },
@@ -586,6 +595,7 @@ async function seedMira() {
         create: {
           jobTitle: "Account Executive",
           vendorTeamId: vendorTeam.vendorId,
+          vendorId: vendorTeam.vendorId,
         },
       },
     },
@@ -604,12 +614,14 @@ async function seedMira() {
           data: [
             {
               userId: aeUser.id,
+              vendorId: aeUser.vendorId,
               role: Role.AccountExecutive,
               isPrimaryContact: true,
               isSecondaryContact: false,
             },
             {
               userId: testUser.id,
+              vendorId: testUser.vendorId,
               role: Role.AccountExecutive,
               isPrimaryContact: false,
               isSecondaryContact: false,
