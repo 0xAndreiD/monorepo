@@ -27,6 +27,7 @@ export default resolver.pipe(
           create: {
             ...link,
             creator: { connect: { id: userId } },
+            vendorId: ctx.session.vendorId,
           },
         },
       },

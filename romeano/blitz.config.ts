@@ -1,10 +1,11 @@
 import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from "blitz"
+import { customIsAuthorized } from "types"
 
 const config: BlitzConfig = {
   middleware: [
     sessionMiddleware({
       cookiePrefix: "romeano",
-      isAuthorized: simpleRolesIsAuthorized,
+      isAuthorized: customIsAuthorized,
     }),
   ],
   /* Uncomment this to customize the webpack config

@@ -25,7 +25,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     where: { id: magicLinkId },
     data: { hasClicked: true },
   })
-  await session.$create({ userId: magicLink.userId, role: Role.Stakeholder })
+  await session.$create({
+    userId: magicLink.userId,
+    roles: [Role.Stakeholder],
+    vendorId: magicLink.vendorId,
+  })
   return {
     redirect: {
       destination: magicLink.destUrl,

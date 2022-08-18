@@ -23,6 +23,7 @@ export default resolver.pipe(
         description,
         isCompleted: false,
         userId,
+        vendorId: ctx.session.vendorId,
       },
     })
   }

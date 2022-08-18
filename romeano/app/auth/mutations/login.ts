@@ -31,8 +31,34 @@ export const authenticateUser = async (rawEmail: string, rawPassword: string) =>
 export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ctx) => {
   // This throws an error if credentials are invalid
   const user = await authenticateUser(email, password)
+  console.log("USER", user)
+  const roles = []
+  // TODO: Add vendorId constraint in query after all user records have been migrated
+  const accountExecutive = await db.accountExecutive.findFirst({
+    where: {
+      userId: user.id,
+      // vendorId: user.vendorId,
+    },
+  })
+  if (accountExecutive) {
+    roles.push("AccountExecutive")
+  }
+  const stakeHolder = await db.stakeholder.findFirst({
+    where: {
+      userId: user.id,
+      // vendorId: user.vendorId,
+    },
+  })
+  if (stakeHolder) {
+    roles.push("StakeHolder")
+  }
+  console.log("AE | SH", accountExecutive, stakeHolder, roles)
 
-  await ctx.session.$create({ userId: user.id, role: user.role as Role })
+  await ctx.session.$create({
+    userId: user.id,
+    roles: roles,
+    vendorId: user.vendorId,
+  })
 
   return user
 })

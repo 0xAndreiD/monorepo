@@ -19,6 +19,7 @@ export default resolver.pipe(
     return await db.productInfoSection.create({
       data: {
         portalId: decodeHashId(portalId),
+        vendorId: ctx.session.vendorId,
         heading: heading,
       },
     })

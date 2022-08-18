@@ -53,7 +53,7 @@ export default resolver.pipe(
     }
     console.log("Vendor...", vendorRecord)
 
-    // Find a vendor team with this vendor email domaoin first and if one doesn't exist, create it
+    // Find a vendor team with this vendor id first and if one doesn't exist, create it
     var vendorTeamRecord = await db.vendorTeam.findFirst({
       where: { vendorId: vendorRecord.id },
       select: { id: true, vendorId: true },
@@ -79,11 +79,13 @@ export default resolver.pipe(
           lastName: lastName,
           email: emailTrimmed,
           hashedPassword,
+          vendorId: vendorRecord.id,
           accountExecutive: {
             //make AE
             create: {
               jobTitle: jobTitle,
               vendorTeamId: vendorTeamRecord.id,
+              vendorId: vendorRecord.id,
             },
           },
         },
@@ -92,6 +94,18 @@ export default resolver.pipe(
         },
       })
     } else {
+      // Update user's vendor id
+      if (userRecord.vendorId && userRecord.vendorId !== vendorRecord.id) {
+        throw new Error("User found but email domain does not match vendor. Please contact Romeano.")
+      }
+      userRecord = await db.user.update({
+        where: {
+          id: userRecord.id,
+        },
+        data: {
+          vendorId: vendorRecord.id,
+        },
+      })
       // Check if AE exists for this user
       var accountExecRecord = await db.accountExecutive.findUnique({
         where: { userId: userRecord.id },
@@ -103,6 +117,7 @@ export default resolver.pipe(
           data: {
             userId: userRecord.id,
             vendorTeamId: vendorTeamRecord.id,
+            vendorId: vendorRecord.id,
             jobTitle: jobTitle,
           },
           select: { id: true, userId: true, vendorTeamId: true },
@@ -118,7 +133,11 @@ export default resolver.pipe(
     console.log("Sending welcome email to vendor")
     await sendVendorWelcomeEmail(emailTrimmed, firstName, lastName)
 
-    await ctx.session.$create({ userId: userRecord.id, role: userRecord.role as Role })
+    await ctx.session.$create({
+      userId: userRecord.id,
+      roles: [Role.AccountExecutive],
+      vendorId: userRecord.vendorId,
+    })
     return userRecord
   }
 )

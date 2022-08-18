@@ -17,6 +17,7 @@ export default resolver.pipe(resolver.zod(CreateLaunchRoadmapStage), resolver.au
   return await db.roadmapStage.create({
     data: {
       portalId: decodeHashId(data.portalId),
+      vendorId: ctx.session.vendorId,
       heading: data.heading,
       date: data.date,
     },

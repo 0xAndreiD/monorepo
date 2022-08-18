@@ -69,6 +69,7 @@ const uploadLogo = nc<NextApiRequest & { fields: Fields; files: Files }, NextApi
           href: file.newFilename!,
           type: LinkType.Document,
           creator: { connect: { id: userId } },
+          vendor: { connect: { id: session.vendorId } },
         },
       })
       await invokeWithMiddleware(

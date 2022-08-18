@@ -21,6 +21,7 @@ const seedCustomerPortal = async () => {
         //make vendor
         create: {
           name: "MiraDemo",
+          emailDomain: "mira.com",
           logoUrl:
             "https://images.squarespace-cdn.com/content/v1/59ecb4ff4c0dbfd368993258/1519077349473-M7ADD9VEABMQSHAJB6ZL/ke17ZwdGBToddI8pDm48kEEk35wlJZsUCSxoPFFCfNNZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PICXa7_N5J40iYbFYBr4Oop3ePWNkItV5sPMJ0tw-x6KIKMshLAGzx4R3EDFOm1kBS/Mira+Labs+logo.jpg",
         },
@@ -171,9 +172,11 @@ const seedCustomerPortal = async () => {
           lastName: stakeholder.lastName,
           email: stakeholder.email,
           photoUrl: stakeholder.photoUrl,
+          vendorId: vendorTeam.vendorId,
           stakeholder: {
             create: {
               jobTitle: stakeholder.jobTitle,
+              vendorId: vendorTeam.vendorId,
             },
           },
           userPortals: {
@@ -553,6 +556,7 @@ async function seedMira() {
         //make vendor
         create: {
           name: "Mira",
+          emailDomain: "miralabs.io",
           logoUrl:
             "https://images.squarespace-cdn.com/content/v1/59ecb4ff4c0dbfd368993258/1519077349473-M7ADD9VEABMQSHAJB6ZL/ke17ZwdGBToddI8pDm48kEEk35wlJZsUCSxoPFFCfNNZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PICXa7_N5J40iYbFYBr4Oop3ePWNkItV5sPMJ0tw-x6KIKMshLAGzx4R3EDFOm1kBS/Mira+Labs+logo.jpg",
         },

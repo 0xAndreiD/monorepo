@@ -49,6 +49,7 @@ export default resolver.pipe(
           lastName,
           email,
           role: SiteRole.SiteUser,
+          vendorId: ctx.session.vendorId,
         },
       }))
 
@@ -58,6 +59,7 @@ export default resolver.pipe(
         data: {
           jobTitle,
           userId: user.id,
+          vendorId: ctx.session.vendorId,
         },
       }))
 
@@ -71,6 +73,7 @@ export default resolver.pipe(
         (await db.userPortal.create({
           data: {
             portalId: decodeHashId(portalId),
+            vendorId: ctx.session.vendorId,
             userId: user.id,
             role: Role.Stakeholder,
           },
@@ -83,6 +86,7 @@ export default resolver.pipe(
       data: {
         id: generateToken(),
         userId: user.id,
+        vendorId: user.vendorId,
         destUrl: Routes.CustomerPortal({ portalId }).pathname.replace("[portalId]", portalId),
         hasClicked: false,
       },

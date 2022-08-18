@@ -18,6 +18,7 @@ export default resolver.pipe(resolver.zod(CreateDocument), resolver.authorize(),
       data: {
         portal: { connect: { id: decodeHashId(portalId) } },
         link: { connect: { id: linkId } },
+        vendor: { connect: { id: ctx.session.vendorId } },
       },
       include: { link: true },
     })
