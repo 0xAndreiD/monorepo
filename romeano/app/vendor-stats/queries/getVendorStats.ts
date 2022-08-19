@@ -11,7 +11,7 @@ import { Contact, EventCounted, Link, Stakeholder } from "types"
 
 import { encodeHashId } from "../../core/util/crypto"
 
-import { enforceSiteAdminIfNotCurrentVendor, setDefaultVendorId } from "app/core/utils"
+import { enforceCurrentVendor } from "app/core/utils"
 import { queries } from "@testing-library/dom"
 
 type ActivePortal = {
@@ -75,27 +75,20 @@ export async function getStakeholderActivityLogRaw(portalIds: number[]) {
 export default resolver.pipe(
   // Ensure user is logged in as AE
   resolver.authorize(Role.AccountExecutive),
-  // Set input.vendorId to the current vendor ID if one is not set
-  // This allows SUPERADMINs to pass in a specific vendorId
-  setDefaultVendorId,
-
-  // But now we need to enforce input.vendorId matches
-  // session.vendorId unless user is a SUPERADMIN
-  enforceSiteAdminIfNotCurrentVendor,
 
   async (input: {}, ctx: Ctx) => {
     const userId = ctx.session.userId
     const vendorId = ctx.session.vendorId
-    // if (!userId) throw new AuthenticationError("no userId provided")
+    if (!userId) throw new AuthenticationError("no userId provided")
 
     const user = await db.user.findUnique({
       where: { id: userId },
       include: { accountExecutive: { include: { vendorTeam: { include: { vendor: true } } } } },
     })
-    // if (!user || !user.accountExecutive) throw new AuthorizationError("Not an account executive")
+    if (!user || !user.accountExecutive) throw new AuthorizationError("Not an account executive")
 
     const header = {
-      vendorLogo: user.accountExecutive.vendorTeam.vendor.logoUrl,
+      vendorLogo: user.accountExecutive?.vendorTeam.vendor.logoUrl,
     }
 
     // TODO: Eliminate JOINs from queries...

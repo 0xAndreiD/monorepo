@@ -48,7 +48,7 @@ declare module "blitz" {
     isAuthorized: typeof customIsAuthorized
     PublicData: {
       userId: User["id"]
-      roles: Array<Role | SiteRole>
+      roles: Array<string>
       vendorId?: Vendor["id"]
     }
   }

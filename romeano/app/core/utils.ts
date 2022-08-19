@@ -8,19 +8,19 @@ export default function assert(condition: any, message: string): asserts conditi
 
 export const setDefaultVendorId = <T extends Record<any, any>>(
   input: T,
-  { session }: Ctx
+  ctx: Ctx
 ): T & { vendorId: Prisma.IntNullableFilter | number } => {
   console.log("In setDefaultVendorId.............")
-  assert(session.vendorId, "Missing session.vendorId in setDefaultVendorId")
+  assert(ctx.session.vendorId, "Missing session.vendorId in setDefaultVendorId")
   if (input.vendorId) {
     // Pass through the input
     return input as T & { vendorId: number }
-  } else if (session.roles?.includes(SiteRole.SiteAdmin)) {
+  } else if (ctx.session.roles?.includes(SiteRole.SiteAdmin)) {
     // Allow viewing any vendor
     return { ...input, vendorId: { not: 0 } }
   } else {
     // Set vendorId to session.vendorId
-    return { ...input, vendorId: session.vendorId }
+    return { ...input, vendorId: ctx.session.vendorId }
   }
 }
 
@@ -33,4 +33,13 @@ export const enforceSiteAdminIfNotCurrentVendor = <T extends Record<any, any>>(i
     ctx.session.$authorize(SiteRole.SiteAdmin)
   }
   return input
+}
+
+export const enforceCurrentVendor = <T extends Record<any, any>>(input: T, ctx: Ctx): T => {
+  // Set input.vendorId to the current vendor ID if one is not set
+  // This allows SUPERADMINs to pass in a specific vendorId
+  setDefaultVendorId(input, ctx)
+  // But now we need to enforce input.vendorId matches
+  // session.vendorId unless user is a SUPERADMIN
+  return enforceSiteAdminIfNotCurrentVendor(input, ctx)
 }

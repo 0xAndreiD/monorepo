@@ -1,18 +1,11 @@
 import { AuthenticationError, AuthorizationError, Ctx, resolver } from "blitz"
 import db, { Template, Role } from "db"
 
-import { enforceSiteAdminIfNotCurrentVendor, setDefaultVendorId } from "app/core/utils"
+import { enforceCurrentVendor } from "app/core/utils"
 
 export default resolver.pipe(
   // Ensure user is logged in
   resolver.authorize(Role.AccountExecutive),
-  // Set input.vendorId to the current vendor ID if one is not set
-  // This allows SUPERADMINs to pass in a specific vendorId
-  setDefaultVendorId,
-
-  // But now we need to enforce input.vendorId matches
-  // session.vendorId unless user is a SUPERADMIN
-  enforceSiteAdminIfNotCurrentVendor,
 
   async (input: {}, ctx: Ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant

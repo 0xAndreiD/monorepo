@@ -11,10 +11,9 @@ export const GetCurrentUser = z.object({
 export default resolver.pipe(
   resolver.authorize(),
   resolver.zod(GetCurrentUser),
-  // eslint-disable-next-line
-  async (input: { portalId: string }, ctx: Ctx) => {
+  async ({ portalId }, { session }: Ctx) => {
     const user = await db.user.findUnique({
-      where: { id: ctx.session.userId },
+      where: { id: session.userId || undefined },
       select: {
         id: true,
         firstName: true,
@@ -41,7 +40,10 @@ export default resolver.pipe(
         stakeholder: true,
         userPortals: portalId
           ? {
-              where: { portalId: decodeHashId(input.portalId) },
+              where: {
+                portalId: decodeHashId(portalId),
+                vendorId: session.vendorId,
+              },
               select: {
                 userId: true,
                 portalId: true,
@@ -57,13 +59,7 @@ export default resolver.pipe(
       },
     })
 
+    // TODO: Remove role from here and use the one from session instead
     return { ...user, role: user?.userPortals?.[0]?.role }
   }
 )
-function async(
-  arg0: { portalId: any },
-  arg1: { session<Session>(): any },
-  Ctx: any
-): (i: { portalId?: string | undefined }, c: import("blitz").AuthenticatedMiddlewareCtx) => unknown {
-  throw new Error("Function not implemented.")
-}

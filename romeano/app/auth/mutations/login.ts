@@ -31,8 +31,7 @@ export const authenticateUser = async (rawEmail: string, rawPassword: string) =>
 export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ctx) => {
   // This throws an error if credentials are invalid
   const user = await authenticateUser(email, password)
-  console.log("USER", user)
-  const roles = []
+  let roles = []
   // TODO: Add vendorId constraint in query after all user records have been migrated
   const accountExecutive = await db.accountExecutive.findFirst({
     where: {
@@ -41,7 +40,7 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
     },
   })
   if (accountExecutive) {
-    roles.push("AccountExecutive")
+    roles.push(Role.AccountExecutive)
   }
   const stakeHolder = await db.stakeholder.findFirst({
     where: {
@@ -50,14 +49,14 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
     },
   })
   if (stakeHolder) {
-    roles.push("StakeHolder")
+    roles.push(Role.Stakeholder)
   }
-  console.log("AE | SH", accountExecutive, stakeHolder, roles)
 
+  // TODO: Remove undefined vendorId when all data is migrated and column is made NON-NULLABLE
   await ctx.session.$create({
     userId: user.id,
     roles: roles,
-    vendorId: user.vendorId,
+    vendorId: user.vendorId || undefined,
   })
 
   return user
