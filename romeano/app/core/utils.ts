@@ -112,24 +112,24 @@ export const tryAndUpdateVendorIdInAllTables = async (user: User, optimize = fal
           })
           console.log("Updated vendorId in userPortal table for user", user.id)
 
-          let updateData = {
+          const updateData1 = {
             where: { userId: user.id, portalId: portal.id },
             data: { vendorId: portal.vendorId },
           }
-          await db.event.updateMany(updateData)
-          await db.internalNote.updateMany(updateData)
-          await db.nextStepsTask.updateMany(updateData)
+          await db.event.updateMany(updateData1)
+          await db.internalNote.updateMany(updateData1)
+          await db.nextStepsTask.updateMany(updateData1)
           console.log("Updated vendorId in event, internalNote, nextStepsTask for user", user.id)
 
-          updateData = {
-            where: { userId: user.id, portalId: portal.id },
+          const updateData2 = {
+            where: { portalId: portal.id },
             data: { vendorId: portal.vendorId },
           }
-          await db.portalDocument.updateMany(updateData)
-          await db.portalImage.updateMany(updateData)
-          await db.productInfoSection.updateMany(updateData)
-          await db.roadmapStage.updateMany(updateData)
-          await db.template.updateMany(updateData)
+          await db.portalDocument.updateMany(updateData2)
+          await db.portalImage.updateMany(updateData2)
+          await db.productInfoSection.updateMany(updateData2)
+          await db.roadmapStage.updateMany(updateData2)
+          await db.template.updateMany(updateData2)
           console.log(
             "Updated vendorId in portalDocument, portalImage, productInfoSection, roadmapStage, template for user",
             user.id
