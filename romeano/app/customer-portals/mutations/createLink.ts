@@ -24,6 +24,7 @@ export default resolver.pipe(resolver.zod(CreateLink), resolver.authorize(), asy
       href: data.link.href,
       type: data.link.type,
       creator: { connect: { id: userId } },
+      vendor: { connect: { id: ctx.session.vendorId } },
     },
   })
 })

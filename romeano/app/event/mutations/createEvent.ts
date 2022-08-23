@@ -42,6 +42,7 @@ export default resolver.pipe(resolver.zod(CreateEvent), resolver.authorize(), as
       linkId: params.linkId,
       portalId: decodeHashId(params.portalId),
       userId: context.session.userId!,
+      vendorId: context.session.vendorId,
     },
   })
 })

@@ -20,6 +20,7 @@ export default resolver.pipe(
     const note = await db.internalNote.create({
       data: {
         portalId: decodeHashId(portalId),
+        vendorId: ctx.session.vendorId,
         message,
         userId,
       },

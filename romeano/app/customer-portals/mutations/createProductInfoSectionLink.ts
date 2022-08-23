@@ -17,7 +17,12 @@ export default resolver.pipe(
 
     return await db.productInfoSectionLink.create({
       data: {
-        productInfoSection: { connect: { id: productInfoSectionId } },
+        vendor: { connect: { id: ctx.session.vendorId } },
+        productInfoSection: {
+          connect: {
+            id: productInfoSectionId,
+          },
+        },
         link: {
           connect: {
             id: linkId,

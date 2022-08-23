@@ -81,6 +81,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       proposalHeading: portal?.proposalHeading ?? "",
       proposalSubheading: portal?.proposalSubheading ?? "",
       portalId: templatePortal.id,
+      vendorId: ctx.session.vendorId,
     },
   })
 
@@ -92,6 +93,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       isSecondaryContact: false,
       portalId: templatePortal.id,
       templateId: template.id,
+      vendorId: ctx.session.vendorId,
     },
   })
 
@@ -105,12 +107,14 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
           href: roadmapStage.ctaLink?.href ?? "",
           type: roadmapStage.ctaLink?.type ?? LinkType.Document,
           userId: userId,
+          vendorId: ctx.session.vendorId,
         },
       })
 
       await db.roadmapStage.create({
         data: {
           portalId: templatePortal.id,
+          vendorId: ctx.session.vendorId,
           heading: roadmapStage.heading,
           date: roadmapStage.date,
           templateId: template.id,
@@ -127,6 +131,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
         data: {
           href: image.href,
           portalId: templatePortal.id,
+          vendorId: ctx.session.vendorId,
           templateId: template.id,
         },
       })
@@ -137,6 +142,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       await db.nextStepsTask.create({
         data: {
           portalId: templatePortal.id,
+          vendorId: ctx.session.vendorId,
           description: nextStepsTask.description,
           isCompleted: nextStepsTask.isCompleted,
           userId: userId,
@@ -152,6 +158,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
       const section = await db.productInfoSection.create({
         data: {
           heading: productInfoSection.heading,
+          vendorId: ctx.session.vendorId,
           portalId: templatePortal.id,
           templateId: template.id,
         },
@@ -167,6 +174,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
             href: link.link.href ?? "",
             type: link.link?.type ?? LinkType.Document,
             userId: userId,
+            vendorId: ctx.session.vendorId,
           },
         })
 
@@ -174,6 +182,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
           data: {
             linkId: thisLink.id,
             productInfoSectionId: section.id,
+            vendorId: ctx.session.vendorId,
           },
         })
       }
@@ -187,6 +196,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
         href: portalDocument.link?.href ?? "",
         type: portalDocument.link?.type ?? LinkType.Document,
         userId: userId,
+        vendorId: ctx.session.vendorId,
       },
     })
 
@@ -195,6 +205,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
         linkId: link.id,
         portalId: templatePortal.id,
         templateId: template.id,
+        vendorId: ctx.session.vendorId,
       },
     })
   })
@@ -207,6 +218,7 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
           userId: userId,
           portalId: templatePortal.id,
           templateId: template.id,
+          vendorId: ctx.session.vendorId,
         },
       })
   )

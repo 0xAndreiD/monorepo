@@ -20,6 +20,7 @@ export default resolver.pipe(
     const userId = ctx.session.userId
     if (!userId) throw new AuthenticationError("no userId provided")
 
+    // TODO: Remove undefined vendorId when all data is migrated and column is made NON-NULLABLE
     return await db.roadmapStage.update({
       where: { id: launchRoadmapStageId },
       data: {
@@ -27,6 +28,7 @@ export default resolver.pipe(
           create: {
             ...link,
             creator: { connect: { id: userId } },
+            vendor: { connect: { id: ctx.session.vendorId } },
           },
         },
       },

@@ -25,7 +25,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     where: { id: magicLinkId },
     data: { hasClicked: true },
   })
-  await session.$create({ userId: magicLink.userId, role: Role.Stakeholder })
+  // TODO: Remove undefined vendorId when all data is migrated and column is made NON-NULLABLE
+  await session.$create({
+    userId: magicLink.userId,
+    roles: [Role.Stakeholder],
+    vendorId: magicLink.vendorId || undefined,
+  })
   return {
     redirect: {
       destination: magicLink.destUrl,

@@ -21,6 +21,7 @@ const seedCustomerPortal = async () => {
         //make vendor
         create: {
           name: "MiraDemo",
+          emailDomain: "mira.com",
           logoUrl:
             "https://images.squarespace-cdn.com/content/v1/59ecb4ff4c0dbfd368993258/1519077349473-M7ADD9VEABMQSHAJB6ZL/ke17ZwdGBToddI8pDm48kEEk35wlJZsUCSxoPFFCfNNZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PICXa7_N5J40iYbFYBr4Oop3ePWNkItV5sPMJ0tw-x6KIKMshLAGzx4R3EDFOm1kBS/Mira+Labs+logo.jpg",
         },
@@ -36,6 +37,7 @@ const seedCustomerPortal = async () => {
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
+      vendorId: vendorTeam.vendorId,
       accountExecutive: {
         //make AE
         create: {
@@ -56,6 +58,7 @@ const seedCustomerPortal = async () => {
       photoUrl:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
+      vendorId: vendorTeam.vendorId,
       accountExecutive: {
         //make AE
         create: {
@@ -80,12 +83,14 @@ const seedCustomerPortal = async () => {
           data: [
             {
               userId: aeUser.id,
+              vendorId: aeUser.vendorId,
               role: Role.AccountExecutive,
               isPrimaryContact: true,
               isSecondaryContact: false,
             },
             {
               userId: aeUser2.id,
+              vendorId: aeUser2.vendorId,
               role: Role.AccountExecutive,
               isPrimaryContact: false,
               isSecondaryContact: true,
@@ -167,14 +172,17 @@ const seedCustomerPortal = async () => {
           lastName: stakeholder.lastName,
           email: stakeholder.email,
           photoUrl: stakeholder.photoUrl,
+          vendorId: vendorTeam.vendorId,
           stakeholder: {
             create: {
               jobTitle: stakeholder.jobTitle,
+              vendorId: vendorTeam.vendorId,
             },
           },
           userPortals: {
             create: {
               portalId: portal.id,
+              vendorId: vendorTeam.vendorId,
               role: Role.Stakeholder,
               hasStakeholderApproved: stakeholder.hasStakeholderApproved,
               isPrimaryContact: stakeholder.firstName === "Kristin",
@@ -429,6 +437,7 @@ async function seedPortalDetails() {
         create: {
           jobTitle: "Account Executive",
           vendorTeamId: 1,
+          vendorId: 1,
         },
       },
     },
@@ -466,6 +475,7 @@ async function seedPortalDetails() {
       firstName: "Ali",
       lastName: "G",
       email: "ali@raytheon.com",
+      vendorId: portal.vendorId,
       stakeholder: {
         create: {
           jobTitle: "Director",
@@ -475,6 +485,7 @@ async function seedPortalDetails() {
         create: {
           role: Role.Stakeholder,
           portalId: portal.id,
+          vendorId: portal.vendorId,
         },
       },
     },
@@ -545,6 +556,7 @@ async function seedMira() {
         //make vendor
         create: {
           name: "Mira",
+          emailDomain: "miralabs.io",
           logoUrl:
             "https://images.squarespace-cdn.com/content/v1/59ecb4ff4c0dbfd368993258/1519077349473-M7ADD9VEABMQSHAJB6ZL/ke17ZwdGBToddI8pDm48kEEk35wlJZsUCSxoPFFCfNNZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PICXa7_N5J40iYbFYBr4Oop3ePWNkItV5sPMJ0tw-x6KIKMshLAGzx4R3EDFOm1kBS/Mira+Labs+logo.jpg",
         },
@@ -565,6 +577,7 @@ async function seedMira() {
         create: {
           jobTitle: "Account Executive",
           vendorTeamId: vendorTeam.vendorId,
+          vendorId: vendorTeam.vendorId,
         },
       },
     },
@@ -586,6 +599,7 @@ async function seedMira() {
         create: {
           jobTitle: "Account Executive",
           vendorTeamId: vendorTeam.vendorId,
+          vendorId: vendorTeam.vendorId,
         },
       },
     },
@@ -604,12 +618,14 @@ async function seedMira() {
           data: [
             {
               userId: aeUser.id,
+              vendorId: aeUser.vendorId,
               role: Role.AccountExecutive,
               isPrimaryContact: true,
               isSecondaryContact: false,
             },
             {
               userId: testUser.id,
+              vendorId: testUser.vendorId,
               role: Role.AccountExecutive,
               isPrimaryContact: false,
               isSecondaryContact: false,

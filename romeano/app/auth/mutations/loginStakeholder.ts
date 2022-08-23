@@ -36,6 +36,7 @@ export default resolver.pipe(resolver.zod(LoginStakeholder), async ({ portalId, 
     data: {
       id: generateToken(),
       userId: userPortal.userId,
+      vendorId: userPortal.vendorId,
       destUrl,
       hasClicked: false,
     },

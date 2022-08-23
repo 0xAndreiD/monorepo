@@ -36,10 +36,12 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
         firstName: data.customerFName,
         lastName: data.customerLName,
         email: data.customerEmail,
+        vendorId: user.vendorId,
         //create the stakeholder data info
         stakeholder: {
           create: {
             jobTitle: data.roleName,
+            vendorId: user.vendorId,
           },
         },
       },
@@ -87,17 +89,20 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
       customerName: data.oppName,
       customerLogoUrl: "",
       currentRoadmapStage: 1,
+      vendorId: vendorTeam.vendorId,
       userPortals: {
         createMany: {
           data: [
             {
               userId: userId,
+              vendorId: vendorTeam.vendorId,
               role: Role.AccountExecutive,
               isPrimaryContact: true,
               isSecondaryContact: false,
             },
             {
               userId: emailUser.id,
+              vendorId: vendorTeam.vendorId,
               role: Role.Stakeholder,
               isPrimaryContact: true,
             },
@@ -106,7 +111,6 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
       },
       proposalHeading: template?.proposalHeading ?? "",
       proposalSubheading: template?.proposalSubheading ?? "",
-      vendorId: vendorTeam.vendorId,
     },
   })
   id = portal.id
@@ -122,6 +126,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
             href: roadmapStage.ctaLink?.href ?? "",
             type: roadmapStage.ctaLink?.type ?? LinkType.Document,
             userId: userId,
+            vendorId: vendorTeam.vendorId,
           },
         })
 
@@ -132,6 +137,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
             date: roadmapStage.date,
             tasks: roadmapStage.tasks,
             ctaLinkId: link.id,
+            vendorId: vendorTeam.vendorId,
           },
         })
       }
@@ -145,6 +151,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
             isCompleted: nextStepsTask.isCompleted,
             userId: userId,
             portalId: id,
+            vendorId: vendorTeam.vendorId,
           },
         })
     )
@@ -155,6 +162,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
           data: {
             href: image.href,
             portalId: id,
+            vendorId: vendorTeam.vendorId,
           },
         })
     )
@@ -167,6 +175,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
           data: {
             heading: productInfoSection.heading,
             portalId: id,
+            vendorId: vendorTeam.vendorId,
           },
         })
 
@@ -180,6 +189,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
               href: link.link.href ?? "",
               type: link.link?.type ?? LinkType.Document,
               userId: userId,
+              vendorId: vendorTeam.vendorId,
             },
           })
 
@@ -187,6 +197,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
             data: {
               linkId: thisLink.id,
               productInfoSectionId: section.id,
+              vendorId: vendorTeam.vendorId,
             },
           })
         }
@@ -201,6 +212,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
           href: portalDocument.link?.href ?? "",
           type: portalDocument.link?.type ?? LinkType.Document,
           userId: userId,
+          vendorId: vendorTeam.vendorId,
         },
       })
 
@@ -208,6 +220,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
         data: {
           linkId: link.id,
           portalId: id,
+          vendorId: vendorTeam.vendorId,
         },
       })
     })
@@ -219,6 +232,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
             message: internalNote.message,
             userId: userId,
             portalId: id,
+            vendorId: vendorTeam.vendorId,
           },
         })
     )

@@ -70,6 +70,7 @@ const uploadDocument = nc<NextApiRequest & { fields: Fields; files: Files }, Nex
           href: file.newFilename!,
           type: LinkType.Document,
           creator: { connect: { id: userId } },
+          vendor: { connect: { id: session.vendorId } },
         },
       })
       await invokeWithMiddleware(
