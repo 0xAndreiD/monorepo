@@ -15,7 +15,8 @@ export function customIsAuthorized({ ctx, args }: CustomIsAuthorizedArgs) {
   }
   if (!ctx.session.vendorId) {
     console.error("Missing vendorId in session")
-    return false
+    // Temporarily allow this until we fix the vendorId data in all prod DB tables
+    // return false
   }
   // TODO: Authorize current user has access to the requested resources for this vendor ID
   const [roleOrRoles, options = {}] = args

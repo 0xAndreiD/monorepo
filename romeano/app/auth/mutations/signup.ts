@@ -136,7 +136,7 @@ export default resolver.pipe(
     // TODO: Remove undefined vendorId when all data is migrated and column is made NON-NULLABLE
     await ctx.session.$create({
       userId: userRecord.id,
-      roles: [Role.AccountExecutive],
+      roles: [userRecord.role, Role.AccountExecutive],
       vendorId: userRecord.vendorId || undefined,
     })
     return userRecord
