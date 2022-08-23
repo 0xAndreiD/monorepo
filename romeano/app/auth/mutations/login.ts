@@ -34,11 +34,12 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   const user = await authenticateUser(email, password)
   let roles: Array<Role | SiteRole> = [user.role]
 
-  if (SiteRole.SiteAdmin in roles) {
+  if (roles?.includes(SiteRole.SiteAdmin)) {
     // TODO: Temporary code to auto-update vendorId in all tables
-    const users = await db.user.findMany({})
+    console.log("***** UPDATING VENDOR ID FOR ALL USERS *****")
+    const allUsers = await db.user.findMany({})
     await Promise.all(
-      users?.map((user) => {
+      allUsers?.map((user) => {
         updateVendorIdInAllTablesForUser(user)
       })
     )
