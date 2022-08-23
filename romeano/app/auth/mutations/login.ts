@@ -25,6 +25,9 @@ export const authenticateUser = async (rawEmail: string, rawPassword: string) =>
     await db.user.update({ where: { id: user.id }, data: { hashedPassword: improvedHash } })
   }
 
+  // TODO: Temporary code to auto-update vendorId in all tables for this user
+  await tryAndUpdateVendorIdInAllTables(user)
+
   const { hashedPassword, ...rest } = user
   return rest
 }
@@ -33,9 +36,6 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   // This throws an error if credentials are invalid
   const user = await authenticateUser(email, password)
   let roles: Array<Role | SiteRole> = [user.role]
-
-  // TODO: Temporary code to fix vendorId in user table
-  await tryAndUpdateVendorIdInAllTables(user)
 
   // TODO: Add vendorId constraint in query after all user records have been migrated
   const accountExecutive = await db.accountExecutive.findFirst({

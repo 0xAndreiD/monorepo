@@ -112,22 +112,28 @@ export const tryAndUpdateVendorIdInAllTables = async (user: User, optimize = fal
           })
           console.log("Updated vendorId in userPortal table for user", user.id)
 
-          const userPortalTables = [db.event, db.internalNote, db.nextStepsTask]
-          userPortalTables.map(async (userPortalTable) => {
-            await userPortalTable.updateMany({
-              where: { userId: user.id, portalId: portal.id },
-              data: { vendorId: portal.vendorId },
-            })
-            console.log("Updated vendorId in table for user", user.id)
-          })
-          const portalTables = [db.portalDocument, db.portalImage, db.productInfoSection, db.roadmapStage, db.template]
-          portalTables.map(async (portalTable) => {
-            await portalTable.updateMany({
-              where: { portalId: portal.id },
-              data: { vendorId: portal.vendorId },
-            })
-            console.log("Updated vendorId in table for user", user.id)
-          })
+          let updateData = {
+            where: { userId: user.id, portalId: portal.id },
+            data: { vendorId: portal.vendorId },
+          }
+          await db.event.updateMany(updateData)
+          await db.internalNote.updateMany(updateData)
+          await db.nextStepsTask.updateMany(updateData)
+          console.log("Updated vendorId in event, internalNote, nextStepsTask for user", user.id)
+
+          updateData = {
+            where: { userId: user.id, portalId: portal.id },
+            data: { vendorId: portal.vendorId },
+          }
+          await db.portalDocument.updateMany(updateData)
+          await db.portalImage.updateMany(updateData)
+          await db.productInfoSection.updateMany(updateData)
+          await db.roadmapStage.updateMany(updateData)
+          await db.template.updateMany(updateData)
+          console.log(
+            "Updated vendorId in portalDocument, portalImage, productInfoSection, roadmapStage, template for user",
+            user.id
+          )
         })
       )
     })
