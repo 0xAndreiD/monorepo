@@ -47,8 +47,7 @@ export const enforceCurrentVendor = <T extends Record<any, any>>(input: T, ctx: 
 }
 
 // Temporary helper function to populate all DB records with the correct vendorID from vendor Team
-export const tryAndUpdateVendorIdInAllTables = async (user: User, optimize = false) => {
-  // Handle only AE for now
+export const updateVendorIdInAllTablesForUser = async (user: User, optimize = false) => {
   const accountExecutive = await db.accountExecutive.findFirst({ where: { userId: user.id } })
   const stakeholder = await db.stakeholder.findFirst({ where: { userId: user.id } })
 
