@@ -17,7 +17,8 @@ model Portal {
   id                  Int                  @id @default(autoincrement())
   customerName        String
   customerLogoUrl     String
-  currentRoadmapStage Int //1 indexed
+  currentRoadmapStage Int
+  //1 indexed
   roadmapStages       RoadmapStage[]
   nextStepsTasks      NextStepsTask[]
   images              PortalImage[]
@@ -312,7 +313,8 @@ model InternalNote {
 model Event {
   id        Int       @id @default(autoincrement())
   type      EventType
-  url       String? // destination url
+  url       String?
+  // destination url
   ip        String?
   userAgent String?
   link      Link?     @relation(fields: [linkId], references: [id])
