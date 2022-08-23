@@ -1,6 +1,8 @@
 // app/core/utils.ts
 import { Ctx } from "blitz"
-import { Prisma, SiteRole } from "db"
+import { AccountExecutive, Prisma, Role, SiteRole, Stakeholder, User } from "db"
+import db from "db"
+import { DebugLoggerFunction } from "util"
 
 export default function assert(condition: any, message: string): asserts condition {
   if (!condition) throw new Error(message)
@@ -42,4 +44,92 @@ export const enforceCurrentVendor = <T extends Record<any, any>>(input: T, ctx: 
   // But now we need to enforce input.vendorId matches
   // session.vendorId unless user is a SUPERADMIN
   return enforceSiteAdminIfNotCurrentVendor(input, ctx)
+}
+
+// Temporary helper function to populate all DB records with the correct vendorID from vendor Team
+export const tryAndUpdateVendorIdInAllTables = async (user: User, optimize = false) => {
+  // Handle only AE for now
+  const accountExecutive = await db.accountExecutive.findFirst({ where: { userId: user.id } })
+  const stakeholder = await db.stakeholder.findFirst({ where: { userId: user.id } })
+
+  if (optimize && user.vendorId && accountExecutive?.vendorId && stakeholder?.vendorId) {
+    console.log("User, AE and stakeholder have vendorId, returning without updating tables for user", user.id)
+    return Promise.resolve()
+  }
+
+  if (accountExecutive) {
+    // Find vendorId from vendorTeam
+    const vendorTeam = await db.vendorTeam.findUnique({
+      where: { id: accountExecutive.vendorTeamId },
+    })
+    if (!vendorTeam) {
+      console.log("User has no vendor team, returning without updating table for user", user.id)
+      return Promise.resolve()
+    }
+    if (!user.vendorId) {
+      // Update user
+      await db.user.update({
+        where: { id: user.id },
+        data: { vendorId: vendorTeam.vendorId },
+      })
+      console.log("Updated vendorId in user table for user", user.id)
+    }
+    if (!accountExecutive?.vendorId) {
+      // Update AE
+      await db.accountExecutive.update({
+        where: { id: user.id },
+        data: { vendorId: vendorTeam.vendorId },
+      })
+      console.log("Updated vendorId in AE table for user", user.id)
+    }
+  }
+
+  // Get all user portals for the user
+  const userPortals = await db.userPortal.findMany({
+    where: { userId: user.id, role: accountExecutive ? Role.AccountExecutive : Role.Stakeholder },
+  })
+  // Update all related tables
+  await Promise.all(
+    userPortals?.map(async (userPortal) => {
+      // Get all portals
+      const portals = await db.portal.findMany({
+        where: {
+          id: userPortal.portalId,
+        },
+      })
+      // Update all related tables
+      await Promise.all(
+        portals.map(async (portal) => {
+          // Update user portal record
+          await db.userPortal.update({
+            where: {
+              userId_portalId: {
+                userId: user.id,
+                portalId: userPortal.portalId,
+              },
+            },
+            data: { vendorId: portal.vendorId },
+          })
+          console.log("Updated vendorId in userPortal table for user", user.id)
+
+          const userPortalTables = [db.event, db.internalNote, db.nextStepsTask]
+          userPortalTables.map(async (userPortalTable) => {
+            await userPortalTable.updateMany({
+              where: { userId: user.id, portalId: portal.id },
+              data: { vendorId: portal.vendorId },
+            })
+            console.log("Updated vendorId in table for user", user.id)
+          })
+          const portalTables = [db.portalDocument, db.portalImage, db.productInfoSection, db.roadmapStage, db.template]
+          portalTables.map(async (portalTable) => {
+            await portalTable.updateMany({
+              where: { portalId: portal.id },
+              data: { vendorId: portal.vendorId },
+            })
+            console.log("Updated vendorId in table for user", user.id)
+          })
+        })
+      )
+    })
+  )
 }

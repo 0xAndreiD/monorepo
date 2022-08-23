@@ -2,6 +2,7 @@ import { resolver, SecurePassword, AuthenticationError } from "blitz"
 import db from "db"
 import { Login } from "../validations"
 import { Role, SiteRole } from "db"
+import { tryAndUpdateVendorIdInAllTables } from "app/core/utils"
 
 export const authenticateUser = async (rawEmail: string, rawPassword: string) => {
   const email = rawEmail.toLowerCase().trim()
@@ -32,6 +33,10 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   // This throws an error if credentials are invalid
   const user = await authenticateUser(email, password)
   let roles: Array<Role | SiteRole> = [user.role]
+
+  // TODO: Temporary code to fix vendorId in user table
+  await tryAndUpdateVendorIdInAllTables(user)
+
   // TODO: Add vendorId constraint in query after all user records have been migrated
   const accountExecutive = await db.accountExecutive.findFirst({
     where: {
