@@ -1,5 +1,5 @@
 import { resolver, SecurePassword } from "blitz"
-import db, { Role } from "db"
+import db, { Role, SiteRole } from "db"
 import { Signup } from "app/auth/validations"
 import { endsWith } from "lodash"
 import { sendVendorSignupNotificationToAdmin, sendVendorWelcomeEmail } from "app/core/util/email"

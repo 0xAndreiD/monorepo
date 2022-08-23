@@ -4,7 +4,7 @@ import { IncomingHttpHeaders } from "http"
 
 type CustomIsAuthorizedArgs = {
   ctx: any
-  args: [roleOrRoles?: string | string[]]
+  args: [roleOrRoles?: Role | SiteRole | Array<Role | SiteRole>]
 }
 export function customIsAuthorized({ ctx, args }: CustomIsAuthorizedArgs) {
   // can access ctx.session, ctx.session.userId, etc
@@ -24,7 +24,7 @@ export function customIsAuthorized({ ctx, args }: CustomIsAuthorizedArgs) {
   // No roles required, so all roles allowed
   if (!roleOrRoles) return true
 
-  const rolesToAuthorize = []
+  const rolesToAuthorize: Array<Role | SiteRole> = []
   if (Array.isArray(roleOrRoles)) {
     rolesToAuthorize.push(...roleOrRoles)
   } else if (roleOrRoles) {
