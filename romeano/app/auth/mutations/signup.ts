@@ -133,11 +133,10 @@ export default resolver.pipe(
     console.log("Sending welcome email to vendor")
     await sendVendorWelcomeEmail(emailTrimmed, firstName, lastName)
 
-    // TODO: Remove undefined vendorId when all data is migrated and column is made NON-NULLABLE
     await ctx.session.$create({
       userId: userRecord.id,
       roles: [userRecord.role, Role.AccountExecutive],
-      vendorId: userRecord.vendorId || undefined,
+      vendorId: userRecord.vendorId,
     })
     return userRecord
   }

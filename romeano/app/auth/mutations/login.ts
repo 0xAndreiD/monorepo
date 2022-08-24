@@ -49,7 +49,7 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   const accountExecutive = await db.accountExecutive.findFirst({
     where: {
       userId: user.id,
-      // vendorId: user.vendorId,
+      vendorId: user.vendorId,
     },
   })
   if (accountExecutive) {
@@ -58,7 +58,7 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   const stakeHolder = await db.stakeholder.findFirst({
     where: {
       userId: user.id,
-      // vendorId: user.vendorId,
+      vendorId: user.vendorId,
     },
   })
   if (stakeHolder) {
@@ -69,7 +69,7 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   await ctx.session.$create({
     userId: user.id,
     roles: roles,
-    vendorId: user.vendorId || undefined,
+    vendorId: user.vendorId,
   })
 
   return user

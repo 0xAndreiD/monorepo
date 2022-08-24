@@ -37,12 +37,13 @@ const seedCustomerPortal = async () => {
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
-      vendorId: vendorTeam.vendorId,
+      vendorId: 1,
       accountExecutive: {
         //make AE
         create: {
           jobTitle: "Account Executive",
-          vendorTeamId: vendorTeam.vendorId,
+          vendorTeamId: vendorTeam.id!,
+          vendorId: vendorTeam.vendorId!,
         },
       },
     },
@@ -58,12 +59,13 @@ const seedCustomerPortal = async () => {
       photoUrl:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
-      vendorId: vendorTeam.vendorId,
+      vendorId: 1,
       accountExecutive: {
         //make AE
         create: {
           jobTitle: "Customer Success Manager",
-          vendorTeamId: vendorTeam.vendorId,
+          vendorTeamId: vendorTeam.id!,
+          vendorId: vendorTeam.vendorId!,
         },
       },
     },
@@ -207,10 +209,12 @@ const seedCustomerPortal = async () => {
           body: "Mira's Slide Deck",
           href: "https://www.google.com/webhp?client=firefox-b-d",
           type: LinkType.WebLink,
+          vendor: { connect: { id: aeUser.vendorId } },
           creator: { connect: { id: aeUser.id } },
         },
       },
       portal: { connect: { id: portal.id } },
+      vendor: { connect: { id: portal.vendorId } },
     },
     {
       heading: "AR Headset Demo",
@@ -221,20 +225,24 @@ const seedCustomerPortal = async () => {
           body: "Join Zoom 📞",
           href: "https://www.google.com/webhp?client=firefox-b-d",
           type: LinkType.WebLink,
+          vendor: { connect: { id: aeUser.vendorId } },
           creator: { connect: { id: aeUser.id } },
         },
       },
       portal: { connect: { id: portal.id } },
+      vendor: { connect: { id: portal.vendorId } },
     },
     {
       heading: "Use-Case Planning Workshop",
       tasks: ["Define problem and primary use-case Mira will be used for."],
       portal: { connect: { id: portal.id } },
+      vendor: { connect: { id: portal.vendorId } },
     },
     {
       heading: "Pilot Package Purchase",
       tasks: ["Quote attached below"],
       portal: { connect: { id: portal.id } },
+      vendor: { connect: { id: portal.vendorId } },
     },
   ]
 
@@ -246,18 +254,21 @@ const seedCustomerPortal = async () => {
     data: [
       {
         portalId: portal.id,
+        vendorId: portal.vendorId!,
         description: "Schedule AR Headset Demo Call",
         isCompleted: true,
         userId: aeUser.id,
       },
       {
         portalId: portal.id,
+        vendorId: portal.vendorId!,
         description: "Invite IT to next meeting",
         isCompleted: false,
         userId: aeUser.id,
       },
       {
         portalId: portal.id,
+        vendorId: portal.vendorId!,
         description: "Send Penelope a revised proposal",
         isCompleted: false,
         userId: stakeholders[0].id,
@@ -268,28 +279,33 @@ const seedCustomerPortal = async () => {
   const documentsRaw = [
     {
       portal: { connect: { id: portal.id } },
+      vendor: { connect: { id: portal.vendorId } },
       link: {
         create: {
           body: "Security Questionnaire",
           href: "security-questionnaire.txt",
           type: LinkType.Document,
+          vendor: { connect: { id: aeUser.vendorId } },
           creator: { connect: { id: aeUser.id } },
         },
       },
     },
     {
       portal: { connect: { id: portal.id } },
+      vendor: { connect: { id: portal.vendorId } },
       link: {
         create: {
           body: "Vendor Setup",
           href: "vendor-setup.txt",
           type: LinkType.Document,
+          vendor: { connect: { id: aeUser.vendorId } },
           creator: { connect: { id: aeUser.id } },
         },
       },
     },
     {
       portal: { connect: { id: portal.id } },
+      vendor: { connect: { id: portal.vendorId } },
       link: {
         create: {
           body: "W-9 Form",
@@ -313,6 +329,7 @@ const seedCustomerPortal = async () => {
           body: "Proposal Doc",
           href: "proposal.txt",
           type: LinkType.Document,
+          vendor: { connect: { id: aeUser.vendorId } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -323,14 +340,17 @@ const seedCustomerPortal = async () => {
     data: [
       {
         portalId: portal.id,
+        vendorId: portal.vendorId,
         href: "https://www.aniwaa.com/wp-content/uploads/2018/06/AR-glasses-smartphone-Mira-Prism-side.jpg",
       },
       {
         portalId: portal.id,
+        vendorId: portal.vendorId,
         href: "https://www.dhresource.com/0x0/f2/albu/g6/M00/D9/44/rBVaR1vhNjmAZBd_AAG1Wfrn4Go755.jpg/top-seller-2018-ar-glasses-mira-prism-ar.jpg",
       },
       {
         portalId: portal.id,
+        vendorId: portal.vendorId,
         href: "https://www.red-dot.org/index.php?f=37089&token=699949922eb8083e9bb5a3f67081e12da55eecff&eID=tx_solr_image&size=large&usage=hero",
       },
     ],
@@ -395,6 +415,7 @@ const seedCustomerPortal = async () => {
       data: {
         portalId: portal.id,
         heading: section.heading,
+        vendorId: portal.vendorId,
         productInfoSectionLink: {
           createMany: {
             data: links.map((link) => ({
@@ -410,11 +431,13 @@ const seedCustomerPortal = async () => {
     data: [
       {
         portalId: portal.id,
+        vendorId: portal.vendorId,
         userId: stakeholders[2].id,
         message: "I wonder how difficult it is to learn how to use the headset",
       },
       {
         portalId: portal.id,
+        vendorId: portal.vendorId,
         userId: stakeholders[3].id,
         message: "Let's ask during our demo call on Wed",
       },
@@ -430,6 +453,7 @@ async function seedPortalDetails() {
       firstName: "Julia",
       lastName: "Lin",
       email: "julia@mira.com",
+      vendorId: 1,
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
       accountExecutive: {
@@ -452,11 +476,13 @@ async function seedPortalDetails() {
       customerLogoUrl:
         "https://gray-kwch-prod.cdn.arcpublishing.com/resizer/gLAX07TEGwQfEgBOQ3quD5JAugM=/1200x400/smart/cloudfront-us-east-1.images.arcpublishing.com/gray/IKLFKUHCCJCO3GQSYNXHJOAOSU.JPG",
       currentRoadmapStage: 3,
+      vendorId: aeUser.vendorId,
       userPortals: {
         createMany: {
           data: [
             {
               userId: aeUser.id,
+              vendorId: aeUser.vendorId,
               role: Role.AccountExecutive,
               isPrimaryContact: true,
               isSecondaryContact: false,
@@ -467,7 +493,6 @@ async function seedPortalDetails() {
       proposalHeading:
         "Get some headsets into the hands of your operators and conduct remote audits across your sites.",
       proposalSubheading: "2 Prism Headsets + 4 User Licenses",
-      vendorId: 1,
     },
   })
   const stakeholder = await db.user.create({
@@ -494,6 +519,7 @@ async function seedPortalDetails() {
   await db.portalDocument.create({
     data: {
       portal: { connect: { id: portal.id } },
+      vendor: { connect: { id: portal.vendorId } },
       link: {
         create: {
           body: "portal2doc",
@@ -540,6 +566,7 @@ async function seedEvents() {
     userAgent: faker.internet.userAgent(),
     linkId: faker.random.arrayElement(documents.map((x) => x.link.id)),
     portalId: 1,
+    vendorId: 1,
     userId: 4,
     createdAt: min([addHours(start, i + faker.datatype.number({ min: -10, max: 10 })), now]),
   }))
@@ -569,6 +596,7 @@ async function seedMira() {
       firstName: "Alexis",
       lastName: "Miller",
       email: "alexis.miller@miralabs.io",
+      vendorId: vendorTeam.vendorId,
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
@@ -591,6 +619,7 @@ async function seedMira() {
       firstName: "AE Test",
       lastName: "User",
       email: "aetest@romeano.com",
+      vendorId: vendorTeam.vendorId,
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
@@ -668,6 +697,7 @@ async function seedMira() {
         },
       },
       portal: { connect: { id: portal.id } },
+      vendor: { connect: { id: portal.vendorId } },
     },
     {
       heading: "Live AR Headset Demo",
@@ -681,16 +711,19 @@ async function seedMira() {
         },
       },
       portal: { connect: { id: portal.id } },
+      vendor: { connect: { id: portal.vendorId } },
     },
     {
       heading: "Use-Case & Value Stream Workshop",
       tasks: ["Define primary use-case where Mira will be used", "Build interaction web", "Value map/ROI calculations"],
       portal: { connect: { id: portal.id } },
+      vendor: { connect: { id: portal.vendorId } },
     },
     {
       heading: "Deployment Configuration",
       tasks: ["Quantify deployment size & scope"],
       portal: { connect: { id: portal.id } },
+      vendor: { connect: { id: portal.vendorId } },
     },
   ]
 
@@ -770,6 +803,7 @@ async function seedMira() {
     await db.productInfoSection.create({
       data: {
         portalId: portal.id,
+        vendorId: portal.vendorId,
         heading: section.heading,
         productInfoSectionLink: {
           createMany: {
@@ -786,14 +820,17 @@ async function seedMira() {
     data: [
       {
         portalId: portal.id,
+        vendorId: portal.vendorId,
         href: "/api/viewDocument/H1_XW_Render_w_NewIndoorLens.jpg",
       },
       {
         portalId: portal.id,
+        vendorId: portal.vendorId,
         href: "/api/viewDocument/H1_HH_Render_w_NewOutdoorLens.jpg",
       },
       {
         portalId: portal.id,
+        vendorId: portal.vendorId,
         href: "/api/viewDocument/Outdoor Lens Tint Both Headsets Bottom View.jpg",
       },
     ],
