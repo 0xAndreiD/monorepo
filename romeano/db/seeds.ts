@@ -311,6 +311,7 @@ const seedCustomerPortal = async () => {
           body: "W-9 Form",
           href: "w9.txt",
           type: LinkType.Document,
+          vendor: { connect: { id: aeUser.vendorId } },
           creator: { connect: { id: stakeholders[0].id } },
         },
       },
@@ -405,6 +406,7 @@ const seedCustomerPortal = async () => {
               body: linkElem.body,
               href: linkElem.href,
               type: LinkType.WebLink,
+              vendor: { connect: { id: aeUser.vendorId } },
               creator: { connect: { id: aeUser.id } },
             },
           })
@@ -420,6 +422,7 @@ const seedCustomerPortal = async () => {
           createMany: {
             data: links.map((link) => ({
               linkId: link.id,
+              vendorId: portal.vendorId,
             })),
           },
         },
@@ -504,6 +507,7 @@ async function seedPortalDetails() {
       stakeholder: {
         create: {
           jobTitle: "Director",
+          vendor: { connect: { id: portal.vendorId } },
         },
       },
       userPortals: {
@@ -525,6 +529,7 @@ async function seedPortalDetails() {
           body: "portal2doc",
           href: "portal2doc.txt",
           type: LinkType.Document,
+          vendor: { connect: { id: aeUser.vendorId } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -539,6 +544,7 @@ async function seedPortalDetails() {
           body: "Proposal Doc",
           href: "proposal2.txt",
           type: LinkType.Document,
+          vendor: { connect: { id: aeUser.vendorId } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -677,6 +683,7 @@ async function seedMira() {
           body: "Proposal",
           href: "https://docs.google.com/presentation/d/1Kwh6nVp00qBtFVegGe-6iWCB4kstwJi4NjUbm5F4CI4/edit#slide=id.gd4d09b3e56_0_233",
           type: LinkType.WebLink,
+          vendor: { connect: { id: aeUser.vendorId } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -693,6 +700,7 @@ async function seedMira() {
           body: "Mira Product Video",
           href: "https://vimeo.com/364410995",
           type: LinkType.WebLink,
+          vendor: { connect: { id: aeUser.vendorId } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -707,6 +715,7 @@ async function seedMira() {
           body: "Join Zoom 📞",
           href: "https://www.google.com/webhp?client=firefox-b-d",
           type: LinkType.WebLink,
+          vendor: { connect: { id: aeUser.vendorId } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -794,6 +803,7 @@ async function seedMira() {
               body: linkElem.body,
               href: linkElem.href,
               type: LinkType.WebLink,
+              vendor: { connect: { id: aeUser.vendorId } },
               creator: { connect: { id: aeUser.id } },
             },
           })
@@ -809,6 +819,7 @@ async function seedMira() {
           createMany: {
             data: links.map((link) => ({
               linkId: link.id,
+              vendorId: portal.vendorId,
             })),
           },
         },

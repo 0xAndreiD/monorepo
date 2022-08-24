@@ -171,8 +171,8 @@ model Stakeholder {
   jobTitle     String
   user         User        @relation(fields: [userId], references: [id])
   userId       Int         @unique
-  vendor       Vendor?     @relation(fields: [vendorId], references: [id])
-  vendorId     Int?
+  vendor       Vendor      @relation(fields: [vendorId], references: [id])
+  vendorId     Int
   vendorTeam   VendorTeam? @relation(fields: [vendorTeamId], references: [id])
   vendorTeamId Int?
 }
@@ -207,8 +207,8 @@ model Link {
   portalDocument         PortalDocument[]
   productInfoSectionLink ProductInfoSectionLink?
   roadmapStage           RoadmapStage?
-  vendor                 Vendor?                 @relation(fields: [vendorId], references: [id])
-  vendorId               Int?
+  vendor                 Vendor                  @relation(fields: [vendorId], references: [id])
+  vendorId               Int
 }
 
 model ProductInfoSection {
@@ -231,8 +231,8 @@ model ProductInfoSectionLink {
   linkId               Int                @unique
   productInfoSection   ProductInfoSection @relation(fields: [productInfoSectionId], references: [id])
   productInfoSectionId Int
-  vendor               Vendor?            @relation(fields: [vendorId], references: [id])
-  vendorId             Int?
+  vendor               Vendor             @relation(fields: [vendorId], references: [id])
+  vendorId             Int
 }
 
 model PortalImage {
@@ -332,7 +332,7 @@ model MagicLink {
   id         String   @id
   hasClicked Boolean  @default(false)
   userId     Int
-  vendorId   Int?
+  vendorId   Int
   destUrl    String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
