@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     data: { hasClicked: true },
   })
   await session.$create({
-    userId: magicLink.userId,
+    userId: magicLink.userId!,
     roles: [Role.Stakeholder],
     vendorId: magicLink.vendorId!,
   })
