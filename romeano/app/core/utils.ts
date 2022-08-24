@@ -67,19 +67,27 @@ export const updateVendorIdInAllTablesForUser = async (user: User, optimize = fa
     }
     if (!user.vendorId) {
       // Update user
-      await db.user.update({
-        where: { id: user.id },
-        data: { vendorId: vendorTeam.vendorId },
-      })
-      console.log("Updated vendorId in user table for user", user.id)
+      try {
+        await db.user.update({
+          where: { id: user.id },
+          data: { vendorId: vendorTeam.vendorId },
+        })
+        console.log("Updated vendorId in user table for user", user.id)
+      } catch (err) {
+        console.warn("Ignoring error updating user", user.id, err)
+      }
     }
     if (!accountExecutive?.vendorId) {
       // Update AE
-      await db.accountExecutive.update({
-        where: { id: user.id },
-        data: { vendorId: vendorTeam.vendorId },
-      })
-      console.log("Updated vendorId in AE table for user", user.id)
+      try {
+        await db.accountExecutive.update({
+          where: { id: user.id },
+          data: { vendorId: vendorTeam.vendorId },
+        })
+        console.log("Updated vendorId in AE table for user", user.id)
+      } catch (err) {
+        console.warn("Ignoring error updating AE for user", user.id, err)
+      }
     }
   }
 
@@ -100,35 +108,72 @@ export const updateVendorIdInAllTablesForUser = async (user: User, optimize = fa
       await Promise.all(
         portals.map(async (portal) => {
           // Update user portal record
-          await db.userPortal.update({
-            where: {
-              userId_portalId: {
-                userId: user.id,
-                portalId: userPortal.portalId,
+          try {
+            await db.userPortal.update({
+              where: {
+                userId_portalId: {
+                  userId: user.id,
+                  portalId: userPortal.portalId,
+                },
               },
-            },
-            data: { vendorId: portal.vendorId },
-          })
-          console.log("Updated vendorId in userPortal table for user", user.id)
+              data: { vendorId: portal.vendorId },
+            })
+            console.log("Updated vendorId in userPortal table for user", user.id)
+          } catch (err) {
+            console.warn("Ignoring error updating userPortal for user", user.id, err)
+          }
 
           const updateData1 = {
             where: { userId: user.id, portalId: portal.id },
             data: { vendorId: portal.vendorId },
           }
-          await db.event.updateMany(updateData1)
-          await db.internalNote.updateMany(updateData1)
-          await db.nextStepsTask.updateMany(updateData1)
+
+          try {
+            await db.event.updateMany(updateData1)
+          } catch (err) {
+            console.warn("Ignoring error updating event, internalNote, nextStepsTask for user", user.id, err)
+          }
+          try {
+            await db.internalNote.updateMany(updateData1)
+          } catch (err) {
+            console.warn("Ignoring error updating event, internalNote, nextStepsTask for user", user.id, err)
+          }
+          try {
+            await db.nextStepsTask.updateMany(updateData1)
+          } catch (err) {
+            console.warn("Ignoring error updating event, internalNote, nextStepsTask for user", user.id, err)
+          }
           console.log("Updated vendorId in event, internalNote, nextStepsTask for user", user.id)
 
           const updateData2 = {
             where: { portalId: portal.id },
             data: { vendorId: portal.vendorId },
           }
-          await db.portalDocument.updateMany(updateData2)
-          await db.portalImage.updateMany(updateData2)
-          await db.productInfoSection.updateMany(updateData2)
-          await db.roadmapStage.updateMany(updateData2)
-          await db.template.updateMany(updateData2)
+          try {
+            await db.portalDocument.updateMany(updateData2)
+          } catch (err) {
+            console.warn("Ignoring error updating portalDocument for user", user.id, err)
+          }
+          try {
+            await db.portalImage.updateMany(updateData2)
+          } catch (err) {
+            console.warn("Ignoring error updating portalImage", user.id, err)
+          }
+          try {
+            await db.productInfoSection.updateMany(updateData2)
+          } catch (err) {
+            console.warn("Ignoring error updating productInfoSection", user.id, err)
+          }
+          try {
+            await db.roadmapStage.updateMany(updateData2)
+          } catch (err) {
+            console.warn("Ignoring error updating roadmapStage", user.id, err)
+          }
+          try {
+            await db.template.updateMany(updateData2)
+          } catch (err) {
+            console.warn("Ignoring error updating template for user", user.id, err)
+          }
           console.log(
             "Updated vendorId in portalDocument, portalImage, productInfoSection, roadmapStage, template for user",
             user.id

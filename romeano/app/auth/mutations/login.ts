@@ -34,8 +34,8 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   const user = await authenticateUser(email, password)
   let roles: Array<Role | SiteRole> = [user.role]
 
-  if (roles?.includes(SiteRole.SiteAdmin)) {
-    // TODO: Temporary code to auto-update vendorId in all tables
+  // TODO: DELETE this temporary code that auto-updates vendorId in all tables once all data is migrated
+  if (user.email === "surya@romeano.com" && roles?.includes(SiteRole.SiteAdmin)) {
     console.log("***** UPDATING VENDOR ID FOR ALL USERS *****")
     const allUsers = await db.user.findMany({})
     await Promise.all(
