@@ -67,9 +67,9 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
 
   // TODO: Remove undefined vendorId when all data is migrated and column is made NON-NULLABLE
   await ctx.session.$create({
-    userId: user.id,
+    userId: user.id!,
     roles: roles,
-    vendorId: user.vendorId,
+    vendorId: user.vendorId!,
   })
 
   return user

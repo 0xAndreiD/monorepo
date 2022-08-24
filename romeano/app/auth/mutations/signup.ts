@@ -134,9 +134,9 @@ export default resolver.pipe(
     await sendVendorWelcomeEmail(emailTrimmed, firstName, lastName)
 
     await ctx.session.$create({
-      userId: userRecord.id,
+      userId: userRecord.id!,
       roles: [userRecord.role, Role.AccountExecutive],
-      vendorId: userRecord.vendorId,
+      vendorId: userRecord.vendorId!,
     })
     return userRecord
   }
