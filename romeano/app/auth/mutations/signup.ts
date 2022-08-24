@@ -136,7 +136,7 @@ export default resolver.pipe(
     await ctx.session.$create({
       userId: userRecord.id,
       roles: [userRecord.role, Role.AccountExecutive],
-      vendorId: userRecord.vendorId || undefined,
+      vendorId: userRecord.vendorId,
     })
     return userRecord
   }

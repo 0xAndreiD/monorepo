@@ -29,7 +29,7 @@ export default resolver.pipe(resolver.zod(LogoData), resolver.authorize(), async
       // href: "http://127.0.0.1:3000/" + params.url,
       href: params.url,
       portalId: decodeHashId(params.portalId),
-      vendorId: ctx.session.vendorId,
+      vendorId: ctx.session.vendorId!,
     },
   })
 

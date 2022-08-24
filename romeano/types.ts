@@ -15,8 +15,7 @@ export function customIsAuthorized({ ctx, args }: CustomIsAuthorizedArgs) {
   }
   if (!ctx.session.vendorId) {
     console.error("Missing vendorId in session")
-    // Temporarily allow this until we fix the vendorId data in all prod DB tables
-    // return false
+    return false
   }
   // TODO: Authorize current user has access to the requested resources for this vendor ID
   const [roleOrRoles, options = {}] = args
@@ -47,10 +46,12 @@ declare module "blitz" {
 
   export interface Session {
     isAuthorized: typeof customIsAuthorized
+    userId: User["id"]
+    vendorId: Vendor["id"]
     PublicData: {
       userId: User["id"]
       roles: Array<Role | SiteRole>
-      vendorId?: Vendor["id"]
+      vendorId: Vendor["id"]
     }
   }
 }
