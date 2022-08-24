@@ -71,8 +71,8 @@ model User {
   lastName         String
   email            String            @unique
   photoUrl         String?
-  vendor           Vendor?           @relation(fields: [vendorId], references: [id])
-  vendorId         Int?
+  vendor           Vendor            @relation(fields: [vendorId], references: [id])
+  vendorId         Int
   accountExecutive AccountExecutive?
   stakeholder      Stakeholder?
   templates        Template[]
