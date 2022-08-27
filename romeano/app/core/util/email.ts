@@ -27,6 +27,7 @@ function recipientProcessor(recipients: string[]) {
 
 //invitation for a new stakeholder
 export async function sendInvite(
+  inviterEmail: string,
   customerName: string,
   vendorName: string,
   inviterFirstName: string,
@@ -53,7 +54,7 @@ export async function sendInvite(
 <a href="${BACKEND_ENDPOINT}/magicLink/${magicLink}">Open Portal</a>`
 
   const msg = {
-    from: `"Romeano" <hey@romeano.com>`,
+    from: `"${inviterFirstName}" <${inviterEmail}>`,
     to: recipientProcessor([inviteeEmailAddress]),
     subject: `${customerName} Customer Portal Invitation - ${vendorName}`, // Subject line
     html: preparedInviteHTMLEmail,
