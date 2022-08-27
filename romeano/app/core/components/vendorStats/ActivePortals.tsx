@@ -1,6 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
 import "tailwindcss/tailwind.css"
-import { MailIcon, PencilIcon, TrashIcon } from "@heroicons/react/outline"
+import { MailIcon, PencilIcon, TrashIcon, TrendingUpIcon } from "@heroicons/react/outline"
 import { getName } from "../../util/text"
 import { StyledLink } from "../generic/Link"
 import { PlusIcon } from "@heroicons/react/solid"
@@ -113,7 +113,7 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                         <div className="flex items-center">
                           <div className="flex flex-col gap-y-1">
                             <div className="text-lg font-medium text-gray-900">
-                              <BlitzLink href={Routes.PortalDetails({ portalId: portal.portalId })}>
+                              <BlitzLink href={Routes.CustomerPortal({ portalId: portal.portalId })}>
                                 <a className="text-blue-600 hover:text-blue-700 hover:underline" title="View Portal">
                                   {portal.customerName}
                                 </a>
@@ -161,6 +161,15 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                             ))}
                           </div>
                           <div className="">
+                            <BlitzLink href={Routes.PortalDetails({ portalId: portal.portalId })}>
+                              <a
+                                className="inline-flex items-center px-4 py-2 my-3 border text-sm\
+                leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300 mr-2"
+                              >
+                                <TrendingUpIcon className="h-4 w-4" />
+                              </a>
+                            </BlitzLink>
                             <BlitzLink href={Routes.EditCustomerPortal({ portalId: portal.portalId })}>
                               <a
                                 className="inline-flex items-center px-4 py-2 my-3 border text-sm\
