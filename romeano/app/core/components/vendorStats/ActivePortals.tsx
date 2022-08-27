@@ -1,6 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
 import "tailwindcss/tailwind.css"
-import { MailIcon } from "@heroicons/react/outline"
+import { MailIcon, PencilIcon, TrashIcon } from "@heroicons/react/outline"
 import { getName } from "../../util/text"
 import { StyledLink } from "../generic/Link"
 import { PlusIcon } from "@heroicons/react/solid"
@@ -114,7 +114,7 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                           <div className="flex flex-col gap-y-1">
                             <div className="text-lg font-medium text-gray-900">
                               <BlitzLink href={Routes.PortalDetails({ portalId: portal.portalId })}>
-                                <a className="hover:text-blue-600 hover:underline" title="View Portal">
+                                <a className="text-blue-600 hover:text-blue-700 hover:underline" title="View Portal">
                                   {portal.customerName}
                                 </a>
                               </BlitzLink>
@@ -160,19 +160,19 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                               </div>
                             ))}
                           </div>
-                          <div className="grid grid-rows-2">
-                            <BlitzLink href={Routes.PortalDetails({ portalId: portal.portalId })}>
+                          <div className="">
+                            <BlitzLink href={Routes.EditCustomerPortal({ portalId: portal.portalId })}>
                               <a
-                                className="inline-flex items-center px-5 py-2 my-3 border text-sm\
+                                className="inline-flex items-center px-4 py-2 my-3 border text-sm\
                 leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
-                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300"
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300 mr-2"
                               >
-                                View
+                                <PencilIcon className="h-4 w-4" />
                               </a>
                             </BlitzLink>
                             <button
                               type="button"
-                              className="inline-flex items-center px-5 py-2 my-3 border text-sm\
+                              className="inline-flex items-center px-4 py-2 my-3 border text-sm\
                 leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300"
                               onClick={async () => {
@@ -180,7 +180,7 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                                 Router.reload()
                               }}
                             >
-                              Delete
+                              <TrashIcon className="h-4 w-4" />
                             </button>
                           </div>
                         </div>

@@ -5,6 +5,7 @@ import { splitName } from "../../core/util/text"
 import { sendInvite } from "../../core/util/email"
 
 import { decodeHashId } from "../../core/util/crypto"
+import getCurrentUser from "app/users/queries/getCurrentUser"
 
 export const CreateStakeholder = z.object({
   portalId: z.string(),
@@ -21,6 +22,7 @@ export default resolver.pipe(
     const userId = ctx.session.userId
     if (!userId) throw new AuthenticationError("no userId provided")
 
+    const currentUser = await getCurrentUser({}, ctx)
     const portal = await db.portal.findUnique({
       where: { id: decodeHashId(portalId) },
       include: {
@@ -41,7 +43,7 @@ export default resolver.pipe(
 
     const [firstName, lastName] = splitName(fullName)
 
-    const user =
+    const stakeholderUser =
       (await db.user.findUnique({ where: { email } })) ??
       (await db.user.create({
         data: {
@@ -54,11 +56,11 @@ export default resolver.pipe(
       }))
 
     const stakeholder =
-      (await db.stakeholder.findUnique({ where: { userId: user.id } })) ??
+      (await db.stakeholder.findUnique({ where: { userId: stakeholderUser.id } })) ??
       (await db.stakeholder.create({
         data: {
           jobTitle,
-          userId: user.id,
+          userId: stakeholderUser.id,
           vendorId: ctx.session.vendorId,
         },
       }))
@@ -67,33 +69,35 @@ export default resolver.pipe(
       ;(await db.userPortal.findFirst({
         where: {
           portalId: decodeHashId(portalId),
-          userId: user.id,
+          userId: stakeholderUser.id,
         },
       })) ??
         (await db.userPortal.create({
           data: {
             portalId: decodeHashId(portalId),
             vendorId: ctx.session.vendorId,
-            userId: user.id,
+            userId: stakeholderUser.id,
             role: Role.Stakeholder,
           },
         }))
     } catch (err) {
-      console.log("Error while creating user portal", err)
+      console.log("Error while creating stakeholderUser user portal", err)
     }
 
     const magicLink = await db.magicLink.create({
       data: {
         id: generateToken(),
-        userId: user.id,
-        vendorId: user.vendorId,
+        userId: stakeholderUser.id,
+        vendorId: stakeholderUser.vendorId,
         destUrl: Routes.CustomerPortal({ portalId }).pathname.replace("[portalId]", portalId),
         hasClicked: false,
       },
     })
 
     console.log("Sending invite...")
+    // TODO: clean up the function args/signature
     sendInvite(
+      currentUser.email!,
       portal.customerName,
       portal.vendor.name,
       userPortal.user.firstName,
