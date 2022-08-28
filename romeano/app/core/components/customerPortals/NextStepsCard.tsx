@@ -15,6 +15,8 @@ import createEvent from "app/event/mutations/createEvent"
 import { EventType, Role } from "db"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { confirmAlert } from "react-confirm-alert" // Import
+import "react-confirm-alert/src/react-confirm-alert.css" // Import css
 
 type NextSteps = {
   customer: {
@@ -142,10 +144,25 @@ function NextStepsTaskList(props: {
               {props.isElementDeletable && (
                 <button
                   style={{ marginLeft: "auto" }}
-                  onClick={async () => {
-                    await deleteNextStep({ id: task.id })
-                    invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepDelete })
-                    props.refetchHandler()
+                  onClick={() => {
+                    confirmAlert({
+                      title: "Are you sure",
+                      message: "Please confirm if you want to delete this next step",
+                      buttons: [
+                        {
+                          label: "Yes",
+                          onClick: async () => {
+                            await deleteNextStep({ id: task.id })
+                            invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepDelete })
+                            props.refetchHandler()
+                          },
+                        },
+                        {
+                          label: "No",
+                          onClick: () => {},
+                        },
+                      ],
+                    })
                   }}
                 >
                   <CustomTrashIcon className="w-4 h-4 text-gray-400" />

@@ -12,6 +12,8 @@ import createEvent from "../../../event/mutations/createEvent"
 import { EventType } from "db"
 import { useEffect } from "react"
 import CustomTrashIcon from "app/core/assets/trashIcon"
+import { confirmAlert } from "react-confirm-alert" // Import
+import "react-confirm-alert/src/react-confirm-alert.css" // Import css
 
 export function InviteStakeholdersModal(props: {
   stakeholders: Array<Stakeholder>
@@ -95,9 +97,24 @@ export function InviteStakeholdersModal(props: {
                   {person.jobTitle}
                   <button
                     style={{ marginLeft: "10px" }}
-                    onClick={async () => {
-                      await deleteStakeholderMutation({ portalId: props.portalId, email: person.email })
-                      props.refetchHandler()
+                    onClick={() => {
+                      confirmAlert({
+                        title: "Are you sure",
+                        message: "Please confirm if you want to remove this stakeholder",
+                        buttons: [
+                          {
+                            label: "Yes",
+                            onClick: async () => {
+                              await deleteStakeholderMutation({ portalId: props.portalId, email: person.email })
+                              props.refetchHandler()
+                            },
+                          },
+                          {
+                            label: "No",
+                            onClick: () => {},
+                          },
+                        ],
+                      })
                     }}
                   >
                     <CustomTrashIcon className="w-4 h-4 text-gray-400" />

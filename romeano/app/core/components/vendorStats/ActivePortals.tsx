@@ -15,6 +15,8 @@ import Modal from "app/core/components/generic/Modal"
 import { Template } from "db"
 import deletePortal from "../../../vendor-stats/mutations/deletePortal"
 import Router from "next/router"
+import { confirmAlert } from "react-confirm-alert"
+import "react-confirm-alert/src/react-confirm-alert.css" // Import css
 
 type ActivePortal = {
   portalId: string
@@ -184,9 +186,24 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                               className="inline-flex items-center px-4 py-2 my-3 border text-sm\
                 leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300"
-                              onClick={async () => {
-                                await deletePortalMutation({ thisPortalId: portal.portalId })
-                                Router.reload()
+                              onClick={() => {
+                                confirmAlert({
+                                  title: "Are you sure",
+                                  message: "Please confirm if you want to delete this portal.",
+                                  buttons: [
+                                    {
+                                      label: "Yes",
+                                      onClick: async () => {
+                                        await deletePortalMutation({ thisPortalId: portal.portalId })
+                                        Router.reload()
+                                      },
+                                    },
+                                    {
+                                      label: "No",
+                                      onClick: () => {},
+                                    },
+                                  ],
+                                })
                               }}
                             >
                               <TrashIcon className="h-4 w-4" />
