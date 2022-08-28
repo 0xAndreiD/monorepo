@@ -116,12 +116,27 @@ export function ProductInfoCard(props: {
             statusFormatter={(current, total) => (
               <button
                 //use the mutation to push the context
-                onClick={async (link) => {
-                  await deleteProductInfoImageMutation({
-                    current: current,
-                    portalId: props.portalId,
-                  }),
-                    props.refetchHandler()
+                onClick={(link) => {
+                  confirmAlert({
+                    title: "Are you sure",
+                    message: "Please confirm if you want to delete this image.",
+                    buttons: [
+                      {
+                        label: "Yes",
+                        onClick: async () => {
+                          await deleteProductInfoImageMutation({
+                            current: current,
+                            portalId: props.portalId,
+                          })
+                          props.refetchHandler()
+                        },
+                      },
+                      {
+                        label: "No",
+                        onClick: () => {},
+                      },
+                    ],
+                  })
                 }}
                 style={{ ...style, right: 15 }}
               >
@@ -231,13 +246,28 @@ export function ProductInfoCard(props: {
                       <TrashIcon
                         style={{ cursor: "pointer" }}
                         className="w-4 h-4 text-gray-400"
-                        onClick={async () => {
-                          await deleteProductInfoLinkMutation({
-                            portalId: props.portalId,
-                            sectionId: section.id,
-                            linkId: sectionLink.id,
+                        onClick={() => {
+                          confirmAlert({
+                            title: "Are you sure",
+                            message: "Please confirm if you want to delete this link",
+                            buttons: [
+                              {
+                                label: "Yes",
+                                onClick: async () => {
+                                  await deleteProductInfoLinkMutation({
+                                    portalId: props.portalId,
+                                    sectionId: section.id,
+                                    linkId: sectionLink.id,
+                                  })
+                                  props.refetchHandler()
+                                },
+                              },
+                              {
+                                label: "No",
+                                onClick: () => {},
+                              },
+                            ],
                           })
-                          props.refetchHandler()
                         }}
                       />
                     </div>

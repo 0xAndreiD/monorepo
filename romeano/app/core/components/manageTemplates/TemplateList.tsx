@@ -11,6 +11,8 @@ import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircle
 import deleteTemplate from "app/vendor-stats/mutations/deleteTemplate"
 import Router from "next/router"
 import { encodeHashId } from "../../../core/util/crypto"
+import { confirmAlert } from "react-confirm-alert"
+import "react-confirm-alert/src/react-confirm-alert.css" // Import css
 
 type Template = {
   id: number
@@ -88,9 +90,24 @@ export function TemplateList(props: { data: Template[] }) {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           type="button"
-                          onClick={async () => {
-                            await deleteTemplateMutation({ id: template.id })
-                            Router.reload()
+                          onClick={() => {
+                            confirmAlert({
+                              title: "Are you sure",
+                              message: "Please confirm if you want to delete this template.",
+                              buttons: [
+                                {
+                                  label: "Yes",
+                                  onClick: async () => {
+                                    await deleteTemplateMutation({ id: template.id })
+                                    Router.reload()
+                                  },
+                                },
+                                {
+                                  label: "No",
+                                  onClick: () => {},
+                                },
+                              ],
+                            })
                           }}
                         >
                           <TrashIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
