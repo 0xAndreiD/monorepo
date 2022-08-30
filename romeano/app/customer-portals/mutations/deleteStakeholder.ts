@@ -27,7 +27,11 @@ export default resolver.pipe(
     })
     if (!portal) throw new AuthenticationError("Could not find portal!")
 
-    const user = await db.user.findUnique({ where: { email } })
+    const user = await db.user.findUnique({
+      where: {
+        email_vendorId: { email: email, vendorId: portal.vendorId },
+      },
+    })
     if (!user) throw new AuthenticationError("Could not find stakeholder user!")
 
     const userPortal = await db.userPortal.findUnique({
@@ -56,7 +60,7 @@ export default resolver.pipe(
 
       // Delete user
       await db.user.delete({
-        where: { email: email },
+        where: { id: user.id },
       })
     } catch (err) {
       console.log("Error while deleting userportal/stakeholder/user", err)

@@ -8,7 +8,7 @@ type CustomIsAuthorizedArgs = {
 }
 export function customIsAuthorized({ ctx, args }: CustomIsAuthorizedArgs) {
   // can access ctx.session, ctx.session.userId, etc
-  console.log("CustomIsAuthorized...", ctx.session.userId, ctx.session.roles, ctx.session.vendorId, args)
+  console.log("CustomIsAuthorized...", ctx.session.$publicData, args)
   if (!ctx.session.userId) {
     console.error("Missing userId in session")
     return false
@@ -30,10 +30,10 @@ export function customIsAuthorized({ ctx, args }: CustomIsAuthorizedArgs) {
     rolesToAuthorize.push(roleOrRoles)
   }
   const sessionRoles = (ctx.session as SessionContext).$publicData.roles || []
-  console.log("sessionRoles", sessionRoles, ctx.session.roles)
   for (const role of rolesToAuthorize) {
     if (sessionRoles!.includes(role)) return true
   }
+  console.error(`User does not have any of ${roleOrRoles}`)
   return false
 }
 

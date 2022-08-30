@@ -28,12 +28,6 @@ export default resolver.pipe(
     if (UNSUPPORTED_EMAIL_DOMAINS.includes(domain))
       throw new Error("Unsupported domain. Please enter your work email address.")
 
-    // Check if user already exists with this email
-    var userRecord = await db.user.findUnique({
-      where: { email: emailTrimmed },
-    })
-    console.log("User...", userRecord)
-
     // Find the vendor with this email domain first and if one doesn't exist, create it
     var vendorRecord = await db.vendor.findUnique({
       where: { emailDomain: domain },
@@ -70,6 +64,14 @@ export default resolver.pipe(
       })
     }
     console.log("Vendor Team...", vendorTeamRecord)
+
+    // Check if user already exists with this email
+    var userRecord = await db.user.findUnique({
+      where: {
+        email_vendorId: { email: emailTrimmed, vendorId: vendorRecord.id },
+      },
+    })
+    console.log("User...", userRecord)
 
     if (!userRecord) {
       console.log("User not found, creating one", emailTrimmed)

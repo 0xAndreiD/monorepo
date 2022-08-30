@@ -25,7 +25,11 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
   const vendorTeam = await db.vendorTeam.findUnique({ where: { id: accountExec.vendorTeamId } })
   if (!vendorTeam) throw new AuthenticationError("No vendor team associated with AE when creating portal")
 
-  var emailUser = await db.user.findUnique({ where: { email: data.customerEmail } })
+  var emailUser = await db.user.findUnique({
+    where: {
+      email_vendorId: { email: data.customerEmail, vendorId: ctx.session.vendorId },
+    },
+  })
   var portal
   var id = 0
 
