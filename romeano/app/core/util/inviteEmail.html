@@ -18,7 +18,7 @@
               margin-bottom: 0px;
             "
           >
-            {{invitee_name}} has shared your customer portal:
+            {{inviter_name}} has shared your customer portal:
           </h2>
           <div class="clearfix" style="box-sizing: border-box; text-align: center; vertical-align: middle">
             <div style="padding: 10px; box-sizing: border-box; display: flex; gap: 0.5rem; align-items: center">
@@ -34,6 +34,7 @@
                   margin-bottom: auto;
                 "
               />
+              {{#if customer_logo}}
               <hr
                 style="
                   box-sizing: border-box;
@@ -62,6 +63,7 @@
                   margin-bottom: auto;
                 "
               />
+              {{/if}}
             </div>
           </div>
           <!-- Action -->

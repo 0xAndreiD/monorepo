@@ -40,7 +40,7 @@ export async function sendInvite(
   let template = handlebars.compile(html)
   const inviteUrl = `${BACKEND_ENDPOINT}/magicLink/${magicLink}`
   let inviteEmailData = {
-    invitee_name: inviterFirstName,
+    inviter_name: inviterFirstName,
     invite_url: inviteUrl,
     vendor_logo: vendorLogo,
     customer_logo: `${BACKEND_ENDPOINT}` + customerLogo,
