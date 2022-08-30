@@ -43,7 +43,7 @@ export async function sendInvite(
     inviter_name: inviterFirstName,
     invite_url: inviteUrl,
     vendor_logo: vendorLogo,
-    customer_logo: `${BACKEND_ENDPOINT}` + customerLogo,
+    customer_logo: customerLogo ? `${BACKEND_ENDPOINT}` + customerLogo : "",
   }
 
   //use the handlebars object to inject custom template data into the email
