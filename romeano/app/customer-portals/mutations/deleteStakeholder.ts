@@ -60,7 +60,7 @@ export default resolver.pipe(
 
       // Delete user
       await db.user.delete({
-        where: { email: email },
+        where: { userId: user.id },
       })
     } catch (err) {
       console.log("Error while deleting userportal/stakeholder/user", err)
