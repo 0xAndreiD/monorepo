@@ -27,7 +27,11 @@ export default resolver.pipe(
     })
     if (!portal) throw new AuthenticationError("Could not find portal!")
 
-    const user = await db.user.findUnique({ where: { email } })
+    const user = await db.user.findUnique({
+      where: {
+        email_vendorId: { email: email, vendorId: portal.vendorId },
+      },
+    })
     if (!user) throw new AuthenticationError("Could not find stakeholder user!")
 
     const userPortal = await db.userPortal.findUnique({
