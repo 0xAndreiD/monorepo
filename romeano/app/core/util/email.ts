@@ -54,7 +54,7 @@ export async function sendInvite(
 <a href="${BACKEND_ENDPOINT}/magicLink/${magicLink}">Open Portal</a>`
 
   const msg = {
-    from: `"${inviterFirstName}" <${inviterEmail}>`,
+    from: `"${inviterFirstName}" <hey@romeano.com>`,
     to: recipientProcessor([inviteeEmailAddress]),
     subject: `${customerName} Customer Portal Invitation - ${vendorName}`, // Subject line
     html: preparedInviteHTMLEmail,

@@ -1,8 +1,6 @@
-import { AuthenticationError, generateToken, resolver, Routes } from "blitz"
-import db, { Role, SiteRole } from "db"
+import { AuthenticationError, resolver } from "blitz"
+import db from "db"
 import { z } from "zod"
-import { splitName } from "../../core/util/text"
-import { sendInvite } from "../../core/util/email"
 
 import { decodeHashId } from "../../core/util/crypto"
 
@@ -36,7 +34,7 @@ export default resolver.pipe(
 
     const userPortal = await db.userPortal.findUnique({
       where: {
-        userId_portalId: { portalId: decodeHashId(portalId), userId: user.id },
+        userId_portalId: { userId: user.id, portalId: decodeHashId(portalId) },
       },
       include: {
         user: true,
