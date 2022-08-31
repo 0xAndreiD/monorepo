@@ -10,6 +10,7 @@ const readFile = promisify(fs.readFile)
 
 // TODO: Move this to env
 const ADMIN_EMAILS = [process.env.ADMIN_EMAIL || "ben@romeano.com"]
+const FROM_ADDRESS = "no-reply@romeano.com"
 
 export const transporter = nodemailer.createTransport({
   host: "smtp.sendgrid.net",
@@ -54,7 +55,7 @@ export async function sendInvite(
 <a href="${BACKEND_ENDPOINT}/magicLink/${magicLink}">Open Portal</a>`
 
   const msg = {
-    from: `"${inviterFirstName}" <hey@romeano.com>`,
+    from: `"${inviterFirstName}" <${FROM_ADDRESS}>`,
     to: recipientProcessor([inviteeEmailAddress]),
     subject: `${customerName} Customer Portal Invitation - ${vendorName}`, // Subject line
     html: preparedInviteHTMLEmail,
@@ -87,7 +88,7 @@ export async function sendPortalLoginLink(
 `
 
   const msg = {
-    from: `"Romeano" <hey@romeano.com>`,
+    from: `"Romeano" <${FROM_ADDRESS}>`,
     to: recipientProcessor([inviteeEmailAddress]),
     subject: `Login to your ${vendorName} Sales Portal`, // Subject line
     html: body,
@@ -114,7 +115,7 @@ export async function sendPortalLoginLink(
 // <a href="${BACKEND_ENDPOINT}/magicLink/${magicLink}">Sign in</a>`
 //
 //   const info = await transporter.sendMail({
-//     from: `"Romeano" <hey@romeano.com>`,
+//     from: `"Romeano" <${FROM_ADDRESS}>`,
 //     to: recipientProcessor([aeEmail]),
 //     subject: `Magic sign-in link for ${aeFirstName} on Romeano`, // Subject line
 //     html: body
@@ -138,7 +139,7 @@ Please make sure you update the vendor logo if it is not already in the system.
 `
 
   const msg = {
-    from: `"Romeano" <hey@romeano.com>`,
+    from: `"Romeano" <${FROM_ADDRESS}>`,
     to: recipientProcessor(ADMIN_EMAILS),
     subject: `Vendor Self Sign Up - ${userFirstName} ${userLastName} (${jobTitle} at ${vendorName})`, // Subject line
     html: body,
@@ -166,7 +167,7 @@ export async function sendVendorWelcomeEmail(userEmail: string, userFirstName: s
 <div>Romeano | <a href="mailto:ben@romeano.com">ben@romeano.com</a></div>
 `
   const msg = {
-    from: `"Romeano" <hey@romeano.com>`,
+    from: `"Romeano" <${FROM_ADDRESS}>`,
     to: recipientProcessor([userEmail]),
     subject: `Welcome to Romeano's Beta`, // Subject line
     html: body,
