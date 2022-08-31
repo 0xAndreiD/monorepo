@@ -52,7 +52,7 @@ function PortalDetails() {
           </div>
         </div>
         <CardDivider />
-        <DocumentsCard portalId={portalId} data={portal.documents} />
+        <DocumentsCard portalId={portalId} data={portal.documents} refetchHandler={refetch} editingEnabled={true} />
         <CardDivider />
         <StakeholderEngagementCard data={portal.stakeholderEngagement} />
       </div>

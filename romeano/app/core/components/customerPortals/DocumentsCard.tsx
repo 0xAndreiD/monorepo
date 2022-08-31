@@ -5,10 +5,14 @@ import { EventType, Role } from "db"
 import { UploadComponent } from "./UploadComponent"
 import { useMutation } from "blitz"
 import createDocument from "../../../customer-portals/mutations/createDocument"
+import deleteDocument from "../../../customer-portals/mutations/deleteDocument"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { UploadProductImageComponent } from "./UploadComponent"
+import { confirmAlert } from "react-confirm-alert"
+import CustomTrashIcon from "app/core/assets/trashIcon"
 
 export type PortalDocument = {
+  documentId: number
   id: number
   body: string
   href: string
@@ -38,9 +42,11 @@ export default function DocumentsCard(props: {
     <Card borderless={true}>
       <CardHeader>Documents</CardHeader>
       <DocumentList
+        refetchHandler={props.refetchHandler}
         portalId={props.portalId}
         companyName={props.data.customer.name}
         documents={props.data.customer.documents}
+        editingEnabled={user?.role === Role.AccountExecutive}
       />
       <div className="mb-5" style={{ width: "min-content" }}>
         {user?.role === Role.AccountExecutive && (
@@ -58,9 +64,11 @@ export default function DocumentsCard(props: {
       </div>
       <CardDivider />
       <DocumentList
+        refetchHandler={props.refetchHandler}
         portalId={props.portalId}
         companyName={props.data.vendor.name}
         documents={props.data.vendor.documents}
+        editingEnabled={user?.role === Role.Stakeholder}
       />
       {user?.role === Role.Stakeholder && (
         <UploadComponent
@@ -78,14 +86,21 @@ export default function DocumentsCard(props: {
   )
 }
 
-function DocumentList(props: { portalId: string; companyName: string; documents: PortalDocument[] }) {
+function DocumentList(props: {
+  refetchHandler: Function
+  portalId: string
+  companyName: string
+  documents: PortalDocument[]
+  editingEnabled: boolean
+}) {
+  const [deleteDocumentMutation] = useMutation(deleteDocument)
   return (
     <>
       <p className="max-w-2xl pt-4 text-sm">
         for <span className="font-bold">{props.companyName}</span>
       </p>
       <div className="py-4 flex flex-wrap justify-self-start gap-2">
-        {props.documents.map((document, idx) => (
+        {props.documents?.map((document, idx) => (
           <div key={idx}>
             <TrackedLink
               portalId={props.portalId}
@@ -104,6 +119,34 @@ function DocumentList(props: { portalId: string; companyName: string; documents:
               >
                 {document.isCompleted && <CheckIcon className="-ml-0.5 mr-2 h-4 w-4 text-green-500" />}
                 {document.body}
+                {props.editingEnabled && (
+                  <a
+                    href="#"
+                    onClick={() => {
+                      confirmAlert({
+                        title: "Are you sure",
+                        message: "Please confirm if you want to delete this document",
+                        buttons: [
+                          {
+                            label: "Yes",
+                            onClick: async () => {
+                              await deleteDocumentMutation({
+                                id: document.documentId,
+                              })
+                              props.refetchHandler()
+                            },
+                          },
+                          {
+                            label: "No",
+                            onClick: () => {},
+                          },
+                        ],
+                      })
+                    }}
+                  >
+                    <CustomTrashIcon className="ml-2 w-4 h-4 text-gray-400" />
+                  </a>
+                )}
               </button>
             </TrackedLink>
           </div>

@@ -11,12 +11,15 @@ import { getStakeholderActivityLogRaw } from "../../vendor-stats/queries/getVend
 import { decodeHashId } from "../../core/util/crypto"
 
 import { enforceSiteAdminIfNotCurrentVendor, setDefaultVendorId } from "app/core/utils"
+import { linkSync } from "fs"
 
 const GetPortalDetail = z.object({
   // This accepts type of undefined, but is required at runtime
   portalId: z.string().refine(Boolean, "Required"),
 })
 
+// TODO: FIXME: CLEAN THIS UP. DOCUMENTS ARE BEING CONVERTED TO LINKS
+// PORTALDOCUMENTS TABLE SEEMS TO BE USELESS - EVERYTHING IS TREATED AS A LINK ANYWAY
 export function getDocuments(
   portalDocuments: (PortalDocument & { link: Link })[],
   userPortals: UserPortal[],
@@ -30,6 +33,7 @@ export function getDocuments(
         .includes(x.link.userId)
     )
     .map((x) => ({
+      documentId: x.id,
       id: x.link.id,
       body: x.link.body,
       href: getExternalUploadPath(x.link.href),
