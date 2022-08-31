@@ -7,7 +7,7 @@ import { UploadParams } from "../../../api/uploadDocument"
 import UploadCloudIcon from "../../assets/uploadCloud"
 import { useState } from "react"
 
-export function UploadComponent(
+export function UploadDocumentComponent(
   props: PropsWithChildren<{
     uploadParams: UploadParams
     onUploadComplete: (link: LinkWithId) => Promise<void>

@@ -22,6 +22,8 @@ export default resolver.pipe(resolver.zod(LogoData), resolver.authorize(), async
 
   const portal = await db.portal.findUnique({ where: { id: decodeHashId(params.portalId) } })
   if (!portal) throw new NotFoundError("customer portal not found")
+  if (portal.vendorId !== ctx.session.vendorId)
+    throw new AuthorizationError("customer portal not found for this vendor")
 
   await db.portal.update({
     where: {

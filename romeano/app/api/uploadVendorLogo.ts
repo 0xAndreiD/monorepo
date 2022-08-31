@@ -6,7 +6,7 @@ import nc from "next-connect"
 import { INTERNAL_UPLOAD_FS_PATH, UPLOAD_SIZE_LIMIT } from "../core/config"
 import formidable, { Fields, Files } from "formidable"
 import { flatten, isNil } from "lodash"
-import changeVendorLogo from "../users/queries/editLogo"
+import editVendorLogo from "../users/queries/editVendorLogo"
 import { LinkWithId } from "../../types"
 
 import { decodeHashId } from "../core/util/crypto"
@@ -17,23 +17,15 @@ export const config = {
   },
 }
 
-const UploadParams = z.object({
-  portalId: z.preprocess(String, z.string()),
-})
-export type UploadParams = z.infer<typeof UploadParams>
+const UploadVendorLogoParams = z.object({})
+export type UploadVendorLogoParams = z.infer<typeof UploadVendorLogoParams>
 
-const uploadLogo = nc<NextApiRequest & { fields: Fields; files: Files }, NextApiResponse<LinkWithId[]>>()
+const uploadVendorLogo = nc<NextApiRequest & { fields: Fields; files: Files }, NextApiResponse<LinkWithId[]>>()
   .use((req, res, next) => {
     const form = formidable({
       uploadDir: INTERNAL_UPLOAD_FS_PATH,
       maxFileSize: UPLOAD_SIZE_LIMIT,
       keepExtensions: true,
-      // //@ts-ignore
-      // filename: (name,ext, part, form) => {
-      //   console.log("in filename")
-      //   console.log(name,ext,part,form)
-      //   return path.join(UPLOAD_DIR, part )//?? uuid());
-      // },
     })
 
     form.parse(req, (err, fields, files) => {
@@ -51,10 +43,9 @@ const uploadLogo = nc<NextApiRequest & { fields: Fields; files: Files }, NextApi
     const session = await getSession(req, res)
     const userId = session.userId
     if (isNil(userId)) throw new AuthorizationError("invalid user id")
-    //if the user is logged in, get the portal ID to figure out where this was
-    const { portalId } = UploadParams.parse(req.fields)
-    const portal = await db.portal.findUnique({ where: { id: decodeHashId(portalId) } })
-    if (!portal) throw new NotFoundError("customer portal not found")
+
+    const vendor = await db.vendor.findUnique({ where: { id: session.vendorId } })
+    if (!vendor) throw new AuthorizationError()
 
     console.log("fileUpload(): file uploaded ggg")
 
@@ -73,11 +64,10 @@ const uploadLogo = nc<NextApiRequest & { fields: Fields; files: Files }, NextApi
         },
       })
       await invokeWithMiddleware(
-        changeVendorLogo,
+        editVendorLogo,
         {
           url: "/api/viewDocument/" + link.href,
           linkId: link.id,
-          portalId: portalId,
         },
         { req, res }
       )
@@ -89,4 +79,4 @@ const uploadLogo = nc<NextApiRequest & { fields: Fields; files: Files }, NextApi
     res.status(200).end()
   })
 
-export default uploadLogo
+export default uploadVendorLogo

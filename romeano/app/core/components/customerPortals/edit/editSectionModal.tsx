@@ -1,16 +1,11 @@
 import { useForm } from "react-hook-form"
 
-import React, { useState } from "react"
-import { LinkType } from "db"
+import React from "react"
 import { Dialog } from "@headlessui/react"
-import { CloudUploadIcon, LinkIcon } from "@heroicons/react/outline"
-import { UploadComponent } from "app/core/components/customerPortals/UploadComponent"
 import { z } from "zod"
 import Labeled from "app/core/components/generic/Labeled"
-import { LinkWithId, LinkWithType } from "types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "blitz"
-import { string } from "fp-ts"
 import editProductInfoSection from "app/customer-portals/mutations/editProductInfoSection"
 
 export default function EditSectionModal(props: {

@@ -99,7 +99,7 @@ export function InviteStakeholdersModal(props: {
                     style={{ marginLeft: "10px" }}
                     onClick={() => {
                       confirmAlert({
-                        title: "Are you sure",
+                        title: "Are you sure?",
                         message: "Please confirm if you want to remove this stakeholder",
                         buttons: [
                           {
