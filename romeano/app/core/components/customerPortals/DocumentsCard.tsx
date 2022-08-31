@@ -12,6 +12,7 @@ import { confirmAlert } from "react-confirm-alert"
 import CustomTrashIcon from "app/core/assets/trashIcon"
 
 export type PortalDocument = {
+  documentId: number
   id: number
   body: string
   href: string

@@ -11,6 +11,7 @@ import { useMutation } from "blitz"
 import deleteDocument from "app/customer-portals/mutations/deleteDocument"
 
 export type PortalDocument = {
+  documentId: number
   id: number
   body: string
   href: string
