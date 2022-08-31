@@ -9,7 +9,7 @@ import { confirmAlert } from "react-confirm-alert"
 
 export function UploadLogoComponent(
   props: PropsWithChildren<{
-    logoType: string
+    logoType?: string
     uploadParams: UploadCustomerLogoParams | UploadVendorLogoParams
     onUploadComplete: (link: LinkWithId) => Promise<void>
   }>
