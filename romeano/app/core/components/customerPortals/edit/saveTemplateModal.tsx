@@ -1,17 +1,12 @@
 import { useForm } from "react-hook-form"
 
-import React, { useState } from "react"
-import { LinkType } from "db"
+import React from "react"
 import { Dialog } from "@headlessui/react"
-import { CloudUploadIcon, LinkIcon } from "@heroicons/react/outline"
-import { UploadComponent } from "app/core/components/customerPortals/UploadComponent"
 import { z } from "zod"
 import Labeled from "app/core/components/generic/Labeled"
-import { LinkWithId, LinkWithType } from "types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "blitz"
 import SaveTemplate from "app/customer-portals/mutations/saveTemplate"
-import { string } from "fp-ts"
 
 export default function SaveTemplateModal(props: { portalId: string; onLinkComplete: (portal: any) => Promise<void> }) {
   const [saveTemplateMutation] = useMutation(SaveTemplate)

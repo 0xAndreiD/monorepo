@@ -6,7 +6,7 @@ import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
 import { Stakeholder } from "./ProposalCard"
 import SaveTemplate from "app/customer-portals/mutations/saveTemplate"
 import SaveTemplateModal from "./edit/saveTemplateModal"
-import { UploadComponent } from "../portalDetails/uploadComponent"
+import { UploadLogoComponent } from "../portalDetails/UploadLogoComponent"
 import { decodeHashId } from "app/core/util/crypto"
 import { ZodUnknown } from "zod"
 import RomeanoLogo from "app/core/assets/RomeanoLogo"
@@ -40,6 +40,24 @@ export function Header(props: {
         ) : (
           <RomeanoLogo alt="Romeano Logo" className="" width={150} height={30} />
         )}
+        {props.editingEnabled && (
+          <UploadLogoComponent
+            logoType="vendorLogo"
+            uploadParams={{}}
+            onUploadComplete={async () => {
+              props.refetchHandler()
+            }}
+          >
+            <button
+              type="button"
+              className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
+                font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            >
+              <PencilIcon className="-ml-0.5 h-4 w-4" />
+            </button>
+          </UploadLogoComponent>
+        )}
         <hr className="border-l mx-1 pt-6 h-full border-gray-300" />
         {props.customerLogo && (
           <img
@@ -49,7 +67,7 @@ export function Header(props: {
           />
         )}
         {props.editingEnabled && (
-          <UploadComponent
+          <UploadLogoComponent
             uploadParams={{ portalId: props.portalId }}
             onUploadComplete={async () => {
               props.refetchHandler()
@@ -63,7 +81,7 @@ export function Header(props: {
             >
               <PencilIcon className="-ml-0.5 h-4 w-4" />
             </button>
-          </UploadComponent>
+          </UploadLogoComponent>
         )}
       </div>
 

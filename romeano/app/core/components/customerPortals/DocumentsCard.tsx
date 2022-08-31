@@ -2,12 +2,12 @@ import { CheckIcon, CloudUploadIcon } from "@heroicons/react/solid"
 import { Card, CardDivider, CardHeader } from "../generic/Card"
 import { TrackedLink } from "../generic/Link"
 import { EventType, Role } from "db"
-import { UploadComponent } from "./UploadComponent"
+import { UploadDocumentComponent } from "./UploadDocumentComponent"
 import { useMutation } from "blitz"
 import createDocument from "../../../customer-portals/mutations/createDocument"
 import deleteDocument from "../../../customer-portals/mutations/deleteDocument"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import { UploadProductImageComponent } from "./UploadComponent"
+import { UploadProductImageComponent } from "./UploadDocumentComponent"
 import { confirmAlert } from "react-confirm-alert"
 import CustomTrashIcon from "app/core/assets/trashIcon"
 
@@ -50,7 +50,7 @@ export default function DocumentsCard(props: {
       />
       <div className="mb-5" style={{ width: "min-content" }}>
         {user?.role === Role.AccountExecutive && (
-          <UploadComponent
+          <UploadDocumentComponent
             uploadParams={{ portalId: props.portalId }}
             onUploadComplete={async ({ id, body, href }) => {
               await createDocumentMutation({
@@ -71,7 +71,7 @@ export default function DocumentsCard(props: {
         editingEnabled={user?.role === Role.Stakeholder}
       />
       {user?.role === Role.Stakeholder && (
-        <UploadComponent
+        <UploadDocumentComponent
           uploadParams={{ portalId: props.portalId }}
           onUploadComplete={async ({ id, body, href }) => {
             await createDocumentMutation({
@@ -124,7 +124,7 @@ function DocumentList(props: {
                     href="#"
                     onClick={() => {
                       confirmAlert({
-                        title: "Are you sure",
+                        title: "Are you sure?",
                         message: "Please confirm if you want to delete this document",
                         buttons: [
                           {

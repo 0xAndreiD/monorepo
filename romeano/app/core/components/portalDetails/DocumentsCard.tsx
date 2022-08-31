@@ -88,7 +88,7 @@ function DocumentList(props: {
                       href="#"
                       onClick={() => {
                         confirmAlert({
-                          title: "Are you sure",
+                          title: "Are you sure?",
                           message: "Please confirm if you want to delete this document",
                           buttons: [
                             {

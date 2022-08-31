@@ -1,6 +1,6 @@
 import { Link, Routes } from "blitz"
 import React from "react"
-import { UploadComponent } from "./uploadComponent"
+import { UploadLogoComponent } from "./UploadLogoComponent"
 import { CheckIcon, CloudUploadIcon, PencilIcon } from "@heroicons/react/solid"
 import HomeIcon from "app/core/assets/HomeIcon"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
@@ -26,13 +26,29 @@ export function Header(props: {
         ) : (
           <RomeanoLogo alt="Romeano Logo" className="" width={150} height={30} />
         )}
+        <UploadLogoComponent
+          logoType="vendorLogo"
+          uploadParams={{}}
+          onUploadComplete={async () => {
+            props.refetchHandler()
+          }}
+        >
+          <button
+            type="button"
+            className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
+              font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >
+            <PencilIcon className="-ml-0.5 h-4 w-4" />
+          </button>
+        </UploadLogoComponent>
         <hr className="border-l mx-1 pt-6 h-full border-gray-300" />
         <img
           alt="customer logo"
           src={props.customerLogo}
           style={{ maxHeight: "70px", maxWidth: "120px", width: "auto" }}
         />
-        <UploadComponent
+        <UploadLogoComponent
           uploadParams={{ portalId: props.portalId }}
           onUploadComplete={async () => {
             props.refetchHandler()
@@ -46,7 +62,7 @@ export function Header(props: {
           >
             <PencilIcon className="-ml-0.5 h-4 w-4" />
           </button>
-        </UploadComponent>
+        </UploadLogoComponent>
       </div>
 
       <span className="text-gray-600 text-sm justify-self-center">{props.customerName} Portal Details</span>

@@ -92,7 +92,7 @@ export function TemplateList(props: { data: Template[] }) {
                           type="button"
                           onClick={() => {
                             confirmAlert({
-                              title: "Are you sure",
+                              title: "Are you sure?",
                               message: "Please confirm if you want to delete this template.",
                               buttons: [
                                 {

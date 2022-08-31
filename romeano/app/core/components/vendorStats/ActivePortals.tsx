@@ -188,7 +188,7 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300"
                               onClick={() => {
                                 confirmAlert({
-                                  title: "Are you sure",
+                                  title: "Are you sure?",
                                   message: "Please confirm if you want to delete this portal.",
                                   buttons: [
                                     {

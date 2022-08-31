@@ -22,7 +22,7 @@ import EditSectionModal from "./edit/editSectionModal"
 import createEvent from "app/event/mutations/createEvent"
 
 import { invoke, useMutation } from "blitz"
-import { UploadProductImageComponent } from "./UploadComponent"
+import { UploadProductImageComponent } from "./UploadDocumentComponent"
 import { Props } from "@headlessui/react/dist/types"
 import { confirmAlert } from "react-confirm-alert" // Import
 import "react-confirm-alert/src/react-confirm-alert.css" // Import css
@@ -118,7 +118,7 @@ export function ProductInfoCard(props: {
                 //use the mutation to push the context
                 onClick={(link) => {
                   confirmAlert({
-                    title: "Are you sure",
+                    title: "Are you sure?",
                     message: "Please confirm if you want to delete this image.",
                     buttons: [
                       {
@@ -192,7 +192,7 @@ export function ProductInfoCard(props: {
                     className="w-4 h-4 text-gray-400"
                     onClick={() => {
                       confirmAlert({
-                        title: "Are you sure",
+                        title: "Are you sure?",
                         message: "Deleting a section will delete all associated links as well",
                         buttons: [
                           {
@@ -248,7 +248,7 @@ export function ProductInfoCard(props: {
                         className="w-4 h-4 text-gray-400"
                         onClick={() => {
                           confirmAlert({
-                            title: "Are you sure",
+                            title: "Are you sure?",
                             message: "Please confirm if you want to delete this link",
                             buttons: [
                               {

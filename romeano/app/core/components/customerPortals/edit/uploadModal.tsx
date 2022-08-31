@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import { LinkType } from "db"
 import { Dialog } from "@headlessui/react"
 import { CloudUploadIcon, LinkIcon } from "@heroicons/react/outline"
-import { UploadComponent } from "app/core/components/customerPortals/UploadComponent"
+import { UploadDocumentComponent } from "app/core/components/customerPortals/UploadDocumentComponent"
 import { z } from "zod"
 import { LinkWithId, LinkWithType } from "types"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -96,12 +96,12 @@ export function UploadModal(props: {
             <LinkIcon className="text-gray-700 w-16 h-16" />
             <span className="font-bold">Link</span>
           </div>
-          <UploadComponent uploadParams={props.uploadParams} onUploadComplete={props.onUploadComplete}>
+          <UploadDocumentComponent uploadParams={props.uploadParams} onUploadComplete={props.onUploadComplete}>
             <div className="flex flex-col gap-2 justify-center items-center cursor-pointer">
               <CloudUploadIcon className="text-gray-700 w-16 h-16" />
               <span className="font-bold">Upload document</span>
             </div>
-          </UploadComponent>
+          </UploadDocumentComponent>
         </div>
       )}
     </div>

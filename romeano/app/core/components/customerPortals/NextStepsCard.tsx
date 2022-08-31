@@ -146,7 +146,7 @@ function NextStepsTaskList(props: {
                   style={{ marginLeft: "auto" }}
                   onClick={() => {
                     confirmAlert({
-                      title: "Are you sure",
+                      title: "Are you sure?",
                       message: "Please confirm if you want to delete this next step",
                       buttons: [
                         {

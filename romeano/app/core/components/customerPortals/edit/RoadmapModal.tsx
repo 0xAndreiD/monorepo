@@ -143,7 +143,7 @@ export default function RoadmapModal(props: {
                     type="button"
                     onClick={() => {
                       confirmAlert({
-                        title: "Are you sure",
+                        title: "Are you sure?",
                         message: "Please confirm if you want to delete this task",
                         buttons: [
                           {
@@ -186,7 +186,7 @@ export default function RoadmapModal(props: {
                     type="button"
                     onClick={() => {
                       confirmAlert({
-                        title: "Are you sure",
+                        title: "Are you sure?",
                         message: "Please confirm if you want to delete this link",
                         buttons: [
                           {
