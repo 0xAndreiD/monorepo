@@ -12,12 +12,16 @@ import getVendorStats from "../vendor-stats/queries/getVendorStats"
 import getTemplates from "app/vendor-stats/queries/getTemplates"
 
 function VendorStats() {
-  const [vendorStats] = useQuery(getVendorStats, {}, { refetchOnWindowFocus: false })
+  const [vendorStats, { refetch }] = useQuery(getVendorStats, {}, { refetchOnWindowFocus: false })
   const [templates] = useQuery(getTemplates, {}, { refetchOnWindowFocus: false })
   return (
     <>
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
-        <Header vendorLogo={vendorStats.header.vendorLogo || ""} templates={templates.templates} />
+        <Header
+          vendorLogo={vendorStats.header.vendorLogo || ""}
+          templates={templates.templates}
+          refetchHandler={refetch}
+        />
         <div className="py-3">
           <CardDivider />
         </div>
