@@ -1,5 +1,5 @@
 import getCurrentUser from "app/users/queries/getCurrentUser"
-import { resolver, Ctx } from "blitz"
+import { resolver, Ctx, AuthorizationError } from "blitz"
 import db, { Role, SiteRole } from "db"
 import * as z from "zod"
 
@@ -14,6 +14,11 @@ export default resolver.pipe(
   resolver.authorize(SiteRole.SiteAdmin),
 
   async ({ userEmail }, ctx) => {
+    const currentUser = await getCurrentUser({}, ctx)
+    if (currentUser!.email!.endsWith("@romeano.com") && currentUser.roles?.includes(SiteRole.SiteAdmin)) {
+      throw new AuthorizationError("Not authorized to impersonate")
+    }
+
     const user = await db.user.findFirst({
       where: {
         email: userEmail,
