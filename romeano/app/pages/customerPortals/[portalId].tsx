@@ -12,6 +12,7 @@ import { CardDivider } from "app/core/components/generic/Card"
 import { useParam, useQuery, useSession } from "blitz"
 import getCustomerPortal from "../../customer-portals/queries/getCustomerPortal"
 import StakeholderLoginForm from "../../auth/components/StakeholderLoginForm"
+import Layout from "app/core/layouts/Layout"
 
 function CustomerPortal() {
   const portalId = useParam("portalId", "string")!
@@ -92,4 +93,5 @@ function CustomerPortal() {
 }
 
 // CustomerPortal.authenticate = true
+CustomerPortal.getLayout = (page) => <Layout title={`Customer Portal`}>{page}</Layout>
 export default CustomerPortal

@@ -13,6 +13,7 @@ import { useParam, useQuery, useSession } from "blitz"
 import getCustomerPortal from "app/customer-portals/queries/getCustomerPortal"
 import StakeholderLoginForm from "app/auth/components/StakeholderLoginForm"
 import React from "react"
+import Layout from "app/core/layouts/Layout"
 
 function EditCustomerPortal() {
   const portalId = useParam("portalId", "string")!
@@ -85,5 +86,6 @@ function EditCustomerPortal() {
   )
 }
 
-// CustomerPortal.authenticate = true
+// EditCustomerPortal.authenticate = true
+EditCustomerPortal.getLayout = (page) => <Layout title={`Edit Customer Portal`}>{page}</Layout>
 export default EditCustomerPortal
