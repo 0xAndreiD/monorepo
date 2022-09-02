@@ -1,4 +1,4 @@
-import React from "react"
+import React, { ReactChild } from "react"
 import "tailwindcss/tailwind.css"
 import { CardDivider } from "app/core/components/generic/Card"
 import { Header } from "app/core/components/manageTemplates/Header"
@@ -30,5 +30,5 @@ function ManageTemplate() {
 }
 
 ManageTemplate.authenticate = true
-ManageTemplate.getLayout = (page) => <Layout title="Manage Templates">{page}</Layout>
+ManageTemplate.getLayout = (page: ReactChild) => <Layout title="Manage Templates">{page}</Layout>
 export default ManageTemplate

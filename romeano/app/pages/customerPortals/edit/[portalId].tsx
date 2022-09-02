@@ -87,5 +87,5 @@ function EditCustomerPortal() {
 }
 
 // EditCustomerPortal.authenticate = true
-EditCustomerPortal.getLayout = (page) => <Layout title={`Edit Customer Portal`}>{page}</Layout>
+EditCustomerPortal.getLayout = (page: React.ReactChild) => <Layout title={`Edit Customer Portal`}>{page}</Layout>
 export default EditCustomerPortal

@@ -21,7 +21,7 @@ export default function SwitchUserModal() {
             try {
               await impersonateUserMutation(values)
               queryClient.clear()
-            } catch (error: Error) {
+            } catch (error: any) {
               return {
                 [FORM_ERROR]: "Sorry, we had an unexpected error. Please try again. - " + error.toString(),
               }

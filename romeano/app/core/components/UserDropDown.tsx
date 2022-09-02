@@ -63,9 +63,9 @@ export default function UserDropDown(props: { templates: Template[] }) {
               <Menu.Item>
                 <div className="flex justify-between">
                   <span className="text-gray-900 block px-4 py-2 text-sm">{user?.email}</span>
-                  {user.roles.includes(SiteRole.SiteAdmin) && (
+                  {user.roles?.includes(SiteRole.SiteAdmin) && (
                     <span className="mt-2 pr-4">
-                      <span
+                      <a
                         href="#"
                         onClick={() => {
                           setIsSwitcherModalOpen(true)
@@ -73,7 +73,7 @@ export default function UserDropDown(props: { templates: Template[] }) {
                         className="text-blue-600"
                       >
                         <ArrowCircleRightIcon className="w-5 h-5" />
-                      </span>
+                      </a>
                     </span>
                   )}
                 </div>
@@ -154,7 +154,7 @@ export default function UserDropDown(props: { templates: Template[] }) {
         <AddPortalModal onLinkComplete={async (portalData) => {}} templates={props.templates} />
       </Modal>
 
-      {user.roles.includes(SiteRole.SiteAdmin) && (
+      {user.roles?.includes(SiteRole.SiteAdmin) && (
         <Modal isOpen={isSwitcherModalOpen} onClose={() => setIsSwitcherModalOpen(false)}>
           <SwitchUserModal />
         </Modal>

@@ -46,5 +46,5 @@ function VendorStats() {
 }
 
 VendorStats.authenticate = true
-VendorStats.getLayout = (page) => <Layout title="Vendor Stats">{page}</Layout>
+VendorStats.getLayout = (page: React.ReactChild) => <Layout title="Vendor Stats">{page}</Layout>
 export default VendorStats

@@ -26,7 +26,7 @@ export default resolver.pipe(
     if (!user) throw new Error("Could not find user " + userEmail)
 
     console.log("Switching user...", user, ctx.session.userId)
-    let roles = [user.role]
+    let roles: Array<SiteRole | Role> = [user.role]
     if (user.accountExecutive) {
       roles.push(Role.AccountExecutive)
     }

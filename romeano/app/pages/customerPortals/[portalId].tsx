@@ -93,5 +93,5 @@ function CustomerPortal() {
 }
 
 // CustomerPortal.authenticate = true
-CustomerPortal.getLayout = (page) => <Layout title={`Customer Portal`}>{page}</Layout>
+CustomerPortal.getLayout = (page: React.ReactChild) => <Layout title={`Customer Portal`}>{page}</Layout>
 export default CustomerPortal
