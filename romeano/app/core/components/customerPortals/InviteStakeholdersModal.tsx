@@ -14,7 +14,7 @@ import { useEffect } from "react"
 import CustomTrashIcon from "app/core/assets/trashIcon"
 import { confirmAlert } from "react-confirm-alert" // Import
 import "react-confirm-alert/src/react-confirm-alert.css" // Import css
-import { MailIcon } from "@heroicons/react/outline"
+import { MailIcon, RefreshIcon } from "@heroicons/react/outline"
 
 export function InviteStakeholdersModal(props: {
   stakeholders: Array<Stakeholder>
@@ -125,7 +125,7 @@ export function InviteStakeholdersModal(props: {
                       })
                     }}
                   >
-                    <MailIcon className="w-4 h-4 text-gray-400" />
+                    <RefreshIcon className="w-4 h-4 text-gray-400" />
                   </button>
 
                   <button
