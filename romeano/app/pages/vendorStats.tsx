@@ -10,6 +10,7 @@ import { StakeholderActivity } from "app/core/components/vendorStats/Stakeholder
 import { useQuery } from "blitz"
 import getVendorStats from "../vendor-stats/queries/getVendorStats"
 import getTemplates from "app/vendor-stats/queries/getTemplates"
+import Layout from "app/core/layouts/Layout"
 
 function VendorStats() {
   const [vendorStats, { refetch }] = useQuery(getVendorStats, {}, { refetchOnWindowFocus: false })
@@ -45,4 +46,5 @@ function VendorStats() {
 }
 
 VendorStats.authenticate = true
+VendorStats.getLayout = (page: React.ReactChild) => <Layout title="Vendor Stats">{page}</Layout>
 export default VendorStats

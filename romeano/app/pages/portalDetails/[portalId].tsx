@@ -11,6 +11,8 @@ import { StakeholderActivityLogCard } from "app/core/components/portalDetails/St
 import OpportunityOverview from "app/core/components/portalDetails/OpportunityOverview"
 import { Header } from "app/core/components/portalDetails/Header"
 import { LoadingSpinner } from "app/core/components/LoadingSpinner"
+import Layout from "app/core/layouts/Layout"
+import { ReactChild } from "react"
 
 function PortalDetails() {
   const portalId = useParam("portalId", "string")!
@@ -68,4 +70,5 @@ function PortalDetails() {
 }
 
 PortalDetails.authenticate = true
+PortalDetails.getLayout = (page: ReactChild) => <Layout title="Portal Details">{page}</Layout>
 export default PortalDetails

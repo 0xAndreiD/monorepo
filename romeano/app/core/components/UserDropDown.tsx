@@ -3,10 +3,15 @@ import { Menu, Transition } from "@headlessui/react"
 import { UserCircleIcon } from "@heroicons/react/solid"
 import Modal from "app/core/components/generic/Modal"
 import AddPortalModal from "app/core/components/vendorStats/edit/addPortalModal"
-import { Link as BlitzLink, useMutation, Routes } from "blitz"
+import { Link as BlitzLink, useMutation, Routes, queryClient } from "blitz"
 import logout from "app/auth/mutations/logout"
-import { Template } from "db"
+import { SiteRole, Template } from "db"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import LabeledTextField from "./LabeledTextField"
+import Form, { FORM_ERROR } from "./Form"
+import impersonateUser, { ImpersonateUserInput } from "app/auth/mutations/impersonateUser"
+import { ArrowCircleRightIcon, ArrowsExpandIcon } from "@heroicons/react/outline"
+import SwitchUserModal from "app/auth/components/SwitchUserModal"
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ")
@@ -19,7 +24,7 @@ export default function UserDropDown(props: { templates: Template[] }) {
     isOpen: false,
     templateId: undefined,
   })
-
+  const [isSwitcherModalOpen, setIsSwitcherModalOpen] = useState(false)
   const [logoutMutation] = useMutation(logout)
   const user = useCurrentUser()
   return (
@@ -56,7 +61,22 @@ export default function UserDropDown(props: { templates: Template[] }) {
           <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
             <div className="py-1">
               <Menu.Item>
-                <span className="bg-gray-100 text-gray-900 block px-4 py-2 text-sm">{user?.email}</span>
+                <div className="flex justify-between">
+                  <span className="text-gray-900 block px-4 py-2 text-sm">{user?.email}</span>
+                  {user.email?.endsWith("@romeano.com") && user.roles?.includes(SiteRole.SiteAdmin) && (
+                    <span className="mt-2 pr-4">
+                      <a
+                        href="#"
+                        onClick={() => {
+                          setIsSwitcherModalOpen(true)
+                        }}
+                        className="text-blue-600"
+                      >
+                        <ArrowCircleRightIcon className="w-5 h-5" />
+                      </a>
+                    </span>
+                  )}
+                </div>
               </Menu.Item>
             </div>
 
@@ -133,6 +153,12 @@ export default function UserDropDown(props: { templates: Template[] }) {
       >
         <AddPortalModal onLinkComplete={async (portalData) => {}} templates={props.templates} />
       </Modal>
+
+      {user.email?.endsWith("@romeano.com") && user.roles?.includes(SiteRole.SiteAdmin) && (
+        <Modal isOpen={isSwitcherModalOpen} onClose={() => setIsSwitcherModalOpen(false)}>
+          <SwitchUserModal />
+        </Modal>
+      )}
     </>
   )
 }

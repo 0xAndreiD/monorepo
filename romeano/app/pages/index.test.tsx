@@ -19,6 +19,7 @@ test.skip("renders blitz documentation link", () => {
     lastName: "User",
     email: "user@email.com",
     role: Role.AccountExecutive,
+    roles: [Role.AccountExecutive],
     userPortals: [],
   })
 

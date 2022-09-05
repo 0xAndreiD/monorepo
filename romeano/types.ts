@@ -50,8 +50,9 @@ declare module "blitz" {
     vendorId: Vendor["id"]
     PublicData: {
       userId: User["id"]
-      roles: Array<Role | SiteRole>
       vendorId: Vendor["id"]
+      roles: Array<Role | SiteRole>
+      impersonatingFromUserId?: number
     }
   }
 }

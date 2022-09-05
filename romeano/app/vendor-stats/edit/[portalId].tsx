@@ -13,6 +13,7 @@ import getCustomerPortal from "app/customer-portals/queries/getCustomerPortal"
 import StakeholderLoginForm from "app/auth/components/StakeholderLoginForm"
 import { LoadingSpinner } from "app/core/components/LoadingSpinner"
 import React from "react"
+import Layout from "app/core/layouts/Layout"
 
 function EditTemplate() {
   const portalId = useParam("portalId", "string")!
@@ -87,4 +88,5 @@ function EditTemplate() {
 }
 
 // CustomerPortal.authenticate = true
+EditTemplate.getLayout = (page: React.ReactChild) => <Layout title="Manage Templates">{page}</Layout>
 export default EditTemplate

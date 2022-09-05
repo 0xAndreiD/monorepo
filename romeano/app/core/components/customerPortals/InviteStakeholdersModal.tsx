@@ -14,6 +14,7 @@ import { useEffect } from "react"
 import CustomTrashIcon from "app/core/assets/trashIcon"
 import { confirmAlert } from "react-confirm-alert" // Import
 import "react-confirm-alert/src/react-confirm-alert.css" // Import css
+import { MailIcon, RefreshIcon } from "@heroicons/react/outline"
 
 export function InviteStakeholdersModal(props: {
   stakeholders: Array<Stakeholder>
@@ -94,7 +95,39 @@ export function InviteStakeholdersModal(props: {
               <div className="flex justify-between py-1">
                 <span className="text-sm text-gray-500 text-left">{person.email}</span>
                 <span className="text-sm text-gray-500 text-right">
-                  {person.jobTitle}
+                  <span className="align-center">{person.jobTitle}</span>
+
+                  <button
+                    style={{ marginLeft: "10px" }}
+                    onClick={() => {
+                      confirmAlert({
+                        title: "Are you sure?",
+                        message: `Please confirm if you want to resend an email to ${person.email}`,
+                        buttons: [
+                          {
+                            label: "Yes",
+                            onClick: async () => {
+                              await inviteStakeholderMutation({
+                                portalId: props.portalId,
+                                email: person.email,
+                                fullName: getName(person.firstName, person.lastName),
+                                jobTitle: person.jobTitle || "",
+                              })
+                              reset()
+                              props.refetchHandler()
+                            },
+                          },
+                          {
+                            label: "No",
+                            onClick: () => {},
+                          },
+                        ],
+                      })
+                    }}
+                  >
+                    <RefreshIcon className="w-4 h-4 text-gray-400" />
+                  </button>
+
                   <button
                     style={{ marginLeft: "10px" }}
                     onClick={() => {
