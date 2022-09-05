@@ -15,7 +15,7 @@ export default resolver.pipe(
 
   async ({ userEmail }, ctx) => {
     const currentUser = await getCurrentUser({}, ctx)
-    if (currentUser!.email!.endsWith("@romeano.com") && currentUser.roles?.includes(SiteRole.SiteAdmin)) {
+    if (!(currentUser!.email!.endsWith("@romeano.com") && currentUser.roles?.includes(SiteRole.SiteAdmin))) {
       throw new AuthorizationError("Not authorized to impersonate")
     }
 
