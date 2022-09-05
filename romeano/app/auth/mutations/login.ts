@@ -34,17 +34,6 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   const user = await authenticateUser(email, password)
   let roles: Array<Role | SiteRole> = [user.role]
 
-  // TODO: DELETE this temporary code that auto-updates vendorId in all tables once all data is migrated
-  if (user.email === "surya@romeano.com" && roles?.includes(SiteRole.SiteAdmin)) {
-    console.log("***** UPDATING VENDOR ID FOR ALL USERS *****")
-    const allUsers = await db.user.findMany({})
-    await Promise.all(
-      allUsers?.map((user) => {
-        updateVendorIdInAllTablesForUser(user)
-      })
-    )
-  }
-
   // TODO: Add vendorId constraint in query after all user records have been migrated
   const accountExecutive = await db.accountExecutive.findFirst({
     where: {

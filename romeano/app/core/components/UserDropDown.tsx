@@ -63,7 +63,7 @@ export default function UserDropDown(props: { templates: Template[] }) {
               <Menu.Item>
                 <div className="flex justify-between">
                   <span className="text-gray-900 block px-4 py-2 text-sm">{user?.email}</span>
-                  {user.email?.endsWith("@romeano.com") && user.roles?.includes(SiteRole.SiteAdmin) && (
+                  {user.canImpersonate && (
                     <span className="mt-2 pr-4">
                       <a
                         href="#"
@@ -154,7 +154,7 @@ export default function UserDropDown(props: { templates: Template[] }) {
         <AddPortalModal onLinkComplete={async (portalData) => {}} templates={props.templates} />
       </Modal>
 
-      {user.email?.endsWith("@romeano.com") && user.roles?.includes(SiteRole.SiteAdmin) && (
+      {user.canImpersonate && (
         <Modal isOpen={isSwitcherModalOpen} onClose={() => setIsSwitcherModalOpen(false)}>
           <SwitchUserModal />
         </Modal>
