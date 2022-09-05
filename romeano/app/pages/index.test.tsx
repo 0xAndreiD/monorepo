@@ -21,6 +21,7 @@ test.skip("renders blitz documentation link", () => {
     role: Role.AccountExecutive,
     roles: [Role.AccountExecutive],
     userPortals: [],
+    canImpersonate: false,
   })
 
   const { getByText } = render(<Home />)
