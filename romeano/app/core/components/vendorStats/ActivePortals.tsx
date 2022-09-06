@@ -163,15 +163,6 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                             ))}
                           </div>
                           <div className="">
-                            <BlitzLink href={Routes.PortalDetails({ portalId: portal.portalId })}>
-                              <a
-                                className="inline-flex items-center px-4 py-2 my-3 border text-sm\
-                leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
-                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300 mr-2"
-                              >
-                                <TrendingUpIcon className="h-4 w-4" />
-                              </a>
-                            </BlitzLink>
                             <BlitzLink href={Routes.EditCustomerPortal({ portalId: portal.portalId })}>
                               <a
                                 className="inline-flex items-center px-4 py-2 my-3 border text-sm\
@@ -179,6 +170,15 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300 mr-2"
                               >
                                 <PencilIcon className="h-4 w-4" />
+                              </a>
+                            </BlitzLink>
+                            <BlitzLink href={Routes.PortalDetails({ portalId: portal.portalId })}>
+                              <a
+                                className="inline-flex items-center px-4 py-2 my-3 border text-sm\
+                leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50\
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 border-gray-300 mr-2"
+                              >
+                                <TrendingUpIcon className="h-4 w-4" />
                               </a>
                             </BlitzLink>
                             <button
