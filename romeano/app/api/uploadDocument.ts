@@ -14,7 +14,9 @@ import { decodeHashId } from "../core/util/crypto"
 
 export const config = {
   api: {
-    bodyParser: false, //cannot parse fields if bodyparser is enabled
+    bodyParser: {
+      sizeLimit: "25mb",
+    },
   },
 }
 
