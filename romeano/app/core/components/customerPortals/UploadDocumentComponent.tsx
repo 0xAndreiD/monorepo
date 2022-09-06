@@ -32,6 +32,9 @@ export function UploadDocumentComponent(
           setIsUploading(false)
           return props.onUploadComplete(res.data[0])
         })
+        .finally(() => {
+          setIsUploading(false)
+        })
     },
     [antiCSRFToken, props]
   )
