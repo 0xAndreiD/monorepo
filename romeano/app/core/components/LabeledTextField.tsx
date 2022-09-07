@@ -24,7 +24,7 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
       <div {...outerProps}>
         <Labeled label={label}>
           <input
-            className="border rounded-md p-3 w-full font-light text-sm"
+            className="border h-10 rounded-md p-3 w-full font-light text-sm"
             disabled={isSubmitting}
             {...register(name)}
             {...props}
