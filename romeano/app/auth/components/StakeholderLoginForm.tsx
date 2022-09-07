@@ -13,7 +13,7 @@ export const StakeholderLoginForm = (props: { errorMessage?: string; onSuccess?:
   const portalId = useParam("portalId", "string")!
   const [loginStakeholderMutation] = useMutation(loginStakeholder)
   const [hasSubmitted, setHasSubmitted] = useState(false)
-  const [email, setEmail] = useState(null)
+  const [email, setEmail] = useState("")
 
   return (
     <div className="max-w-md flex flex-col mx-auto content-center mt-12">
@@ -28,10 +28,10 @@ export const StakeholderLoginForm = (props: { errorMessage?: string; onSuccess?:
         </div>
       )}
 
-      <div className="">
+      <div className="px-12">
         {hasSubmitted ? (
           <div className="text-center border-2 border-gray-200 rounded-md py-16">
-            <div>{`Access link sent to ${email}`}</div>
+            <div>{`Access link sent to ${email || "your email"}`}</div>
             <a className="cursor-pointer text-blue-600 underline" onClick={() => setHasSubmitted(false)}>
               Send again
             </a>
@@ -48,12 +48,12 @@ export const StakeholderLoginForm = (props: { errorMessage?: string; onSuccess?:
                   destUrl: router.asPath,
                 }) //router.pathname doesnt include query params
                 setHasSubmitted(true)
-                setEmail(values.email!)
+                setEmail(values.email)
                 props.onSuccess?.() //catch error boundary auth error
                 // await router.push(Routes.MagicLinkPage({ magicLinkId: magicLink })) //TODO: dev speed hack
               } catch (error) {
                 setHasSubmitted(false)
-                setEmail(null)
+                setEmail("")
                 console.log("Error while authenticating", error)
                 if (error instanceof AuthenticationError) {
                   return {
@@ -68,7 +68,7 @@ export const StakeholderLoginForm = (props: { errorMessage?: string; onSuccess?:
             }}
           >
             <div className="flex justify-between align-center">
-              <div className="w-full h-10">
+              <div className="w-full h-10 mr-1">
                 <LabeledTextField name="email" label="" placeholder="Email" />
               </div>
               <button type="submit" className="bg-black h-10 text-white px-4 py-2 rounded-md">
