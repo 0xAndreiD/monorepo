@@ -9,8 +9,8 @@ import path from "path"
 const readFile = promisify(fs.readFile)
 
 // TODO: Move this to env
-const ADMIN_EMAILS = [process.env.ADMIN_EMAIL || "ben@romeano.com"]
-const FROM_ADDRESS = "no-reply@romeano.com"
+export const ADMIN_EMAILS = [process.env.ADMIN_EMAIL || "ben@romeano.com"]
+export const FROM_ADDRESS = "no-reply@romeano.com"
 
 export const transporter = nodemailer.createTransport({
   host: "smtp.sendgrid.net",
@@ -22,7 +22,7 @@ export const transporter = nodemailer.createTransport({
   },
 })
 
-function recipientProcessor(recipients: string[]) {
+export const recipientProcessor = (recipients: string[]) => {
   return process.env.NODE_ENV === "production" ? recipients : [process.env.DEV_EMAIL_RECIPIENT]
 }
 
