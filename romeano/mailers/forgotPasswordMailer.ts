@@ -4,8 +4,9 @@
  * and then export it. That way you can import here and anywhere else
  * and use it straight away.
  */
+import { BACKEND_ENDPOINT } from "app/core/config"
 import previewEmail from "preview-email"
-import { transporter } from "../app/core/util/email"
+import { transporter, FROM_ADDRESS, recipientProcessor } from "../app/core/util/email"
 
 type ResetPasswordMailer = {
   to: string
@@ -13,15 +14,13 @@ type ResetPasswordMailer = {
 }
 
 export function forgotPasswordMailer({ to, token }: ResetPasswordMailer) {
-  const resetUrl = `/reset-password?token=${token}`
+  const resetUrl = `${BACKEND_ENDPOINT}/reset-password?token=${token}`
   const msg = {
-    from: "forgotpasssword@romeano.com",
-    to,
+    from: `"Romeano" <${FROM_ADDRESS}>`,
+    to: recipientProcessor([to]),
     subject: "Your Password Reset Instructions",
     html: `
       <h1>Reset Your Password</h1>
-      <h3>NOTE: You must set up a production email integration in mailers/forgotPasswordMailer.ts</h3>
-
       <a href="${resetUrl}">
         Click here to set a new password
       </a>
