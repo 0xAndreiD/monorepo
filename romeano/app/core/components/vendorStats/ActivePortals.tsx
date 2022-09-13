@@ -61,6 +61,8 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
     templateId: undefined,
   })
 
+  console.log("DOCS", props.data)
+
   // const [createPortalMutation] = useMutation(createPortal)
   const [deletePortalMutation] = useMutation(deletePortal)
 
@@ -156,7 +158,7 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                         <div className="flex justify-between">
                           <div className="text-sm flex justify-center flex-col gap-y-1">
                             {portal.documentEvents.slice(0, 3).map((document, idx) => (
-                              <div key={idx} className="flex gap-x-1">
+                              <div key={idx} className="flex gap-x-1 justify-between">
                                 <StyledLink href={document.href}>{document.body}</StyledLink>
                                 <span className={"text-gray-900"}>{document.eventCount}</span>
                               </div>

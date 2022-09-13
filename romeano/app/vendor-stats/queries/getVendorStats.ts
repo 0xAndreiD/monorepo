@@ -262,7 +262,7 @@ export default resolver.pipe(
       })
       const documentEvents = groupBy(
         activePortalsDocs.map((x) => ({
-          portalId: encodeHashId(Number(x.portalId)),
+          portalId: x.portalId,
           body: x.title,
           href: getExternalUploadPath(x.path),
           eventCount: x.eventCount,
