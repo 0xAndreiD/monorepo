@@ -15,9 +15,10 @@ type ResetPasswordMailer = {
 
 export function forgotPasswordMailer({ to, token }: ResetPasswordMailer) {
   const resetUrl = `${BACKEND_ENDPOINT}/reset-password?token=${token}`
+  const recipients = recipientProcessor([to])
   const msg = {
     from: `"Romeano" <${FROM_ADDRESS}>`,
-    to: recipientProcessor([to]),
+    to: recipients[0],
     subject: "Your Password Reset Instructions",
     html: `
       <h1>Reset Your Password</h1>
