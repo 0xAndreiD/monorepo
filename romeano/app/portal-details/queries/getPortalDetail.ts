@@ -180,6 +180,7 @@ export default resolver.pipe(
       customerName: x.customerName,
       type: x.type,
       link: generateLinkFromEventType(x),
+      url: x.url,
       location: getLocation(x.ip),
       device: UAParser(x.userAgent).device.type === "mobile" ? Device.Mobile : Device.Computer,
       timestamp: new Date(x.createdAt).toISOString(),

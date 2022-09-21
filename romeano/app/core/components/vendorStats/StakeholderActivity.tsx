@@ -10,6 +10,7 @@ type StakeholderActivityEvent = {
   stakeholderName: string
   customerName: string
   type: EventType
+  url: string | null
   link: Link | null
   timestamp: string
 }
@@ -24,7 +25,13 @@ export function StakeholderActivity(props: { data: StakeholderActivityEvent[] })
             <div key={idx} className="flex justify-between text-sm">
               <span>
                 {`${event.stakeholderName} from ${event.customerName} ${getActionText(event.type)} `}
-                {event.link && <StyledLink href={event.link.href}>{event.link.body}</StyledLink>}
+                {event.link && event.link.href ? (
+                  <StyledLink href={event.link.href}>{event.link.body}</StyledLink>
+                ) : event.url ? (
+                  <StyledLink href={event.url}>{event.url}</StyledLink>
+                ) : (
+                  "a link"
+                )}
               </span>
               <span className="text-right text-gray-500">{timeAgo(new Date(event.timestamp))}</span>
             </div>

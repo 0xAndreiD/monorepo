@@ -11,6 +11,7 @@ export type StakeholderActivityEvent = {
   customerName: string
   type: EventType
   link: Link | null
+  url: string | null
   location: string
   device: Device
   timestamp: string
