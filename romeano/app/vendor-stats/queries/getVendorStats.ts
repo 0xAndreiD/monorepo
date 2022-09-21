@@ -134,6 +134,7 @@ export default resolver.pipe(
         customerName: x.customerName,
         type: x.type,
         link: generateLinkFromEventType(x),
+        url: x.url,
         timestamp: new Date(x.createdAt).toISOString(),
       }))
 
@@ -288,11 +289,6 @@ export default resolver.pipe(
           documentEvents: documentEvents[p.portalId] ?? [],
         }
       })
-
-      console.log("Header", header)
-      console.log("Opportunity Engagement", opportunityEngagement)
-      console.log("Stakeholder Activitiy Log", stakeholderActivityLog)
-      console.log("All portals", all)
 
       return {
         header,
