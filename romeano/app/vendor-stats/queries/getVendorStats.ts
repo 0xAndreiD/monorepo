@@ -289,6 +289,11 @@ export default resolver.pipe(
         }
       })
 
+      console.log("Header", header)
+      console.log("Opportunity Engagement", opportunityEngagement)
+      console.log("Stakeholder Activitiy Log", stakeholderActivityLog)
+      console.log("All portals", all)
+
       return {
         header,
         opportunityEngagement,
