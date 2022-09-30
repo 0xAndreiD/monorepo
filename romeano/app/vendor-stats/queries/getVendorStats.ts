@@ -95,10 +95,12 @@ export default resolver.pipe(
     const portalIds = (
       await db.$queryRaw<Array<{ portalId: number }>>`
         SELECT "portalId"
-        FROM "UserPortal"
+        FROM "UserPortal" UP, "Portal" P 
         WHERE ("isPrimaryContact" IS TRUE OR "isSecondaryContact" IS TRUE)
-          AND "userId" = ${userId} AND "templateId" IS NULL
-          AND "vendorId" = ${vendorId} 
+          AND UP."userId" = ${userId} AND UP."templateId" IS NULL
+          AND UP."vendorId" = ${vendorId} 
+          AND UP."portalId" = P."id"
+          AND P."isTemplate" IS NOT TRUE
       `
     ).map((x) => x.portalId)
 
