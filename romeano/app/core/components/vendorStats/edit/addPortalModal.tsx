@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form"
+import { ErrorMessage } from "@hookform/error-message"
 
 import React from "react"
 import { Template } from "db"
@@ -22,13 +23,20 @@ export default function AddPortalModal(props: {
   const [inviteStakeholderMutation] = useMutation(createStakeholder)
   const schema = z.object({
     oppName: z.string().nonempty(),
-    firstName: z.string().nonempty(),
-    lastName: z.string().nonempty(),
-    email: z.string().email(),
+    firstName: z.string(),
+    lastName: z.string(),
+    email: z.string(),
     roleName: z.string(),
     templateId: z.string(),
   })
-  const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof schema>>({
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+    setFocus,
+    formState,
+  } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   })
 
@@ -43,12 +51,14 @@ export default function AddPortalModal(props: {
     })
     await props.onLinkComplete(dbLink)
 
-    await inviteStakeholderMutation({
-      portalId: encodeHashId(dbLink.id),
-      email: portalData.email,
-      fullName: portalData.firstName + " " + portalData.lastName,
-      jobTitle: portalData.roleName,
-    })
+    if (portalData.email && portalData.roleName) {
+      await inviteStakeholderMutation({
+        portalId: encodeHashId(dbLink.id),
+        email: portalData.email,
+        fullName: portalData.firstName + " " + portalData.lastName,
+        jobTitle: portalData.roleName,
+      })
+    }
 
     reset()
     Router.reload()
@@ -70,7 +80,7 @@ export default function AddPortalModal(props: {
                 {...register("templateId", { required: true })}
               >
                 <option key={-1} value="">
-                  {" "}
+                  {"Choose a template (optional)..."}
                 </option>
                 {props.templates.map((element, index) => (
                   <option key={index} value={element?.id}>
@@ -82,13 +92,14 @@ export default function AddPortalModal(props: {
           </div>
 
           <div>
-            <Labeled label={"Opportunity Name"}>
+            <Labeled label={"Opportunity Name *"}>
               <input
                 className="border rounded-md p-3 w-full font-light text-sm"
                 placeholder="Romeano"
-                {...register("oppName", { required: true })}
+                {...register("oppName", { required: "This is a required field." })}
               />
             </Labeled>
+            {errors?.oppName && <p className="text-sm text-red-500">{errors.oppName.message}</p>}
           </div>
 
           <Labeled label={"Primary Contact"}>
@@ -97,15 +108,14 @@ export default function AddPortalModal(props: {
                 <input
                   className="border rounded-md p-3 w-full font-light text-sm"
                   placeholder="Jane"
-                  {...register("firstName", { required: true })}
+                  {...register("firstName", { required: false })}
                 />
-                {/* {errors.heading && <p>{errors.heading.message}</p>} */}
               </div>
               <div>
                 <input
                   className="border rounded-md p-3 w-full font-light text-sm"
                   placeholder="Doe"
-                  {...register("lastName", { required: true })}
+                  {...register("lastName", { required: false })}
                 />
               </div>
             </div>
@@ -117,7 +127,7 @@ export default function AddPortalModal(props: {
                 <input
                   className="border rounded-md p-3 w-full font-light text-sm"
                   placeholder="email"
-                  {...register("email", { required: true })}
+                  {...register("email", { required: false })}
                 />
               </div>
             </div>
@@ -128,7 +138,7 @@ export default function AddPortalModal(props: {
                 <input
                   className="border rounded-md p-3 w-full font-light text-sm"
                   placeholder="Role"
-                  {...register("roleName", { required: true })}
+                  {...register("roleName", { required: false })}
                 />
               </div>
             </div>

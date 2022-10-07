@@ -3,7 +3,7 @@ import db, { LinkType, Role } from "db"
 import { z } from "zod"
 
 export const CreatePortal = z.object({
-  oppName: z.string(),
+  oppName: z.string().nonempty(),
   customerFName: z.string(),
   customerLName: z.string(),
   customerEmail: z.string(),
@@ -25,32 +25,36 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
   const vendorTeam = await db.vendorTeam.findUnique({ where: { id: accountExec.vendorTeamId } })
   if (!vendorTeam) throw new AuthenticationError("No vendor team associated with AE when creating portal")
 
-  var emailUser = await db.user.findUnique({
-    where: {
-      email_vendorId: { email: data.customerEmail, vendorId: ctx.session.vendorId },
-    },
-  })
-  var portal
-  var id = 0
-
-  //check if user with this email already exists, if not, make a new stakeholder for them
-  if (!emailUser) {
-    emailUser = await db.user.create({
-      data: {
-        firstName: data.customerFName,
-        lastName: data.customerLName,
-        email: data.customerEmail,
-        vendorId: user.vendorId,
-        //create the stakeholder data info
-        stakeholder: {
-          create: {
-            jobTitle: data.roleName,
-            vendorId: user.vendorId,
-          },
-        },
+  let emailUser = null
+  if (data.customerEmail) {
+    emailUser = await db.user.findUnique({
+      where: {
+        email_vendorId: { email: data.customerEmail, vendorId: ctx.session.vendorId },
       },
     })
+
+    //check if user with this email already exists, if not, make a new stakeholder for them
+    if (!emailUser) {
+      emailUser = await db.user.create({
+        data: {
+          firstName: data.customerFName,
+          lastName: data.customerLName,
+          email: data.customerEmail,
+          vendorId: user.vendorId,
+          //create the stakeholder data info
+          stakeholder: {
+            create: {
+              jobTitle: data.roleName,
+              vendorId: user.vendorId,
+            },
+          },
+        },
+      })
+    }
   }
+
+  var portal
+  var id = 0
 
   var template = null
   // load template if a template was sent with this request
@@ -86,37 +90,59 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
       },
     })
   }
-  console.log("TEMPLATE", template)
 
-  portal = await db.portal.create({
-    data: {
-      customerName: data.oppName,
-      customerLogoUrl: "",
-      currentRoadmapStage: 1,
-      vendorId: vendorTeam.vendorId,
-      userPortals: {
-        createMany: {
-          data: [
-            {
-              userId: userId,
-              vendorId: vendorTeam.vendorId,
-              role: Role.AccountExecutive,
-              isPrimaryContact: true,
-              isSecondaryContact: false,
-            },
-            {
-              userId: emailUser.id,
-              vendorId: vendorTeam.vendorId,
-              role: Role.Stakeholder,
-              isPrimaryContact: true,
-            },
-          ],
+  if (emailUser && emailUser.id) {
+    portal = await db.portal.create({
+      data: {
+        customerName: data.oppName,
+        customerLogoUrl: "",
+        currentRoadmapStage: 1,
+        vendorId: vendorTeam.vendorId,
+        userPortals: {
+          createMany: {
+            data: [
+              {
+                userId: userId,
+                vendorId: vendorTeam.vendorId,
+                role: Role.AccountExecutive,
+                isPrimaryContact: true,
+                isSecondaryContact: false,
+              },
+              {
+                userId: emailUser.id,
+                vendorId: vendorTeam.vendorId,
+                role: Role.Stakeholder,
+                isPrimaryContact: true,
+                isSecondaryContact: false,
+              },
+            ],
+          },
         },
+        proposalHeading: template?.proposalHeading ?? "",
+        proposalSubheading: template?.proposalSubheading ?? "",
       },
-      proposalHeading: template?.proposalHeading ?? "",
-      proposalSubheading: template?.proposalSubheading ?? "",
-    },
-  })
+    })
+  } else {
+    portal = await db.portal.create({
+      data: {
+        customerName: data.oppName,
+        customerLogoUrl: "",
+        currentRoadmapStage: 1,
+        vendorId: vendorTeam.vendorId,
+        userPortals: {
+          create: {
+            userId: userId,
+            vendorId: vendorTeam.vendorId,
+            role: Role.AccountExecutive,
+            isPrimaryContact: true,
+            isSecondaryContact: false,
+          },
+        },
+        proposalHeading: template?.proposalHeading ?? "",
+        proposalSubheading: template?.proposalSubheading ?? "",
+      },
+    })
+  }
   id = portal.id
 
   if (template) {
