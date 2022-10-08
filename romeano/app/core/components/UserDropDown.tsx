@@ -3,6 +3,7 @@ import { Menu, Transition } from "@headlessui/react"
 import { UserCircleIcon } from "@heroicons/react/solid"
 import Modal from "app/core/components/generic/Modal"
 import AddPortalModal from "app/core/components/vendorStats/edit/addPortalModal"
+import AddTemplateModal from "app/core/components/vendorStats/edit/addTemplateModal"
 import { Link as BlitzLink, useMutation, Routes, queryClient } from "blitz"
 import logout from "app/auth/mutations/logout"
 import { SiteRole, Template } from "db"
@@ -18,11 +19,12 @@ function classNames(...classes: string[]) {
 }
 
 export default function UserDropDown(props: { templates: Template[] }) {
-  const [addTemplateProps, setAddTemplateProps] = useState<
-    { isOpen: false; templateId: undefined } | { isOpen: true; templateId: number }
-  >({
+  const [addPortalProps, setAddPortalProps] = useState<{ isOpen: boolean; templateId: number | undefined }>({
     isOpen: false,
     templateId: undefined,
+  })
+  const [addTemplateProps, setAddTemplateProps] = useState<{ isOpen: boolean }>({
+    isOpen: false,
   })
   const [isSwitcherModalOpen, setIsSwitcherModalOpen] = useState(false)
   const [logoutMutation] = useMutation(logout)
@@ -96,22 +98,42 @@ export default function UserDropDown(props: { templates: Template[] }) {
               </Menu.Item>
             </div>
 
+            <div className="py-1">
+              <Menu.Item>
+                {({ active }) => (
+                  <a
+                    href="#"
+                    onClick={() => setAddTemplateProps({ isOpen: true, templateId: 1 })}
+                    className={classNames(
+                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                      "block px-4 py-2 text-sm"
+                    )}
+                  >
+                    Create Template
+                  </a>
+                )}
+              </Menu.Item>
+            </div>
+
+            <div className="py-1">
+              <Menu.Item>
+                {({ active }) => (
+                  <a
+                    href="#"
+                    onClick={() => setAddPortalProps({ isOpen: true, templateId: 1 })}
+                    className={classNames(
+                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                      "block px-4 py-2 text-sm"
+                    )}
+                  >
+                    Add Portal
+                  </a>
+                )}
+              </Menu.Item>
+            </div>
+
             {props.templates && (
               <div className="py-1">
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      onClick={() => setAddTemplateProps({ isOpen: true, templateId: 1 })}
-                      className={classNames(
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "block px-4 py-2 text-sm"
-                      )}
-                    >
-                      Add Portal
-                    </a>
-                  )}
-                </Menu.Item>
                 <Menu.Item>
                   {({ active }) => (
                     <a
@@ -147,11 +169,11 @@ export default function UserDropDown(props: { templates: Template[] }) {
           </Menu.Items>
         </Transition>
       </Menu>
-      <Modal
-        isOpen={addTemplateProps.isOpen}
-        onClose={() => setAddTemplateProps({ isOpen: false, templateId: undefined })}
-      >
+      <Modal isOpen={addPortalProps.isOpen} onClose={() => setAddPortalProps({ isOpen: false, templateId: undefined })}>
         <AddPortalModal onLinkComplete={async (portalData) => {}} templates={props.templates} />
+      </Modal>
+      <Modal isOpen={addTemplateProps.isOpen} onClose={() => setAddTemplateProps({ isOpen: false })}>
+        <AddTemplateModal onLinkComplete={async (portalData) => {}} />
       </Modal>
 
       {user.canImpersonate && (
