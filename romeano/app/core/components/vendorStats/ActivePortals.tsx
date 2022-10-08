@@ -61,8 +61,6 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
     templateId: undefined,
   })
 
-  console.log("DOCS", props.data)
-
   // const [createPortalMutation] = useMutation(createPortal)
   const [deletePortalMutation] = useMutation(deletePortal)
 
