@@ -103,7 +103,7 @@ export default function UserDropDown(props: { templates: Template[] }) {
                 {({ active }) => (
                   <a
                     href="#"
-                    onClick={() => setAddTemplateProps({ isOpen: true, templateId: 1 })}
+                    onClick={() => setAddTemplateProps({ isOpen: true })}
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                       "block px-4 py-2 text-sm"
