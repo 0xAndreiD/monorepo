@@ -47,6 +47,7 @@ function EditCustomerPortal() {
           data={data.proposal.stakeholders}
           editingEnabled={true}
           refetchHandler={refetch}
+          template={data.template}
         />
         <div className="py-3">
           <CardDivider />

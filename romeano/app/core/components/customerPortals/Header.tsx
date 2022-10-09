@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Link, Routes, useMutation } from "blitz"
+import { Link, Routes, useMutation, useRouter } from "blitz"
 import { UserAddIcon, PencilIcon } from "@heroicons/react/solid"
 import Modal from "../generic/Modal"
 import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
@@ -7,11 +7,14 @@ import { Stakeholder } from "./ProposalCard"
 import SaveTemplate from "app/customer-portals/mutations/saveTemplate"
 import SaveTemplateModal from "./edit/saveTemplateModal"
 import { UploadLogoComponent } from "../portalDetails/UploadLogoComponent"
-import { decodeHashId } from "app/core/util/crypto"
+import { decodeHashId, encodeHashId } from "app/core/util/crypto"
 import { ZodUnknown } from "zod"
 import RomeanoLogo from "app/core/assets/RomeanoLogo"
 
 export function Header(props: {
+  template: {
+    name: string
+  } | null
   portalId: string
   vendorLogo: string
   customerName: string
@@ -27,6 +30,7 @@ export function Header(props: {
     isOpen: false,
     templateId: undefined,
   })
+  const router = useRouter()
 
   return (
     <div className="grid grid-cols-3 grid-rows-1 items-center">
@@ -40,13 +44,15 @@ export function Header(props: {
         ) : (
           <RomeanoLogo alt="Romeano Logo" className="" width={150} height={30} />
         )}
-        <hr className="border-l mx-1 pt-6 h-full border-gray-300" />
         {props.customerLogo && (
-          <img
-            alt="customer logo"
-            src={props.customerLogo}
-            style={{ maxHeight: "70px", maxWidth: "120px", width: "auto" }}
-          />
+          <>
+            <hr className="border-l mx-1 pt-6 h-full border-gray-300" />
+            <img
+              alt="customer logo"
+              src={props.customerLogo}
+              style={{ maxHeight: "70px", maxWidth: "120px", width: "auto" }}
+            />
+          </>
         )}
         {props.editingEnabled && (
           <UploadLogoComponent
@@ -67,33 +73,39 @@ export function Header(props: {
         )}
       </div>
 
-      <span className="text-gray-600 text-sm justify-self-center">{props.customerName} Customer Portal</span>
+      <span className="text-gray-600 text-sm justify-self-center">
+        {props.template ? props.template.name + " (Template)" : props.customerName + "Customer Portal"}
+      </span>
       <div className="justify-self-end">
-        <div className={props.editingEnabled ? "grid gap-2 grid-cols-2 place-items-center" : ""}>
+        <div
+          className={
+            !props.template && props.editingEnabled
+              ? "grid gap-2 grid-cols-2 place-items-center"
+              : "grid gap-2 grid-cols-1 place-items-center"
+          }
+        >
           {props.editingEnabled && (
             <Link href={Routes.CustomerPortal({ portalId: props.portalId })}>
-              <a
-                className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
+              <button
+                className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
                 leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
                 Preview Portal
-              </a>
+              </button>
             </Link>
           )}
-          {props.editingEnabled && (
-            <button>
-              <a
-                className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
+          {!props.template && props.editingEnabled && (
+            <button
+              className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
                 leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                onClick={() => setAddTemplateProps({ isOpen: true, templateId: decodeHashId(props.portalId) })}
-              >
-                Save as Template
-              </a>
+              onClick={() => setAddTemplateProps({ isOpen: true, templateId: decodeHashId(props.portalId) })}
+            >
+              Save as Template
             </button>
           )}
-          {!props.editingEnabled && (
+          {!props.template && !props.editingEnabled && (
             <button
               onClick={() => setIsInviteStakeholdersModalOpen(true)}
               className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
@@ -103,6 +115,18 @@ export function Header(props: {
               <UserAddIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
               Share Portal
             </button>
+          )}
+          {props.template && !props.editingEnabled && (
+            <Link href={Routes.EditCustomerPortal({ portalId: props.portalId })}>
+              <button
+                className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
+                font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                <UserAddIcon className="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                Edit Template
+              </button>
+            </Link>
           )}
         </div>
       </div>
