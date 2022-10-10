@@ -56,6 +56,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
   var portal
   var id = 0
 
+  console.log("TEMPLATE ID", data.templateId)
   var template = null
   // load template if a template was sent with this request
   if (data.templateId != "") {
@@ -90,6 +91,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
       },
     })
   }
+  console.log("template", template)
 
   if (emailUser && emailUser.id) {
     portal = await db.portal.create({
@@ -146,9 +148,45 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
   id = portal.id
 
   if (template) {
-    if (template?.roadmapStages) {
-      for (var i = 0; i < template?.roadmapStages.length; i++) {
-        const roadmapStage = template?.roadmapStages[i]
+    // Load everything from template portal
+    const templatePortal = await db.portal.findFirst({
+      where: {
+        id: template.portalId,
+        vendorId: ctx.session.vendorId,
+      },
+      include: {
+        roadmapStages: {
+          orderBy: {
+            date: "asc",
+          },
+          include: {
+            ctaLink: true,
+          },
+        },
+        nextStepsTasks: true,
+        images: true,
+        productInfoSections: {
+          include: {
+            productInfoSectionLink: {
+              include: {
+                link: true,
+              },
+            },
+          },
+        },
+        portalDocuments: {
+          include: {
+            link: true,
+          },
+        },
+        internalNotes: true,
+      },
+    })
+    console.log("templatePortal", templatePortal)
+
+    if (templatePortal?.roadmapStages) {
+      for (var i = 0; i < templatePortal?.roadmapStages.length; i++) {
+        const roadmapStage = templatePortal?.roadmapStages[i]
 
         const link = await db.link.create({
           data: {
@@ -173,7 +211,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
       }
     }
 
-    template?.nextStepsTasks.map(
+    templatePortal?.nextStepsTasks.map(
       async (nextStepsTask) =>
         await db.nextStepsTask.create({
           data: {
@@ -186,7 +224,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
         })
     )
 
-    template?.images.map(
+    templatePortal?.images.map(
       async (image) =>
         await db.portalImage.create({
           data: {
@@ -197,9 +235,9 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
         })
     )
 
-    if (template?.productInfoSections) {
-      for (var i = 0; i < template?.productInfoSections.length; i++) {
-        const productInfoSection = template?.productInfoSections[i]
+    if (templatePortal?.productInfoSections) {
+      for (var i = 0; i < templatePortal?.productInfoSections.length; i++) {
+        const productInfoSection = templatePortal?.productInfoSections[i]
 
         const section = await db.productInfoSection.create({
           data: {
@@ -235,7 +273,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
     }
 
     //need to duplicate the links as well
-    template?.portalDocuments.map(async (portalDocument) => {
+    templatePortal?.portalDocuments.map(async (portalDocument) => {
       const link = await db.link.create({
         data: {
           body: portalDocument.link?.body ?? "",
@@ -255,7 +293,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
       })
     })
 
-    template?.internalNotes.map(
+    templatePortal?.internalNotes.map(
       async (internalNote) =>
         await db.internalNote.create({
           data: {

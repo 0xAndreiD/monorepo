@@ -26,16 +26,8 @@ export default resolver.pipe(resolver.zod(CreateTemplate), resolver.authorize(),
       customerName: data.templateName,
       customerLogoUrl: "",
       currentRoadmapStage: 1,
+      userId: userId,
       vendorId: vendorTeam.vendorId,
-      userPortals: {
-        create: {
-          userId: userId,
-          vendorId: vendorTeam.vendorId,
-          role: Role.AccountExecutive,
-          isPrimaryContact: true,
-          isSecondaryContact: false,
-        },
-      },
       proposalHeading: "",
       proposalSubheading: "",
     },
@@ -48,6 +40,18 @@ export default resolver.pipe(resolver.zod(CreateTemplate), resolver.authorize(),
       proposalHeading: "",
       proposalSubheading: "",
       portalId: templatePortal.id,
+      vendorId: ctx.session.vendorId,
+    },
+  })
+
+  await db.userPortal.create({
+    data: {
+      userId: userId,
+      role: Role.AccountExecutive,
+      isPrimaryContact: true,
+      isSecondaryContact: false,
+      portalId: templatePortal.id,
+      templateId: template.id,
       vendorId: ctx.session.vendorId,
     },
   })
