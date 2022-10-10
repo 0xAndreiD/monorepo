@@ -14,7 +14,7 @@ import getCustomerPortal from "../../customer-portals/queries/getCustomerPortal"
 import StakeholderLoginForm from "../../auth/components/StakeholderLoginForm"
 import Layout from "app/core/layouts/Layout"
 
-function CustomerPortal() {
+function TemplatePortal() {
   const portalId = useParam("portalId", "string")!
   const session = useSession()
   const [data, { refetch }] = useQuery(
@@ -93,6 +93,6 @@ function CustomerPortal() {
   )
 }
 
-// CustomerPortal.authenticate = true
-CustomerPortal.getLayout = (page: React.ReactChild) => <Layout title={`Customer Portal`}>{page}</Layout>
-export default CustomerPortal
+TemplatePortal.authenticate = true
+TemplatePortal.getLayout = (page: React.ReactChild) => <Layout title={`Template Portal`}>{page}</Layout>
+export default TemplatePortal

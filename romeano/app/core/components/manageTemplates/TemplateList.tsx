@@ -47,7 +47,7 @@ export function TemplateList(props: { data: Template[] }) {
                       scope="col"
                       className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Times Used
+                      Create Date
                     </th>
                     <th
                       scope="col"
@@ -70,7 +70,7 @@ export function TemplateList(props: { data: Template[] }) {
                         </div>
                       </td>
 
-                      <td className="px-6 py-4 whitespace-nowrap">0</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{template.createdAt.toString()}</td>
                       <td className="px-6 py-4 items-center whitespace-nowrap">
                         <div className="flex justify-center gap-3">
                           <BlitzLink href={Routes.EditCustomerPortal({ portalId: encodeHashId(template.portalId) })}>
@@ -79,7 +79,6 @@ export function TemplateList(props: { data: Template[] }) {
                               className="items-center px-3 py-2 border border-gray-300 text-sm 
                              font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
                             focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                              // onClick={() => setAddTemplateProps({ isOpen: true, templateId: 1 })}
                             >
                               Edit
                             </button>

@@ -103,6 +103,15 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
     customerLogo: portal.customerLogoUrl,
   }
 
+  const template = portal.isTemplate
+    ? await db.template.findFirst({
+        where: {
+          vendorId: ctx.session.vendorId,
+          portalId: portal.id,
+        },
+      })
+    : null
+
   const launchRoadmap = {
     currentRoadmapStage: portal.currentRoadmapStage,
     stages: portal.roadmapStages.map((stage) => ({
@@ -226,6 +235,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   }
 
   return {
+    template,
     header,
     launchRoadmap,
     nextSteps,
