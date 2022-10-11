@@ -304,6 +304,46 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
           },
         })
     )
+
+    await db.portal.update({
+      where: {
+        id: portal.id,
+      },
+      data: {
+        proposalHeading: templatePortal?.proposalHeading,
+        proposalSubheading: templatePortal?.proposalSubheading,
+      },
+    })
+    //need to duplicate the proposal links as well
+    const proposalLink = templatePortal?.proposalLinkId
+      ? await db.link.findFirst({
+          where: {
+            id: templatePortal.proposalLinkId,
+          },
+        })
+      : null
+    console.log("Proposal Link", proposalLink)
+    if (proposalLink) {
+      const link = await db.link.create({
+        data: {
+          body: proposalLink?.body ?? "",
+          href: proposalLink?.href ?? "",
+          type: proposalLink?.type ?? LinkType.Document,
+          userId: userId,
+          vendorId: vendorTeam.vendorId,
+        },
+      })
+      if (link) {
+        await db.portal.update({
+          where: {
+            id: portal.id,
+          },
+          data: {
+            proposalLinkId: link.id,
+          },
+        })
+      }
+    }
   }
 
   return portal
