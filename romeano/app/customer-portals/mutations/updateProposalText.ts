@@ -29,6 +29,14 @@ export default resolver.pipe(
       },
     })
 
+    await db.portal.update({
+      where: { id: decodeHashId(portalId) },
+      data: {
+        proposalHeading,
+        proposalSubheading,
+      },
+    })
+
     return proposalText
   }
 )
