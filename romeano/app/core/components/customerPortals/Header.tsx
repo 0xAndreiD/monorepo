@@ -74,7 +74,7 @@ export function Header(props: {
       </div>
 
       <span className="text-gray-600 text-sm justify-self-center">
-        {props.template ? props.template.name + " (Template)" : props.customerName + "Customer Portal"}
+        {props.template ? props.template.name + " (Template)" : props.customerName + " Customer Portal"}
       </span>
       <div className="justify-self-end">
         <div
