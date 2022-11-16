@@ -75,7 +75,7 @@ export default function RoadmapModal(props: {
     props.actionDispatcher({ type: ModalActionChange.MODAL_SUBMITTED, payload: {} })
     props.refetchHandler()
   })
-
+  console.log(props.modalState.date)
   useEffect(() => {
     reset({
       heading: props.modalState.heading ?? undefined,

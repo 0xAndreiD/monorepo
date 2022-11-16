@@ -45,14 +45,16 @@ export function Header(props: {
           <RomeanoLogo alt="Romeano Logo" className="" width={150} height={30} />
         )}
 
-        <>
-          <hr className="border-l mx-1 pt-6 h-full border-gray-300" />
-          <img
-            alt="customer logo"
-            src={props.customerLogo || "/assets/client_logo_placeholder.png"}
-            style={{ maxHeight: "70px", maxWidth: "120px", width: "auto" }}
-          />
-        </>
+        {(props.customerLogo || props.editingEnabled) && (
+          <>
+            <hr className="border-l mx-1 pt-6 h-full border-gray-300" />
+            <img
+              alt="customer logo"
+              src={props.customerLogo || "/assets/client_logo_placeholder.png"}
+              style={{ maxHeight: "70px", maxWidth: "120px", width: "auto" }}
+            />
+          </>
+        )}
 
         {props.editingEnabled && (
           <UploadLogoComponent
