@@ -279,7 +279,7 @@ export default function LaunchRoadmap(props: {
             onClick={() => {
               invoke(createRoadMapLaunchStage, {
                 portalId: props.portalId,
-                date: new Date(2023, 11, 24, 10, 33, 30, 0),
+                date: new Date(),
                 heading: "New Roadmap Stage",
               }).then(props.refetchHandler)
             }}
