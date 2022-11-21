@@ -17,8 +17,6 @@ import { ModalAction, ModalActionChange, ModalDisplayState, ModalState } from ".
 import { formatISO9075 } from "date-fns"
 import { utcToZonedTime } from "date-fns-tz"
 import { TrashIcon } from "@heroicons/react/outline"
-import { confirmAlert } from "react-confirm-alert" // Import
-import "react-confirm-alert/src/react-confirm-alert.css" // Import css
 
 export default function RoadmapModal(props: {
   portalId: string
@@ -142,22 +140,7 @@ export default function RoadmapModal(props: {
                   <button
                     type="button"
                     onClick={() => {
-                      confirmAlert({
-                        title: "Are you sure?",
-                        message: "Please confirm if you want to delete this task",
-                        buttons: [
-                          {
-                            label: "Yes",
-                            onClick: () => {
-                              remove(index)
-                            },
-                          },
-                          {
-                            label: "No",
-                            onClick: () => {},
-                          },
-                        ],
-                      })
+                      remove(index)
                     }}
                   >
                     <TrashIcon className="w-4 h-4 text-gray-400" />
@@ -185,22 +168,7 @@ export default function RoadmapModal(props: {
                   <button
                     type="button"
                     onClick={() => {
-                      confirmAlert({
-                        title: "Are you sure?",
-                        message: "Please confirm if you want to delete this link",
-                        buttons: [
-                          {
-                            label: "Yes",
-                            onClick: () => {
-                              setValue("linkId", undefined)
-                            },
-                          },
-                          {
-                            label: "No",
-                            onClick: () => {},
-                          },
-                        ],
-                      })
+                      setValue("linkId", undefined)
                     }}
                   >
                     <TrashIcon className="w-4 h-4 text-gray-400" />
