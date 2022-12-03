@@ -26,23 +26,15 @@ function PortalDetails() {
   if (!portalId || !portal) return <LoadingSpinner />
   return (
     <div>
-      <div className="max-w-6xl mx-auto sm:px-6 lg:px-8 pt-2">
-        <Header
-          portalId={portalId}
-          vendorLogo={portal.header.vendorLogo || ""}
-          customerName={portal.header.customerName}
-          customerLogo={portal.header.customerLogo}
-          refetchHandler={refetch}
-        />
-      </div>
-
-      <div className="max-w-12xl mx-auto sm:px-6 lg:px-8 py-2">
-        <div className="">
-          <CardDivider />
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto sm:px-6 lg:px-8 py-2 mt-6">
+      <Header
+        portalId={portalId}
+        vendorLogo={portal.header.vendorLogo || ""}
+        customerName={portal.header.customerName}
+        customerLogo={portal.header.customerLogo}
+        refetchHandler={refetch}
+      />
+      <CardDivider />
+      <div className="max-w-6xl mt-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col">
             <OpportunityOverview {...portal.opportunityOverview} />

@@ -1,32 +1,35 @@
-import AddPortalModal from "./edit/addPortalModal"
+import AddPortalModal from "./vendorStats/edit/addPortalModal"
 import Modal from "app/core/components/generic/Modal"
 import { useState } from "react"
 import { Template } from "db"
 import RomeanoLogo from "app/core/assets/RomeanoLogo"
 import UserDropDown from "app/core/components/UserDropDown"
-import { UploadLogoComponent } from "../portalDetails/UploadLogoComponent"
-import { PencilIcon } from "@heroicons/react/outline"
+import { UploadLogoComponent } from "./portalDetails/UploadLogoComponent"
+import { HomeIcon, PencilIcon } from "@heroicons/react/outline"
+import { useCurrentUser } from "../hooks/useCurrentUser"
 
-export function Header(props: { vendorLogo?: string; templates: Template[]; refetchHandler: () => void }) {
+export function AppHeader(props: { vendorLogo?: string; templates: Template[]; refetchHandler: () => void }) {
   const [addTemplateProps, setAddTemplateProps] = useState<
     { isOpen: false; templateId: undefined } | { isOpen: true; templateId: number }
   >({
     isOpen: false,
     templateId: undefined,
   })
-
+  const user = useCurrentUser()
   return (
-    <div className="grid grid-cols-2 grid-rows-1 items-center">
+    <div className="grid grid-cols-2 grid-rows-1 items-center bg-gray-100 py-2 px-4 shadow-md sticky top-0 z-30">
       <span className="flex items-center">
-        {props.vendorLogo ? (
-          <img
-            alt="vendor logo"
-            src={props.vendorLogo}
-            style={{ maxHeight: "50px", maxWidth: "150px", width: "auto" }}
-          />
-        ) : (
-          <RomeanoLogo alt="Romeano Logo" className="" width={150} height={30} />
-        )}
+        <a title="Go Home" href="/">
+          {props.vendorLogo ? (
+            <img
+              alt="Vendor Logo"
+              src={props.vendorLogo}
+              style={{ maxHeight: "50px", maxWidth: "150px", width: "auto" }}
+            />
+          ) : (
+            <RomeanoLogo alt="Romeano Logo" className="" width={150} height={30} />
+          )}
+        </a>
         <UploadLogoComponent
           logoType="vendorLogo"
           uploadParams={{}}
@@ -45,6 +48,12 @@ export function Header(props: { vendorLogo?: string; templates: Template[]; refe
         </UploadLogoComponent>
       </span>
       <div className="flex justify-self-end gap-x-3">
+        <span className="text-gray-900 block px-4 py-2 text-xs">
+          Hi, {user?.firstName} {user?.lastName}
+        </span>
+        <a href="/" className="py-1">
+          <HomeIcon className="w-6 h-6" />
+        </a>
         <UserDropDown {...props} />
       </div>
       <Modal

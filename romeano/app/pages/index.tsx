@@ -3,7 +3,6 @@ import { BlitzPage, Link, Routes, useQuery, useRouter } from "blitz"
 import React from "react"
 import "tailwindcss/tailwind.css"
 import { Card, CardDivider, CardHeader } from "app/core/components/generic/Card"
-import { Header } from "app/core/components/vendorStats/Header"
 import { Footer } from "app/core/components/Footer"
 import getPortalList from "../customer-portals/queries/getPortalList"
 import { getName } from "../core/util/text"
@@ -16,21 +15,8 @@ import getVendorStats from "app/vendor-stats/queries/getVendorStats"
 import getTemplates from "app/vendor-stats/queries/getTemplates"
 
 function PortalsList() {
-  const [portalsList, { refetch }] = useQuery(getPortalList, null)
-  const [vendorStats] = useQuery(getVendorStats, {}, { refetchOnWindowFocus: false })
-  const [templates] = useQuery(getTemplates, {}, { refetchOnWindowFocus: false })
   return (
     <>
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
-        <Header
-          vendorLogo={vendorStats.header.vendorLogo || ""}
-          templates={templates.templates}
-          refetchHandler={refetch}
-        />
-        <div className="py-3">
-          <CardDivider />
-        </div>
-      </div>
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
         <Card>
           <CardHeader>My Portals</CardHeader>

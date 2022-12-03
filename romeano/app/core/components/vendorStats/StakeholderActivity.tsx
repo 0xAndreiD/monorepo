@@ -17,9 +17,9 @@ type StakeholderActivityEvent = {
 
 export function StakeholderActivity(props: { data: StakeholderActivityEvent[] }) {
   return (
-    <Card borderless>
+    <Card borderless className="px-4">
       <CardHeader classNameAddition="text-2xl">Stakeholder Activity Log</CardHeader>
-      <div className="mt-5 bg-white overflow-hidden border border-gray-200 rounded-lg">
+      <div className="mt-5 bg-white border border-gray-200 rounded-lg">
         <div className="px-4 py-2 flex flex-col gap-y-3 overflow-y-auto h-64">
           {props.data.map((event, idx) => (
             <div key={idx} className="flex justify-between text-sm">
