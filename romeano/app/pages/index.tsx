@@ -11,10 +11,9 @@ import { useCurrentUser } from "../core/hooks/useCurrentUser"
 import VendorStats from "./vendorStats"
 import { StyledLink } from "app/core/components/generic/Link"
 import Layout from "../core/layouts/Layout"
-import getVendorStats from "app/vendor-stats/queries/getVendorStats"
-import getTemplates from "app/vendor-stats/queries/getTemplates"
 
 function PortalsList() {
+  const [portalsList, { refetch }] = useQuery(getPortalList, null)
   return (
     <>
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
