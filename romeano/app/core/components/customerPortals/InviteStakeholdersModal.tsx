@@ -1,5 +1,5 @@
 import { Dialog } from "@headlessui/react"
-import { AddButton } from "../generic/AddButton"
+import { AddEditButton } from "../generic/AddEditButton"
 import { Stakeholder } from "./ProposalCard"
 import { invoke, useMutation } from "blitz"
 
@@ -81,7 +81,7 @@ export function InviteStakeholdersModal(props: {
           </div>
 
           <span className="flex py-4 justify-end">
-            <AddButton
+            <AddEditButton
               disabled={formState.isSubmitting}
               onClick={() => invoke(createEvent, { portalId: props.portalId, type: EventType.InviteStakeholder })}
             />

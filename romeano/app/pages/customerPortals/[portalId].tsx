@@ -9,10 +9,12 @@ import { Footer } from "app/core/components/Footer"
 import { LoadingSpinner } from "app/core/components/LoadingSpinner"
 import { Header } from "app/core/components/customerPortals/Header"
 import { CardDivider } from "app/core/components/generic/Card"
-import { useParam, useQuery, useSession } from "blitz"
+import { Link, Routes, useParam, useQuery, useSession } from "blitz"
 import getCustomerPortal from "../../customer-portals/queries/getCustomerPortal"
 import StakeholderLoginForm from "../../auth/components/StakeholderLoginForm"
 import Layout from "app/core/layouts/Layout"
+import { PencilIcon } from "@heroicons/react/outline"
+import { AddEditButton } from "app/core/components/generic/AddEditButton"
 
 function CustomerPortal() {
   const portalId = useParam("portalId", "string")!
@@ -36,37 +38,56 @@ function CustomerPortal() {
   //container: https://tailwindui.com/components/application-ui/layout/containers
   return (
     <>
-      <div className="max-w-6xl mx-auto sm:px-6 lg:px-8 pt-2">
-        <Header
-          template={data.template}
-          portalId={portalId}
-          vendorLogo={data.header.vendorLogo || ""}
-          customerName={data.header.customerName}
-          customerLogo={data.header.customerLogo}
-          data={data.proposal.stakeholders}
-          editingEnabled={false}
-          refetchHandler={refetch}
-        />
-      </div>
-
-      <div className="max-w-12xl mx-auto sm:px-6 lg:px-8 py-2">
-        <div className="">
-          <CardDivider />
+      <div className="bg-yellow-100 -mt-6 px-2 py-4 mb-2">
+        <div className="grid grid-cols-2">
+          <div className="text-sm py-2">
+            <span>You are previewing {data.header.customerName} customer portal.</span>
+          </div>
+          <div className="flex justify-end">
+            <div className="inline-flex flex px-2 gap-2">
+              <Link href={Routes.EditCustomerPortal({ portalId: portalId })}>
+                <button
+                  className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
+                    leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+                      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                >
+                  Edit Portal
+                </button>
+              </Link>
+              {/* <Link href={Routes.CustomerPortal({ portalId: portalId, fullScreen: true })}>
+                <button
+                  className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
+                  leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                  >
+                  View Full Screen
+                </button>
+              </Link> */}
+            </div>
+          </div>
         </div>
       </div>
-
-      <div className="max-w-6xl mx-auto sm:px-6 lg:px-8 py-2">
-        <LaunchRoadmap
-          portalId={portalId}
-          refetchHandler={refetch}
-          editingEnabled={false}
-          stageData={data.launchRoadmap.stages}
-          currentRoadmapStage={data.launchRoadmap.currentRoadmapStage}
-        />
-      </div>
+      <Header
+        template={data.template}
+        portalId={portalId}
+        vendorLogo={data.header.vendorLogo || ""}
+        customerName={data.header.customerName}
+        customerLogo={data.header.customerLogo}
+        data={data.proposal.stakeholders}
+        editingEnabled={false}
+        refetchHandler={refetch}
+      />
+      <CardDivider />
+      <LaunchRoadmap
+        portalId={portalId}
+        refetchHandler={refetch}
+        editingEnabled={false}
+        stageData={data.launchRoadmap.stages}
+        currentRoadmapStage={data.launchRoadmap.currentRoadmapStage}
+      />
 
       {/* <div className="max-w-8xl mx-40 bg-gray-100"> */}
-      <div className="max-w-12xl mx-auto sm:px-6 lg:px-16 py-6 bg-gray-100">
+      <div className="max-w-12xl mx-auto py-2 bg-gray-100">
         <div className="max-w-6xl lg:px-8 mx-auto mt-10 grid grid-cols-1 md:grid-cols-2 gap-9">
           <div className="flex flex-col gap-9">
             <NextStepsCard {...data.nextSteps} portalId={portalId} refetchHandler={refetch} />

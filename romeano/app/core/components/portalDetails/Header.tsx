@@ -73,7 +73,7 @@ export function Header(props: {
               </a>
             </Link>
           </div>
-          <button className="basis-1/3 pl-2">
+          {/* <button className="basis-1/3 pl-2">
             <Link href={Routes.Home()}>
               <div
                 className="inline-flex items-center py-2 text-sm
@@ -83,7 +83,7 @@ export function Header(props: {
                 <HomeIcon alt="Home" className="w-6 h-6" />
               </div>
             </Link>
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

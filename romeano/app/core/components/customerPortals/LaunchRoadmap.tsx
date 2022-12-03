@@ -12,7 +12,7 @@ import { utcToZonedTime } from "date-fns-tz"
 import RoadmapModal from "./edit/RoadmapModal"
 import CheckIcon from "../../assets/CheckIcon"
 import DotIcon from "../../assets/DotIcon"
-import { AddButton } from "../generic/AddButton"
+import { AddEditButton } from "../generic/AddEditButton"
 import createRoadMapLaunchStage from "../../../customer-portals/mutations/createLaunchRoadmapStage"
 import { invoke } from "blitz"
 import Carousel from "react-multi-carousel"
@@ -92,7 +92,7 @@ function RoadmapStage(props: {
           </ul>
 
           <div className="text-center">
-            {props.stage.ctaLink && (
+            {props.stage.ctaLink ? (
               <TrackedLink
                 type={EventType.LaunchRoadmapLinkOpen}
                 portalId={props.portalId}
@@ -103,19 +103,16 @@ function RoadmapStage(props: {
               >
                 <p className="text-sm">{props.stage.ctaLink.body}</p>
               </TrackedLink>
+            ) : (
+              <p className="text-sm">&nbsp;</p>
+            )}
+
+            {props.editingEnabled && (
+              <div className="mt-4">
+                <AddEditButton isEdit={true} onClick={props.onClickEdit} />
+              </div>
             )}
           </div>
-
-          {props.editingEnabled && (
-            <button
-              className="inline-flex items-center px-6 py-3 border border-gray-300 text-sm
-              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-              onClick={props.onClickEdit}
-            >
-              EDIT
-            </button>
-          )}
         </div>
       </div>
     </React.Fragment>
@@ -254,10 +251,10 @@ export default function LaunchRoadmap(props: {
     if (carouselRef && carouselRef.current) {
       carouselRef.current.goToSlide(Math.max(0, props.currentRoadmapStage - 2))
     }
-  }, [carouselRef])
+  }, [carouselRef, props.currentRoadmapStage])
 
   return (
-    <>
+    <div className="px-2">
       <RoadmapModal
         portalId={props.portalId}
         roadmapStageId={modalState.roadmapStageId!} //roadmapStageId cannot be null if editing
@@ -267,24 +264,26 @@ export default function LaunchRoadmap(props: {
       />
 
       <nav>
-        <div className="flex justify-between mt-6">
-          <h1 className="text-xl font-semibold">Launch Roadmap</h1>
+        <div className="flex justify-between mt-2">
+          <div className="flex justify-left gap-4">
+            <h1 className="text-xl font-semibold">Launch Roadmap</h1>
+            {props.editingEnabled && (
+              <AddEditButton
+                onClick={() => {
+                  invoke(createRoadMapLaunchStage, {
+                    portalId: props.portalId,
+                    date: new Date(),
+                    heading: "New Roadmap Stage",
+                  }).then(props.refetchHandler)
+                }}
+              />
+            )}
+          </div>
           <div className="gap-1 font-bold">
             <span className="text-gray-900">{props.currentRoadmapStage}</span>
             <span className="text-gray-400">&nbsp;/&nbsp;{props.stageData.length}</span>
           </div>
         </div>
-        {props.editingEnabled && (
-          <AddButton
-            onClick={() => {
-              invoke(createRoadMapLaunchStage, {
-                portalId: props.portalId,
-                date: new Date(),
-                heading: "New Roadmap Stage",
-              }).then(props.refetchHandler)
-            }}
-          />
-        )}
 
         {/* <button>
           <div className="flex justify-left text-gray-600">
@@ -404,6 +403,6 @@ export default function LaunchRoadmap(props: {
           min-height: 48px;
         }
       `}</style>
-    </>
+    </div>
   )
 }

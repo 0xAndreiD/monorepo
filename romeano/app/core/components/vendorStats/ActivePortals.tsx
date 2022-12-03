@@ -71,8 +71,7 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
         style={{ backgroundColor: "#F7F7F9" }}
       >
         <div className="grid grid-cols-2 grid-rows-1">
-          <div className="flex justify-self-front">Active Portals</div>
-
+          <CardHeader classNameAddition="text-2xl">Active Portals</CardHeader>
           <div className="flex justify-self-end gap-x-4 mr-0.5">
             <button
               type="button"

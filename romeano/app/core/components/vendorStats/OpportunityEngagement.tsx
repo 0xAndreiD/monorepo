@@ -4,7 +4,7 @@ import { Card, CardHeader } from "../generic/Card"
 export function OpportunityEngagement(props: { data: Array<{ customerName: string; eventCount: number }> }) {
   const maxClickCount = props.data.reduce((prevMax, currVal) => Math.max(prevMax, currVal.eventCount), 0)
   return (
-    <Card borderless>
+    <Card borderless className="px-4">
       <div className="flex items-end gap-x-2">
         <CardHeader classNameAddition="text-2xl">Opportunity Engagement</CardHeader>
         <div className="text-sm text-gray-700">(clicks)</div>

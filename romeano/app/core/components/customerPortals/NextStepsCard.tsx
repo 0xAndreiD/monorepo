@@ -1,7 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 
 import { Card, CardDivider, CardHeader } from "../generic/Card"
-import { AddButton } from "../generic/AddButton"
+import { AddEditButton } from "../generic/AddEditButton"
 import { PaperAirplaneIcon, TrashIcon } from "@heroicons/react/outline"
 import CustomTrashIcon from "../../assets/trashIcon"
 import createNextStepsTask, { CreateNextStepsTask } from "../../../customer-portals/mutations/createNextStepsTask"
@@ -70,7 +70,7 @@ export default function NextStepsCard(props: NextSteps & { portalId: string; ref
             </button>
           </form>
         )}
-        <AddButton onClick={() => setIsAdding(!isAdding)} />
+        <AddEditButton onClick={() => setIsAdding(!isAdding)} />
       </div>
     )
   }

@@ -34,9 +34,6 @@ export default function UserDropDown(props: { templates: Template[] }) {
       <Menu as="div" className="relative inline-block text-left" style={{ zIndex: 100 }}>
         <div>
           <Menu.Button className="bg-gray-100 inline-flex justify-center w-full rounded-md font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
-            <span className="text-gray-900 block px-4 py-2 text-xs">
-              {user?.firstName} {user?.lastName}
-            </span>
             {user?.photoUrl ? (
               <img
                 className="rounded-full"
@@ -82,7 +79,7 @@ export default function UserDropDown(props: { templates: Template[] }) {
               </Menu.Item>
             </div>
 
-            <div className="py-1">
+            {/* <div className="py-1">
               <Menu.Item>
                 {({ active }) => (
                   <a
@@ -96,7 +93,7 @@ export default function UserDropDown(props: { templates: Template[] }) {
                   </a>
                 )}
               </Menu.Item>
-            </div>
+            </div> */}
 
             <div className="py-1">
               <Menu.Item>

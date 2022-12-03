@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Link, Routes, useMutation, useRouter } from "blitz"
+import { Link, Routes, useMutation, useQuery, useRouter } from "blitz"
 import { UserAddIcon, PencilIcon } from "@heroicons/react/solid"
 import Modal from "../generic/Modal"
 import { InviteStakeholdersModal } from "./InviteStakeholdersModal"
@@ -33,11 +33,11 @@ export function Header(props: {
   const router = useRouter()
 
   return (
-    <div className="grid grid-cols-3 grid-rows-1 items-center">
+    <div className="grid grid-cols-3 grid-rows-1 items-center py-1">
       <div className="flex gap-2 items-center">
         {props.vendorLogo ? (
           <img
-            alt="vendor logo"
+            alt="Vendor Logo"
             src={props.vendorLogo}
             style={{ maxHeight: "50px", maxWidth: "150px", width: "auto" }}
           />
@@ -78,7 +78,7 @@ export function Header(props: {
       <span className="text-gray-600 text-sm justify-self-center">
         {props.template ? props.template.name + " (Template)" : props.customerName + " Customer Portal"}
       </span>
-      <div className="justify-self-end">
+      <div className="justify-self-end px-2">
         <div
           className={
             !props.template && props.editingEnabled
@@ -86,7 +86,7 @@ export function Header(props: {
               : "grid gap-2 grid-cols-1 place-items-center"
           }
         >
-          {props.editingEnabled && (
+          {/* {props.editingEnabled && (
             <Link href={Routes.CustomerPortal({ portalId: props.portalId })}>
               <button
                 className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
@@ -106,7 +106,7 @@ export function Header(props: {
             >
               Save as Template
             </button>
-          )}
+          )} */}
           {!props.template && !props.editingEnabled && (
             <button
               onClick={() => setIsInviteStakeholdersModalOpen(true)}
@@ -143,7 +143,7 @@ export function Header(props: {
         />
       </Modal>
 
-      <Modal
+      {/* <Modal
         isOpen={addTemplateProps.isOpen}
         onClose={() => setAddTemplateProps({ isOpen: false, templateId: undefined })}
       >
@@ -153,7 +153,7 @@ export function Header(props: {
             setAddTemplateProps({ isOpen: false, templateId: undefined })
           }}
         />
-      </Modal>
+      </Modal> */}
     </div>
   )
 }
