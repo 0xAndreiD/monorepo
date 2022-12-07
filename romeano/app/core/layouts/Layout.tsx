@@ -52,7 +52,7 @@ const Layout = ({ title, children }: LayoutProps) => {
           templates={templates.templates}
           refetchHandler={refetch}
         />
-        <div className="mt-6">{children}</div>
+        <div className="mt-10">{children}</div>
       </div>
     </>
   )

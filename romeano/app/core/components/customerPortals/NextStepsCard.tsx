@@ -2,7 +2,7 @@
 
 import { Card, CardDivider, CardHeader } from "../generic/Card"
 import { AddEditButton } from "../generic/AddEditButton"
-import { PaperAirplaneIcon, TrashIcon } from "@heroicons/react/outline"
+import { PaperAirplaneIcon, PlusIcon, TrashIcon } from "@heroicons/react/outline"
 import CustomTrashIcon from "../../assets/trashIcon"
 import createNextStepsTask, { CreateNextStepsTask } from "../../../customer-portals/mutations/createNextStepsTask"
 import updateNextStepsTask from "../../../customer-portals/mutations/updateNextStepsTask"
@@ -64,13 +64,13 @@ export default function NextStepsCard(props: NextSteps & { portalId: string; ref
             />
             <button
               disabled={formState.isSubmitting}
-              className="w-10 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full "
+              className="w-12 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full "
             >
-              <PaperAirplaneIcon fill="#00ddb9" className="ml-1 mb-1 transform rotate-45 h-6 w-6 text-green-400" />
+              <PlusIcon className="ml-1 mb-1 transform h-6 w-6 text-green-400" />
             </button>
           </form>
         )}
-        <AddEditButton onClick={() => setIsAdding(!isAdding)} />
+        {!isAdding && <AddEditButton onClick={() => setIsAdding(!isAdding)} />}
       </div>
     )
   }

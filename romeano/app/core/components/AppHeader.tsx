@@ -17,7 +17,10 @@ export function AppHeader(props: { vendorLogo?: string; templates: Template[]; r
   })
   const user = useCurrentUser()
   return (
-    <div className="grid grid-cols-2 grid-rows-1 items-center bg-gray-100 py-2 px-4 shadow-md sticky top-0 z-30">
+    <div
+      style={{ backgroundColor: "#efefef" }}
+      className="grid grid-cols-2 grid-rows-1 items-center py-2 px-4 shadow-md sticky top-0"
+    >
       <span className="flex items-center">
         <a title="Go Home" href="/">
           {props.vendorLogo ? (

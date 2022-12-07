@@ -46,7 +46,7 @@ function EditCustomerPortal() {
 
   return (
     <>
-      <div className="bg-yellow-100 -mt-6 px-2 py-4 mb-2">
+      <div className="bg-yellow-100 -mt-10 px-2 py-4 mb-2">
         <div className="grid grid-cols-2">
           <div className="text-sm">
             <span className="mr-4 py-2">You are editing {data.header.customerName} customer portal.</span>
