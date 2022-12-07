@@ -19,7 +19,7 @@ export function AppHeader(props: { vendorLogo?: string; templates: Template[]; r
   return (
     <div
       style={{ backgroundColor: "#efefef" }}
-      className="grid grid-cols-2 grid-rows-1 items-center py-2 px-4 shadow-md sticky top-0"
+      className="grid grid-cols-2 grid-rows-1 items-center py-2 px-4 shadow-md sticky top-0 z-30"
     >
       <span className="flex items-center">
         <a title="Go Home" href="/">
