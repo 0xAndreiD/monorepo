@@ -5,7 +5,7 @@ export function AddEditButton(props: PropsWithChildren<ComponentProps<"button"> 
   return (
     <button
       {...props}
-      className="inline-flex items-center px-2 py-1 border border-gray-300 text-sm
+      className="inline-flex items-center px-3 py-2 border border-gray-300 text-md
              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
     >
