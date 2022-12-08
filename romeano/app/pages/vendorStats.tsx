@@ -16,7 +16,7 @@ function VendorStats() {
   const [templates] = useQuery(getTemplates, {}, { refetchOnWindowFocus: false })
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 mb-16">
         <OpportunityEngagement data={vendorStats.opportunityEngagement} />
         <StakeholderActivity data={vendorStats.stakeholderActivityLog} />
       </div>
