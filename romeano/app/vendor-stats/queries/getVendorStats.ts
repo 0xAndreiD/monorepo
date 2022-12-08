@@ -263,6 +263,7 @@ export default resolver.pipe(
         x.portalId = encodeHashId(Number(x.portalId))
         return x
       })
+      console.log("activePortalsDocs", activePortalsDocs)
       const documentEvents = groupBy(
         activePortalsDocs.map((x) => ({
           portalId: x.portalId,
