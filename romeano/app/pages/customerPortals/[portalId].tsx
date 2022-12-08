@@ -38,7 +38,7 @@ function CustomerPortal() {
   //container: https://tailwindui.com/components/application-ui/layout/containers
   return (
     <>
-      <div className="bg-yellow-100 -mt-10 px-2 py-4 mb-2">
+      <div className="bg-yellow-100 -mt-16 px-2 py-4 mb-2">
         <div className="grid grid-cols-2">
           <div className="text-sm py-2">
             <span>You are previewing {data.header.customerName} customer portal.</span>
