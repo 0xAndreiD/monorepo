@@ -64,9 +64,9 @@ export default function NextStepsCard(props: NextSteps & { portalId: string; ref
             />
             <button
               disabled={formState.isSubmitting}
-              className="w-12 h-10 border-2 flex items-center justify-center border-grey-600 rounded-full "
+              className="border-2 w-14 h-12 flex items-center justify-center border-grey-600 rounded-full"
             >
-              <PlusIcon className="ml-1 mb-1 transform h-6 w-6 text-green-400" />
+              <PlusIcon className="h-8 w-8 text-green-400" />
             </button>
           </form>
         )}
