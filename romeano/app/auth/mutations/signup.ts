@@ -81,7 +81,6 @@ export default resolver.pipe(
           lastName: lastName,
           email: emailTrimmed,
           hashedPassword,
-          vendorId: vendorRecord.id,
           accountExecutive: {
             //make AE
             create: {
