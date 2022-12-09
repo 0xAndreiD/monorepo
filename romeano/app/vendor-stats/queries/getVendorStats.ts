@@ -79,7 +79,6 @@ export default resolver.pipe(
   async (input: {}, ctx: Ctx) => {
     const userId = ctx.session.userId
     const vendorId = ctx.session.vendorId
-    console.log("USER", userId, vendorId)
     if (!userId) throw new AuthenticationError("no userId provided")
 
     const user = await db.user.findUnique({
@@ -88,7 +87,6 @@ export default resolver.pipe(
     })
     if (!user || !user.accountExecutive) throw new AuthorizationError("Not an account executive")
 
-    console.log("USER", user)
     const header = {
       vendorLogo: user.accountExecutive?.vendorTeam.vendor.logoUrl,
     }
@@ -105,7 +103,6 @@ export default resolver.pipe(
           AND P."isTemplate" IS NOT TRUE
       `
     ).map((x) => x.portalId)
-    console.log("portalIds", portalIds)
 
     if (portalIds.length != 0) {
       const opportunityEngagement = (
@@ -238,25 +235,6 @@ export default resolver.pipe(
         return x
       })
       const stakeholderEvents = groupBy(activePortalsStakeholders, "portalId")
-
-      console.log("portalIds", portalIds)
-      console.log("activePortals", activePortals)
-      const query = `
-      SELECT E."portalId" AS "portalId",
-            L.body       AS title,
-            L.href       AS path,
-            COUNT(*)     AS "eventCount"
-      FROM "Event" E
-            JOIN "PortalDocument" PD ON PD.id = E."linkId"
-            JOIN "Link" L ON PD."linkId" = L.id
-            JOIN "UserPortal" UP ON E."userId" = UP."userId"
-        AND E."portalId" = UP."portalId"
-        AND UP.role = 'Stakeholder'
-      WHERE E."vendorId" = ${vendorId} 
-        AND E."portalId" IN (${Prisma.join(portalIds)})
-      GROUP BY E."portalId", title, path
-    `
-      console.log("query", query, portalIds)
       const activePortalsDocs = (
         await db.$queryRaw<
           Array<{
