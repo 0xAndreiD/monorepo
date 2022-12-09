@@ -236,6 +236,22 @@ export default resolver.pipe(
       })
       const stakeholderEvents = groupBy(activePortalsStakeholders, "portalId")
 
+      const query = `
+      SELECT E."portalId" AS "portalId",
+            L.body       AS title,
+            L.href       AS path,
+            COUNT(*)     AS "eventCount"
+      FROM "Event" E
+            JOIN "PortalDocument" PD ON PD.id = E."linkId"
+            JOIN "Link" L ON PD."linkId" = L.id
+            JOIN "UserPortal" UP ON E."userId" = UP."userId"
+        AND E."portalId" = UP."portalId"
+        AND UP.role = 'Stakeholder'
+      WHERE E."vendorId" = ${vendorId} 
+        AND E."portalId" IN (${Prisma.join(portalIds)})
+      GROUP BY E."portalId", title, path
+    `
+      console.log("query", query)
       const activePortalsDocs = (
         await db.$queryRaw<
           Array<{
