@@ -79,6 +79,7 @@ export default resolver.pipe(
   async (input: {}, ctx: Ctx) => {
     const userId = ctx.session.userId
     const vendorId = ctx.session.vendorId
+    console.log("USER", userId, vendorId)
     if (!userId) throw new AuthenticationError("no userId provided")
 
     const user = await db.user.findUnique({
@@ -87,6 +88,7 @@ export default resolver.pipe(
     })
     if (!user || !user.accountExecutive) throw new AuthorizationError("Not an account executive")
 
+    console.log("USER", user)
     const header = {
       vendorLogo: user.accountExecutive?.vendorTeam.vendor.logoUrl,
     }
