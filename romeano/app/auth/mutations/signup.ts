@@ -81,7 +81,6 @@ export default resolver.pipe(
           lastName: lastName,
           email: emailTrimmed,
           hashedPassword,
-          vendorId: vendorRecord.id,
           accountExecutive: {
             //make AE
             create: {
@@ -97,21 +96,21 @@ export default resolver.pipe(
       })
     } else {
       // Update user's vendor id
-      if (userRecord.vendorId && userRecord.vendorId !== vendorRecord.id) {
-        throw new Error("User found but email domain does not match vendor. Please contact Romeano.")
-      }
-      userRecord = await db.user.update({
-        where: {
-          id: userRecord.id,
-        },
-        data: {
-          vendorId: vendorRecord.id,
-        },
-      })
+      // if (userRecord.vendorId && userRecord.vendorId !== vendorRecord.id) {
+      //   throw new Error("User found but email domain does not match vendor. Please contact Romeano.")
+      // }
+      // userRecord = await db.user.update({
+      //   where: {
+      //     id: userRecord.id,
+      //   },
+      //   data: {
+      //     vendorId: vendorRecord.id,
+      //   },
+      // })
       // Check if AE exists for this user
       var accountExecRecord = await db.accountExecutive.findUnique({
         where: { userId: userRecord.id },
-        select: { id: true, userId: true, vendorTeamId: true },
+        select: { id: true, userId: true, vendorTeamId: true, vendorId: true },
       })
       if (!accountExecRecord) {
         console.log("Account exec record does not exist for this user, creating one")
@@ -122,7 +121,7 @@ export default resolver.pipe(
             vendorId: vendorRecord.id,
             jobTitle: jobTitle,
           },
-          select: { id: true, userId: true, vendorTeamId: true },
+          select: { id: true, userId: true, vendorTeamId: true, vendorId: true },
         })
       }
     }
@@ -135,10 +134,15 @@ export default resolver.pipe(
     console.log("Sending welcome email to vendor")
     await sendVendorWelcomeEmail(emailTrimmed, firstName, lastName)
 
+    accountExecRecord = await db.accountExecutive.findUnique({
+      where: { userId: userRecord.id },
+      select: { id: true, userId: true, vendorTeamId: true, vendorId: true },
+    })
+
     await ctx.session.$create({
       userId: userRecord.id!,
       roles: [userRecord.role, Role.AccountExecutive],
-      vendorId: userRecord.vendorId!,
+      vendorId: accountExecRecord!.vendorId!,
     })
     return userRecord
   }

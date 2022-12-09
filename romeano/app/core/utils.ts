@@ -51,7 +51,7 @@ export const updateVendorIdInAllTablesForUser = async (user: User, optimize = fa
   const accountExecutive = await db.accountExecutive.findFirst({ where: { userId: user.id } })
   const stakeholder = await db.stakeholder.findFirst({ where: { userId: user.id } })
 
-  if (optimize && user.vendorId && accountExecutive?.vendorId && stakeholder?.vendorId) {
+  if (optimize && accountExecutive?.vendorId && stakeholder?.vendorId) {
     console.log("User, AE and stakeholder have vendorId, returning without updating tables for user", user.id)
     return Promise.resolve()
   }
@@ -65,18 +65,18 @@ export const updateVendorIdInAllTablesForUser = async (user: User, optimize = fa
       console.log("User has no vendor team, returning without updating table for user", user.id)
       return Promise.resolve()
     }
-    if (!user.vendorId) {
-      // Update user
-      try {
-        await db.user.update({
-          where: { id: user.id },
-          data: { vendorId: vendorTeam.vendorId },
-        })
-        console.log("Updated vendorId in user table for user", user.id)
-      } catch (err) {
-        console.warn("Ignoring error updating user", user.id, err)
-      }
-    }
+    // if (!user.vendorId) {
+    //   // Update user
+    //   try {
+    //     await db.user.update({
+    //       where: { id: user.id },
+    //       data: { vendorId: vendorTeam.vendorId },
+    //     })
+    //     console.log("Updated vendorId in user table for user", user.id)
+    //   } catch (err) {
+    //     console.warn("Ignoring error updating user", user.id, err)
+    //   }
+    // }
     if (!accountExecutive?.vendorId) {
       // Update AE
       try {

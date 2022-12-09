@@ -37,7 +37,6 @@ const seedCustomerPortal = async () => {
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
-      vendorId: 1,
       accountExecutive: {
         //make AE
         create: {
@@ -59,13 +58,12 @@ const seedCustomerPortal = async () => {
       photoUrl:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
-      vendorId: 1,
       accountExecutive: {
         //make AE
         create: {
           jobTitle: "Customer Success Manager",
           vendorTeamId: vendorTeam.id!,
-          vendorId: vendorTeam.vendorId!,
+          vendorId: 1,
         },
       },
     },
@@ -85,14 +83,14 @@ const seedCustomerPortal = async () => {
           data: [
             {
               userId: aeUser.id,
-              vendorId: aeUser.vendorId,
+              vendorId: 1,
               role: Role.AccountExecutive,
               isPrimaryContact: true,
               isSecondaryContact: false,
             },
             {
               userId: aeUser2.id,
-              vendorId: aeUser2.vendorId,
+              vendorId: 1,
               role: Role.AccountExecutive,
               isPrimaryContact: false,
               isSecondaryContact: true,
@@ -174,7 +172,6 @@ const seedCustomerPortal = async () => {
           lastName: stakeholder.lastName,
           email: stakeholder.email,
           photoUrl: stakeholder.photoUrl,
-          vendorId: vendorTeam.vendorId,
           stakeholder: {
             create: {
               jobTitle: stakeholder.jobTitle,
@@ -209,7 +206,7 @@ const seedCustomerPortal = async () => {
           body: "Mira's Slide Deck",
           href: "https://www.google.com/webhp?client=firefox-b-d",
           type: LinkType.WebLink,
-          vendor: { connect: { id: aeUser.vendorId! } },
+          vendor: { connect: { id: 1! } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -225,7 +222,7 @@ const seedCustomerPortal = async () => {
           body: "Join Zoom 📞",
           href: "https://www.google.com/webhp?client=firefox-b-d",
           type: LinkType.WebLink,
-          vendor: { connect: { id: aeUser.vendorId! } },
+          vendor: { connect: { id: 1! } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -285,7 +282,7 @@ const seedCustomerPortal = async () => {
           body: "Security Questionnaire",
           href: "security-questionnaire.txt",
           type: LinkType.Document,
-          vendor: { connect: { id: aeUser.vendorId! } },
+          vendor: { connect: { id: 1! } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -298,7 +295,7 @@ const seedCustomerPortal = async () => {
           body: "Vendor Setup",
           href: "vendor-setup.txt",
           type: LinkType.Document,
-          vendor: { connect: { id: aeUser.vendorId! } },
+          vendor: { connect: { id: 1! } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -311,7 +308,7 @@ const seedCustomerPortal = async () => {
           body: "W-9 Form",
           href: "w9.txt",
           type: LinkType.Document,
-          vendor: { connect: { id: aeUser.vendorId! } },
+          vendor: { connect: { id: 1! } },
           creator: { connect: { id: stakeholders[0].id } },
         },
       },
@@ -330,7 +327,7 @@ const seedCustomerPortal = async () => {
           body: "Proposal Doc",
           href: "proposal.txt",
           type: LinkType.Document,
-          vendor: { connect: { id: aeUser.vendorId! } },
+          vendor: { connect: { id: 1! } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -406,7 +403,7 @@ const seedCustomerPortal = async () => {
               body: linkElem.body,
               href: linkElem.href,
               type: LinkType.WebLink,
-              vendor: { connect: { id: aeUser.vendorId! } },
+              vendor: { connect: { id: 1! } },
               creator: { connect: { id: aeUser.id } },
             },
           })
@@ -456,7 +453,6 @@ async function seedPortalDetails() {
       firstName: "Julia",
       lastName: "Lin",
       email: "julia@mira.com",
-      vendorId: 1,
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
       accountExecutive: {
@@ -479,13 +475,13 @@ async function seedPortalDetails() {
       customerLogoUrl:
         "https://gray-kwch-prod.cdn.arcpublishing.com/resizer/gLAX07TEGwQfEgBOQ3quD5JAugM=/1200x400/smart/cloudfront-us-east-1.images.arcpublishing.com/gray/IKLFKUHCCJCO3GQSYNXHJOAOSU.JPG",
       currentRoadmapStage: 3,
-      vendorId: aeUser.vendorId,
+      vendorId: 1,
       userPortals: {
         createMany: {
           data: [
             {
               userId: aeUser.id,
-              vendorId: aeUser.vendorId,
+              vendorId: 1,
               role: Role.AccountExecutive,
               isPrimaryContact: true,
               isSecondaryContact: false,
@@ -503,7 +499,6 @@ async function seedPortalDetails() {
       firstName: "Ali",
       lastName: "G",
       email: "ali@raytheon.com",
-      vendorId: portal.vendorId,
       stakeholder: {
         create: {
           jobTitle: "Director",
@@ -529,7 +524,7 @@ async function seedPortalDetails() {
           body: "portal2doc",
           href: "portal2doc.txt",
           type: LinkType.Document,
-          vendor: { connect: { id: aeUser.vendorId! } },
+          vendor: { connect: { id: 1! } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -544,7 +539,7 @@ async function seedPortalDetails() {
           body: "Proposal Doc",
           href: "proposal2.txt",
           type: LinkType.Document,
-          vendor: { connect: { id: aeUser.vendorId! } },
+          vendor: { connect: { id: 1! } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -602,7 +597,6 @@ async function seedMira() {
       firstName: "Alexis",
       lastName: "Miller",
       email: "alexis.miller@miralabs.io",
-      vendorId: vendorTeam.vendorId,
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
@@ -625,7 +619,6 @@ async function seedMira() {
       firstName: "AE Test",
       lastName: "User",
       email: "aetest@romeano.com",
-      vendorId: vendorTeam.vendorId,
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
@@ -653,14 +646,14 @@ async function seedMira() {
           data: [
             {
               userId: aeUser.id,
-              vendorId: aeUser.vendorId,
+              vendorId: vendorTeam.vendorId,
               role: Role.AccountExecutive,
               isPrimaryContact: true,
               isSecondaryContact: false,
             },
             {
               userId: testUser.id,
-              vendorId: testUser.vendorId,
+              vendorId: vendorTeam.vendorId,
               role: Role.AccountExecutive,
               isPrimaryContact: false,
               isSecondaryContact: false,
@@ -683,7 +676,7 @@ async function seedMira() {
           body: "Proposal",
           href: "https://docs.google.com/presentation/d/1Kwh6nVp00qBtFVegGe-6iWCB4kstwJi4NjUbm5F4CI4/edit#slide=id.gd4d09b3e56_0_233",
           type: LinkType.WebLink,
-          vendor: { connect: { id: aeUser.vendorId! } },
+          vendor: { connect: { id: 1! } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -700,7 +693,7 @@ async function seedMira() {
           body: "Mira Product Video",
           href: "https://vimeo.com/364410995",
           type: LinkType.WebLink,
-          vendor: { connect: { id: aeUser.vendorId! } },
+          vendor: { connect: { id: 1! } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -715,7 +708,7 @@ async function seedMira() {
           body: "Join Zoom 📞",
           href: "https://www.google.com/webhp?client=firefox-b-d",
           type: LinkType.WebLink,
-          vendor: { connect: { id: aeUser.vendorId! } },
+          vendor: { connect: { id: 1! } },
           creator: { connect: { id: aeUser.id } },
         },
       },
@@ -803,7 +796,7 @@ async function seedMira() {
               body: linkElem.body,
               href: linkElem.href,
               type: LinkType.WebLink,
-              vendor: { connect: { id: aeUser.vendorId! } },
+              vendor: { connect: { id: 1! } },
               creator: { connect: { id: aeUser.id } },
             },
           })

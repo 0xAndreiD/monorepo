@@ -47,7 +47,6 @@ export default resolver.pipe(
       (await db.user.findFirst({
         where: {
           email: email,
-          vendorId: portal.vendorId,
         },
       })) ??
       (await db.user.create({
@@ -56,7 +55,6 @@ export default resolver.pipe(
           lastName,
           email,
           role: SiteRole.SiteUser,
-          vendorId: ctx.session.vendorId,
         },
       }))
 
@@ -93,7 +91,7 @@ export default resolver.pipe(
       data: {
         id: generateToken(),
         userId: stakeholderUser.id,
-        vendorId: stakeholderUser.vendorId,
+        vendorId: ctx.session.vendorId,
         destUrl: Routes.CustomerPortal({ portalId }).pathname.replace("[portalId]", portalId),
         hasClicked: false,
       },

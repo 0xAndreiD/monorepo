@@ -21,7 +21,6 @@ export default resolver.pipe(
         photoUrl: true,
         email: true,
         role: true,
-        vendorId: true,
         accountExecutive: {
           select: {
             id: true,

@@ -29,7 +29,6 @@ describe("resetPassword mutation", () => {
         email: "user@example.com",
         firstName: "Test",
         lastName: "User",
-        vendorId: -1,
         tokens: {
           // Create old token to ensure it's deleted
           create: [

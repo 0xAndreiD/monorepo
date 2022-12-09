@@ -71,8 +71,6 @@ model User {
   lastName         String
   email            String            @unique
   photoUrl         String?
-  vendor           Vendor            @relation(fields: [vendorId], references: [id])
-  vendorId         Int
   accountExecutive AccountExecutive?
   stakeholder      Stakeholder?
   templates        Template[]
@@ -135,7 +133,6 @@ model Vendor {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
-  users                  User[]
   accountExecutives      AccountExecutive[]
   userPortals            UserPortal[]
   templates              Template[]
