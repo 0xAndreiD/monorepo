@@ -37,6 +37,7 @@ const ImpersonatingUserNotice = () => {
 
 const Layout = ({ title, children }: LayoutProps) => {
   const [vendorStats] = useQuery(getVendorStats, {}, { refetchOnWindowFocus: false })
+  console.log(vendorStats)
   const [templates] = useQuery(getTemplates, {}, { refetchOnWindowFocus: false })
   const [portalsList, { refetch }] = useQuery(getPortalList, null)
   return (
