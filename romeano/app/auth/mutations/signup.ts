@@ -97,17 +97,17 @@ export default resolver.pipe(
       })
     } else {
       // Update user's vendor id
-      if (userRecord.vendorId && userRecord.vendorId !== vendorRecord.id) {
-        throw new Error("User found but email domain does not match vendor. Please contact Romeano.")
-      }
-      userRecord = await db.user.update({
-        where: {
-          id: userRecord.id,
-        },
-        data: {
-          vendorId: vendorRecord.id,
-        },
-      })
+      // if (userRecord.vendorId && userRecord.vendorId !== vendorRecord.id) {
+      //   throw new Error("User found but email domain does not match vendor. Please contact Romeano.")
+      // }
+      // userRecord = await db.user.update({
+      //   where: {
+      //     id: userRecord.id,
+      //   },
+      //   data: {
+      //     vendorId: vendorRecord.id,
+      //   },
+      // })
       // Check if AE exists for this user
       var accountExecRecord = await db.accountExecutive.findUnique({
         where: { userId: userRecord.id },
