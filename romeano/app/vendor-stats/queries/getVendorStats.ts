@@ -105,6 +105,7 @@ export default resolver.pipe(
           AND P."isTemplate" IS NOT TRUE
       `
     ).map((x) => x.portalId)
+    console.log("portalIds", portalIds)
 
     if (portalIds.length != 0) {
       const opportunityEngagement = (
@@ -238,6 +239,8 @@ export default resolver.pipe(
       })
       const stakeholderEvents = groupBy(activePortalsStakeholders, "portalId")
 
+      console.log("portalIds", portalIds)
+      console.log("activePortals", activePortals)
       const query = `
       SELECT E."portalId" AS "portalId",
             L.body       AS title,
@@ -253,7 +256,7 @@ export default resolver.pipe(
         AND E."portalId" IN (${Prisma.join(portalIds)})
       GROUP BY E."portalId", title, path
     `
-      console.log("query", query)
+      console.log("query", query, portalIds)
       const activePortalsDocs = (
         await db.$queryRaw<
           Array<{
@@ -268,7 +271,7 @@ export default resolver.pipe(
               L.href       AS path,
               COUNT(*)     AS "eventCount"
         FROM "Event" E
-              JOIN "PortalDocument" PD ON PD.id = E."linkId"
+              JOIN "PortalDocument" PD ON PD."linkId" = E."linkId"
               JOIN "Link" L ON PD."linkId" = L.id
               JOIN "UserPortal" UP ON E."userId" = UP."userId"
           AND E."portalId" = UP."portalId"
