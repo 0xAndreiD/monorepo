@@ -37,7 +37,6 @@ const seedCustomerPortal = async () => {
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
-      vendorId: 1,
       accountExecutive: {
         //make AE
         create: {
@@ -59,7 +58,6 @@ const seedCustomerPortal = async () => {
       photoUrl:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
-      vendorId: 1,
       accountExecutive: {
         //make AE
         create: {
@@ -174,7 +172,6 @@ const seedCustomerPortal = async () => {
           lastName: stakeholder.lastName,
           email: stakeholder.email,
           photoUrl: stakeholder.photoUrl,
-          vendorId: vendorTeam.vendorId,
           stakeholder: {
             create: {
               jobTitle: stakeholder.jobTitle,
@@ -456,7 +453,6 @@ async function seedPortalDetails() {
       firstName: "Julia",
       lastName: "Lin",
       email: "julia@mira.com",
-      vendorId: 1,
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
       accountExecutive: {
@@ -503,7 +499,6 @@ async function seedPortalDetails() {
       firstName: "Ali",
       lastName: "G",
       email: "ali@raytheon.com",
-      vendorId: portal.vendorId,
       stakeholder: {
         create: {
           jobTitle: "Director",
@@ -602,7 +597,6 @@ async function seedMira() {
       firstName: "Alexis",
       lastName: "Miller",
       email: "alexis.miller@miralabs.io",
-      vendorId: vendorTeam.vendorId,
       photoUrl:
         "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1002&q=80",
       hashedPassword: await SecurePassword.hash("password123"),
