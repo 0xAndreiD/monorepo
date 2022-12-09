@@ -30,7 +30,6 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
     emailUser = await db.user.findFirst({
       where: {
         email: data.customerEmail,
-        vendorId: ctx.session.vendorId,
       },
     })
 

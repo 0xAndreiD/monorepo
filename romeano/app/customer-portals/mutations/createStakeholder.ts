@@ -55,7 +55,6 @@ export default resolver.pipe(
           lastName,
           email,
           role: SiteRole.SiteUser,
-          vendorId: ctx.session.vendorId,
         },
       }))
 

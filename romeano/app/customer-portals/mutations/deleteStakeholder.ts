@@ -28,7 +28,6 @@ export default resolver.pipe(
     const user = await db.user.findFirst({
       where: {
         email: email,
-        vendorId: portal.vendorId,
       },
     })
     if (!user) throw new AuthenticationError("Could not find stakeholder user!")
