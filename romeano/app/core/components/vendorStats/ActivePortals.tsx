@@ -128,7 +128,7 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
                   {props.data.map((portal, idx) => (
                     <tr key={idx} className="divide-x">
                       <td className="px-6 py-4 whitespace-nowrap sm:rounded-lg">
-                        <div className="flex justify-between">
+                        <div className="flex justify-between gap-x-2">
                           <div className="flex flex-col gap-y-1">
                             <div className="text-lg font-medium text-gray-900">
                               <BlitzLink href={Routes.CustomerPortal({ portalId: portal.portalId })}>
