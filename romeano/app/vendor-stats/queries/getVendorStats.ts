@@ -273,7 +273,7 @@ export default resolver.pipe(
         })),
         "portalId"
       )
-
+      console.log("documentEvents", documentEvents)
       const all = activePortals.map((p) => {
         return {
           portalId: p.portalId,
