@@ -27,9 +27,10 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
 
   let emailUser = null
   if (data.customerEmail) {
-    emailUser = await db.user.findUnique({
+    emailUser = await db.user.findFirst({
       where: {
-        email_vendorId: { email: data.customerEmail, vendorId: ctx.session.vendorId },
+        email: data.customerEmail,
+        vendorId: ctx.session.vendorId,
       },
     })
 

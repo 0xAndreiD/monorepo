@@ -68,7 +68,7 @@ export default resolver.pipe(
     // Check if user already exists with this email
     var userRecord = await db.user.findUnique({
       where: {
-        email_vendorId: { email: emailTrimmed, vendorId: vendorRecord.id },
+        email: emailTrimmed,
       },
     })
     console.log("User...", userRecord)

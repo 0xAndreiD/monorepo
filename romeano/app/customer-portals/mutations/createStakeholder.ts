@@ -44,9 +44,10 @@ export default resolver.pipe(
     const [firstName, lastName] = splitName(fullName)
 
     const stakeholderUser =
-      (await db.user.findUnique({
+      (await db.user.findFirst({
         where: {
-          email_vendorId: { email: email, vendorId: portal.vendorId },
+          email: email,
+          vendorId: portal.vendorId,
         },
       })) ??
       (await db.user.create({
