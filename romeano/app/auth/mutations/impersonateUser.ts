@@ -41,7 +41,7 @@ export default resolver.pipe(
     await ctx.session.$create({
       userId: user.id,
       roles: roles,
-      vendorId: user.vendorId,
+      vendorId: user.accountExecutive!.vendorId,
       impersonatingFromUserId: ctx.session.userId,
     })
 

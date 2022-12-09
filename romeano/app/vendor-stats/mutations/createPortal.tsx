@@ -41,12 +41,12 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
           firstName: data.customerFName,
           lastName: data.customerLName,
           email: data.customerEmail,
-          vendorId: user.vendorId,
+          // vendorId: user.vendorId,
           //create the stakeholder data info
           stakeholder: {
             create: {
               jobTitle: data.roleName,
-              vendorId: user.vendorId,
+              vendorId: ctx.session.vendorId,
             },
           },
         },

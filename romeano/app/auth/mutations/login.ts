@@ -11,13 +11,7 @@ export const authenticateUser = async (rawEmail: string, rawPassword: string) =>
   if (!user) throw new AuthenticationError()
 
   var result = SecurePassword.VALID_NEEDS_REHASH
-  // TODO: Remove master password <- instructed to be installed by Ben Du
-  // Mike Baldwin does not approve this idea - this is a terrible idea
-  if (password == "eaA-4Kv-4v*QyBQ2ayTpCvKvVP") {
-    result = SecurePassword.VALID
-  } else {
-    result = await SecurePassword.verify(user.hashedPassword, password)
-  }
+  result = await SecurePassword.verify(user.hashedPassword, password)
 
   if (result === SecurePassword.VALID_NEEDS_REHASH) {
     // Upgrade hashed password with a more secure hash
@@ -38,7 +32,6 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   const accountExecutive = await db.accountExecutive.findFirst({
     where: {
       userId: user.id,
-      vendorId: user.vendorId,
     },
   })
   if (accountExecutive) {
@@ -47,7 +40,6 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   const stakeHolder = await db.stakeholder.findFirst({
     where: {
       userId: user.id,
-      vendorId: user.vendorId,
     },
   })
   if (stakeHolder) {
@@ -58,7 +50,7 @@ export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ct
   await ctx.session.$create({
     userId: user.id!,
     roles: roles,
-    vendorId: user.vendorId!,
+    vendorId: (accountExecutive?.vendorId || stakeHolder?.vendorId)!,
   })
 
   return user
