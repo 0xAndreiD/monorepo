@@ -276,6 +276,7 @@ model NextStepsTask {
   templateId  Int?
   vendor      Vendor    @relation(fields: [vendorId], references: [id])
   vendorId    Int
+  isForVendor Boolean   @default(false)
 }
 
 model PortalDocument {
