@@ -55,4 +55,5 @@ type NextStepsTask = {
   id: number
   description: string
   isCompleted: boolean
+  userId: number
 }
