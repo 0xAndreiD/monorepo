@@ -37,6 +37,17 @@ export async function sendInvite(
   customerLogo: string,
   vendorLogo?: string
 ) {
+  console.log(
+    "Sending invite...",
+    inviterEmail,
+    customerName,
+    vendorName,
+    inviterFirstName,
+    inviteeEmailAddress,
+    magicLink,
+    customerLogo,
+    vendorLogo
+  )
   let html = await readFile("app/core/util/inviteEmail.html", "utf8")
   let template = handlebars.compile(html)
   const inviteUrl = `${BACKEND_ENDPOINT}/magicLink/${magicLink}`
