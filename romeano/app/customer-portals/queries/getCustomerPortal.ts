@@ -132,6 +132,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
           id: x.id,
           description: x.description,
           isCompleted: x.isCompleted,
+          userId: x.userId,
         })),
     },
     vendor: {
@@ -142,6 +143,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
           id: x.id,
           description: x.description,
           isCompleted: x.isCompleted,
+          userId: x.userId,
         })),
     },
   }

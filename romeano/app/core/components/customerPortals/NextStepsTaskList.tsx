@@ -75,7 +75,6 @@ export default function NextStepsCard(props: {
   const allowAdd = props.isVendorTaskList
     ? user?.role === Role.Stakeholder || user?.role === Role.AccountExecutive
     : user?.role === Role.AccountExecutive
-
   return (
     <>
       <p className="max-w-2xl pt-2 text-sm">
@@ -84,50 +83,55 @@ export default function NextStepsCard(props: {
 
       <div className="sm:divide-y sm:divide-gray-200 text-sm">
         <ul className="py-3 sm:py-3">
-          {props.tasks.map((task) => (
-            <li key={task.id} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={task.isCompleted}
-                onChange={async () => {
-                  const newCompletionStatus = !task.isCompleted
-                  const updatedTask = await updateIsCompleted({ id: task.id, isCompleted: newCompletionStatus })
-                  newCompletionStatus
-                    ? invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepMarkCompleted })
-                    : invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepMarkNotCompleted })
-                  props.refetchHandler()
-                }}
-              />
-              <span className="px-2">{task.description}</span>
-              {props.isElementDeletable && (
-                <button
-                  style={{ marginLeft: "auto" }}
-                  onClick={() => {
-                    confirmAlert({
-                      title: "Are you sure?",
-                      message: "Please confirm if you want to delete this next step",
-                      buttons: [
-                        {
-                          label: "Yes",
-                          onClick: async () => {
-                            await deleteNextStep({ id: task.id })
-                            invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepDelete })
-                            props.refetchHandler()
-                          },
-                        },
-                        {
-                          label: "No",
-                          onClick: () => {},
-                        },
-                      ],
-                    })
+          {props.tasks.map((task) => {
+            const isElementDeletable = props.isVendorTaskList
+              ? user?.role === Role.Stakeholder || (user?.role === Role.AccountExecutive && user?.id === task.userId)
+              : user?.role === Role.AccountExecutive
+            return (
+              <li key={task.id} className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={task.isCompleted}
+                  onChange={async () => {
+                    const newCompletionStatus = !task.isCompleted
+                    const updatedTask = await updateIsCompleted({ id: task.id, isCompleted: newCompletionStatus })
+                    newCompletionStatus
+                      ? invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepMarkCompleted })
+                      : invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepMarkNotCompleted })
+                    props.refetchHandler()
                   }}
-                >
-                  <CustomTrashIcon className="w-4 h-4 text-gray-400" />
-                </button>
-              )}
-            </li>
-          ))}
+                />
+                <span className="px-2">{task.description}</span>
+                {isElementDeletable && (
+                  <button
+                    style={{ marginLeft: "auto" }}
+                    onClick={() => {
+                      confirmAlert({
+                        title: "Are you sure?",
+                        message: "Please confirm if you want to delete this next step",
+                        buttons: [
+                          {
+                            label: "Yes",
+                            onClick: async () => {
+                              await deleteNextStep({ id: task.id })
+                              invoke(createEvent, { portalId: props.portalId, type: EventType.NextStepDelete })
+                              props.refetchHandler()
+                            },
+                          },
+                          {
+                            label: "No",
+                            onClick: () => {},
+                          },
+                        ],
+                      })
+                    }}
+                  >
+                    <CustomTrashIcon className="w-4 h-4 text-gray-400" />
+                  </button>
+                )}
+              </li>
+            )
+          })}
         </ul>
       </div>
       {allowAdd && <NextStepsAddButton className="mb-5" />}
@@ -139,4 +143,5 @@ type NextStepsTask = {
   id: number
   description: string
   isCompleted: boolean
+  userId: number
 }
