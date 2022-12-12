@@ -1,5 +1,5 @@
 import { BlitzPage, NotFoundError, useParam, useRouter, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
+import AnonymousLayout from "app/core/layouts/AnonymousLayout"
 import { LoginForm } from "app/auth/components/LoginForm"
 
 const LoginPage: BlitzPage = () => {
@@ -17,8 +17,7 @@ const LoginPage: BlitzPage = () => {
   )
 }
 
-
 LoginPage.redirectAuthenticatedTo = "/"
-LoginPage.getLayout = (page) => <Layout title="Log In">{page}</Layout>
+LoginPage.getLayout = (page) => <AnonymousLayout title="Log In">{page}</AnonymousLayout>
 
 export default LoginPage

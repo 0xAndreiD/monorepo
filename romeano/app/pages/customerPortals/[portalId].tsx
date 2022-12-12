@@ -27,7 +27,7 @@ function CustomerPortal() {
       enabled: !!portalId && !session.isLoading && !!session.userId,
     }
   )
-
+  console.log("Session...", session)
   if (!session.isLoading && !session.userId) {
     return <StakeholderLoginForm />
   }

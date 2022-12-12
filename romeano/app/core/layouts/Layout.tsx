@@ -1,13 +1,11 @@
-import { ReactNode, Suspense } from "react"
+import { ReactNode } from "react"
 import { Head, invoke, queryClient, useQuery, useSession } from "blitz"
 import stopImpersonating from "app/auth/mutations/stopImpersonating"
-import { useCurrentUser } from "../hooks/useCurrentUser"
-import { ArrowCircleRightIcon, ExclamationIcon } from "@heroicons/react/outline"
+import { ExclamationIcon } from "@heroicons/react/outline"
 import getTemplates from "app/vendor-stats/queries/getTemplates"
 import getVendorStats from "app/vendor-stats/queries/getVendorStats"
 import getPortalList from "app/customer-portals/queries/getPortalList"
 import { AppHeader } from "../components/AppHeader"
-import { CardDivider } from "../components/generic/Card"
 
 type LayoutProps = {
   title?: string
