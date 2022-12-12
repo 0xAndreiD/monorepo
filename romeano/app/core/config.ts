@@ -4,9 +4,9 @@ export const PUBLIC_PORT = 3000
 const DEV_OR_TEST_SERVER = process.env.APP_ENV === "stage" ? "stage.romeano.com" : "localhost"
 export const BACKEND_ENDPOINT =
   process.env.APP_ENV === "production"
-    ? "http://app.romeano.com"
+    ? "https://app.romeano.com"
     : process.env.APP_ENV === "stage"
-    ? "http://stage.romeano.com"
+    ? "https://stage.romeano.com"
     : `http://${DEV_OR_TEST_SERVER}:${PUBLIC_PORT}`
 export const PUBLIC_ROOT_URL =
   process.env.NODE_ENV === "development" ? "https://6866ccb5.ngrok.io" : "https://romeano.com"
