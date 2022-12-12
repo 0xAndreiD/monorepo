@@ -7,6 +7,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const magicLink = await db.magicLink.findUnique({ where: { id: magicLinkId } })
 
   const session = await getSession(context.req, context.res)
+  console.log("Session in MagicLink", session, magicLink)
   if (!magicLink) throw new NotFoundError("Magiclink not found")
 
   if (!session.userId && magicLink.hasClicked) {
