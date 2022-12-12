@@ -1,5 +1,5 @@
 import { BlitzPage, useMutation } from "blitz"
-import AnonymousLayout from "app/core/layouts/Layout"
+import AnonymousLayout from "app/core/layouts/AnonymousLayout"
 import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
 import { ForgotPassword } from "app/auth/validations"

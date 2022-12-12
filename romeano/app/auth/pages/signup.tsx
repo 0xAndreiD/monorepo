@@ -1,5 +1,5 @@
 import { useRouter, BlitzPage, Routes } from "blitz"
-import AnonymousLayout from "app/core/layouts/Layout"
+import AnonymousLayout from "app/core/layouts/AnonymousLayout"
 import { SignupForm } from "app/auth/components/SignupForm"
 
 const SignupPage: BlitzPage = () => {

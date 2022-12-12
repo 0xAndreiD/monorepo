@@ -1,13 +1,11 @@
-import { ReactNode, Suspense } from "react"
+import { ReactNode } from "react"
 import { Head, invoke, queryClient, useQuery, useSession } from "blitz"
 import stopImpersonating from "app/auth/mutations/stopImpersonating"
-import { useCurrentUser } from "../hooks/useCurrentUser"
-import { ArrowCircleRightIcon, ExclamationIcon } from "@heroicons/react/outline"
+import { ExclamationIcon } from "@heroicons/react/outline"
 import getTemplates from "app/vendor-stats/queries/getTemplates"
 import getVendorStats from "app/vendor-stats/queries/getVendorStats"
 import getPortalList from "app/customer-portals/queries/getPortalList"
 import { AppHeader } from "../components/AppHeader"
-import { CardDivider } from "../components/generic/Card"
 
 type LayoutProps = {
   title?: string
@@ -53,20 +51,6 @@ const Layout = ({ title, children }: LayoutProps) => {
           templates={templates.templates}
           refetchHandler={refetch}
         />
-        <div className="mt-16">{children}</div>
-      </div>
-    </>
-  )
-}
-
-export const AnonymousLayout = ({ title, children }: LayoutProps) => {
-  return (
-    <>
-      <Head>
-        <title>{title || "romeano"}</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div className="mt-16">{children}</div>
       </div>
     </>

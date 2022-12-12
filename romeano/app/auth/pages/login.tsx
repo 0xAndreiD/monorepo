@@ -1,5 +1,5 @@
 import { BlitzPage, NotFoundError, useParam, useRouter, Routes } from "blitz"
-import AnonymousLayout from "app/core/layouts/Layout"
+import AnonymousLayout from "app/core/layouts/AnonymousLayout"
 import { LoginForm } from "app/auth/components/LoginForm"
 
 const LoginPage: BlitzPage = () => {
