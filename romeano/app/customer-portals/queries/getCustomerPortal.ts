@@ -127,21 +127,23 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
     customer: {
       name: portal.customerName,
       tasks: portal.nextStepsTasks
-        .filter((x) => accountExecutiveIds.has(x.userId))
+        .filter((x) => !x.isForVendor && accountExecutiveIds.has(x.userId))
         .map((x) => ({
           id: x.id,
           description: x.description,
           isCompleted: x.isCompleted,
+          userId: x.userId,
         })),
     },
     vendor: {
       name: portal.vendor.name,
       tasks: portal.nextStepsTasks
-        .filter((x) => stakeholderIds.has(x.userId))
+        .filter((x) => x.isForVendor || stakeholderIds.has(x.userId))
         .map((x) => ({
           id: x.id,
           description: x.description,
           isCompleted: x.isCompleted,
+          userId: x.userId,
         })),
     },
   }
