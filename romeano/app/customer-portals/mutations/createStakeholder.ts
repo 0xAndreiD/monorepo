@@ -29,6 +29,7 @@ export default resolver.pipe(
         vendor: true,
       },
     })
+    console.log("portal", portal)
     if (!portal) throw new AuthenticationError("Could not find portal!")
 
     const userPortal = await db.userPortal.findUnique({
@@ -39,6 +40,7 @@ export default resolver.pipe(
         user: true,
       },
     })
+    console.log("userportal", portal)
     if (!userPortal) throw new AuthenticationError("Could not find user in portal!")
 
     const [firstName, lastName] = splitName(fullName)
@@ -57,6 +59,7 @@ export default resolver.pipe(
           role: SiteRole.SiteUser,
         },
       }))
+    console.log("stakeholderUser", stakeholderUser)
 
     const stakeholder =
       (await db.stakeholder.findUnique({ where: { userId: stakeholderUser.id } })) ??
@@ -67,6 +70,7 @@ export default resolver.pipe(
           vendorId: ctx.session.vendorId,
         },
       }))
+    console.log("stakeholder", stakeholder)
 
     try {
       ;(await db.userPortal.findFirst({
