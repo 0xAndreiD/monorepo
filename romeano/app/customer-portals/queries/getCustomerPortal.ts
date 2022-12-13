@@ -30,7 +30,7 @@ export function checkIfUserCanAccessPortal(
   const stakeholderIds = new Set(portal.userPortals?.filter((x) => x.role === Role.Stakeholder).map((x) => x.userId))
   console.log("Verifying USER ACCESS TO PORTAL", userId, accountExecutiveIds, stakeholderIds)
 
-  if (!accountExecutiveIds?.has(userId) && !stakeholderIds?.has(userId) && !portal.isGlobal && !portal.isTemplate) {
+  if (!accountExecutiveIds?.has(userId) && !stakeholderIds?.has(userId) && !portal.isGlobal) {
     throw new AuthorizationError("User does not have access to the requested portal")
   }
 

@@ -93,7 +93,6 @@ export default resolver.pipe(
 
     const defaultPortal = await db.portal.findFirst({
       where: {
-        isTemplate: true,
         isGlobal: true,
       },
     })
