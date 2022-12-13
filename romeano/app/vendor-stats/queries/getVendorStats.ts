@@ -91,6 +91,13 @@ export default resolver.pipe(
       vendorLogo: user.accountExecutive?.vendorTeam.vendor.logoUrl,
     }
 
+    const defaultPortal = await db.portal.findFirst({
+      where: {
+        isTemplate: true,
+        isGlobal: true,
+      },
+    })
+
     // TODO: Eliminate JOINs from queries...
     const portalIds = (
       await db.$queryRaw<Array<{ portalId: number }>>`
@@ -297,6 +304,7 @@ export default resolver.pipe(
         opportunityEngagement,
         stakeholderActivityLog,
         activePortals: all,
+        defaultPortal: defaultPortal,
       }
 
       // in the case the user is signing up for the first time and has no portals assigned to their acc,
@@ -317,6 +325,7 @@ export default resolver.pipe(
         opportunityEngagement,
         stakeholderActivityLog,
         activePortals: all,
+        defaultPortal: defaultPortal,
       }
     }
   }

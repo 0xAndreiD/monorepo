@@ -15,10 +15,21 @@ import StakeholderLoginForm from "../../auth/components/StakeholderLoginForm"
 import Layout from "app/core/layouts/Layout"
 import { PencilIcon } from "@heroicons/react/outline"
 import { AddEditButton } from "app/core/components/generic/AddEditButton"
+import SaveTemplateModal from "app/core/components/customerPortals/edit/saveTemplateModal"
+import Modal from "app/core/components/generic/Modal"
+import { useState } from "react"
+import { decodeHashId } from "app/core/util/crypto"
 
 function CustomerPortal() {
   const portalId = useParam("portalId", "string")!
   const session = useSession()
+  const [addTemplateProps, setAddTemplateProps] = useState<
+    { isOpen: false; templateId: undefined } | { isOpen: true; templateId: number }
+  >({
+    isOpen: false,
+    templateId: undefined,
+  })
+
   const [data, { refetch }] = useQuery(
     getCustomerPortal,
     { portalId },
@@ -45,15 +56,17 @@ function CustomerPortal() {
           </div>
           <div className="flex justify-end">
             <div className="inline-flex flex px-2 gap-2">
-              <Link href={Routes.EditCustomerPortal({ portalId: portalId })}>
-                <button
-                  className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
-                    leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
-                      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                >
-                  Edit Portal
-                </button>
-              </Link>
+              {!data.isGlobal && (
+                <Link href={Routes.EditCustomerPortal({ portalId: portalId })}>
+                  <button
+                    className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
+                      leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+                        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                  >
+                    Edit Portal
+                  </button>
+                </Link>
+              )}
               {/* <Link href={Routes.CustomerPortal({ portalId: portalId, fullScreen: true })}>
                 <button
                   className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
@@ -63,6 +76,17 @@ function CustomerPortal() {
                   View Full Screen
                 </button>
               </Link> */}
+
+              {data.isGlobal && (
+                <button
+                  className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
+                    leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+                      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                  onClick={() => setAddTemplateProps({ isOpen: true, templateId: decodeHashId(portalId) })}
+                >
+                  Save as Template
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -110,6 +134,18 @@ function CustomerPortal() {
         </div>
       </div>
       {/* </div> */}
+
+      <Modal
+        isOpen={addTemplateProps.isOpen}
+        onClose={() => setAddTemplateProps({ isOpen: false, templateId: undefined })}
+      >
+        <SaveTemplateModal
+          portalId={portalId}
+          onLinkComplete={async () => {
+            setAddTemplateProps({ isOpen: false, templateId: undefined })
+          }}
+        />
+      </Modal>
     </>
   )
 }
