@@ -17,6 +17,7 @@ import SaveTemplateModal from "app/core/components/customerPortals/edit/saveTemp
 import Modal from "app/core/components/generic/Modal"
 import { useState } from "react"
 import { decodeHashId } from "app/core/util/crypto"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
 function CustomerPortal() {
   const portalId = useParam("portalId", "string")!
@@ -27,7 +28,7 @@ function CustomerPortal() {
     isOpen: false,
     templateId: undefined,
   })
-
+  const user = useCurrentUser()
   const [data, { refetch }] = useQuery(
     getCustomerPortal,
     { portalId },
@@ -47,39 +48,42 @@ function CustomerPortal() {
   //container: https://tailwindui.com/components/application-ui/layout/containers
   return (
     <>
-      <div className="bg-yellow-100 -mt-16 px-2 py-4 mb-2">
-        <div className="grid grid-cols-2">
-          <div className="text-sm py-2">
-            <span>You are previewing {data.header.customerName} customer portal.</span>
-          </div>
-          <div className="flex justify-end">
-            <div className="inline-flex flex px-2 gap-2">
-              {!data.isGlobal && (
-                <Link href={Routes.EditCustomerPortal({ portalId: portalId })}>
+      {user.accountExecutive && (
+        <div className="bg-yellow-100 -mt-16 px-2 py-4 mb-2">
+          <div className="grid grid-cols-2">
+            <div className="text-sm py-2">
+              <span>You are previewing {data.header.customerName} customer portal.</span>
+            </div>
+            <div className="flex justify-end">
+              <div className="inline-flex flex px-2 gap-2">
+                {!data.isGlobal && (
+                  <Link href={Routes.EditCustomerPortal({ portalId: portalId })}>
+                    <button
+                      className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
+                        leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+                          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                    >
+                      Edit Portal
+                    </button>
+                  </Link>
+                )}
+
+                {data.isGlobal && (
                   <button
                     className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
                       leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
                         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                    onClick={() => setAddTemplateProps({ isOpen: true, templateId: decodeHashId(portalId) })}
                   >
-                    Edit Portal
+                    Save as Template
                   </button>
-                </Link>
-              )}
-
-              {data.isGlobal && (
-                <button
-                  className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
-                    leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
-                      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                  onClick={() => setAddTemplateProps({ isOpen: true, templateId: decodeHashId(portalId) })}
-                >
-                  Save as Template
-                </button>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
+
       <Header
         template={data.template}
         portalId={portalId}
