@@ -6,6 +6,7 @@ import getTemplates from "app/vendor-stats/queries/getTemplates"
 import getVendorStats from "app/vendor-stats/queries/getVendorStats"
 import getPortalList from "app/customer-portals/queries/getPortalList"
 import { AppHeader } from "../components/AppHeader"
+import { useCurrentUser } from "../hooks/useCurrentUser"
 
 type LayoutProps = {
   title?: string
@@ -33,9 +34,8 @@ const ImpersonatingUserNotice = () => {
   )
 }
 
-const Layout = ({ title, children }: LayoutProps) => {
+const GetVendorLayout = ({ title, children }: LayoutProps) => {
   const [vendorStats] = useQuery(getVendorStats, {}, { refetchOnWindowFocus: false })
-  console.log(vendorStats)
   const [templates] = useQuery(getTemplates, {}, { refetchOnWindowFocus: false })
   const [portalsList, { refetch }] = useQuery(getPortalList, null)
   return (
@@ -54,6 +54,23 @@ const Layout = ({ title, children }: LayoutProps) => {
         <div className="mt-16">{children}</div>
       </div>
     </>
+  )
+}
+
+const Layout = ({ title, children }: LayoutProps) => {
+  const user = useCurrentUser()
+  return user?.stakeholder ? (
+    <>
+      <Head>
+        <title>{title || "romeano"}</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div className="mt-16">{children}</div>
+      </div>
+    </>
+  ) : (
+    GetVendorLayout({ title, children })
   )
 }
 

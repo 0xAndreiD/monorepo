@@ -280,8 +280,12 @@ export default function LaunchRoadmap(props: {
             )}
           </div>
           <div className="gap-1 font-bold">
-            <span className="text-gray-900">{props.currentRoadmapStage}</span>
-            <span className="text-gray-400">&nbsp;/&nbsp;{props.stageData.length}</span>
+            {props.stageData.length > 0 && (
+              <>
+                <span className="text-gray-900">{props.currentRoadmapStage}</span>
+                <span className="text-gray-400">&nbsp;/&nbsp;{props.stageData.length}</span>
+              </>
+            )}
           </div>
         </div>
 
@@ -303,97 +307,101 @@ export default function LaunchRoadmap(props: {
         {/*</ol>*/}
 
         {/* Track if mouse enters or leaves, and show/hide the arrows accordingly */}
-        <div id="launchroadmap" onMouseEnter={() => setIsShown(true)} onMouseLeave={() => setIsShown(false)}>
-          <Carousel
-            ref={carouselRef}
-            swipeable={false}
-            draggable={false}
-            responsive={responsive}
-            ssr={true} // means to render carousel on server-side.
-            containerClass={"grid grid-flow-col justify-items-center gap-x-5 pt-6 mx-4"}
-            showDots={false}
-            infinite={false}
-            // use the status from show hide
-            arrows={isShown}
-          >
-            {props.stageData.map((stage, idx) => {
-              const numStages = props.stageData.length
+        {props.stageData.length > 0 ? (
+          <div id="launchroadmap" onMouseEnter={() => setIsShown(true)} onMouseLeave={() => setIsShown(false)}>
+            <Carousel
+              ref={carouselRef}
+              swipeable={false}
+              draggable={false}
+              responsive={responsive}
+              ssr={true} // means to render carousel on server-side.
+              containerClass={"grid grid-flow-col justify-items-center gap-x-5 pt-6 mx-4"}
+              showDots={false}
+              infinite={false}
+              // use the status from show hide
+              arrows={isShown}
+            >
+              {props.stageData.map((stage, idx) => {
+                const numStages = props.stageData.length
 
-              const stageNum = idx + 1
-              let linearGradient =
-                stageNum < props.currentRoadmapStage
-                  ? "linear-gradient(to right, #fff, rgb(99, 217, 187))"
-                  : "linear-gradient(to right, #fff, rgb(217, 217, 217))"
-              return (
-                <div
-                  key={idx}
-                  className={`grid grid-cols-2 grid-rows-1 items-top display-flex ${
-                    stageNum === props.currentRoadmapStage
-                      ? "react-multi-carousel-item--active"
-                      : "react-multi-carousel-item"
-                  }`}
-                >
+                const stageNum = idx + 1
+                let linearGradient =
+                  stageNum < props.currentRoadmapStage
+                    ? "linear-gradient(to right, #fff, rgb(99, 217, 187))"
+                    : "linear-gradient(to right, #fff, rgb(217, 217, 217))"
+                return (
                   <div
-                    // key={idx}
-                    style={{
-                      gridTemplateRows: `repeat(${props.editingEnabled ? 6 : 5}, auto)`,
-                      gridAutoColumns: "1fr",
-                    }}
-                    className="grid grid-flow-col auto-cols-auto justify-items-center gap-y-4 gap-x-2 pt-5"
+                    key={idx}
+                    className={`grid grid-cols-2 grid-rows-1 items-top display-flex ${
+                      stageNum === props.currentRoadmapStage
+                        ? "react-multi-carousel-item--active"
+                        : "react-multi-carousel-item"
+                    }`}
                   >
-                    <RoadmapStage
-                      key={idx}
-                      stage={stage}
-                      stageId={stage.id}
-                      stageNum={stageNum}
-                      portalId={props.portalId}
-                      currentRoadmapStage={props.currentRoadmapStage}
-                      status={getCompletionStatus(props.currentRoadmapStage, idx)}
-                      editingEnabled={props.editingEnabled}
-                      onClickCircle={
-                        props.editingEnabled
-                          ? () =>
-                              updateCurrentLaunchRoadmapStageMutation({
-                                portalId: props.portalId,
-                                currentRoadmapStage: stageNum,
-                              }).then(props.refetchHandler)
-                          : () => null
-                      }
-                      onClickEdit={() => {
-                        modalDispatch({
-                          type: ModalActionChange.HANDLE_EDIT,
-                          payload: {
-                            roadmapStageId: stage.id,
-                            heading: stage.heading,
-                            date: (stage.date && new Date(stage.date)) || undefined,
-                            tasks: stage.tasks,
-                            link: stage.ctaLink,
-                          },
-                        })
+                    <div
+                      // key={idx}
+                      style={{
+                        gridTemplateRows: `repeat(${props.editingEnabled ? 6 : 5}, auto)`,
+                        gridAutoColumns: "1fr",
                       }}
-                    />
-                  </div>
-
-                  {stageNum != numStages && (
-                    <div className="h-90 gap-x-2 pt-8 justify-items-center" style={{ marginLeft: "40px" }}>
-                      <hr
-                        className="mt-7"
-                        style={{
-                          width: "100%",
-                          marginLeft: "auto",
-                          marginRight: "auto",
-                          height: "3px",
-                          border: "0px",
-                          background: linearGradient,
+                      className="grid grid-flow-col auto-cols-auto justify-items-center gap-y-4 gap-x-2 pt-5"
+                    >
+                      <RoadmapStage
+                        key={idx}
+                        stage={stage}
+                        stageId={stage.id}
+                        stageNum={stageNum}
+                        portalId={props.portalId}
+                        currentRoadmapStage={props.currentRoadmapStage}
+                        status={getCompletionStatus(props.currentRoadmapStage, idx)}
+                        editingEnabled={props.editingEnabled}
+                        onClickCircle={
+                          props.editingEnabled
+                            ? () =>
+                                updateCurrentLaunchRoadmapStageMutation({
+                                  portalId: props.portalId,
+                                  currentRoadmapStage: stageNum,
+                                }).then(props.refetchHandler)
+                            : () => null
+                        }
+                        onClickEdit={() => {
+                          modalDispatch({
+                            type: ModalActionChange.HANDLE_EDIT,
+                            payload: {
+                              roadmapStageId: stage.id,
+                              heading: stage.heading,
+                              date: (stage.date && new Date(stage.date)) || undefined,
+                              tasks: stage.tasks,
+                              link: stage.ctaLink,
+                            },
+                          })
                         }}
                       />
                     </div>
-                  )}
-                </div>
-              )
-            })}
-          </Carousel>
-        </div>
+
+                    {stageNum != numStages && (
+                      <div className="h-90 gap-x-2 pt-8 justify-items-center" style={{ marginLeft: "40px" }}>
+                        <hr
+                          className="mt-7"
+                          style={{
+                            width: "100%",
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                            height: "3px",
+                            border: "0px",
+                            background: linearGradient,
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </Carousel>
+          </div>
+        ) : (
+          <div className="text-sm py-4 mb-12">No roadmap stages defined.</div>
+        )}
       </nav>
       <style global jsx>{`
         #launchroadmap.react-multi-carousel-list {
