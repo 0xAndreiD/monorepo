@@ -66,7 +66,7 @@ const Layout = ({ title, children }: LayoutProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div className="mt-16">{children}</div>
+        <div className="mt-0">{children}</div>
       </div>
     </>
   ) : (
