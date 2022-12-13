@@ -48,14 +48,16 @@ function VendorStats() {
           <h1 className="text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">Welcome to Romeano!</h1>
           <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">You have no portals created yet.</p>
           <div className="mt-8 flex gap-x-4 sm:justify-center">
-            <Link href={Routes.CustomerPortal({ portalId: encodeHashId(vendorStats?.defaultPortal?.id) })}>
-              <button className="inline-block rounded-lg px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-                Preview Demo Portal{" "}
-                <span className="text-green-400 ml-2" aria-hidden="true">
-                  →
-                </span>
-              </button>
-            </Link>
+            {vendorStats.defaultPortal && (
+              <Link href={Routes.CustomerPortal({ portalId: encodeHashId(vendorStats.defaultPortal.id) })}>
+                <button className="inline-block rounded-lg px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
+                  Preview Demo Portal{" "}
+                  <span className="text-green-400 ml-2" aria-hidden="true">
+                    →
+                  </span>
+                </button>
+              </Link>
+            )}
             <a
               href="#"
               onClick={() => setAddTemplateProps({ isOpen: true, templateId: 1 })}
