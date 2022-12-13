@@ -13,7 +13,7 @@ import { Suspense } from "react"
 
 export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
-
+  console.log("ERROR BOUNDARY", Component)
   return (
     <ErrorBoundary FallbackComponent={RootErrorFallback} onReset={useQueryErrorResetBoundary().reset}>
       <Suspense fallback={<LoadingSpinner />}>{getLayout(<Component {...pageProps} />)}</Suspense>

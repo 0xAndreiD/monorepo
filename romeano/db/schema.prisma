@@ -36,6 +36,7 @@ model Portal {
   vendor              Vendor               @relation(fields: [vendorId], references: [id])
   vendorId            Int
   isTemplate          Boolean?
+  isGlobal            Boolean              @default(false)
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
 }

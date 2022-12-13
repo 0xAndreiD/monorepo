@@ -9,7 +9,7 @@ import { Footer } from "app/core/components/Footer"
 import { LoadingSpinner } from "app/core/components/LoadingSpinner"
 import { Header } from "app/core/components/customerPortals/Header"
 import { CardDivider } from "app/core/components/generic/Card"
-import { Link, Routes, useParam, useQuery, useSession } from "blitz"
+import { AuthorizationError, Link, Router, Routes, useParam, useQuery, useSession } from "blitz"
 import getCustomerPortal from "app/customer-portals/queries/getCustomerPortal"
 import StakeholderLoginForm from "app/auth/components/StakeholderLoginForm"
 import React, { useState } from "react"
@@ -17,6 +17,8 @@ import Layout from "app/core/layouts/Layout"
 import { decodeHashId } from "app/core/util/crypto"
 import Modal from "app/core/components/generic/Modal"
 import SaveTemplateModal from "app/core/components/customerPortals/edit/saveTemplateModal"
+import { Role } from "@prisma/client"
+import LoginForm from "app/auth/components/LoginForm"
 
 function EditCustomerPortal() {
   const portalId = useParam("portalId", "string")!
@@ -44,7 +46,14 @@ function EditCustomerPortal() {
     return <LoadingSpinner />
   }
 
-  return (
+  return data.isGlobal && !("SiteAdmin" in (session.roles || [])) ? (
+    <div className="px-2 py-4 mb-2">
+      <span className="mr-2">You do not have access to edit this portal.</span>
+      <a href="/" className="text-blue-600">
+        Back to the Home Page
+      </a>
+    </div>
+  ) : (
     <>
       <div className="bg-yellow-100 -mt-16 px-2 py-4 mb-2">
         <div className="grid grid-cols-2">
