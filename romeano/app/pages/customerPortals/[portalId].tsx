@@ -13,8 +13,6 @@ import { Link, Routes, useParam, useQuery, useSession } from "blitz"
 import getCustomerPortal from "../../customer-portals/queries/getCustomerPortal"
 import StakeholderLoginForm from "../../auth/components/StakeholderLoginForm"
 import Layout from "app/core/layouts/Layout"
-import { PencilIcon } from "@heroicons/react/outline"
-import { AddEditButton } from "app/core/components/generic/AddEditButton"
 import SaveTemplateModal from "app/core/components/customerPortals/edit/saveTemplateModal"
 import Modal from "app/core/components/generic/Modal"
 import { useState } from "react"
@@ -67,15 +65,6 @@ function CustomerPortal() {
                   </button>
                 </Link>
               )}
-              {/* <Link href={Routes.CustomerPortal({ portalId: portalId, fullScreen: true })}>
-                <button
-                  className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
-                  leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
-                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                  >
-                  View Full Screen
-                </button>
-              </Link> */}
 
               {data.isGlobal && (
                 <button

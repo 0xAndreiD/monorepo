@@ -50,7 +50,7 @@ function VendorStats() {
           <div className="mt-8 flex gap-x-4 sm:justify-center">
             {vendorStats.defaultPortal && (
               <Link href={Routes.CustomerPortal({ portalId: encodeHashId(vendorStats.defaultPortal.id) })}>
-                <button className="inline-block rounded-lg px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
+                <button className="inline-block rounded-lg px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-green-900/10 hover:ring-green-900/20">
                   Preview Demo Portal{" "}
                   <span className="text-green-400 ml-2" aria-hidden="true">
                     →
