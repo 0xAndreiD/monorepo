@@ -5,7 +5,6 @@ import getPortalDetail from "../../portal-details/queries/getPortalDetail"
 import { ContactsCard } from "app/core/components/ContactsCard"
 import DocumentsCard from "app/core/components/portalDetails/DocumentsCard"
 import { CardDivider } from "app/core/components/generic/Card"
-import { Footer } from "app/core/components/Footer"
 import { StakeholderEngagementCard } from "app/core/components/portalDetails/StakeholderEngagementCard"
 import { StakeholderActivityLogCard } from "app/core/components/portalDetails/StakeholderActivityLogCard"
 import OpportunityOverview from "app/core/components/portalDetails/OpportunityOverview"
@@ -56,7 +55,6 @@ function PortalDetails() {
           <StakeholderActivityLogCard data={portal.stakeholderActivityLog} />
         </div>
       </div>
-      <Footer />
     </div>
   )
 }

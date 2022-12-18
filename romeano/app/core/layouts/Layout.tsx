@@ -7,6 +7,7 @@ import getVendorStats from "app/vendor-stats/queries/getVendorStats"
 import getPortalList from "app/customer-portals/queries/getPortalList"
 import { AppHeader } from "../components/AppHeader"
 import { useCurrentUser } from "../hooks/useCurrentUser"
+import { Footer } from "../components/Footer"
 
 type LayoutProps = {
   title?: string
@@ -53,6 +54,7 @@ const GetVendorLayout = ({ title, children }: LayoutProps) => {
         />
         <div className="mt-16">{children}</div>
       </div>
+      <Footer />
     </>
   )
 }
@@ -68,6 +70,7 @@ const Layout = ({ title, children }: LayoutProps) => {
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div className="mt-0">{children}</div>
       </div>
+      <Footer />
     </>
   ) : (
     GetVendorLayout({ title, children })

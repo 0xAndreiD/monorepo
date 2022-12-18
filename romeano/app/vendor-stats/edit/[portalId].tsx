@@ -5,7 +5,6 @@ import { ProposalCard } from "app/core/components/customerPortals/ProposalCard"
 import LaunchRoadmap from "app/core/components/customerPortals/LaunchRoadmap"
 import { ProductInfoCard } from "app/core/components/customerPortals/ProductInfoCard"
 import { ContactsCard } from "app/core/components/ContactsCard"
-import { Footer } from "app/core/components/Footer"
 import { Header } from "app/core/components/customerPortals/Header"
 import { CardDivider } from "app/core/components/generic/Card"
 import { useParam, useQuery, useSession } from "blitz"
@@ -79,9 +78,6 @@ function EditTemplate() {
             <ContactsCard data={data.contacts} />
             {/*<InternalNotesCard portalId={portalId} data={data.internalNotes} refetchHandler={refetch} />*/}
           </div>
-        </div>
-        <div className="pt-4">
-          <Footer />
         </div>
       </div>
     </>

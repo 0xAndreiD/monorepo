@@ -1,10 +1,22 @@
 import { CSSProperties, PropsWithChildren } from "react"
 
 //source: https://tailwindui.com/components/application-ui/layout/panels#component-5a45d30370f33848da982e8b0879e0a3
-export function Card(props: PropsWithChildren<{ borderless?: boolean; className?: string; style?: CSSProperties }>) {
+export function Card(
+  props: PropsWithChildren<{
+    additionalClasses?: string
+    borderless?: boolean
+    className?: string
+    style?: CSSProperties
+  }>
+) {
   return (
     // <div className={"bg-white overflow-hidden" + (props.borderless === true ? "" : "shadow rounded-lg")}>
-    <div className={"bg-white overflow-hidden" + (props.borderless === true ? " rounded-2xl" : " shadow rounded-2xl")}>
+    <div
+      className={
+        `${props.additionalClasses} bg-white overflow-hidden` +
+        (props.borderless === true ? ` rounded-2xl` : ` shadow rounded-2xl`)
+      }
+    >
       <div className={props.className ?? "m-4 px-5 py-5 sm:p-6"}>{props.children}</div>
     </div>
   )
