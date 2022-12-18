@@ -3,7 +3,6 @@ import { BlitzPage, Link, Routes, useQuery, useRouter } from "blitz"
 import React from "react"
 import "tailwindcss/tailwind.css"
 import { Card, CardDivider, CardHeader } from "app/core/components/generic/Card"
-import { Footer } from "app/core/components/Footer"
 import getPortalList from "../customer-portals/queries/getPortalList"
 import { getName } from "../core/util/text"
 import { CheckIcon, QuestionMarkCircleIcon, XIcon } from "@heroicons/react/solid"
@@ -97,7 +96,6 @@ function PortalsList() {
           </div>
         </Card>
       </div>
-      <Footer />
     </>
   )
 }

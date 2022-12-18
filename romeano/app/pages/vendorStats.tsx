@@ -3,7 +3,6 @@ import "tailwindcss/tailwind.css"
 import { CardDivider } from "app/core/components/generic/Card"
 
 import { ActivePortals } from "app/core/components/vendorStats/ActivePortals"
-import { Footer } from "app/core/components/Footer"
 import { OpportunityEngagement } from "app/core/components/vendorStats/OpportunityEngagement"
 import { StakeholderActivity } from "app/core/components/vendorStats/StakeholderActivity"
 import { Link, Routes, useQuery } from "blitz"
@@ -39,7 +38,6 @@ function VendorStats() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   ) : (
     <div>

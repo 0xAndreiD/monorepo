@@ -5,7 +5,6 @@ import { ProposalCard } from "app/core/components/customerPortals/ProposalCard"
 import LaunchRoadmap from "app/core/components/customerPortals/LaunchRoadmap"
 import { ProductInfoCard } from "app/core/components/customerPortals/ProductInfoCard"
 import { ContactsCard } from "app/core/components/ContactsCard"
-import { Footer } from "app/core/components/Footer"
 import { LoadingSpinner } from "app/core/components/LoadingSpinner"
 import { Header } from "app/core/components/customerPortals/Header"
 import { CardDivider } from "app/core/components/generic/Card"
@@ -67,7 +66,7 @@ function TemplatePortal() {
 
       {/* <div className="max-w-8xl mx-40 bg-gray-100"> */}
       <div className="max-w-12xl mx-auto sm:px-6 lg:px-16 py-6 bg-gray-100">
-        <div className="max-w-6xl lg:px-8 mx-auto mt-10 grid grid-cols-1 md:grid-cols-2 gap-9">
+        <div className="max-w-6xl lg:px-8 mx-auto mt-10 mb-10 grid grid-cols-1 md:grid-cols-2 gap-9">
           <div className="flex flex-col gap-9">
             <NextStepsCard {...data.nextSteps} portalId={portalId} refetchHandler={refetch} />
             <DocumentsCard portalId={portalId} data={data.documents} refetchHandler={refetch} />
@@ -83,9 +82,6 @@ function TemplatePortal() {
             <ContactsCard data={data.contacts} />
             {/*<InternalNotesCard portalId={portalId} data={data.internalNotes} refetchHandler={refetch} />*/}
           </div>
-        </div>
-        <div className="pt-4">
-          <Footer />
         </div>
       </div>
       {/* </div> */}

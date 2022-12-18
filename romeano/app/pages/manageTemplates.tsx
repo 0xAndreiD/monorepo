@@ -1,7 +1,6 @@
 import React, { ReactChild } from "react"
 import "tailwindcss/tailwind.css"
 import { CardDivider } from "app/core/components/generic/Card"
-import { Footer } from "app/core/components/Footer"
 import { useQuery } from "blitz"
 import getTemplates from "app/vendor-stats/queries/getTemplates"
 import getVendorStats from "app/vendor-stats/queries/getVendorStats"
@@ -14,7 +13,6 @@ function ManageTemplate() {
   return (
     <>
       <TemplateList data={templates.templates} />
-      <Footer />
     </>
   )
 }
