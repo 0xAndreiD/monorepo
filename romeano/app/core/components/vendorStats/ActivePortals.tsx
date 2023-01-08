@@ -24,6 +24,7 @@ import deletePortal from "../../../vendor-stats/mutations/deletePortal"
 import Router from "next/router"
 import { confirmAlert } from "react-confirm-alert"
 import "react-confirm-alert/src/react-confirm-alert.css" // Import css
+import { encodeHashId } from "app/core/util/crypto"
 
 type ActivePortal = {
   portalId: string
@@ -70,7 +71,11 @@ function ProgressBullets(props: { portalId: string; current: number; total: numb
   )
 }
 
-export function ActivePortals(props: { data: ActivePortal[]; templates: Template[] }) {
+export function ActivePortals(props: {
+  defaultPortalId: number | undefined
+  data: ActivePortal[]
+  templates: Template[]
+}) {
   const [addTemplateProps, setAddTemplateProps] = useState<
     { isOpen: false; templateId: undefined } | { isOpen: true; templateId: number }
   >({
@@ -91,6 +96,16 @@ export function ActivePortals(props: { data: ActivePortal[]; templates: Template
           <div className="grid grid-cols-2 grid-rows-1">
             <CardHeader classNameAddition="text-2xl">Active Portals</CardHeader>
             <div className="flex justify-self-end gap-x-4 mr-0.5">
+              {props.defaultPortalId && (
+                <BlitzLink href={Routes.CustomerPortal({ portalId: encodeHashId(props.defaultPortalId) })}>
+                  <button className="inline-block rounded-lg px-4 py-1.5 text-sm leading-7 text-gray-900 ring-1 ring-green-900/10 hover:ring-green-900/20">
+                    Preview Demo Portal{" "}
+                    <span className="text-green-400 ml-2" aria-hidden="true">
+                      →
+                    </span>
+                  </button>
+                </BlitzLink>
+              )}
               <button
                 type="button"
                 className="inline-flex items-center px-3 py-2 border border-gray-300  text-sm
