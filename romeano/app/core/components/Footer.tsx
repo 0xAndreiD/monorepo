@@ -7,9 +7,9 @@ import { encodeHashId } from "../util/crypto"
 
 export function Footer() {
   return (
-    <div className="mt-20 max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <Link passHref href="https://romeano.com">
-        <div className="flex justify-center items-center gap-2 pb-2 bg-gray-100">
+        <div className="pt-10 flex justify-center items-center gap-2 pb-2 bg-gray-100">
           <span className="text-gray-500 text-xs">Powered by</span>
 
           <RomeanoLogo alt="Romeano Logo" className="" />

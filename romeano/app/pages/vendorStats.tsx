@@ -34,7 +34,11 @@ function VendorStats() {
       <div style={{ backgroundColor: "#F7F7F9" }}>
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div style={{ backgroundColor: "#F7F7F9" }}>
-            <ActivePortals data={vendorStats.activePortals} templates={templates.templates} />
+            <ActivePortals
+              defaultPortalId={vendorStats.defaultPortal?.id}
+              data={vendorStats.activePortals}
+              templates={templates.templates}
+            />
           </div>
         </div>
       </div>
