@@ -61,7 +61,9 @@ const GetVendorLayout = ({ title, children }: LayoutProps) => {
 
 const Layout = ({ title, children }: LayoutProps) => {
   const user = useCurrentUser()
-  return false && user?.stakeholder ? (
+  return user?.accountExecutive ? (
+    GetVendorLayout({ title, children })
+  ) : (
     <>
       <Head>
         <title>{title || "romeano"}</title>
@@ -72,8 +74,6 @@ const Layout = ({ title, children }: LayoutProps) => {
       </div>
       <Footer />
     </>
-  ) : (
-    GetVendorLayout({ title, children })
   )
 }
 
