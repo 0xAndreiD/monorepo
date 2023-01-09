@@ -61,7 +61,7 @@ const GetVendorLayout = ({ title, children }: LayoutProps) => {
 
 const Layout = ({ title, children }: LayoutProps) => {
   const user = useCurrentUser()
-  return user?.stakeholder ? (
+  return false && user?.stakeholder ? (
     <>
       <Head>
         <title>{title || "romeano"}</title>
