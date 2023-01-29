@@ -13,6 +13,7 @@ import Router from "next/router"
 import { encodeHashId } from "../../../core/util/crypto"
 import { confirmAlert } from "react-confirm-alert"
 import "react-confirm-alert/src/react-confirm-alert.css" // Import css
+import moment from "moment"
 
 type Template = {
   id: number
@@ -70,7 +71,9 @@ export function TemplateList(props: { data: Template[] }) {
                         </div>
                       </td>
 
-                      <td className="px-6 py-4 whitespace-nowrap">{template.createdAt.toString()}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {moment(template.createdAt).format("ddd, MMM D, YYYY \\a\\t h:mma")}
+                      </td>
                       <td className="px-6 py-4 items-center whitespace-nowrap">
                         <div className="flex justify-center gap-3">
                           <BlitzLink href={Routes.EditCustomerPortal({ portalId: encodeHashId(template.portalId) })}>

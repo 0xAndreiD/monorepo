@@ -12,6 +12,7 @@ export function Header(props: {
   vendorLogo?: string
   customerName: string
   customerLogo: string
+  editingEnabled: boolean
   refetchHandler: () => void
 }) {
   return (
@@ -19,34 +20,42 @@ export function Header(props: {
       <div className="flex gap-x-2 items-center">
         {props.vendorLogo ? (
           <img
-            alt="vendor logo"
+            alt="Vendor Logo"
             src={props.vendorLogo}
             style={{ maxHeight: "50px", maxWidth: "150px", width: "auto" }}
           />
         ) : (
           <RomeanoLogo alt="Romeano Logo" className="" width={150} height={30} />
         )}
-        <hr className="border-l mx-1 pt-6 h-full border-gray-300" />
-        <img
-          alt="customer logo"
-          src={props.customerLogo}
-          style={{ maxHeight: "70px", maxWidth: "120px", width: "auto" }}
-        />
-        <UploadLogoComponent
-          uploadParams={{ portalId: props.portalId }}
-          onUploadComplete={async () => {
-            props.refetchHandler()
-          }}
-        >
-          <button
-            type="button"
-            className="inline-flex items-center px-2 py-2 border border-gray-300 text-md
+
+        {(props.customerLogo || props.editingEnabled) && (
+          <>
+            <hr className="border-l mx-1 pt-6 h-full border-gray-300" />
+            <img
+              alt="customer logo"
+              src={props.customerLogo || "/assets/client_logo_placeholder.png"}
+              style={{ maxHeight: "70px", maxWidth: "120px", width: "auto" }}
+            />
+          </>
+        )}
+
+        {props.editingEnabled && (
+          <UploadLogoComponent
+            uploadParams={{ portalId: props.portalId }}
+            onUploadComplete={async () => {
+              props.refetchHandler()
+            }}
+          >
+            <button
+              type="button"
+              className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
                 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
                   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-          >
-            <PencilIcon className="-ml-0.5 h-4 w-4" />
-          </button>
-        </UploadLogoComponent>
+            >
+              <PencilIcon className="-ml-0.5 h-4 w-4" />
+            </button>
+          </UploadLogoComponent>
+        )}
       </div>
 
       <span className="text-gray-600 text-sm justify-self-center">{props.customerName} Portal Details</span>

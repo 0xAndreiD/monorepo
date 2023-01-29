@@ -30,6 +30,7 @@ function PortalDetails() {
         vendorLogo={portal.header.vendorLogo || ""}
         customerName={portal.header.customerName}
         customerLogo={portal.header.customerLogo}
+        editingEnabled={false}
         refetchHandler={refetch}
       />
       <CardDivider />
