@@ -12,6 +12,7 @@ export function Header(props: {
   vendorLogo?: string
   customerName: string
   customerLogo: string
+  editingEnabled: boolean
   refetchHandler: () => void
 }) {
   return (
