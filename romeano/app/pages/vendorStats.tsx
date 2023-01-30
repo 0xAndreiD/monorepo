@@ -19,11 +19,8 @@ import AddTemplateModal from "app/core/components/vendorStats/edit/addTemplateMo
 function VendorStats() {
   const [vendorStats, { refetch }] = useQuery(getVendorStats, {}, { refetchOnWindowFocus: false })
   const [templates] = useQuery(getTemplates, {}, { refetchOnWindowFocus: false })
-  const [addTemplateProps, setAddTemplateProps] = useState<
-    { isOpen: false; templateId: undefined } | { isOpen: true; templateId: number }
-  >({
+  const [addTemplateProps, setAddTemplateProps] = useState<{ isOpen: false } | { isOpen: true }>({
     isOpen: false,
-    templateId: undefined,
   })
 
   return vendorStats.activePortals?.length > 0 ? (
