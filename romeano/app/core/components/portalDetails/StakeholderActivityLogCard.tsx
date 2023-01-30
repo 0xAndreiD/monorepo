@@ -5,6 +5,7 @@ import { Device, Link } from "../../../../types"
 import { StyledLink } from "../generic/Link"
 import { timeAgo } from "../../util/relativeDate"
 import { EventType } from "db"
+import moment from "moment"
 
 export type StakeholderActivityEvent = {
   stakeholderName: string
@@ -107,7 +108,9 @@ export function StakeholderActivityLogCard(props: { data: StakeholderActivityEve
                         {event.device === Device.Computer && <DesktopComputerIcon className="h-5 w-5" />}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-right text-sm text-gray-500">{timeAgo(new Date(event.timestamp))}</span>
+                        <span className="text-right text-sm text-gray-500">
+                          {moment(event.timestamp).format("ddd, MMM D, YYYY \\a\\t h:mma")}
+                        </span>
                       </td>
                     </tr>
                   ))}
