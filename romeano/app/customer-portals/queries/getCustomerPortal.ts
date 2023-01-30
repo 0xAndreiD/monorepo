@@ -243,7 +243,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
 
   // Track portal open event if user is stakeholder
   if (currentUser.stakeholder) {
-    invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: encodeHashId(portal.id) })
+    invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: portalId })
   }
   return {
     ...portal,
