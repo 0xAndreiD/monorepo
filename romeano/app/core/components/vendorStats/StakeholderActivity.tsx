@@ -5,6 +5,7 @@ import React from "react"
 import { Link } from "../../../../types"
 import { getActionText } from "../portalDetails/StakeholderActivityLogCard"
 import { EventType } from "../../../../db"
+import moment from "moment"
 
 type StakeholderActivityEvent = {
   stakeholderName: string
@@ -37,7 +38,9 @@ export function StakeholderActivity(props: { data: StakeholderActivityEvent[] })
                       ""
                     )}
                   </span>
-                  <span className="text-right text-gray-500">{timeAgo(new Date(event.timestamp))}</span>
+                  <span className="text-right text-gray-500">
+                    {moment(event.timestamp).format("ddd, MMM D, YYYY \\a\\t h:mma")}
+                  </span>
                 </div>
               ))}
             </div>
