@@ -14,15 +14,13 @@ import Modal from "app/core/components/generic/Modal"
 import AddPortalModal from "app/core/components/vendorStats/edit/addPortalModal"
 import { PlusIcon } from "@heroicons/react/outline"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import AddTemplateModal from "app/core/components/vendorStats/edit/addTemplateModal"
 
 function VendorStats() {
   const [vendorStats, { refetch }] = useQuery(getVendorStats, {}, { refetchOnWindowFocus: false })
   const [templates] = useQuery(getTemplates, {}, { refetchOnWindowFocus: false })
-  const [addTemplateProps, setAddTemplateProps] = useState<
-    { isOpen: false; templateId: undefined } | { isOpen: true; templateId: number }
-  >({
+  const [addTemplateProps, setAddTemplateProps] = useState<{ isOpen: false } | { isOpen: true }>({
     isOpen: false,
-    templateId: undefined,
   })
 
   return vendorStats.activePortals?.length > 0 ? (
@@ -62,19 +60,22 @@ function VendorStats() {
             )}
             <a
               href="#"
-              onClick={() => setAddTemplateProps({ isOpen: true, templateId: 1 })}
+              onClick={() => setAddTemplateProps({ isOpen: true })}
               className="inline-block rounded-lg bg-green-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-green-600 hover:bg-green-700 hover:ring-green-700"
             >
-              Create Portal
+              Create Template
             </a>
           </div>
         </div>
       </div>
-      <Modal
+      {/* <Modal
         isOpen={addTemplateProps.isOpen}
         onClose={() => setAddTemplateProps({ isOpen: false, templateId: undefined })}
       >
         <AddPortalModal onLinkComplete={async (portal) => {}} templates={templates.templates} />
+      </Modal> */}
+      <Modal isOpen={addTemplateProps.isOpen} onClose={() => setAddTemplateProps({ isOpen: false })}>
+        <AddTemplateModal onLinkComplete={async (portalData) => {}} />
       </Modal>
     </div>
   )
