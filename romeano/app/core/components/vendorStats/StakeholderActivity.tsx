@@ -31,7 +31,7 @@ export function StakeholderActivity(props: { data: StakeholderActivityEvent[] })
                       <StyledLink href={event.link.href}>{event.link.body}</StyledLink>
                     ) : event.url ? (
                       <StyledLink href={event.url}>{event.url}</StyledLink>
-                    ) : event.url || event.link ? (
+                    ) : event.url || (event.link && event.link && event.link.href) ? (
                       "a link"
                     ) : (
                       ""
