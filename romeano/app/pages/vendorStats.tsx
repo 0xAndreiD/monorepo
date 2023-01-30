@@ -25,9 +25,11 @@ function VendorStats() {
 
   return vendorStats.activePortals?.length > 0 ? (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 mb-16">
+      <div className="flex gap-y-4 gap-x-8 mb-16">
         <OpportunityEngagement data={vendorStats.opportunityEngagement} />
-        <StakeholderActivity data={vendorStats.stakeholderActivityLog} />
+        <div className="flex-grow">
+          <StakeholderActivity data={vendorStats.stakeholderActivityLog} />
+        </div>
       </div>
       <div style={{ backgroundColor: "#F7F7F9" }}>
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
