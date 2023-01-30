@@ -34,7 +34,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   })
   // Track this event - magic link clicked, session created, stakeholder logged in.
   const portalEncId = magicLink.destUrl.split("/customerPortals/")?.[1]
-  invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: portalEncId })
+  invoke(createEvent, { type: EventType.StakeholderLogin, portalId: portalEncId })
   return {
     redirect: {
       destination: magicLink.destUrl,
