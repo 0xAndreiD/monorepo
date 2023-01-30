@@ -1,6 +1,7 @@
 import { Card, CardHeader } from "../generic/Card"
 import React from "react"
 import { timeAgo } from "../../util/relativeDate"
+import moment from "moment"
 
 type StakeholderStats = {
   stakeholderName: string
@@ -37,7 +38,9 @@ export function StakeholderEngagementCard(props: { data: StakeholderStats[] }) {
               />
               <span className="font-bold text-sm">{stakeholder.eventCount}</span>
             </div>
-            <div className="text-right text-sm text-gray-500">{timeAgo(new Date(stakeholder.lastActive))} ago</div>
+            <div className="text-right text-sm text-gray-500">
+              {moment(stakeholder.lastActive).format("ddd, MMM D, YYYY \\a\\t h:mma")}
+            </div>
           </React.Fragment>
         ))}
       </div>
