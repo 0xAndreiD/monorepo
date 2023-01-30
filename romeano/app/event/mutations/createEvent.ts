@@ -6,13 +6,14 @@ import { decodeHashId } from "../../core/util/crypto"
 
 //TODO: keep this in sync with redir.tsx
 export const CreateEvent = z.object({
-  portalId: z.string(),
   type: z.nativeEnum(EventType),
   url: z.string().optional(),
   // ip: z.string(),
   // userAgent: z.string().optional(),
   linkId: z.number().optional(),
+  portalId: z.string(),
   // userId: z.number()
+  // vendorId: z.number()
 })
 
 function parseIp(data: string | string[] | undefined): string | undefined {
