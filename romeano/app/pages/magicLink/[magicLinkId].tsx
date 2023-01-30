@@ -1,5 +1,6 @@
-import { GetServerSideProps, getSession, NotFoundError } from "blitz"
-import db, { Role } from "db"
+import createEvent from "app/event/mutations/createEvent"
+import { GetServerSideProps, getSession, invoke, NotFoundError } from "blitz"
+import db, { EventType, Role } from "db"
 import { z } from "zod"
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -31,6 +32,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     roles: [Role.Stakeholder],
     vendorId: magicLink.vendorId!,
   })
+  // Track this event - magic link clicked, session created, stakeholder logged in.
+  const portalEncId = magicLink.destUrl.split("/customerPortals/")?.[1]
+  invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: portalEncId })
   return {
     redirect: {
       destination: magicLink.destUrl,
