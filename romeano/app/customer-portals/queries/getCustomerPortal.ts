@@ -6,11 +6,8 @@ import { Stakeholder } from "../../core/components/customerPortals/ProposalCard"
 import { getDocuments } from "../../portal-details/queries/getPortalDetail"
 import { formatLink } from "../../core/util/upload"
 import { LinkWithId } from "../../../types"
-import { invoke } from "blitz"
 
 import { decodeHashId, encodeHashId } from "../../core/util/crypto"
-import getCurrentUser from "app/users/queries/getCurrentUser"
-import createEvent from "app/event/mutations/createEvent"
 
 const GetCustomerPortal = z.object({
   // This accepts type of undefined, but is required at runtime
@@ -239,12 +236,6 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
       })),
   }
 
-  // Track portal open event if user is stakeholder
-  // const sessionRoles = ctx.session?.$publicData?.roles || []
-  // if (sessionRoles!.includes(Role.Stakeholder)) {
-  console.log("Tracking stakeholder portal access event")
-  invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: portalId })
-  // }
   return {
     ...portal,
     template,
