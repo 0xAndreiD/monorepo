@@ -233,5 +233,7 @@ export function generateLinkFromEventType(event: {
       return { body: event.linkBody, href: formatLink({ type: event.linkType, href: event.linkHref }) }
     case EventType.InviteStakeholder:
       return null
+    case EventType.StakeholderPortalOpen:
+      return { body: event.linkBody, href: event.linkHref }
   }
 }
