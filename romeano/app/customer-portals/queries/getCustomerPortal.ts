@@ -1,4 +1,4 @@
-import { AuthenticationError, NotFoundError, resolver, Ctx, AuthorizationError } from "blitz"
+import { AuthenticationError, NotFoundError, resolver, Ctx, AuthorizationError, SessionContext } from "blitz"
 import db, { EventType, Portal, Role, UserPortal } from "db"
 import { orderBy } from "lodash"
 import { z } from "zod"
@@ -46,8 +46,6 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const portalIdInt = decodeHashId(portalId)
   if (!portalIdInt) throw new NotFoundError()
-
-  const currentUser = await getCurrentUser({}, ctx)
 
   const portal = await db.portal.findUnique({
     where: { id: portalIdInt },
@@ -242,7 +240,8 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   }
 
   // Track portal open event if user is stakeholder
-  if (currentUser.stakeholder) {
+  const sessionRoles = (ctx.session as SessionContext).$publicData.roles || []
+  if (sessionRoles!.includes(Role.Stakeholder)) {
     invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: portalId })
   }
   return {
