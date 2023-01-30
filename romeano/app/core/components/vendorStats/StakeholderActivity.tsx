@@ -18,7 +18,7 @@ type StakeholderActivityEvent = {
 
 export function StakeholderActivity(props: { data: StakeholderActivityEvent[] }) {
   return (
-    <Card borderless className="px-4">
+    <Card borderless className="pl-4">
       <CardHeader classNameAddition="text-2xl">Stakeholder Activity Log</CardHeader>
       <div>
         {props.data.length > 0 ? (
