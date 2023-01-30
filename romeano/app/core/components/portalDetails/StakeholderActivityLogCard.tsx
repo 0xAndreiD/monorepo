@@ -47,6 +47,8 @@ export function getActionText(eventType: EventType): string | undefined {
       return "opened" //link follows this
     case EventType.InviteStakeholder:
       return "invited a stakeholder"
+    case EventType.StakeholderLogin:
+      return "logged in"
     case EventType.StakeholderPortalOpen:
       return "opened portal" //portal name follows this
   }
