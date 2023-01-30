@@ -27,14 +27,16 @@ export function StakeholderActivity(props: { data: StakeholderActivityEvent[] })
                 <div key={idx} className="flex justify-between text-sm">
                   <span>
                     {`${event.stakeholderName} from ${event.customerName} ${getActionText(event.type)} `}
-                    {event.link && event.link.href ? (
-                      <StyledLink href={event.link.href}>{event.link.body}</StyledLink>
-                    ) : event.url ? (
-                      <StyledLink href={event.url}>{event.url}</StyledLink>
-                    ) : event.url && event.url.indexOf("/customerPortals/") > 0 ? (
-                      ""
+                    {event.link || event.url ? (
+                      event.link && event.link.href ? (
+                        <StyledLink href={event.link.href}>{event.link.body}</StyledLink>
+                      ) : event.url ? (
+                        <StyledLink href={event.url}>{event.url}</StyledLink>
+                      ) : (
+                        "a link"
+                      )
                     ) : (
-                      "a link"
+                      ""
                     )}
                   </span>
                   <span className="text-right text-gray-500">{timeAgo(new Date(event.timestamp))}</span>
