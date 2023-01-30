@@ -17,7 +17,7 @@ export type StakeholderActivityEvent = {
   timestamp: string
 }
 
-export function getActionText(eventType: EventType): string {
+export function getActionText(eventType: EventType): string | undefined {
   switch (eventType) {
     case EventType.LaunchRoadmapLinkOpen:
       return "opened Roadmap link" //TODO: have actual link
