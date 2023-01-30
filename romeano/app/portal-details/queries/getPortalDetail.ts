@@ -236,6 +236,6 @@ export function generateLinkFromEventType(event: {
     case EventType.StakeholderLogin:
       return null
     case EventType.StakeholderPortalOpen:
-      return { body: event.linkBody, href: event.linkHref }
+      return null
   }
 }
