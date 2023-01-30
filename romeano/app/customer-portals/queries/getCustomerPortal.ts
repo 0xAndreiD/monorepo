@@ -1,13 +1,16 @@
 import { AuthenticationError, NotFoundError, resolver, Ctx, AuthorizationError } from "blitz"
-import db, { Portal, Role, UserPortal } from "db"
+import db, { EventType, Portal, Role, UserPortal } from "db"
 import { orderBy } from "lodash"
 import { z } from "zod"
 import { Stakeholder } from "../../core/components/customerPortals/ProposalCard"
 import { getDocuments } from "../../portal-details/queries/getPortalDetail"
 import { formatLink } from "../../core/util/upload"
 import { LinkWithId } from "../../../types"
+import { invoke } from "blitz"
 
-import { decodeHashId } from "../../core/util/crypto"
+import { decodeHashId, encodeHashId } from "../../core/util/crypto"
+import getCurrentUser from "app/users/queries/getCurrentUser"
+import createEvent from "app/event/mutations/createEvent"
 
 const GetCustomerPortal = z.object({
   // This accepts type of undefined, but is required at runtime
@@ -43,6 +46,8 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const portalIdInt = decodeHashId(portalId)
   if (!portalIdInt) throw new NotFoundError()
+
+  const currentUser = await getCurrentUser({}, ctx)
 
   const portal = await db.portal.findUnique({
     where: { id: portalIdInt },
@@ -236,6 +241,10 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
       })),
   }
 
+  // Track portal open event if user is stakeholder
+  if (currentUser.stakeholder) {
+    invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: encodeHashId(portal.id) })
+  }
   return {
     ...portal,
     template,
