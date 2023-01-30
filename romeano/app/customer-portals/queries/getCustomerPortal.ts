@@ -240,8 +240,9 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
   }
 
   // Track portal open event if user is stakeholder
-  const sessionRoles = (ctx.session as SessionContext).$publicData.roles || []
+  const sessionRoles = ctx.session?.$publicData?.roles || []
   if (sessionRoles!.includes(Role.Stakeholder)) {
+    console.log("Tracking stakeholder portal access event")
     invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: portalId })
   }
   return {
