@@ -17,6 +17,9 @@ import Modal from "app/core/components/generic/Modal"
 import { useState } from "react"
 import { decodeHashId } from "app/core/util/crypto"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import { EventType, Role } from "@prisma/client"
+import createEvent from "app/event/mutations/createEvent"
+import { invoke } from "blitz"
 
 function CustomerPortal() {
   const portalId = useParam("portalId", "string")!
@@ -44,6 +47,13 @@ function CustomerPortal() {
   if (!portalId || !data) {
     return <LoadingSpinner />
   }
+
+  // Track portal open event if user is stakeholder
+  if (session.roles?.includes(Role.Stakeholder)) {
+    console.log("Tracking stakeholder portal access event")
+    invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: portalId })
+  }
+
   //container: https://tailwindui.com/components/application-ui/layout/containers
   return (
     <>
