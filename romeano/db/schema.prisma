@@ -373,4 +373,5 @@ enum EventType {
   CreateInternalMessage
   ProductInfoLinkOpen
   InviteStakeholder
+  StakeholderPortalOpen
 }
