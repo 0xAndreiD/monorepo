@@ -41,6 +41,8 @@ export default resolver.pipe(resolver.zod(CreateTemplate), resolver.authorize(),
       proposalSubheading: "",
       portalId: templatePortal.id,
       vendorId: ctx.session.vendorId,
+      userId: userId,
+      isPublic: false,
     },
   })
 

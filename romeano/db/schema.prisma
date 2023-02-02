@@ -356,6 +356,7 @@ model Template {
   vendorId            Int
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
+  isPublic            Boolean              @default(false)
 }
 
 enum EventType {

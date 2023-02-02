@@ -1,6 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
 import "tailwindcss/tailwind.css"
-import { MailIcon, TrashIcon } from "@heroicons/react/outline"
+import { LockClosedIcon, LockOpenIcon, MailIcon, SortDescendingIcon, TrashIcon } from "@heroicons/react/outline"
 import { getName } from "../../util/text"
 import { StyledLink } from "../generic/Link"
 import { Card, CardHeader } from "../generic/Card"
@@ -9,6 +9,7 @@ import { range } from "lodash"
 import { Link as BlitzLink, Routes, useMutation } from "blitz"
 import { StakeholderApprovalCircles } from "../generic/StakeholderApprovalCircles"
 import deleteTemplate from "app/vendor-stats/mutations/deleteTemplate"
+import updateTemplate from "app/vendor-stats/mutations/updateTemplate"
 import Router from "next/router"
 import { encodeHashId } from "../../../core/util/crypto"
 import { confirmAlert } from "react-confirm-alert"
@@ -21,13 +22,16 @@ type Template = {
   proposalHeading: string
   proposalSubheading: string
   createdAt: any
+  createdBy: string
+  isPublic: boolean
   updatedAt: any
   portalId: number
 }
 
 export function TemplateList(props: { data: Template[] }) {
   const [deleteTemplateMutation] = useMutation(deleteTemplate)
-
+  const [updateTemplateMutation] = useMutation(updateTemplate)
+  console.log(props.data)
   return (
     <Card borderless={true} className="px-2 py-2">
       <CardHeader>Manage Templates</CardHeader>
@@ -48,8 +52,12 @@ export function TemplateList(props: { data: Template[] }) {
                       scope="col"
                       className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Create Date
+                      Last Modified Date <SortDescendingIcon className="inline w-4 h-4" />
                     </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
+                    ></th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
@@ -70,9 +78,8 @@ export function TemplateList(props: { data: Template[] }) {
                           </div>
                         </div>
                       </td>
-
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {moment(template.createdAt).format("ddd, MMM D, YYYY \\a\\t h:mma")}
+                        {moment(template.updatedAt).format("ddd, MMM D, YYYY \\a\\t h:mma")}
                       </td>
                       <td className="px-6 py-4 items-center whitespace-nowrap">
                         <div className="flex justify-center gap-3">
@@ -88,7 +95,49 @@ export function TemplateList(props: { data: Template[] }) {
                           </BlitzLink>
                         </div>
                       </td>
-
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {template.isPublic ? (
+                          <div className="inline text-sm">
+                            <LockOpenIcon className="inline w-4 h-4 mr-4" />
+                          </div>
+                        ) : (
+                          <div className="inline text-sm">
+                            <LockClosedIcon className="inline w-4 h-4 mr-4" />
+                          </div>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            confirmAlert({
+                              title: "Are you sure?",
+                              message: "Please confirm if you want to change the privacy setting of this template.",
+                              buttons: [
+                                {
+                                  label: "Yes",
+                                  onClick: async () => {
+                                    await updateTemplateMutation({ id: template.id, isPublic: !template.isPublic })
+                                    Router.reload()
+                                  },
+                                },
+                                {
+                                  label: "No",
+                                  onClick: () => {},
+                                },
+                              ],
+                            })
+                          }}
+                          className="items-center px-3 py-2 border border-gray-300 text-sm 
+                            font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50
+                            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        >
+                          {template.isPublic ? "Make Private" : "Make Public"}
+                        </button>
+                        {!template.isPublic ? (
+                          <div className="text-xs">Only you can view this template</div>
+                        ) : (
+                          <div className="text-xs">Everyone in your organization can view this template</div>
+                        )}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           type="button"

@@ -25,6 +25,9 @@ export default resolver.pipe(
       where: {
         vendorId: vendorId,
       },
+      orderBy: {
+        updatedAt: "desc",
+      },
     })
     // let vendorTemplates = await Promise.all(
     //   allTemplates.map(async (template) => {
@@ -40,14 +43,14 @@ export default resolver.pipe(
     //   })
     // )
     // console.log("TEMPLATES", allTemplates, vendorTemplates)
-
-    // return {
-    //   templates: <Template[]>vendorTemplates.filter((x) => {
-    //     return x !== undefined
-    //   }),
-    // }
+    console.log("Template User", userId, vendorTemplates)
     return {
-      templates: vendorTemplates,
+      templates: <Template[]>vendorTemplates.filter((x) => {
+        return x.isPublic || (x.userId ? x.userId === userId : true)
+      }),
     }
+    // return {
+    //   templates: vendorTemplates,
+    // }
   }
 )
