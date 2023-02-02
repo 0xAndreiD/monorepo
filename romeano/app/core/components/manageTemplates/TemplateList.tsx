@@ -22,7 +22,6 @@ type Template = {
   proposalHeading: string
   proposalSubheading: string
   createdAt: any
-  createdBy: string
   isPublic: boolean
   updatedAt: any
   portalId: number
