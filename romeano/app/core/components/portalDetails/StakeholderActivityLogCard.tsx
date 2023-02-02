@@ -109,7 +109,7 @@ export function StakeholderActivityLogCard(props: { data: StakeholderActivityEve
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="text-right text-sm text-gray-500">
-                          {moment(event.timestamp).format("l \\a\\t h:mma")}
+                          {moment(event.timestamp).format("ddd, MMM D, YYYY \\a\\t h:mma")}
                         </span>
                       </td>
                     </tr>
