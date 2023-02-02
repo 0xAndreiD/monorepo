@@ -2,11 +2,12 @@ import { AuthenticationError, resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
 
-const DeleteTemplate = z.object({
+const UpdateTemplate = z.object({
   id: z.number(),
+  isPublic: z.boolean(),
 })
 
-export default resolver.pipe(resolver.zod(DeleteTemplate), resolver.authorize(), async ({ id, ...data }, ctx) => {
+export default resolver.pipe(resolver.zod(UpdateTemplate), resolver.authorize(), async ({ id, ...data }, ctx) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const userId = ctx.session.userId
   if (!userId) throw new AuthenticationError("No userId found in session")
@@ -20,5 +21,12 @@ export default resolver.pipe(resolver.zod(DeleteTemplate), resolver.authorize(),
   if (template.vendorId !== ctx.session.vendorId) {
     throw new AuthenticationError("Template is not accessible")
   }
-  return await db.template.delete({ where: { id } })
+  await db.template.update({
+    where: {
+      id: id,
+    },
+    data: {
+      isPublic: data.isPublic,
+    },
+  })
 })
