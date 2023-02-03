@@ -9,7 +9,7 @@ export const GetCurrentUser = z.object({
 })
 
 export default resolver.pipe(
-  // resolver.authorize(),
+  resolver.authorize(),
   resolver.zod(GetCurrentUser),
   async ({ portalId }, { session }: Ctx) => {
     const user = await db.user.findUnique({
@@ -57,7 +57,7 @@ export default resolver.pipe(
           : false,
       },
     })
-
+    console.log("GOT SESSION USER", session, user)
     // TODO: Remove role from here and use the one from session instead
     return { ...user, role: user?.userPortals?.[0]?.role, roles: session.roles }
   }
