@@ -119,7 +119,7 @@ const Home: BlitzPage = () => {
 }
 
 // Home.suppressFirstRenderFlicker = true
-Home.authenticate = true
+// Home.authenticate = true
 Home.getLayout = (page: React.ReactChild) => <Layout title="Home">{page}</Layout>
 
 export default Home
