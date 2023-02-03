@@ -30,7 +30,7 @@ function CustomerPortal() {
     isOpen: false,
     templateId: undefined,
   })
-  const user = useCurrentUser()
+  // const user = useCurrentUser()
   const [data, { refetch }] = useQuery(
     getCustomerPortal,
     { portalId },
@@ -57,7 +57,7 @@ function CustomerPortal() {
   //container: https://tailwindui.com/components/application-ui/layout/containers
   return (
     <>
-      {user.accountExecutive && (
+      {session.roles?.includes(Role.AccountExecutive) && (
         <div className="bg-yellow-100 -mt-16 px-2 py-4 mb-2">
           <div className="grid grid-cols-2">
             <div className="text-sm py-2">
