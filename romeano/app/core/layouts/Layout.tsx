@@ -8,6 +8,7 @@ import getPortalList from "app/customer-portals/queries/getPortalList"
 import { AppHeader } from "../components/AppHeader"
 import { useCurrentUser } from "../hooks/useCurrentUser"
 import { Footer } from "../components/Footer"
+import { Role } from "@prisma/client"
 
 type LayoutProps = {
   title?: string
@@ -60,8 +61,20 @@ const GetVendorLayout = ({ title, children }: LayoutProps) => {
 }
 
 const Layout = ({ title, children }: LayoutProps) => {
-  const user = useCurrentUser()
-  return user?.accountExecutive ? (
+  const session = useSession()
+  // if (!session || !session.userId) {
+  //   return (<>
+  //     <Head>
+  //       <title>{title || "romeano"}</title>
+  //       <link rel="icon" href="/favicon.ico" />
+  //     </Head>
+  //     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+  //       <div className="mt-0">{children}</div>
+  //     </div>
+  //     <Footer />
+  //   </>)
+  // }
+  return session.roles?.includes(Role.AccountExecutive) ? (
     GetVendorLayout({ title, children })
   ) : (
     <>
