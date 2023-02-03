@@ -9,7 +9,7 @@ export const GetCurrentUser = z.object({
 })
 
 export default resolver.pipe(
-  resolver.authorize(),
+  // resolver.authorize(),
   resolver.zod(GetCurrentUser),
   async ({ portalId }, { session }: Ctx) => {
     const user = await db.user.findUnique({
