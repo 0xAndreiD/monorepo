@@ -49,7 +49,7 @@ function CustomerPortal() {
   }
 
   // Track portal open event if user is stakeholder
-  if (session.roles?.includes(Role.Stakeholder)) {
+  if (!session.isLoading && session.roles?.includes(Role.Stakeholder)) {
     console.log("Tracking stakeholder portal access event")
     invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: portalId })
   }
