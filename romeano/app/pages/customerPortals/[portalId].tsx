@@ -45,8 +45,8 @@ function CustomerPortal() {
     // Track portal open event if user is stakeholder
     if (!session.isLoading && !tracked && session.roles?.includes(Role.Stakeholder)) {
       invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: portalId })
+      setTracked(true)
     }
-    setTracked(true)
     return () => {}
   }, [portalId, session.isLoading, session.roles, tracked])
 
