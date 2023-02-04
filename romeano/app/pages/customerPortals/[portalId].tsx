@@ -14,7 +14,7 @@ import StakeholderLoginForm from "../../auth/components/StakeholderLoginForm"
 import Layout from "app/core/layouts/Layout"
 import SaveTemplateModal from "app/core/components/customerPortals/edit/saveTemplateModal"
 import Modal from "app/core/components/generic/Modal"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { decodeHashId } from "app/core/util/crypto"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { EventType, Role } from "@prisma/client"
@@ -40,6 +40,16 @@ function CustomerPortal() {
       enabled: !!portalId && !session.isLoading && !!session.userId,
     }
   )
+
+  useEffect(() => {
+    // Track portal open event if user is stakeholder
+    if (!session.isLoading && !tracked && session.roles?.includes(Role.Stakeholder)) {
+      invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: portalId })
+    }
+    setTracked(true)
+    return () => {}
+  }, [portalId, session.isLoading, session.roles, tracked])
+
   console.log("Session...", session)
   if (!session.isLoading && !session.userId) {
     return <StakeholderLoginForm />
@@ -47,13 +57,6 @@ function CustomerPortal() {
 
   if (!portalId || !data) {
     return <LoadingSpinner />
-  }
-
-  // Track portal open event if user is stakeholder
-  if (!session.isLoading && !tracked && session.roles?.includes(Role.Stakeholder)) {
-    console.log("Tracking stakeholder portal access event")
-    invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: portalId })
-    setTracked(true)
   }
 
   //container: https://tailwindui.com/components/application-ui/layout/containers
