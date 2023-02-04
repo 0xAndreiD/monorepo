@@ -42,12 +42,12 @@ function CustomerPortal() {
 
   useEffect(() => {
     // Track portal open event if user is stakeholder
-    if (!session.isLoading && session.roles?.includes(Role.Stakeholder)) {
+    if (session.roles?.includes(Role.Stakeholder)) {
       console.log("Tracking portal open event...")
       invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: portalId })
     }
     return () => {}
-  }, [portalId, session.isLoading, session.roles])
+  }, [portalId, session.roles])
 
   console.log("Session...", session)
   if (!session.isLoading && !session.userId) {

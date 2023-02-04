@@ -8,7 +8,15 @@ type CustomIsAuthorizedArgs = {
 }
 export function customIsAuthorized({ ctx, args }: CustomIsAuthorizedArgs) {
   // can access ctx.session, ctx.session.userId, etc
-  console.log("CustomIsAuthorized...", ctx.session.$publicData, args)
+  if (!ctx) {
+    console.warn("No context in customIsAuthorized")
+    return false
+  }
+  if (!ctx.session) {
+    console.warn("No session in customIsAuthorized")
+    return false
+  }
+  console.log("CustomIsAuthorized...", ctx?.session?.$publicData, args)
   if (!ctx.session.userId) {
     console.error("Missing userId in session")
     return false
