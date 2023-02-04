@@ -23,6 +23,7 @@ import { invoke } from "blitz"
 
 function CustomerPortal() {
   const portalId = useParam("portalId", "string")!
+  const [tracked, setTracked] = useState(false)
   const session = useSession()
   const [addTemplateProps, setAddTemplateProps] = useState<
     { isOpen: false; templateId: undefined } | { isOpen: true; templateId: number }
@@ -49,9 +50,10 @@ function CustomerPortal() {
   }
 
   // Track portal open event if user is stakeholder
-  if (!session.isLoading && session.roles?.includes(Role.Stakeholder)) {
+  if (!session.isLoading && !tracked && session.roles?.includes(Role.Stakeholder)) {
     console.log("Tracking stakeholder portal access event")
     invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: portalId })
+    setTracked(true)
   }
 
   //container: https://tailwindui.com/components/application-ui/layout/containers
