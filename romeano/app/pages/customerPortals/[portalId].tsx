@@ -23,7 +23,6 @@ import { invoke } from "blitz"
 
 function CustomerPortal() {
   const portalId = useParam("portalId", "string")!
-  const [tracked, setTracked] = useState(false)
   const session = useSession()
   const [addTemplateProps, setAddTemplateProps] = useState<
     { isOpen: false; templateId: undefined } | { isOpen: true; templateId: number }
@@ -43,12 +42,12 @@ function CustomerPortal() {
 
   useEffect(() => {
     // Track portal open event if user is stakeholder
-    if (!session.isLoading && !tracked && session.roles?.includes(Role.Stakeholder)) {
+    if (!session.isLoading && session.roles?.includes(Role.Stakeholder)) {
+      console.log("Tracking portal open event...")
       invoke(createEvent, { type: EventType.StakeholderPortalOpen, portalId: portalId })
-      setTracked(true)
     }
     return () => {}
-  }, [portalId, session.isLoading, session.roles, tracked])
+  }, [portalId, session.isLoading, session.roles])
 
   console.log("Session...", session)
   if (!session.isLoading && !session.userId) {
