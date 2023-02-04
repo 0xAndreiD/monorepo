@@ -6,10 +6,22 @@ import { z } from "zod"
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { magicLinkId } = z.object({ magicLinkId: z.string().nonempty() }).parse(context.params)
   const magicLink = await db.magicLink.findUnique({ where: { id: magicLinkId } })
-
-  const session = await getSession(context.req, context.res)
-  console.log("Session in MagicLink", session, magicLink)
   if (!magicLink) throw new NotFoundError("Magiclink not found")
+
+  let session = null
+  try {
+    session = await getSession(context.req, context.res)
+  } catch (err) {
+    console.error("Error while fetching session in magic link", err)
+  }
+  if (!session) {
+    return {
+      redirect: {
+        destination: magicLink.destUrl,
+        permanent: false,
+      },
+    }
+  }
 
   if (!session.userId && magicLink.hasClicked) {
     console.log("Invalid magiclink!", magicLink)
@@ -34,7 +46,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   })
   // Track this event - magic link clicked, session created, stakeholder logged in.
   const portalEncId = magicLink.destUrl.split("/customerPortals/")?.[1]
-  invoke(createEvent, { type: EventType.StakeholderLogin, portalId: portalEncId })
+  // invoke(createEvent, { type: EventType.StakeholderLogin, portalId: portalEncId })
   return {
     redirect: {
       destination: magicLink.destUrl,
