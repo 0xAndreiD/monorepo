@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import "tailwindcss/tailwind.css"
-import { CardDivider } from "app/core/components/generic/Card"
 
 import { ActivePortals } from "app/core/components/vendorStats/ActivePortals"
 import { OpportunityEngagement } from "app/core/components/vendorStats/OpportunityEngagement"
@@ -11,18 +10,15 @@ import getTemplates from "app/vendor-stats/queries/getTemplates"
 import getVendorStats from "app/vendor-stats/queries/getVendorStats"
 import { encodeHashId } from "app/core/util/crypto"
 import Modal from "app/core/components/generic/Modal"
-import AddPortalModal from "app/core/components/vendorStats/edit/addPortalModal"
-import { PlusIcon } from "@heroicons/react/outline"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import AddTemplateModal from "app/core/components/vendorStats/edit/addTemplateModal"
 
 function VendorStats() {
-  const [vendorStats, { refetch }] = useQuery(getVendorStats, {}, { refetchOnWindowFocus: false })
-  const [templates] = useQuery(getTemplates, {}, { refetchOnWindowFocus: false })
+  const [vendorStats, { refetch }] = useQuery(getVendorStats, {}, { refetchOnWindowFocus: true })
+  const [templates] = useQuery(getTemplates, {}, { refetchOnWindowFocus: true })
   const [addTemplateProps, setAddTemplateProps] = useState<{ isOpen: false } | { isOpen: true }>({
     isOpen: false,
   })
-
+  console.log("ActivePortals", vendorStats.activePortals)
   return vendorStats.activePortals?.length > 0 ? (
     <div className="">
       <div className="grid grid-cols-2 gap-y-4 gap-x-8 mb-16">
