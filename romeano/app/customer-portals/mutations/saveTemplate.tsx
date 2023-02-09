@@ -27,6 +27,9 @@ export default resolver.pipe(resolver.zod(SaveTemplate), resolver.authorize(), a
         include: {
           ctaLink: true,
         },
+        orderBy: {
+          createdAt: "asc",
+        },
       },
       nextStepsTasks: true,
       images: true,

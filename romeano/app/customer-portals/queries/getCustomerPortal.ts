@@ -52,7 +52,7 @@ export default resolver.pipe(resolver.zod(GetCustomerPortal), resolver.authorize
         include: {
           ctaLink: true,
         },
-        orderBy: [{ portalId: "asc" }, { id: "asc" }],
+        orderBy: [{ portalId: "asc" }, { createdAt: "asc" }],
       },
       nextStepsTasks: {
         include: {

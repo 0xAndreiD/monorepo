@@ -68,7 +68,7 @@ export default resolver.pipe(
       include: {
         roadmapStages: {
           include: { ctaLink: true },
-          orderBy: [{ portalId: "asc" }, { id: "asc" }],
+          orderBy: [{ portalId: "asc" }, { createdAt: "asc" }],
         },
         vendor: true,
         portalDocuments: {
