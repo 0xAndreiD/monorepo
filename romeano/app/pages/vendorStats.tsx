@@ -18,8 +18,8 @@ function VendorStats() {
   const [addTemplateProps, setAddTemplateProps] = useState<{ isOpen: false } | { isOpen: true }>({
     isOpen: false,
   })
-  console.log("ActivePortals", vendorStats.activePortals)
-  return vendorStats.activePortals?.length > 0 ? (
+  console.log("ActivePortals", vendorStats.activePortals, templates)
+  return templates?.templates?.length > 0 || vendorStats.activePortals?.length > 0 ? (
     <div className="">
       <div className="grid grid-cols-2 gap-y-4 gap-x-8 mb-16">
         <OpportunityEngagement data={vendorStats.opportunityEngagement} />
