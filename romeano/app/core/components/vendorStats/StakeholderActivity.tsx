@@ -38,7 +38,9 @@ export function StakeholderActivity(props: { data: StakeholderActivityEvent[] })
                       ""
                     )}
                   </span>
-                  <span className="text-right text-gray-500">{moment(event.timestamp).format("l \\a\\t h:mma")}</span>
+                  <span className="text-right text-gray-500">
+                    {moment(event.timestamp).format("M/D/\\`YY \\a\\t h:mma")}
+                  </span>
                 </div>
               ))}
             </div>
