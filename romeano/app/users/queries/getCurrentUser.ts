@@ -57,7 +57,7 @@ export default resolver.pipe(
           : false,
       },
     })
-    console.log("GOT SESSION USER", session, user)
+    // console.log("GOT SESSION USER", session, user)
     // TODO: Remove role from here and use the one from session instead
     return { ...user, role: user?.userPortals?.[0]?.role, roles: session.roles }
   }

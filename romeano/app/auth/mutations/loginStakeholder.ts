@@ -26,7 +26,11 @@ export default resolver.pipe(resolver.zod(LoginStakeholder), async ({ portalId, 
     include: { user: true },
     where: {
       portalId: decodeHashId(portalId),
-      user: { email },
+      user: {
+        email: {
+          mode: "insensitive",
+        },
+      },
     },
   })
 
