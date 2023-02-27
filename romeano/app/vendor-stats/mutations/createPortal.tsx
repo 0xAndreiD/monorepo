@@ -202,7 +202,7 @@ export default resolver.pipe(resolver.zod(CreatePortal), resolver.authorize(), a
           data: {
             portalId: id,
             heading: roadmapStage.heading,
-            date: roadmapStage.date,
+            // date: roadmapStage.date,
             tasks: roadmapStage.tasks,
             ctaLinkId: link.id,
             vendorId: vendorTeam.vendorId,
