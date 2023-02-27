@@ -36,7 +36,7 @@ export function getDocuments(
       documentId: x.id,
       id: x.link.id,
       body: x.link.body,
-      href: getExternalUploadPath(x.link.href),
+      href: x.link.type === LinkType.Document ? getExternalUploadPath(x.link.href) : x.link.href,
       isCompleted: role === Role.Stakeholder, //FIXME: should make this actually check
     }))
 }
