@@ -78,7 +78,7 @@ export function UploadDocumentComponent(
     <div {...getRootProps({ className: "dropzone" })}>
       <input {...getInputProps()} />
       <div onClick={open}>
-        <button
+        {/* <button
           type="button"
           className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
           leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
@@ -86,7 +86,7 @@ export function UploadDocumentComponent(
         >
           <UploadCloudIcon className="h-4 w-4 mr-2" />
           UPLOAD
-        </button>
+        </button> */}
         {props.children}
       </div>
     </div>

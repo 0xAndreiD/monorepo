@@ -99,7 +99,7 @@ export function UploadModal(props: {
           <UploadDocumentComponent uploadParams={props.uploadParams} onUploadComplete={props.onUploadComplete}>
             <div className="flex flex-col gap-2 justify-center items-center cursor-pointer">
               <CloudUploadIcon className="text-gray-700 w-16 h-16" />
-              <span className="font-bold">Upload document</span>
+              <span className="font-bold">Document</span>
             </div>
           </UploadDocumentComponent>
         </div>
