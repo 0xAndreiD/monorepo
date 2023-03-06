@@ -3,18 +3,19 @@
 Monorepo containing all code (frontend, backend, etc.)
 
 ```
-#install docker (or Docker Desktop for Mac) 
+#install docker (or Docker Desktop for Mac)
 
 #Linux only
-#add DOCKER_HOST to .bashrc 
+#add DOCKER_HOST to .bashrc
 systemctl --user start docker.service
 
-#Create Personal Auth Token on Github 
+#Create Personal Auth Token on Github
 #https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
-#login with PAT
+#you can select the amount of days until renewal, eventually a security process will specify times
+#login with your PAT copied from Github
 docker login ghcr.io -u YOUR-GITHUB-UNAME
 
-#Make sure you have created a SSH token and added it to your GitHub account before the next step 
+#Make sure you have created a SSH token and added it to your GitHub account before the next step
 #https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
 git clone git@github.com:romeano-inc/monorepo.git
 cd monorepo/romeano
