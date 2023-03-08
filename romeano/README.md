@@ -6,21 +6,30 @@ This is a [Blitz.js](https://github.com/blitz-js/blitz) app.
 
 ## Getting Started
 
-Run your app in the development mode.
+1. install postgres if you don't already have it
+   `brew install postgresql@14`
+2. start postgres
+   `pg_ctl -D /usr/local/var/postgres start`
+3. conect to postgres
+   `psql -U postgres`
+4. create `romeano` db in postgres
+   `CREATE DATABASE romeano;`
+5. if it says `role "postgres" does not exist`, do the following:
+   `createuser --interactive --pwprompt`
+6. pass in user (`postgres`) and password (up to you) when Terminal asks for it
+7. after that, run the following:
+   `psql -U postgres -h localhost -d romeano -c 'drop schema public cascade;'; yarn blitz prisma migrate dev --name init --skip-generate && yarn blitz prisma migrate reset --force --skip-generate`
+8. run your app in dev mode
+   `blitz dev`
+9. open [http://localhost:3000](http://localhost:3000) to see the app
 
-```
-blitz dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Prod
 
 DB Setup
 
 ```shell
 psql -U postgres -h localhost -d romeano -c 'drop schema public cascade;'; yarn blitz prisma migrate dev --name init --skip-generate && yarn blitz prisma migrate reset --force --skip-generate
 ```
-
-### Prod
 
 #### Docker Seed
 
