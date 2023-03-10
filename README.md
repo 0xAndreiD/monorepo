@@ -2,6 +2,16 @@
 
 Monorepo containing all code (frontend, backend, etc.)
 
+Running app locally:
+
+```
+[start from root folder, /monorepo]
+git pull origin master
+cd romeano/
+yarn install
+blitz dev
+```
+
 ```
 #install docker (or Docker Desktop for Mac)
 
