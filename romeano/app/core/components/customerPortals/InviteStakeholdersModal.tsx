@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form"
 import { getName } from "../../util/text"
 import createEvent from "../../../event/mutations/createEvent"
 import { EventType } from "db"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import CustomTrashIcon from "app/core/assets/trashIcon"
 import { confirmAlert } from "react-confirm-alert" // Import
 import "react-confirm-alert/src/react-confirm-alert.css" // Import css
@@ -24,6 +24,12 @@ export function InviteStakeholdersModal(props: {
 }) {
   const [inviteStakeholderMutation] = useMutation(createStakeholder)
   const [deleteStakeholderMutation] = useMutation(deleteStakeholder)
+  const [copied, setCopied] = useState(false)
+
+  function copyLinkToClipboard() {
+    navigator.clipboard.writeText(window.location.href)
+    setCopied(true)
+  }
 
   const { register, handleSubmit, reset, setFocus, formState } = useForm<z.infer<typeof CreateStakeholder>>({
     // resolver: zodResolver(CreateStakeholder.omit({portalId:true}))
@@ -157,6 +163,35 @@ export function InviteStakeholdersModal(props: {
             </div>
           ))}
         </div>
+      </div>
+      <div className="m-5">
+        <h2 className="text-lg leading-6 font-semibold text-gray-900">Share Link</h2>
+        <span className="mt-2 flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="12px"
+            viewBox="0 0 24 24"
+            width="24px"
+            fill="#9CA3AF"
+            // className="mt-2mr-1"
+          >
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
+          </svg>
+          <p className="text-sm text-gray-500">Only people with access can open with the link</p>
+        </span>
+
+        <button
+          onClick={copyLinkToClipboard}
+          className="inline-flex items-center mt-5 px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
+          style={{ backgroundColor: copied ? "#EDF2FA" : "#FFFFFF" }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#1a73e8">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z" />
+          </svg>
+          <span className="ml-2">Copy link</span>
+        </button>
       </div>
       <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
         <button

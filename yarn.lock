@@ -3,18 +3,18 @@
 
 
 "@mikemmb73/react-responsive-carousel2@^3.2.22":
-  version "3.2.22"
-  resolved "https://registry.yarnpkg.com/@mikemmb73/react-responsive-carousel2/-/react-responsive-carousel2-3.2.22.tgz#04f0ac118f8aab4cc3937656474fdd5554ac9ad3"
-  integrity sha512-GR/8bSLbPi9PFB4gYTXHguhwBc0X43ZLchKpC/HEceFW1aS54FkUkWJ4rxygdHEJH1ur0y3XO8nI0bTeJ0JHUQ==
+  version "3.2.24"
+  resolved "https://registry.yarnpkg.com/@mikemmb73/react-responsive-carousel2/-/react-responsive-carousel2-3.2.24.tgz#38dc1d4f7da988ea62a74b20bc83e98d66ccbde9"
+  integrity sha512-/FkP7Eaay9MDM7JxCaW46hgBxrHyU7NlFAAC8zyirE0JAthNJhwsKgoZ9ewgH5fOBq+9UhD4m0XbPBvLQfCscg==
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.5.8"
     react-easy-swipe "^0.0.21"
 
 classnames@^2.2.5:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
-  integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.2.tgz#351d813bf0137fcc6a76a16b88208d2560a0d924"
+  integrity sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==
 
 "js-tokens@^3.0.0 || ^4.0.0":
   version "4.0.0"
@@ -31,7 +31,7 @@ loose-envify@^1.4.0:
 object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
-  integrity sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=
+  integrity sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==
 
 prop-types@^15.5.8:
   version "15.8.1"
