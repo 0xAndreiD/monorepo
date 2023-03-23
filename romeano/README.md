@@ -23,6 +23,16 @@ This is a [Blitz.js](https://github.com/blitz-js/blitz) app.
    `blitz dev`
 9. open [http://localhost:3000](http://localhost:3000) to see the app
 
+## If you need to restart development after taking a break
+
+1. start postgres
+   `pg_ctl -D /usr/local/var/postgres start`
+2. after that, run the following:
+   `psql -U postgres -h localhost -d romeano -c 'drop schema public cascade;'; yarn blitz prisma migrate dev --name init --skip-generate && yarn blitz prisma migrate reset --force --skip-generate`
+3. run your app in dev mode
+   `blitz dev`
+4. open [http://localhost:3000](http://localhost:3000) to see the app
+
 ### Prod
 
 DB Setup
