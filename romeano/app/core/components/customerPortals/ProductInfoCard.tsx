@@ -95,7 +95,7 @@ export function ProductInfoCard(props: {
 
   return (
     <Card borderless={true}>
-      <CardHeader>Product Info</CardHeader>
+      {/* <CardHeader>Product Info</CardHeader> */}
       {props.data?.images?.length != 0 && (
         <div className="border-2 border-grey-600 px-12 mt-2 py-1 rounded-md margin">
           <Carousel
@@ -103,16 +103,16 @@ export function ProductInfoCard(props: {
             showThumbs={false}
             showStatus={props.editingEnabled}
             showIndicators={false}
-            renderArrowPrev={(onClickHandler, hasPrev, label) => (
-              <button onClick={onClickHandler} style={{ ...style, left: 15 }}>
-                <ChevronLeftIcon className="text-gray-400" />
-              </button>
-            )}
-            renderArrowNext={(onClickHandler, hasPrev, label) => (
-              <button onClick={onClickHandler} style={{ ...style, right: 15 }}>
-                <ChevronRightIcon className="text-gray-400" />
-              </button>
-            )}
+            // renderArrowPrev={(onClickHandler, hasPrev, label) => (
+            //   <button onClick={onClickHandler} style={{ ...style, left: 15 }}>
+            //     <ChevronLeftIcon className="text-gray-400" />
+            //   </button>
+            // )}
+            // renderArrowNext={(onClickHandler, hasPrev, label) => (
+            //   <button onClick={onClickHandler} style={{ ...style, right: 15 }}>
+            //     <ChevronRightIcon className="text-gray-400" />
+            //   </button>
+            // )}
             statusFormatter={(current, total) => (
               <button
                 //use the mutation to push the context
