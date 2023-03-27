@@ -158,12 +158,12 @@ export function ProductInfoCard(props: {
             props.refetchHandler()
           }}
         >
-          <div className="w-64 flex items-center border-gray-300">
+          <div className="inline-flex justify-center items-center w-full h-64 bg-white border-2 border-gray-200 rounded">
             <button
               type="button"
               className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
-              leading-4 font-medium rounded-full mt-2 text-gray-700 bg-white hover:bg-gray-50
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            leading-4 font-medium rounded-full mt-2 text-gray-700 bg-white hover:bg-gray-50
+            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
               <UploadCloudIcon className="h-4 w-4 mr-2" />
               UPLOAD IMAGE
