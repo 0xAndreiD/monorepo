@@ -58,35 +58,26 @@ function EditCustomerPortal() {
         <div className="grid grid-cols-2">
           <div className="text-sm">
             <span className="mr-4 py-2">You are editing {data.header.customerName} customer portal.</span>
-            <Link href={Routes.CustomerPortal({ portalId: portalId })}>
-              <button
-                className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
-                leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
-                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-              >
-                Done Editing
-              </button>
-            </Link>
+            <button
+              className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
+                  leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              onClick={() => setAddTemplateProps({ isOpen: true, templateId: decodeHashId(portalId) })}
+            >
+              Save as Template
+            </button>
           </div>
           <div className="flex justify-end">
             <div className="inline-flex flex px-2 gap-2">
               <Link href={Routes.CustomerPortal({ portalId: portalId })}>
                 <button
                   className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
-                  leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
-                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 >
-                  Preview Portal
+                  Done Editing
                 </button>
               </Link>
-              <button
-                className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm
-                  leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50
-                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                onClick={() => setAddTemplateProps({ isOpen: true, templateId: decodeHashId(portalId) })}
-              >
-                Save as Template
-              </button>
             </div>
           </div>
         </div>
