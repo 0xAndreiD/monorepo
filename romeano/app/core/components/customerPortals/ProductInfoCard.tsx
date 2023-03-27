@@ -158,15 +158,17 @@ export function ProductInfoCard(props: {
             props.refetchHandler()
           }}
         >
-          <button
-            type="button"
-            className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
-            leading-4 font-medium rounded-full mt-2 text-gray-700 bg-white hover:bg-gray-50
+          <div className="w-64 flex items-center border-gray-300">
+            <button
+              type="button"
+              className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
+              leading-4 font-medium rounded-full mt-2 text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-          >
-            <UploadCloudIcon className="h-4 w-4 mr-2" />
-            UPLOAD
-          </button>
+            >
+              <UploadCloudIcon className="h-4 w-4 mr-2" />
+              UPLOAD IMAGE
+            </button>
+          </div>
         </UploadProductImageComponent>
       )}
       {props.data.sections.map((section, idx) => (
