@@ -131,19 +131,22 @@ export default function UserDropDown(props: { templates: Template[] }) {
 
             {props.templates && (
               <div className="py-1">
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "block px-4 py-2 text-sm"
-                      )}
-                    >
-                      <BlitzLink href={Routes.ManageTemplate()}>Manage Templates</BlitzLink>
-                    </a>
-                  )}
-                </Menu.Item>
+                <BlitzLink href={Routes.ManageTemplate()}>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <a
+                        href="#"
+                        className={classNames(
+                          active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                          "block px-4 py-2 text-sm"
+                        )}
+                      >
+                        {/* <BlitzLink href={Routes.ManageTemplate()}>Manage Templates</BlitzLink> */}
+                        Manage Templates
+                      </a>
+                    )}
+                  </Menu.Item>
+                </BlitzLink>
               </div>
             )}
 

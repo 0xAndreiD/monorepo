@@ -95,24 +95,25 @@ export function ProductInfoCard(props: {
 
   return (
     <Card borderless={true}>
-      <CardHeader>Product Info</CardHeader>
+      {/* <CardHeader>Product Info</CardHeader> */}
       {props.data?.images?.length != 0 && (
-        <div className="border-2 border-grey-600 px-12 mt-2 py-1 rounded-md margin">
+        // <div className="border-2 border-grey-600 px-12 mt-2 py-1 rounded-md margin">
+        <div className="px-12 mt-2 py-1 rounded-md margin">
           <Carousel
             infiniteLoop={true}
             showThumbs={false}
             showStatus={props.editingEnabled}
             showIndicators={false}
-            renderArrowPrev={(onClickHandler, hasPrev, label) => (
-              <button onClick={onClickHandler} style={{ ...style, left: 15 }}>
-                <ChevronLeftIcon className="text-gray-400" />
-              </button>
-            )}
-            renderArrowNext={(onClickHandler, hasPrev, label) => (
-              <button onClick={onClickHandler} style={{ ...style, right: 15 }}>
-                <ChevronRightIcon className="text-gray-400" />
-              </button>
-            )}
+            // renderArrowPrev={(onClickHandler, hasPrev, label) => (
+            //   <button onClick={onClickHandler} style={{ ...style, left: 15 }}>
+            //     <ChevronLeftIcon className="text-gray-400" />
+            //   </button>
+            // )}
+            // renderArrowNext={(onClickHandler, hasPrev, label) => (
+            //   <button onClick={onClickHandler} style={{ ...style, right: 15 }}>
+            //     <ChevronRightIcon className="text-gray-400" />
+            //   </button>
+            // )}
             statusFormatter={(current, total) => (
               <button
                 //use the mutation to push the context
@@ -157,15 +158,17 @@ export function ProductInfoCard(props: {
             props.refetchHandler()
           }}
         >
-          <button
-            type="button"
-            className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
+          <div className="inline-flex justify-center items-center w-full h-64 bg-white border-2 border-gray-200 rounded">
+            <button
+              type="button"
+              className="inline-flex items-center px-4 py-3 border border-gray-300 text-sm
             leading-4 font-medium rounded-full mt-2 text-gray-700 bg-white hover:bg-gray-50
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-          >
-            <UploadCloudIcon className="h-4 w-4 mr-2" />
-            UPLOAD
-          </button>
+            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            >
+              <UploadCloudIcon className="h-4 w-4 mr-2" />
+              UPLOAD IMAGE
+            </button>
+          </div>
         </UploadProductImageComponent>
       )}
       {props.data.sections.map((section, idx) => (
