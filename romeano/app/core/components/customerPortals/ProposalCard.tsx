@@ -144,7 +144,6 @@ function EditProposalCard(props: { portalId: string; data: Proposal; refetchHand
              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
-              {/* <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" /> */}
               <UploadCloudIcon className="-ml-0.5 mr-2 h-4 w-4" />
               Upload
             </button>
