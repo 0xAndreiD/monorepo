@@ -2,6 +2,7 @@ import { CheckIcon, CloudUploadIcon } from "@heroicons/react/solid"
 import { Card, CardDivider, CardHeader } from "../generic/Card"
 import { TrackedLink } from "../generic/Link"
 import { EventType, Role } from "db"
+import UploadCloudIcon from "../../assets/uploadCloud"
 import { UploadDocumentComponent } from "./UploadDocumentComponent"
 import { useMutation } from "blitz"
 import createDocument from "../../../customer-portals/mutations/createDocument"
@@ -63,7 +64,8 @@ export default function DocumentsCard(props: {
               leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
-                <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" />
+                {/* <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" /> */}
+                <UploadCloudIcon className="-ml-0.5 mr-2 h-4 w-4" />
                 Upload
               </button>
             </div>
