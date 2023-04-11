@@ -144,18 +144,8 @@ function EditProposalCard(props: { portalId: string; data: Proposal; refetchHand
              leading-4 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
-              {/* <CloudUploadIcon className="-ml-0.5 mr-2 h-4 w-4" /> */}
               <UploadCloudIcon className="-ml-0.5 mr-2 h-4 w-4" />
               Upload
-            </button>
-          </div>
-          <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-            <button
-              disabled={formState.isSubmitting}
-              className="w-full inline-flex justify-center rounded-md border border-transparent  px-4 py-2 bg-green-500 text-base font-medium text-white hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
-              onClick={formOnSubmit}
-            >
-              Save
             </button>
           </div>
         </div>
