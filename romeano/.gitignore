@@ -23,10 +23,6 @@ blitz-log.log
 .env.local
 .env.*.local
 .envrc
-.env
-.env.development
-.env.production
-.env.stage
 
 # Logs
 logs
